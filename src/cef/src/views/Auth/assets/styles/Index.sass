@@ -1,0 +1,311 @@
+$Montserrat: "Montserrat", sans-serif
+$PFDisplay: "PF DinDisplay Pro", sans-serif
+
+html
+  width: 100%
+  height: 100%
+
+body
+  margin: 0 0
+  width: 100%
+  height: 100%
+
+  #root
+    width: 100%
+    height: 100%
+
+.auth
+  position: absolute
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 100%
+  height: 100%
+  box-shadow: inset 0 0 250px 140px rgba(9, 12, 19, 0.6)
+  background: rgba(217, 217, 217, 0.06)
+  font-family: $Montserrat
+
+  .form-block.login
+    animation: fadeInLogin 1s ease forwards
+  
+  .form-block.register
+    animation: fadeInRegister 1s ease forwards
+
+  .form-block.recovery
+    animation: fadeInRecovery 1.3s ease forwards
+
+  .form-block
+    position: relative
+    color: #ffff
+    background: rgba(22, 21, 35, 0.99)
+    border-radius: .625rem
+    width: 480px
+    padding: 50px 0
+    //height: 600px
+    font-size: 1.125rem
+    overflow: hidden
+    z-index: 1
+
+    .effects
+      user-select: none
+
+      .blurs
+        svg
+          position: absolute
+          filter: blur(8rem)
+          z-index: -1
+
+        #one-blur
+          top: -4.5rem
+          left: -4rem
+          
+        #two-blur
+          bottom: -4.5rem
+          right: -4rem
+
+      .shapes
+        img
+          opacity: .05
+          position: absolute
+
+        #polygon
+          top: 0.9rem
+          left: 0.9rem
+
+        #elipse
+          top: 0.9rem
+          right: 0.9rem
+
+        #rectangle
+          bottom: 0.9rem
+          left: 0.9rem
+
+        #polygon-2
+          bottom: 0.9rem
+          right: 0.9rem
+    
+    #content
+      display: flex
+      justify-content: center
+      align-items: center
+      height: 100%
+      flex-direction: column
+
+      .pers-img
+        position: absolute
+        right: -5.5rem
+        user-select: none
+        pointer-events: none
+        mix-blend-mode: luminosity
+        z-index: -2
+
+      .header-section
+        display: flex
+        flex-direction: column
+        align-items: center
+        gap: 0.55rem
+        user-select: none
+
+        .title
+          display: flex
+          align-items: center
+          justify-content: center
+          position: relative
+
+          .bg
+            width: 23rem
+            position: absolute
+            opacity: .8
+
+          .text
+            margin-bottom: 0.3rem
+            font-family: $Montserrat
+            font-weight: 600
+            font-size: 24px
+            text-transform: uppercase
+            color: rgba(235, 247, 255, 0.96)
+
+        .description
+          font-weight: 500
+          font-size: 12px
+          text-align: center
+          color: rgba(235, 247, 255, 0.55)
+
+      .inputs-section
+        display: flex
+        flex-direction: column
+        align-items: center
+        width: 81%
+        gap: 1rem
+
+        .section
+          display: flex
+          flex-direction: column
+          gap: 0.35rem
+          width: 100%
+
+          .title
+            font-family: $PFDisplay
+            font-weight: 400
+            font-size: 1rem
+            color: rgba(235, 247, 255, 0.76)
+
+          .input
+            display: flex
+            align-items: center
+            width: 100%
+            height: 100%
+
+            .icon
+              display: flex
+              align-items: center
+              justify-content: center
+              position: absolute
+              justify-content: center
+              border-radius: 3px
+              width: 44px
+              height: 44px
+              background: rgba(255, 255, 255, 0.08)
+              margin-left: 1rem
+              z-index: 1
+
+              img
+                opacity: 0.3
+                transition: all 0.3s
+
+            input
+              color: #ffff
+              outline: none
+              border: none
+              position: relative
+              width: 100%
+              height: 4.1rem
+              background: rgba(255, 255, 255, 0.09)
+              border-radius: 6px
+              font-family: $Montserrat
+              font-size: 1.1rem
+              font-weight: 700
+              text-transform: uppercase
+              letter-spacing: 0.03em
+              box-sizing: border-box
+              padding-left: 5rem
+              padding-right: 1.2rem
+              transition: all 0.3s
+
+              &::placeholder
+                font-family: $Montserrat
+                font-weight: 500
+                font-size: 15px
+                text-transform: none
+                letter-spacing: 0.01em
+                color: rgba(235, 247, 255, 0.3)
+
+            &:focus-within
+              .icon
+                img
+                  opacity: 0.8
+                  transition: all 0.3s
+
+              input
+                background: rgba(255, 255, 255, 0.12)
+                transition: all 0.3s
+
+      .btns-section
+        display: flex
+        flex-direction: column
+        width: 81%
+        gap: 1rem
+
+        .main-btn
+          cursor: pointer
+          outline: none
+          border: none
+          background: #ea1448
+          border-radius: 8px
+          height: 60px
+          font-family: $Montserrat
+          font-weight: 600
+          font-size: 15px
+          color: #ebf7ff
+          animation: pulseBtn 2s ease infinite
+          transition: all 0.3s
+
+          &:hover
+            animation: fadeInMainBtn 0.5s ease forwards
+            transition: all 0.3s
+
+        .bottom-btns
+          display: flex
+          justify-content: space-between
+          width: 100%
+
+          .scnd-btn
+            font-family: $Montserrat
+            font-size: .75rem
+            font-weight: 500
+            color: #ebf7ffd7
+            background: rgba(255, 255, 255, 0.12)
+            cursor: pointer
+            outline: none
+            border: none
+            border-radius: 5px
+            height: 2.2rem
+            width: 49%
+            transition: all 0.3s
+
+            &:hover
+              transition: all 0.3s
+              color: #ebf7ff
+              background: rgba(255, 255, 255, 0.18)
+
+
+@keyframes fadeInLogin
+  from
+    transform: translate(0, -45rem)
+  to
+    transform: translate(0, 0)
+
+@keyframes fadeInRegister
+  from
+    transform: translate(0, -45rem)
+  to
+    transform: translate(0, 0)
+
+@keyframes fadeInRecovery
+  from
+    transform: translate(0, -45rem)
+  to
+    transform: translate(0, 0)
+
+@keyframes pulseBtn
+  0%
+    box-shadow: 0 0 0 0px rgba(234, 20, 72, 0.6)
+  100%
+    box-shadow: 0 0 0 11px rgba(234, 20, 72, 0)
+
+@keyframes fadeInMainBtn
+  from
+    box-shadow: 0 0 20px 8px rgba(234, 20, 72, 0)
+  to
+    box-shadow: 0 0 20px 8px rgba(234, 20, 72, 0.4)
+
+
+@media screen and ( min-width: 1600px )
+  .form-block
+    zoom: 110%
+
+@media screen and ( min-width: 1800px )
+  .form-block
+    zoom: 120%
+
+@media screen and ( min-width: 2000px )
+  .form-block
+    zoom: 130%
+
+@media screen and ( min-width: 2200px )
+  .form-block
+    zoom: 140%
+
+@media screen and ( min-width: 2400px )
+  .form-block
+    zoom: 145%

@@ -1,0 +1,15 @@
+# Gamemode 'REDSTAR RP' for RAGE:MP
+
+## (DEV) 0.0.1
++ Начальный проект для репозитория
++ Создан скрипт build.js для компиляции TS файлов в JS
++ Переписан чат сервера
++ Отверстана и отображена на сервере авторизация / регистрация / восст.пароля
++ Написан скрипт для отображения любого интерфейса на сервере
+
+## (DEV) 0.0.2
++ The project has been transferred to the RAGE:MP
++ Fixed authorization, registration, password recovery
++ RPC is enabled for interaction between the client, server, and CEF parts.
++ Fixed critical errors after translation.
++ Notification system added

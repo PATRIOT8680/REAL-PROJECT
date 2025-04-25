@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "removeComments": true,
+    "target": "es2022",
+    "module": "ES6",
+    "moduleResolution": "node",
+    "noEmitOnError": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowImportingTsExtensions": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "baseUrl": "./",
+    "paths": {
+      "@ragempcommunity/types-cef/*": ["node_modules/@ragempcommunity/types-cef/*"],
+      "@ragempcommunity/types-client/*": ["node_modules/@ragempcommunity/types-client/*"],
+      "@ragempcommunity/types-server/*": ["node_modules/@ragempcommunity/types-server/*"]
+    },
+    "typeRoots": [
+      "./node_modules/@ragempcommunity",
+      "./node_modules/@types/node",
+      "./node_modules/natives-ragemp"
+    ]
+  },
+  "include": [
+    "client/**/*.ts",
+    "server/**/*.ts"
+  ],
+  "exclude": [
+    "../client_packages/client",
+    "../packages/core"
+  ]
+}
