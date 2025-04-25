@@ -1,0 +1,83 @@
+.login-form {
+  gap: 2rem;
+}
+.login-form .pers-img {
+  width: 20rem;
+  opacity: 0.08;
+}
+.login-form .header-section .title .lines div {
+  border-radius: 2px;
+  width: 47px;
+  height: 3.5px;
+  -webkit-box-shadow: 0 0 9px 1px rgba(255, 22, 78, 0.5);
+          box-shadow: 0 0 9px 1px rgba(255, 22, 78, 0.5);
+  background: #ff164e;
+}
+.login-form .header-section .title .lines .line-1 {
+  position: absolute;
+  margin-top: -1.5rem;
+  margin-left: -0.4rem;
+  -webkit-animation: fadeInLine1 1.5s ease forwards;
+          animation: fadeInLine1 1.5s ease forwards;
+}
+.login-form .header-section .title .lines .line-2 {
+  position: absolute;
+  margin-top: 1rem;
+  margin-left: 10.5rem;
+  -webkit-animation: fadeInLine2 1.5s ease forwards;
+          animation: fadeInLine2 1.5s ease forwards;
+}
+.login-form .header-section .description {
+  width: 16rem;
+}
+.login-form .description-project {
+  width: 81%;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 0.61rem;
+  text-align: justify;
+  line-height: 145%;
+  color: rgba(235, 247, 255, 0.5803921569);
+}
+
+@-webkit-keyframes fadeInLine1 {
+  from {
+    -webkit-transform: translate(-70px, 0);
+            transform: translate(-70px, 0);
+  }
+  100% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+}
+
+@keyframes fadeInLine1 {
+  from {
+    -webkit-transform: translate(-70px, 0);
+            transform: translate(-70px, 0);
+  }
+  100% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+}
+@-webkit-keyframes fadeInLine2 {
+  from {
+    -webkit-transform: translate(70px, 0);
+            transform: translate(70px, 0);
+  }
+  100% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+}
+@keyframes fadeInLine2 {
+  from {
+    -webkit-transform: translate(70px, 0);
+            transform: translate(70px, 0);
+  }
+  100% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+}

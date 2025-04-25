@@ -1,0 +1,12 @@
+.server-info {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  color: rgba(255, 255, 255, 0.2078431373);
+  font-family: "PF DinDisplay Pro", sans-serif;
+  font-size: 14px;
+  position: absolute;
+  bottom: 2px;
+  right: 10px;
+}
