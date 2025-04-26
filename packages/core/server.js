@@ -974,7 +974,7 @@ const registerUser = (player, login, email, password) => {
                         player.dimension = 0;
                         rpc.callBrowser(player, 'server:player:local:info', [sid, player.id]);
                         rpc.callClient(player, 'server:auth:saveLogin', [login]);
-                        rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно зарегистрировались!`, 5000, 'right']);
+                        rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно зарегистрировались!`, 5000, 'bottom']);
                         rpc.callBrowser(player, 'server:regSuccess');
                         console.log(`User ${login} created. sid: ${sid}`);
                         console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`));
@@ -1078,7 +1078,7 @@ const sendRecoveryCode = (player, email) => {
                     return;
                 }
                 rpc.callBrowser(player, 'server:successSendNotify');
-                rpc.callClient(player, 'sendNotify', ['info', `Код отправлен на почту "${email}". Если письма нет, не забудьте проверить раздел "СПАМ"!`, 5000, 'right']);
+                rpc.callClient(player, 'sendNotify', ['info', `Код отправлен на почту "${email}". Если письма нет, не забудьте проверить раздел "СПАМ"!`, 7000, 'right']);
             });
         }
         else {
@@ -1117,6 +1117,9 @@ rpc.register('client:authPlayerVisible', (player, visible) => {
     else {
         player.alpha = 255;
     }
+});
+rpc.register('client:startNewCamera', (player, coords) => {
+    player.position = new mp.Vector3(coords.x, coords.y, coords.z);
 });
 rpc.register('cef:auth:regAccount', (player, login, email, password) => {
     registerUser(player, login, email, password);
