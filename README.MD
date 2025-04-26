@@ -13,3 +13,6 @@
 + RPC is enabled for interaction between the client, server, and CEF parts.
 + Fixed critical errors after translation.
 + Notification system added
+
+## [DEV] 0.0.3
++ An active camera has been added that moves during the authorization/registration/password recovery stage. The camera moves from point A to point B according to randomly selected coordinates from the config.

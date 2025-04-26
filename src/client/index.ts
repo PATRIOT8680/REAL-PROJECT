@@ -6,6 +6,8 @@ import './menus/global'
 import './menus/interface/loading'
 import './utils/keys'
 import './utils/rpc'
+import './game/movingCamera'
+import './menus/interface/auth/coordsCamera'
 
 if (openInterfaces.has('Auth')) {
 	mp.console.logInfo('Меню авторизации ВКЛЮЧЕНО!')

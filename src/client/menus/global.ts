@@ -1,5 +1,5 @@
 import { rpc } from "../utils/rpc"
-import './interface/auth'
+import './interface/auth/auth'
 import './interface/chat'
 import './interface/loading'
 import './main/toogleInterface'

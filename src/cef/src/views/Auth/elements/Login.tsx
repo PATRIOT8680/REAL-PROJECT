@@ -30,6 +30,7 @@ const Login: FC<IPropsAuth> = ({ setCurrentForm }) => {
 
     return () => {
       rpc.unregister('server:loginSuccess')
+      rpc.unregister('client:auth:saveLogin')
     }
   }, [])
 
