@@ -980,6 +980,7 @@ const coordsCamera = [
 ];
 
 let currentCameraIndex = -1;
+let isCameraSpan = false;
 const getRandomCameraIndex = () => {
     if (coordsCamera.length <= 1)
         return 0;
@@ -990,6 +991,8 @@ const getRandomCameraIndex = () => {
     return newIndex;
 };
 const startNextCameraMovement = async () => {
+    if (!isCameraSpan)
+        return;
     if (currentCameraIndex !== -1) {
         mp.game.cam.doScreenFadeOut(1500);
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -1006,6 +1009,7 @@ const startNextCameraMovement = async () => {
     startNextCameraMovement();
 };
 const enableAuth = () => {
+    isCameraSpan = true;
     rpc.call('execute', [`window.App.authReducer.showAuth()`]);
     rpc.callServer('client:authPlayerVisible', [false]);
     mp.game.ui.displayRadar(false);
@@ -1028,6 +1032,7 @@ const enableAuth = () => {
     });
 };
 const disableAuth = () => {
+    isCameraSpan = false;
     setTimeout(() => {
         mp.gui.cursor.show(false, false);
     }, 500);

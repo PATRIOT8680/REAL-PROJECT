@@ -24,7 +24,7 @@ const App = () => {
 
   const [sid, setSid] = useState('')
   const [playerName, setPlayerName] = useState('Patriot Adminov')
-  const [playerId, setPlayerId] = useState<number>()
+  const [playerId, setPlayerId] = useState<number | undefined>(undefined)
 
   const sendNotify = useNotify()
   const authVisible = useSelector((state: RootState) => state.authReducer.isVisible)
@@ -51,9 +51,9 @@ const App = () => {
   return(
     <>
       <div className="server-info">
-        <span className="text">REDSTAR GAMEMODE (dev: v0.0.2)</span>
+        <span className="text">REDSTAR GAMEMODE (dev: v0.0.3)</span>
         <span className="text">{playerName && ` • ${playerName}`} {sid && `(#${sid})`} </span>
-        <span className="text">{playerId && ` • ID: ${playerId}`}</span>
+        <span className="text">{playerId !== undefined && ` • ID: ${playerId}`}</span>
       </div>
       { authVisible && <Auth /> }
       { chatVisible && <Chat /> }
