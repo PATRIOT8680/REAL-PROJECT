@@ -1146,10 +1146,19 @@ mp.events.add('guiReady', () => {
         mp.console.logWarning(`На клиенте мы приняли с клиента код и отправляем в CEF: ${code}`);
         rpc.callBrowser('client:executeCode', [code]);
     });
-    rpc.call('cef:authEnabled', []);
 });
 rpc.register('clientCmd', (text) => {
     mp.console.logInfo(`[CEF]: ${text}`);
+});
+
+mp.events.add('browserDomReady', async (player) => {
+    rpc.call('execute', [`window.App.welcomeReducer.showWelcome()`]);
+    await setTimeout(() => {
+        rpc.call('cef:authEnabled', []);
+        setTimeout(() => {
+            rpc.call('execute', [`window.App.welcomeReducer.hideWelcome()`]);
+        }, 200);
+    }, 7100);
 });
 
 if (openInterfaces.has('Auth')) {
