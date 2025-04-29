@@ -16,3 +16,7 @@
 
 ## [DEV] 0.0.3
 + An active camera has been added that moves during the authorization/registration/password recovery stage. The camera moves from point A to point B according to randomly selected coordinates from the config.
+
+## [DEV] 0.0.4
++ A welcome menu with a user agreement warning has been created and enabled.
++ Added localization (server translation into different languages) with 5 languages: Russian, English, French, Spanish, German. Main language: Russian.
