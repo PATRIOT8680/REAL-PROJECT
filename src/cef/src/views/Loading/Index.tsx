@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { RootState } from "../../reducers/rootReducer";
 import './assets/styles/compiled-css/Index.css'
 
@@ -8,6 +9,7 @@ import { hideLoading } from "../../actions/menus/loading";
 import star_svg from './assets/img/star.svg'
 
 const Loading = () => {
+  const { t, ready } = useTranslation('loading')
   const loadingState = useSelector((state: RootState) => state.loadingReducer);
   const dispatch = useDispatch()
   const [exit, setExit] = useState(false)
@@ -29,7 +31,7 @@ const Loading = () => {
     }
   }, [loadingState.isVisible, loadingState.duration])
 
-  if (!loadingState.isVisible) return null;
+  if (!loadingState.isVisible || !ready) return null;
 
   return(
     <div className={`loading ${exit ? 'exit' : ''}`}>
@@ -50,7 +52,7 @@ const Loading = () => {
             <span className="dot">.</span>
           </span>
 
-          <span className="description">Подождите ещё немного, <br/>происходит загрузка ресурсов сервера</span>
+          <span className="description">{t('one-span')}, <br/>{t('two-span')}</span>
         </div>
       </div>
     </div>

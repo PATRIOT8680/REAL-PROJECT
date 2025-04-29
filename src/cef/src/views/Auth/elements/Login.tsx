@@ -1,8 +1,6 @@
 import { FC, useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
-import { hideAuth, showAuth } from "../../../actions/menus/auth"
 import { IPropsAuth } from "../Index"
-import { EventManager } from "../../../hooks/eventmanager.ts"
+import { useTranslation } from "react-i18next"
 import { rpc } from "../../../main.tsx"
 import '../assets/styles/compiled-css/Login.css'
 
@@ -14,6 +12,7 @@ import password_icon from '../assets/img/password.svg'
 const Login: FC<IPropsAuth> = ({ setCurrentForm }) => {
 	const [login, setLogin] = useState('')
 	const [password, setPassword] = useState('')
+  const { t } = useTranslation('auth')
 
   useEffect(() => {
     const saveLoginHandler = (login: string) => {
@@ -87,33 +86,33 @@ const Login: FC<IPropsAuth> = ({ setCurrentForm }) => {
 							<div className='line-1'></div>
 							<div className='line-2'></div>
 						</div>
-						<span className='text'>Авторизация</span>
+						<span className='text'>{t('login.title-text')}</span>
 					</div>
-					<span className="description">Чтобы продолжить игру, введите свои данные от аккаунта</span>
+					<span className="description">{t('login.description')}</span>
 				</div>
 
 				<div className="inputs-section">
 					<div className="section">
-						<span className="title">Логин / Email</span>
+						<span className="title">{t('login.inputs.login')}</span>
 						<div className="input">
 							<div className="icon"><img src={login_icon} /></div>
 							<input 
 								type="text"
 								maxLength={40}
-								placeholder="Введите данные..."
+								placeholder={t('login.inputs.enter-data')}
 								value={login}
 								onChange={(e) => setLogin(e.target.value)}
 							/>
 						</div>
 					</div>
 					<div className="section">
-						<span className="title">Пароль</span>
+						<span className="title">{t('login.inputs.password')}</span>
 						<div className="input">
 							<div className="icon"><img src={password_icon} /></div>
 							<input 
 								type="password"
 								maxLength={30}
-								placeholder="Введите данные..."
+								placeholder={t('login.inputs.enter-data')}
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 							/>
@@ -122,15 +121,15 @@ const Login: FC<IPropsAuth> = ({ setCurrentForm }) => {
 				</div>
 
 				<div className="btns-section">
-					<button type="button" className="main-btn" onClick={handleAuth}>Авторизоваться</button>
+					<button type="button" className="main-btn" onClick={handleAuth}>{t('login.btns.main-btn')}</button>
 					<div className="bottom-btns">
-						<button onClick={() => setCurrentForm('register')} type="button" className="scnd-btn">Зарегистрироваться</button>
-						<button onClick={() => setCurrentForm('recovery')} type="button" className="scnd-btn">Восстановление</button>
+						<button onClick={() => setCurrentForm('register')} type="button" className="scnd-btn">{t('login.btns.reg-btn')}</button>
+						<button onClick={() => setCurrentForm('recovery')} type="button" className="scnd-btn">{t('login.btns.recovery-btn')}</button>
 					</div>
 				</div>
 
 				<span className="description-project">
-					REDSTAR - это многофункциональный проект с режимом ролевой игры. Просим вас соблюдать правила сервера, чтобы не портить атмосферу и не получить наказание!
+					{t('login.descr-project')}
 				</span>
 			</div>
 		</>

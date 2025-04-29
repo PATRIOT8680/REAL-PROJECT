@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from 'react'
 import { IPropsAuth } from '../Index'
+import { useTranslation } from 'react-i18next' 
 import '../assets/styles/compiled-css/Recovery.css'
 import { rpc } from '../../../main'
 
@@ -13,6 +14,7 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
 	const [code, setCode] = useState<string>('')
   const [newPassword, setNewPassword] = useState<string>('')
   const [isCodeSent, setIsCodeSent] = useState<boolean>(false)
+  const { t } = useTranslation('auth')
 
   useEffect(() => {
     rpc.register('server:successSendNotify', () => {
@@ -81,40 +83,40 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
 							<div className='line-1'></div>
 							<div className='line-2'></div>
 						</div>
-						<span className='text'>Восстановление</span>
+						<span className='text'>{t('recovery.title-text')}</span>
 					</div>
-					<span className="description">Забыли пароль от аккаунта? <br/>Вы можете попробовать его восстановить!</span>
+					<span className="description">{t('recovery.description')}</span>
 				</div>
 				
 				<div className="inputs-section">
 					<div className="section">
-						<span className="title">Привязанный Email</span>
+						<span className="title">{t('recovery.inputs.email')}</span>
 						<div className="input">
 							<div className="icon"><img src={email_icon} /></div>
-							<input type="email" value={email} onChange={(e) => setEmail(e.target.value)}  maxLength={40} placeholder="Введите данные..." />
+							<input type="email" value={email} onChange={(e) => setEmail(e.target.value)}  maxLength={40} placeholder={t('recovery.inputs.enter-data')} />
 						</div>
 					</div>
 					<div className="section">
-						<span className="title">Код с почты</span>
+						<span className="title">{t('recovery.inputs.code')}</span>
 						<div className="input" id='code-input'>
-							<input id='code' value={code} onChange={handleChangeCode} type="text" placeholder="Введите данные..." />
-							<span className="send-code" onClick={handleSendCode}>Отправить код</span>
+							<input id='code' value={code} onChange={handleChangeCode} type="text" placeholder={t('recovery.inputs.enter-data')} />
+							<span className="send-code" onClick={handleSendCode}>{t('recovery.inputs.sendCode')}</span>
 						</div>
 					</div>
 					<div className="section">
-						<span className="title">Новый пароль</span>
+						<span className="title">{t('recovery.inputs.newPass')}</span>
 						<div className="input">
 							<div className="icon"><img src={password_icon} /></div>
-							<input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} maxLength={30} placeholder="Введите данные..." />
+							<input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} maxLength={30} placeholder={t('recovery.inputs.enter-data')} />
 						</div>
 					</div>
 				</div>
 
 				<div className="btns-section">
-					<button type="button" className="main-btn" onClick={handleChangePass}>Поменять пароль</button>
+					<button type="button" className="main-btn" onClick={handleChangePass}>{t('recovery.btns.main-btn')}</button>
 					<div className="bottom-btns">
-						<button onClick={() => setCurrentForm('login')} type="button" className="scnd-btn">Авторизоваться</button>
-						<button onClick={() => setCurrentForm('register')} type="button" className="scnd-btn">Зарегистрироваться</button>
+						<button onClick={() => setCurrentForm('login')} type="button" className="scnd-btn">{t('recovery.btns.login-btn')}</button>
+						<button onClick={() => setCurrentForm('register')} type="button" className="scnd-btn">{t('recovery.btns.reg-btn')}</button>
 					</div>
 				</div>
 			</div>

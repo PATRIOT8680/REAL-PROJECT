@@ -7,11 +7,8 @@ import './interface/notify'
 
 rpc.browser = mp.browsers.new('package://cef/index.html')
 
-export let isBrowserReady = false;
-
 mp.events.add('guiReady', () => {
   mp.gui.chat.show(false)
-  isBrowserReady = true 
 
   mp.console.logInfo('guiReady')
 
@@ -20,7 +17,7 @@ mp.events.add('guiReady', () => {
     rpc.callBrowser('client:executeCode', [code]);
   });
 
-  rpc.call('cef:authEnabled', [])
+  //rpc.call('cef:authEnabled', [])
 });
 
 rpc.register('clientCmd', (text: string) => {
