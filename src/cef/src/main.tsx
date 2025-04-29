@@ -1,12 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
+import { I18nextProvider } from 'react-i18next';
 import { EventEmitter } from 'events'
 
 import App from './App'
 import { store } from './store/store'
 import { Rpc } from '@entityseven/rage-fw-rpc'
 import NotifyProvider from './components/Notify/NotifyProvider'
+import { initI18n, i18n } from './locales/index';
 
 declare global {
   interface Window {
@@ -39,10 +41,14 @@ rpc.register('client:executeCode', (code: string) => {
   }
 })
 
-createRoot(document.getElementById('root')!).render(
-  <Provider store={store}>
-    <NotifyProvider>
-      <App />
-    </NotifyProvider>
-  </Provider>
-)
+initI18n().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <Provider store={store}>
+      <I18nextProvider i18n={i18n}>
+        <NotifyProvider>
+          <App />
+        </NotifyProvider>
+      </I18nextProvider>
+    </Provider>
+  );
+});

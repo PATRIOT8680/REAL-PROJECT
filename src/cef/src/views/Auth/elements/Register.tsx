@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from 'react'
 import { IPropsAuth } from '../Index'
+import { useTranslation } from 'react-i18next'
 import '../assets/styles/compiled-css/Register.css'
 import { rpc } from '../../../main'
 
@@ -14,7 +15,7 @@ const Register: FC<IPropsAuth> = ({ setCurrentForm }) => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [passwordConfirm, setPasswordConfirm] = useState('')
-	const [btnRegister, setBtnRegister] = useState('Зарегистрироваться')
+  const { t } = useTranslation('auth')
 
   useEffect(() => {
     rpc.register('server:regSuccess', () => {
@@ -87,59 +88,59 @@ const Register: FC<IPropsAuth> = ({ setCurrentForm }) => {
 							<div className='line-1'></div>
 							<div className='line-2'></div>
 						</div>
-						<span className='text'>Регистрация</span>
+						<span className='text'>{t('register.title-text')}</span>
 					</div>
-					<span className="description">Зашли первый раз на сервер? Создайте новый аккаунт!</span>
+					<span className="description">{t('register.description')}</span>
 				</div>
 
 				<div className="inputs-section">
 					<div className="section">
-						<span className="title">Логин</span>
+						<span className="title">{t('register.inputs.login')}</span>
 						<div className="input">
 							<div className="icon"><img src={login_icon} /></div>
 							<input 
 								type="text"
 								maxLength={25}
-								placeholder="Введите данные..."
+								placeholder={t('register.inputs.enter-data')}
 								value={login}
 								onChange={(e) => setLogin(e.target.value)}
 							/>
 						</div>
 					</div>
 					<div className="section">
-						<span className="title">Email</span>
+						<span className="title">{t('register.inputs.email')}</span>
 						<div className="input">
 							<div className="icon"><img src={email_icon} /></div>
 							<input
 								type="email"
 								maxLength={40}
-								placeholder="Введите данные..."
+								placeholder={t('register.inputs.enter-data')}
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 							/>
 						</div>
 					</div>
 					<div className="section">
-						<span className="title">Пароль</span>
+						<span className="title">{t('register.inputs.password')}</span>
 						<div className="input">
 							<div className="icon"><img src={password_icon} /></div>
 							<input
 								type="password"
 								maxLength={30}
-								placeholder="Введите данные..."
+								placeholder={t('register.inputs.enter-data')}
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 							/>
 						</div>
 					</div>
 					<div className="section">
-						<span className="title">Повторите пароль</span>
+						<span className="title">{t('register.inputs.rep-pass')}</span>
 						<div className="input">
 							<div className="icon"><img src={password_icon} /></div>
 							<input
 								type="password"
 								maxLength={30}
-								placeholder="Введите данные..."
+								placeholder={t('register.inputs.enter-data')}
 								value={passwordConfirm}
 								onChange={(e) => setPasswordConfirm(e.target.value)}
 							/>
@@ -148,10 +149,10 @@ const Register: FC<IPropsAuth> = ({ setCurrentForm }) => {
 				</div>
 
 				<div className="btns-section">
-					<button type="button" className="main-btn" onClick={handleRegister}>{btnRegister}</button>
+					<button type="button" className="main-btn" onClick={handleRegister}>{t('register.btns.main-btn')}</button>
 					<div className="bottom-btns">
-						<button onClick={() => setCurrentForm('login')} type="button" className="scnd-btn">Авторизоваться</button>
-						<button onClick={() => setCurrentForm('recovery')} type="button" className="scnd-btn">Восстановление</button>
+						<button onClick={() => setCurrentForm('login')} type="button" className="scnd-btn">{t('register.btns.login-btn')}</button>
+						<button onClick={() => setCurrentForm('recovery')} type="button" className="scnd-btn">{t('register.btns.recovery-btn')}</button>
 					</div>
 				</div>
 			</div>

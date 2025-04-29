@@ -17,6 +17,7 @@ import './assets/fonts/Ponter/stylesheet.css'
 import Auth from "./views/Auth/Index"
 import Chat from "./views/Chat/Index"
 import Loading from "./views/Loading/Index"
+import Welcome from "./views/Welcome/Index"
 import Rent from "./views/Rent/Index"
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
   const sendNotify = useNotify()
   const authVisible = useSelector((state: RootState) => state.authReducer.isVisible)
   const chatVisible = useSelector((state: RootState) => state.chatReducer.isVisible)
+  const welcomeVisible = useSelector((state: RootState) => state.welcomeReducer.isVisible)
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
 
   rpc.register('server:player:local:info', (sid: string, id: number) => {
@@ -41,8 +43,6 @@ const App = () => {
   }, [dispatch])
 
   useEffect(() => {
-    rpc.callClient('clientCmd', ['Получили запрос о создании уведомления. Делаем'])
-
     if (sendNotifyReducer) {
       sendNotify({ typeNotify: sendNotifyReducer.typeNotify, msg: sendNotifyReducer.msg, duration: sendNotifyReducer.duration, pos: sendNotifyReducer.pos })
     }
@@ -51,12 +51,13 @@ const App = () => {
   return(
     <>
       <div className="server-info">
-        <span className="text">REDSTAR GAMEMODE (dev: v0.0.3)</span>
+        <span className="text">REDSTAR GAMEMODE (dev: v0.0.4)</span>
         <span className="text">{playerName && ` • ${playerName}`} {sid && `(#${sid})`} </span>
         <span className="text">{playerId !== undefined && ` • ID: ${playerId}`}</span>
       </div>
       { authVisible && <Auth /> }
       { chatVisible && <Chat /> }
+      { welcomeVisible && <Welcome /> }
       <Loading />
       {/*<Rent />*/}
     </>
