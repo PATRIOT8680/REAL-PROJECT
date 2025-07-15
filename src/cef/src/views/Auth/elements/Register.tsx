@@ -10,26 +10,12 @@ import login_icon from '../assets/img/login.svg'
 import password_icon from '../assets/img/password.svg'
 import email_icon from '../assets/img/email.svg'
 
-const Register: FC<IPropsAuth> = ({ setCurrentForm }) => {
+const Register: FC<IPropsAuth> = ({ setCurrentForm, setRegisterData }) => {
 	const [login, setLogin] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [passwordConfirm, setPasswordConfirm] = useState('')
   const { t } = useTranslation('auth')
-
-  useEffect(() => {
-    rpc.register('server:regSuccess', () => {
-      rpc.callClient('cef:authDisabled')
-      setLogin('')
-      setEmail('')
-      setPassword('')
-      setPasswordConfirm('')
-    })
-    
-    return () => {
-      rpc.unregister('server:regSuccess')
-    }
-  }, [])
 
 	const handleRegister = () => {
 		if (login.length < 4) {
@@ -70,6 +56,13 @@ const Register: FC<IPropsAuth> = ({ setCurrentForm }) => {
 		}
 
 		try {
+      if (setRegisterData) {
+        setRegisterData({
+          login: login.toLowerCase(),
+          email: email.toLowerCase(),
+          password: password.toLowerCase()
+        })
+      }
       rpc.callServer('cef:auth:regAccount', [login.toLowerCase(), email.toLowerCase(), password.toLowerCase()])
 		} catch (e) {
       rpc.callClient('clientCmd', [`[AUTH] Ошибка регистрации: ${e}`])

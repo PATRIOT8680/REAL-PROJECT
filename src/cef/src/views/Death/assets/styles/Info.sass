@@ -1,0 +1,121 @@
+$Montserrat: "Montserrat", sans-serif
+
+.death-player
+  .info-death
+    position: absolute
+    bottom: 0
+    left: 0
+    padding: 2rem 2.5rem
+    font-family: $Montserrat
+    display: flex
+    flex-direction: column
+    gap: 1.5rem
+    user-select: none
+    animation: fadeInInfo 0.7s ease forwards
+
+    .header
+      display: flex
+      flex-direction: column
+      align-items: flex-start
+      gap: 0.3125rem
+
+      .title
+        font-size: 1.2rem
+        font-weight: 600
+        text-transform: uppercase
+
+      #ems-title
+        color: #0AFFA7
+        text-shadow: 0 0 30px rgba(10, 255, 167, 0.5)
+
+      #death-title
+        color: #ff680a
+        text-shadow: 0 0 50px rgba(255, 104, 10, 0.5)
+
+      .descr
+        font-size: 0.9rem
+        font-weight: 500
+        width: 17rem
+        color: rgba(255, 255, 255, 0.7)
+
+    .death-info
+      display: flex
+      flex-direction: column
+      gap: 0.75rem
+
+      .line
+        display: flex
+        align-items: flex-start
+        gap: 0.5rem
+
+        span
+          display: flex
+          align-items: center
+          cursor: pointer
+          height: 3rem
+          padding: 0 1rem 0 1rem
+          background: rgba(255, 255, 255, 0.15)
+          border-radius: 0.3125rem
+          color: #ffff
+          font-weight: 600
+          font-size: 1rem
+          transition: all 0.3s
+
+          &:hover
+            transition: all 0.3s
+            background: #ffff
+            color: #161523
+
+
+    .chance-reborn
+      display: flex
+      flex-direction: column
+      gap: 0.6875rem
+      width: 100%
+
+      .text-line
+        display: flex
+        justify-content: space-between
+        align-items: center
+        font-size: 1rem
+
+        .title
+          color: #ffff
+          font-weight: 500
+
+        .chance
+          color: #ff7c4c
+          font-weight: 600
+
+      .line-chance
+        width: 100%
+        height: 0.5rem
+        position: relative
+        
+        .bg-line
+          
+          width: 100%
+          height: 0.5rem
+          border-radius: 10px
+          background: rgba(255, 255, 255, 0.15)
+
+        .active-line
+          height: 0.5rem
+          top: 0
+          left: 0
+          position: absolute
+          background: #ff7c4c
+          box-shadow: 0 0 15px 1px rgba(255, 124, 76, 0.45)
+          border-radius: 10px
+          animation: fadeInLineReborn 2s ease
+
+
+@keyframes fadeInLineReborn
+  0%
+    width: 0%
+
+@keyframes fadeInInfo
+  from
+    transform: translate(-10rem, 10rem)
+  to
+    transform: translate(0, 0)

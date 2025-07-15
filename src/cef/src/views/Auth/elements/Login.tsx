@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from "react"
-import { IPropsAuth } from "../Index"
 import { useTranslation } from "react-i18next"
 import { rpc } from "../../../main.tsx"
 import '../assets/styles/compiled-css/Login.css'
@@ -9,21 +8,26 @@ import bg_title from '../assets/img/login-title.svg'
 import login_icon from '../assets/img/login.svg'
 import password_icon from '../assets/img/password.svg'
 
-const Login: FC<IPropsAuth> = ({ setCurrentForm }) => {
-	const [login, setLogin] = useState('')
+interface IAuthLogin {
+  setCurrentForm: (newForm: 'login' | 'register' | 'recovery' | 'verify-email') => void,
+  saveLogin: string,
+  setSaveLogin: (login: string) => void
+}
+
+const Login: FC<IAuthLogin> = ({ setCurrentForm, saveLogin, setSaveLogin }) => {
 	const [password, setPassword] = useState('')
   const { t } = useTranslation('auth')
 
   useEffect(() => {
     const saveLoginHandler = (login: string) => {
-			setLogin(login)
+			setSaveLogin(login)
 		}
 
     rpc.register('client:auth:saveLogin', saveLoginHandler)
 
     rpc.register('server:loginSuccess', () => {
       rpc.callClient('cef:authDisabled')
-			setLogin('')
+			setSaveLogin('')
 			setPassword('')
     })
 
@@ -36,23 +40,23 @@ const Login: FC<IPropsAuth> = ({ setCurrentForm }) => {
   const handleAuth = () => {
     console.log('handleAuth вызван')
 
-    if (!login || !password) {
+    if (!saveLogin || !password) {
       window.App.sendNotifyReducer.sendNotify('err', 'Поля ввода не могут быть пустыми!', 4000, 'right')
       return
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (login.includes('@') && !emailRegex.test(login)) {
+    if (saveLogin.includes('@') && !emailRegex.test(saveLogin)) {
       window.App.sendNotifyReducer.sendNotify('err', 'Некорректный email', 4000, 'right')
       return
     }
 
-    if (login.length < 4) {
+    if (saveLogin.length < 4) {
       window.App.sendNotifyReducer.sendNotify('err', 'Логин должен содержать не менее 4 символов!', 5500, 'right')
 			return
 		}
 
-		if (login.length > 25) {
+		if (saveLogin.length > 25) {
       window.App.sendNotifyReducer.sendNotify('err', 'Логин должен содержать не более 25 символов!', 5500, 'right')
 			return
 		}
@@ -68,7 +72,7 @@ const Login: FC<IPropsAuth> = ({ setCurrentForm }) => {
 		}
 
     try {
-      rpc.callServer('cef:auth:loginAccount', [login.toLocaleLowerCase(), password.toLocaleLowerCase()])
+      rpc.callServer('cef:auth:loginAccount', [saveLogin.toLocaleLowerCase(), password.toLocaleLowerCase()])
     } catch (e) {
       console.error(`[AUTH] Ошибка авторизации: ${e}`)
     }
@@ -100,8 +104,8 @@ const Login: FC<IPropsAuth> = ({ setCurrentForm }) => {
 								type="text"
 								maxLength={40}
 								placeholder={t('login.inputs.enter-data')}
-								value={login}
-								onChange={(e) => setLogin(e.target.value)}
+								value={saveLogin}
+								onChange={(e) => setSaveLogin(e.target.value)}
 							/>
 						</div>
 					</div>

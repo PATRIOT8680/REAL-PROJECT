@@ -1,0 +1,54 @@
+.death-player .timer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  font-family: "Bellflower", sans-serif;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-animation: fadeInTimer 0.7s ease forwards;
+          animation: fadeInTimer 0.7s ease forwards;
+}
+.death-player .timer .timeout-text {
+  font-weight: 400;
+  font-size: 3.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.death-player .timer .descr {
+  font-weight: 400;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@-webkit-keyframes fadeInTimer {
+  from {
+    -webkit-transform: translate(10rem, -10rem);
+            transform: translate(10rem, -10rem);
+  }
+  to {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+}
+
+@keyframes fadeInTimer {
+  from {
+    -webkit-transform: translate(10rem, -10rem);
+            transform: translate(10rem, -10rem);
+  }
+  to {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+}

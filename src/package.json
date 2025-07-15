@@ -1,16 +1,20 @@
 {
-	"name": "dm-project",
+	"name": "redstar-gamemode",
 	"version": "1.0.0",
 	"description": "RP-gamemode for RAGE multiplayer",
 	"main": "index.ts",
 	"type": "commonjs",
 	"scripts": {
-		"build:client": "rollup -c rollup.config.js --input client/index.ts --output.file ../client_packages/client/client.js --bundleConfigAsCjs",
-		"build:server": "rollup -c rollup.config.js --input server/index.ts --output.file ../packages/core/server.js --bundleConfigAsCjs",
 		"build:cef": "cd cef && npm run build",
-		"build": "npm run build:client && npm run build:server && npm run build:cef && cd .. && ragemp-server.exe",
-		"dev:cef": "cd cef && npm run dev"
+		"build": "rollup -c --bundleConfigAsCjs && cd cef && npm run build && cd ../.. && ragemp-server.exe",
+		"dev:cef": "cd cef && npm run dev",
+		"release": "node -r dotenv/config ./node_modules/semantic-release/bin/semantic-release.js"
 	},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PATRIOT8680/REDSTAR-RAGE.git"
+  },
+  
 	"dependencies": {
 		"@entityseven/rage-fw-rpc": "^0.2.5",
 		"@rollup/plugin-json": "^6.1.0",
@@ -65,7 +69,6 @@
 		"defaults": "^3.0.0",
 		"defer-to-connect": "^2.0.1",
 		"delayed-stream": "^1.0.0",
-		"dotenv": "^16.5.0",
 		"download": "^8.0.0",
 		"duplexer3": "^1.0.0",
 		"eastasianwidth": "^0.3.0",
@@ -104,6 +107,7 @@
 		"has-symbol-support-x": "^2.1.2",
 		"has-to-string-tag-x": "^2.1.2",
 		"highlight.js": "^11.11.1",
+		"howler": "^2.2.4",
 		"http-cache-semantics": "^4.1.1",
 		"http2-wrapper": "^2.2.1",
 		"human-signals": "^8.0.1",
@@ -260,13 +264,24 @@
 		"@ragempcommunity/types-server": "^2.1.9",
 		"@rollup/plugin-commonjs": "^28.0.3",
 		"@rollup/plugin-node-resolve": "^16.0.1",
+		"@semantic-release/changelog": "^6.0.3",
+		"@semantic-release/commit-analyzer": "^13.0.1",
+		"@semantic-release/exec": "^7.1.0",
+		"@semantic-release/git": "^10.0.1",
+		"@semantic-release/github": "^11.0.3",
+		"@semantic-release/npm": "^12.0.2",
+		"@semantic-release/release-notes-generator": "^14.0.3",
 		"@types/node": "^22.14.1",
+		"@types/ragemp-c": "github:CocaColaBear/types-ragemp-c#v2.0",
+		"@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#v1.0",
 		"concurrently": "^9.1.2",
+		"dotenv": "^17.2.0",
 		"nodemon": "^3.1.9",
 		"rimraf": "^6.0.1",
 		"rollup": "^4.40.0",
 		"rollup-plugin-dts": "^6.2.1",
 		"rollup-plugin-typescript2": "^0.36.0",
+		"semantic-release": "^24.2.7",
 		"ts-loader": "^9.5.2",
 		"typeorm": "^0.3.22",
 		"typescript": "^5.8.3"

@@ -1,0 +1,159 @@
+$Montserrat: "Montserrat", sans-serif
+
+.change-language
+  display: flex
+  flex-direction: column
+  gap: 0.5rem
+  position: relative
+  user-select: none
+  z-index: 200
+
+  .current-lng.closed
+    position: relative
+    animation: fadeOutCurrentLang 0.8s ease forwards
+
+  .current-lng.open
+    position: relative
+    animation: fadeInCurrentLang 1s ease forwards
+    transition: all 0.3s
+    background: #ffff
+
+    .flag
+      transition: all 0.3s
+      box-shadow: 0 0 13px 0 rgba(22, 21, 35, 0.35)
+
+    .name
+      transition: all 0.3s
+      color: #161523
+
+    svg
+      path
+        stroke: #161523
+        stroke-opacity: 1
+        transition: all 0.3s
+
+  .current-lng
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    background: rgba(255, 255, 255, 0.12)
+    align-items: center
+    gap: 1rem
+    outline: none
+    border: none
+    height: 2.5rem
+    padding: 0 1.2rem 0 1.2rem
+    border-radius: 0.375rem
+    cursor: pointer
+    transition: all 0.3s
+
+    &:hover
+      transition: all 0.3s
+      background: #ffff
+
+      .flag
+        transition: all 0.3s
+        box-shadow: 0 0 13px 0 rgba(22, 21, 35, 0.35)
+
+      .name
+        transition: all 0.3s
+        color: #161523
+
+      
+      svg
+        path
+          stroke: #161523
+          stroke-opacity: 1
+          transition: all 0.3s
+
+    .flag
+      transition: all 0.3s
+
+    .name
+      transition: all 0.3s
+      font-family: $Montserrat
+      font-size: 0.8rem
+      font-weight: 500
+      text-transform: uppercase
+      color: #ffff
+
+    #icon-open
+      transition: all 0.4s
+      transform: rotate(180deg)
+
+    #icon-closed
+      transition: all 0.4s
+      transform: rotate(0deg)
+      
+    svg
+      path
+        transition: all 0.3s
+
+  
+  .list-languages
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    gap: 0.5rem
+    width: 100%
+
+    .lang-option
+      display: flex
+      flex-direction: row
+      justify-content: space-evenly
+      background: rgba(255, 255, 255, 0.12)
+      align-items: center
+      gap: 1rem
+      outline: none
+      border: none
+      height: 2.5rem
+      padding: 0 1.2rem 0 1.2rem
+      border-radius: 0.375rem
+      cursor: pointer
+      transition: all 0.3s
+      position: relative
+      animation: fadeInLangOption 1s ease forwards
+
+      &:hover
+        transition: all 0.3s
+        background: #ffff
+
+        .flag
+          transition: all 0.3s
+          box-shadow: 0 0 13px 0 rgba(22, 21, 35, 0.35)
+
+        .name
+          transition: all 0.3s
+          color: #161523
+
+      .flag
+        transition: all 0.3s
+
+      .name
+        transition: all 0.3s
+        font-family: $Montserrat
+        font-size: 0.8rem
+        font-weight: 500
+        text-transform: uppercase
+        color: #ffff
+
+
+@keyframes fadeInLangOption
+  from
+    opacity: 0
+    bottom: -15rem
+  to
+    opacity: 1
+    bottom: 0
+
+@keyframes fadeInCurrentLang
+  from
+    bottom: -10rem
+  to
+    bottom: 0
+
+@keyframes fadeOutCurrentLang
+  from
+    bottom: 12rem
+  to
+    bottom: 0

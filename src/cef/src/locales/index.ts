@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { rpc } from '../main';
 
 const languages = ['ru', 'en', 'fr', 'es', 'de'];
 const namespaces = ['auth', 'loading', 'welcome'];
@@ -33,7 +34,7 @@ export const initI18n = () => {
   return Promise.all(promises).then(() => {
     return i18next.use(initReactI18next).init({
       resources,
-      lng: 'es',
+      lng: 'ru',
       fallbackLng: 'en',
       ns: namespaces,
       defaultNS: 'loading',

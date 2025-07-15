@@ -1,6 +1,6 @@
 import { rpc } from '../../utils/rpc'
 
-mp.events.add('browserDomReady', async (player) => {
+mp.events.add('browserDomReady', async (player: PlayerMp) => {
   rpc.call('execute', [`window.App.welcomeReducer.showWelcome()`])
 
   await setTimeout(() => {

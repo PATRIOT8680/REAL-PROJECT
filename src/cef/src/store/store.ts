@@ -6,6 +6,7 @@ import { authStore } from "./menus/auth";
 import { chatStore } from "./menus/chat";
 import { loadingStore } from "./menus/loading";
 import { welcomeStore } from "./menus/welcome";
+import { deathStore } from "./menus/death";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -24,6 +25,7 @@ window.App = {
   chatReducer: chatStore,
   loadingReducer: loadingStore,
   welcomeReducer: welcomeStore,
+  deathReducer: deathStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore

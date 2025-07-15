@@ -1,0 +1,141 @@
+$Rothek: "Rothek", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+.verify-email
+  display: flex
+  flex-direction: column
+  gap: 0.625rem
+  width: 30rem
+  color: #ffff
+  
+  .main-block
+    display: flex
+    flex-direction: column
+    gap: 1.8rem
+    border-radius: 0.625rem
+    box-sizing: border-box
+    padding: 1.875rem
+    box-shadow: inset 0 0 100px 10px rgba(225, 29, 64, 0.3)
+    background: rgba(22, 21, 35, 0.98)
+
+    .header
+      display: flex
+      flex-direction: column
+      user-select: none
+      gap: 0.3125rem
+
+      .title
+        font-family: $Rothek
+        font-weight: 700
+        font-size: 1.3rem
+        text-transform: uppercase
+      
+      .descr
+        font-family: $Montserrat
+        font-weight: 500
+        font-size: 1rem
+        line-height: 135%
+        color: rgba(255, 255, 255, 0.7)
+    
+    .input-code
+      position: relative
+      display: flex
+      align-items: center
+
+      &:focus-within
+        transition: all 0.4s
+        .icon
+          background: rgba(255, 255, 255, 0.1)
+
+        input
+          background: rgba(255, 255, 255, 0.12)
+
+      .icon
+        display: flex
+        align-items: center
+        justify-content: center
+        position: absolute
+        margin-left: 1rem
+        width: 40px
+        height: 40px
+        background: rgba(255, 255, 255, 0.08)
+        border-radius: 3px
+        transition: all 0.4s
+        user-select: none
+
+        img
+          opacity: 0.3
+
+      input
+        width: 100%
+        height: 4.2rem
+        border: none
+        outline: none
+        background: rgba(255, 255, 255, 0.1)
+        border-radius: 0.375rem
+        box-sizing: border-box
+        padding-left: 5rem
+        font-family: $Montserrat
+        font-weight: 500
+        font-size: 1rem
+        color: #ffff
+        transition: all 0.4s
+
+        &::placeholder
+          font-size: 0.9rem
+
+    .btns-verify
+      display: flex
+      flex-direction: column
+      align-items: center
+      gap: 1.2rem
+      user-select: none
+
+      .btn-verify
+        cursor: pointer
+        width: 100%
+        height: 4.3rem
+        border-radius: 0.375rem
+        border: none
+        outline: none
+        background: rgba(234, 20, 72, 0.9)
+        font-family: $Rothek
+        font-weight: 600
+        font-size: 1rem
+        text-transform: uppercase
+        transition: all 0.4s
+        color: #ffff
+
+        &:hover
+          transition: all 0.4s
+          box-shadow: 0 0 0 6px rgba(234, 20, 72, 0.25)
+        
+      .send-code
+        transition: all 0.25s
+        font-family: $Montserrat
+        font-weight: 600
+        letter-spacing: 0.05em
+        text-transform: uppercase
+        font-size: 0.8rem
+        opacity: 0.6
+
+        &:hover
+          cursor: pointer
+          color: #EA1448
+          opacity: 1
+          text-decoration: underline
+          text-decoration-skip-ink: none
+          transition: all 0.25s
+
+  .warning-spam
+    border-radius: 0.625rem
+    background: #301928
+    box-sizing: border-box
+    padding: 1.875rem
+    font-family: $Montserrat
+    font-size: 0.85rem
+    font-weight: 500
+    text-align: center
+    line-height: 145%
+    color: #ff8731
+    user-select: none

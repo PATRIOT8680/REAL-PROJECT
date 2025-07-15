@@ -1,0 +1,30 @@
+$Bellflower: "Bellflower", sans-serif
+
+.death-player
+  .timer
+    display: flex
+    flex-direction: column
+    align-items: flex-end
+    font-family: $Bellflower
+    user-select: none
+    animation: fadeInTimer 0.7s ease forwards
+
+    .timeout-text
+      font-weight: 400
+      font-size: 3.75rem
+      letter-spacing: 0.06em
+      text-transform: uppercase
+      color: #fff
+
+    .descr
+      font-weight: 400
+      font-size: 1.125rem
+      text-transform: uppercase
+      color: rgba(255, 255, 255, 0.8)
+
+
+@keyframes fadeInTimer
+  from
+    transform: translate(10rem, -10rem)
+  to
+    transform: translate(0, 0)

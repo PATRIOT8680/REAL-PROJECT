@@ -199,6 +199,10 @@ body #root {
   font-weight: 400;
   font-size: 1rem;
   color: rgba(235, 247, 255, 0.76);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .auth .form-block #content .inputs-section .section .input {
   display: -webkit-box;
@@ -228,6 +232,10 @@ body #root {
   background: rgba(255, 255, 255, 0.08);
   margin-left: 1rem;
   z-index: 1;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .auth .form-block #content .inputs-section .section .input .icon img {
   opacity: 0.3;
@@ -315,6 +323,10 @@ body #root {
           flex-direction: column;
   width: 81%;
   gap: 1rem;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .auth .form-block #content .btns-section .main-btn {
   cursor: pointer;
