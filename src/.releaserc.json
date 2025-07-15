@@ -1,58 +1,52 @@
 {
-    "branches": [
-      "main"
+  "branches": ["main"],
+  "repositoryUrl": "https://github.com/PATRIOT8680/REDSTAR-RAGE.git",
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "angular",
+        "releaseRules": [
+          {"type": "build", "release": "patch"},
+          {"type": "ci", "release": false},
+          {"type": "perf", "release": "patch"},
+          {"type": "refactor", "release": "patch"},
+          {"breaking": true, "release": "major"}
+        ],
+        "parserOpts": {
+          "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+        }
+      }
     ],
-    "repositoryUrl": "https://github.com/PATRIOT8680/REDSTAR-RAGE.git",
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "angular",
-          "parserOpts": {
-            "noteKeywords": [
-              "BREAKING CHANGE",
-              "BREAKING CHANGES"
-            ]
-          }
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "angular",
+        "parserOpts": {
+          "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"]
+        },
+        "writerOpts": {
+          "commitsSort": ["subject", "scope"],
+          "groupBy": "type",
+          "commitGroupsSort": ["feat", "fix", "perf", "build", "docs", "refactor", "test", "ci", "chore"]
         }
-      ],
-      [
-        "@semantic-release/release-notes-generator",
-        {
-          "preset": "angular",
-          "parserOpts": {
-            "noteKeywords": [
-              "BREAKING CHANGE",
-              "BREAKING CHANGES",
-              "BREAKING"
-            ]
-          },
-          "writerOpts": {
-            "commitsSort": [
-              "subject",
-              "scope"
-            ]
-          }
-        }
-      ],
-      "@semantic-release/github",
-      "@semantic-release/changelog",
-      "@semantic-release/exec",
-      [
-        "@semantic-release/npm",
-        {
-          "npmPublish": false
-        }
-      ],
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "package.json",
-            "README.md"
-          ],
-          "message": "chore(release): <%= nextRelease.version %> - <%= new Date().toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' }) %> [skip-ci]"
-        }
-      ]
+      }
+    ],
+    "@semantic-release/github",
+    "@semantic-release/changelog",
+    "@semantic-release/exec",
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["package.json", "README.md", "CHANGELOG.md"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
     ]
-  }
+  ]
+}
