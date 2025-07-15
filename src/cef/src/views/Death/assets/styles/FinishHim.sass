@@ -1,0 +1,86 @@
+$Bellflower: "Bellflower", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+.death-player
+  &.finish
+    animation: fadeInBG 4s ease forwards
+
+  &:has(#closed-death)
+    animation: fadeOutDeath 1s ease forwards
+
+  .finish-him
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    align-items: center
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    user-select: none
+    height: 100%
+
+    .text-block
+      display: flex
+      flex-direction: column
+      align-items: center
+      gap: 1rem
+
+      .title
+        font-family: $Bellflower
+        font-weight: 400
+        font-size: 7.5rem
+        letter-spacing: 0.06em
+        text-transform: uppercase
+        color: #ff0c46
+        text-shadow: 0 0 7rem #ff0c46
+        animation: tracking-in-contract-bck-bottom 1s ease
+
+      .description
+        font-family: $Montserrat
+        font-weight: 500
+        font-size: 1.1rem
+        color: #fff
+        animation: tracking-in-contract-bck-bottom 1s ease
+
+    .line
+      width: 4px
+      background: rgba(255, 255, 255, 0.3)
+      animation: fadeInLine 4s ease forwards
+
+
+@keyframes fadeInLine
+  from
+    height: 0%
+  to
+    height: 38%
+
+@keyframes tracking-in-contract-bck-bottom
+  0%
+    letter-spacing: 1em
+    transform: scale(2.1)
+    opacity: 0
+
+  100%
+    transform: scale(1)
+    opacity: 1
+
+
+@keyframes fadeInBG
+  from
+    box-shadow: inset 0 0 250px 200px rgba(22, 21, 35, 0.7)
+    background: rgba(22, 21, 35, 0.01)
+  to
+    box-shadow: inset 0 0 250px 400px rgba(22, 21, 35, 1)
+    background: rgba(22, 21, 35, 1)
+
+
+@keyframes fadeOutDeath
+  from
+    box-shadow: inset 0 0 250px 400px rgba(22, 21, 35, 1)
+    background: rgba(22, 21, 35, 1)
+    opacity: 1
+  to
+    opacity: 0
+    box-shadow: inset 0 0 250px 400px rgba(22, 21, 35, 0)
+    background: rgba(22, 21, 35, 0)

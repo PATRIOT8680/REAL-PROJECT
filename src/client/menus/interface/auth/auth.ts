@@ -92,18 +92,17 @@ const disableAuth = () => {
   }
   stopCamMoving()
 
-  showLoading(5000)
+  showLoading(3000)
   rpc.call('execute', [`window.App.authReducer.hideAuth()`])
   setTimeout(() => {
     rpc.callServer('client:authPlayerVisible', [true])
     mp.game.ui.displayRadar(true)
     mp.players.local.freezePosition(false)
-  }, 5000)
+  }, 3000)
 }
 
 
 rpc.register('cef:authEnabled', () => {
-  mp.console.logWarning('вызов enabled')
   enableAuth()
 })
 

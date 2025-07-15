@@ -17,7 +17,7 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
   const { t } = useTranslation('auth')
 
   useEffect(() => {
-    rpc.register('server:successSendNotify', () => {
+    rpc.register('server:recovery:successSendNotify', () => {
       setIsCodeSent(true)
     })
 
@@ -28,7 +28,7 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
     })
 
     return () => {
-      rpc.unregister('server:successSendNotify')
+      rpc.unregister('server:recovery:successSendNotify')
       rpc.unregister('server:auth:changePassSuccess')
     }
   }, [])
@@ -75,7 +75,6 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
 		<>
 			<div className='recovery-form' id='content'>
 				<img src={recovery_pers} className='pers-img' id='pers-img-rec' />
-
 				<div className='header-section'>
 					<div className='title'>
 						<img src={bg_title} className='bg' />

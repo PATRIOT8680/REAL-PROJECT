@@ -43,21 +43,41 @@ export const sendRecoveryCode = (player: PlayerMp, email: string) => {
       const mailOptions = {
         from: 'redstar.games2025@yandex.ru',
         to: email,
-        subject: 'Код для восстановления пароля',
+        subject: '🔐 Код для восстановления пароля • REDSTAR RP',
         html: `
-          <div style="font-family: Montserrat, sans-serif; background-color: #EBF7FF; padding: 20px;">
-            <div style="display: flex; align-items: center; flex-direction: column; background-color: #161523; padding: 13px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
-                <p style="text-transform: uppercase; font-size: 18px; color: #EBF7FF; background:rgba(235, 247, 255, 0.1); padding: 7px 5px; border-radius: 5px">Восстановление пароля</p>
-                <p style="font-size: 16px; color: #EBF7FF;">Вы запросили код для восстановления пароля. Пожалуйста, используйте следующий код:</p>
-                <p style="font-size: 40px; font-weight: bold; color: #FF0C46; backdrop-filter: blur(30px); background: rgba(255, 255, 255, 0.08); padding: 7px 10px; border-radius: 5px">${code}</p>
-                <p style="font-size: 16px; color:rgba(235, 247, 255, 0.8);">Если вы не запрашивали восстановление пароля, просто проигнорируйте это сообщение.</p>
-                <div style="margin-top: 20px; font-size: 12px; color: rgba(235, 247, 255, 0.8);">
-                    <p>С уважением, команда 🌟 REDSTAR ROLEPLAY</p>
+          <div style="font-family: 'Montserrat', Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <!-- Header with logo -->
+            <div style="background: linear-gradient(135deg, #161523 0%, #2a1a4a 100%); padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0;">
+              <h1 style="margin: 0; color: #fff; font-weight: 600; letter-spacing: 1px;">REDSTAR ROLEPLAY</h1>
+            </div>
+            
+            <!-- Main content -->
+            <div style="background: #ffffff; padding: 30px 20px; color: #333;">
+              <h2 style="margin-top: 0; color: #161523; font-weight: 600;">Восстановление доступа</h2>
+              <p style="font-size: 16px; line-height: 1.5;">Вы запросили восстановление пароля для вашего аккаунта. Используйте следующий код подтверждения:</p>
+              
+              <!-- Verification code box -->
+              <div style="margin: 25px 0; text-align: center;">
+                <div style="display: inline-block; background: #f8f8f8; border: 1px dashed #d1d1d1; padding: 15px 30px; border-radius: 6px;">
+                  <p style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: 3px; color: #FF0C46;">${code}</p>
                 </div>
+              </div>
+              
+              <p style="font-size: 16px; line-height: 1.5;">Этот код действителен в течение 15 минут. Никому не сообщайте этот код.</p>
+              
+              <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p style="font-size: 14px; color: #777;">Если вы не запрашивали код для подтверждения электронной почты, проигнорируйте это сообщение или сообщите об этом нам в дискорд: https://discord.com/invite/JyNY89CUjE</p>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; font-size: 12px; color: #777;">
+              <p style="margin: 0;">© 2025 REDSTAR ROLEPLAY. Все права защищены.</p>
+              <p style="margin: 5px 0 0;">Это письмо отправлено автоматически, пожалуйста, не отвечайте на него.</p>
             </div>
           </div>
         `
-      }
+      };
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
@@ -65,8 +85,8 @@ export const sendRecoveryCode = (player: PlayerMp, email: string) => {
           return
         }
 
-        rpc.callBrowser(player, 'server:successSendNotify')
-        rpc.callClient(player, 'sendNotify', ['info', `Код отправлен на почту "${email}". Если письма нет, не забудьте проверить раздел "СПАМ"!`, 7000, 'right'])
+        rpc.callBrowser(player, 'server:recovery:successSendNotify')
+        rpc.callClient(player, 'sendNotify', ['info', `Код отправлен на почту "${email}". Если письма нет, то проверьте раздел "СПАМ"!`, 7000, 'right'])
       })
     } else {
       rpc.callClient(player, 'sendNotify', ['err', `Пользователь с данным Email не найден!`, 5000, 'right'])

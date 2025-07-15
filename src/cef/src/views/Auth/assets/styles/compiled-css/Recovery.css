@@ -63,6 +63,10 @@
   background: rgba(255, 255, 255, 0.09);
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .recovery-form .inputs-section #code-input .send-code:hover {
   background: #ea1448;

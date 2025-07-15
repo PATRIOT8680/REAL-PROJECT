@@ -38,6 +38,10 @@
   text-align: justify;
   line-height: 145%;
   color: rgba(235, 247, 255, 0.5803921569);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 @-webkit-keyframes fadeInLine1 {

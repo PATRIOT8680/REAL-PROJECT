@@ -1,5 +1,4 @@
 import { rpc } from '../../utils/rpc'
-import { isBrowserReady } from '../global'
 import Keys from '../../utils/keys'
 
 export const openInterfaces = new Set()

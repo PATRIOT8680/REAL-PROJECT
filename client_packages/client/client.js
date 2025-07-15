@@ -21,6 +21,7 @@ var Errors;
     Errors["EVENT_RESPONSE_TIMEOUT"] = "Response was timed out after 10s of inactivity";
 })(Errors || (Errors = {}));
 class Utils {
+    // todo type for dev browser
     static getEnvironment() {
         if ('joaat' in mp)
             return Environment.SERVER;
@@ -103,6 +104,7 @@ const nativeClientEvents = new Set([
 ]);
 const nativeServerEvents = new Set([
     'entityCreated',
+    // 'entityDestroyed',
     'entityModelChange',
     'incomingConnection',
     'packagesLoaded',
@@ -156,6 +158,7 @@ class Wrapper {
         }
         this.forceBrowserDevMode_ = !!options.forceBrowserDevMode;
     }
+    // checks if event is available (registered) in current environment
     verifyEvent_(data) {
         let rpcData = typeof data === 'string' ? Utils.prepareExecution(data) : data;
         if (!this.state_[rpcData.eventName]) {
@@ -181,6 +184,9 @@ class Wrapper {
     }
 }
 
+/**
+ * NOT INTENDED FOR OUT-OF-CONTEXT USE
+ */
 class Server extends Wrapper {
     constructor(options = {
         forceBrowserDevMode: false,
@@ -188,10 +194,14 @@ class Server extends Wrapper {
         super(options);
         if (!!options.forceBrowserDevMode)
             return;
+        // specific event to save player in context as it is not available on server -> server calls
         mp.events.add(Events.SERVER_EVENT_LISTENER, async (player, dataRaw) => {
             this.emit(player, dataRaw);
         });
     }
+    /**
+     * NOT INTENDED FOR OUT-OF-CONTEXT USE
+     */
     _resolveEmitDestination(player, dataRaw) {
         let state = Utils.prepareExecution(dataRaw);
         switch (state.calledTo) {
@@ -206,13 +216,16 @@ class Server extends Wrapper {
     emitClient(player, dataRaw) {
         player.call(Events.LOCAL_EVENT_LISTENER, [dataRaw]);
     }
+    // called to server
     async emit(player, dataRaw) {
         let state = Utils.prepareExecution(dataRaw);
         const responseEventName = Utils.generateResponseEventName(state.uuid);
+        // check availability
         state = this.verifyEvent_(state);
         if (state.knownError) {
             this.triggerError_(state, state.knownError);
         }
+        // execute + generate response
         const response = await this.state_[state.eventName](player, ...(Array.isArray(state.data) ? state.data : []));
         const responseState = {
             uuid: Utils.generateUUID(),
@@ -223,6 +236,7 @@ class Server extends Wrapper {
             data: response,
             type: RPCEventType.RESPONSE,
         };
+        // send response
         switch (state.calledFrom) {
             case Environment.SERVER:
                 try {
@@ -244,6 +258,9 @@ class Server extends Wrapper {
     }
 }
 
+/**
+ * NOT INTENDED FOR OUT-OF-CONTEXT USE
+ */
 class Client extends Wrapper {
     _browser = null;
     constructor(options = {
@@ -254,6 +271,9 @@ class Client extends Wrapper {
     set browser(browser) {
         this._browser = browser;
     }
+    /**
+     * NOT INTENDED FOR OUT-OF-CONTEXT USE
+     */
     _resolveEmitDestination(dataRaw) {
         const state = Utils.prepareExecution(dataRaw);
         switch (state.calledTo) {
@@ -271,12 +291,15 @@ class Client extends Wrapper {
                 break;
         }
     }
+    // called to client
     async emit(state) {
         this.errorNoBrowser();
+        // check availability
         state = this.verifyEvent_(state);
         if (state.knownError) {
             this.triggerError_(state, state.knownError);
         }
+        // execute + generate response
         const responseEventName = Utils.generateResponseEventName(state.uuid);
         const response = await this.state_[state.eventName](...(Array.isArray(state.data) ? state.data : []));
         const responseState = {
@@ -288,6 +311,7 @@ class Client extends Wrapper {
             data: response,
             type: RPCEventType.RESPONSE,
         };
+        // send response
         switch (state.calledFrom) {
             case Environment.CLIENT:
                 try {
@@ -312,9 +336,11 @@ class Client extends Wrapper {
                 break;
         }
     }
+    // called to server
     emitServer(dataRaw) {
         this.errorNoBrowser();
         const state = Utils.prepareExecution(dataRaw);
+        // if event is called from browser we will forward response through client via this
         if (state.calledFrom === Environment.BROWSER) {
             const responseEventName = Utils.generateResponseEventName(state.uuid);
             const timeout = setTimeout(() => {
@@ -329,9 +355,11 @@ class Client extends Wrapper {
         }
         mp.events.callRemote(Events.SERVER_EVENT_LISTENER, dataRaw);
     }
+    // called to browser
     emitBrowser(dataRaw) {
         this.errorNoBrowser();
         const state = Utils.prepareExecution(dataRaw);
+        // if event is called from server we will forward response through client via this
         if (state.calledFrom === Environment.SERVER) {
             const responseEventName = Utils.generateResponseEventName(state.uuid);
             const timeout = setTimeout(() => {
@@ -352,12 +380,18 @@ class Client extends Wrapper {
     }
 }
 
+/**
+ * NOT INTENDED FOR OUT-OF-CONTEXT USE
+ */
 class Browser extends Wrapper {
     constructor(options = {
         forceBrowserDevMode: false,
     }) {
         super(options);
     }
+    /**
+     * NOT INTENDED FOR OUT-OF-CONTEXT USE
+     */
     _resolveEmitDestination(dataRaw) {
         let state = Utils.prepareExecution(dataRaw);
         switch (state.calledTo) {
@@ -372,13 +406,16 @@ class Browser extends Wrapper {
     emitClient(dataRaw) {
         mp.trigger(Events.LOCAL_EVENT_LISTENER, dataRaw);
     }
+    // called to browser
     async emit(dataRaw) {
         let state = Utils.prepareExecution(dataRaw);
         const responseEventName = Utils.generateResponseEventName(state.uuid);
+        // check availability
         state = this.verifyEvent_(state);
         if (state.knownError) {
             this.triggerError_(state, state.knownError);
         }
+        // execute + generate response
         const response = await this.state_[state.eventName](...(Array.isArray(state.data) ? state.data : []));
         const responseState = {
             uuid: Utils.generateUUID(),
@@ -390,6 +427,7 @@ class Browser extends Wrapper {
             type: RPCEventType.RESPONSE,
         };
         const responseDataRaw = Utils.prepareTransfer(responseState);
+        // send response
         switch (state.calledFrom) {
             case Environment.BROWSER:
                 try {
@@ -445,6 +483,23 @@ class Rpc extends Wrapper {
     set browser(browser) {
         this._client.browser = browser;
     }
+    /**
+     * Registers a callback function for a specified event
+     *
+     * @template CallbackArguments - An array of argument types that the callback function accepts
+     * @template CallbackReturn - The type of the value returned by the callback function
+     * @template EventName - A string representing the event name or union of names
+     *
+     * @param {EventName} eventName - The name of the event to register the callback for
+     * @param {(...args: CallbackArguments) => CallbackReturn} cb - The callback function that is called when the event is triggered
+     *
+     * @returns {void}
+     *
+     * @example
+     * register<[PlayerMp]>('playerJoin', (player) => {
+     *   console.log(`Connected: ${player.socialClub}`)
+     * })
+     */
     register(eventName, cb) {
         this.log('register', eventName, cb);
         if (this.forceBrowserDevMode_)
@@ -460,6 +515,18 @@ class Rpc extends Wrapper {
             this.state_[eventName] = cb;
         }
     }
+    /**
+     * Unregisters callback function for a specified event
+     *
+     * @template EventName - A string representing the event name or union of names
+     *
+     * @param {EventName} eventName - The name of the event to register the callback for
+     *
+     * @returns {void}
+     *
+     * @example
+     * unregister('playerJoin')
+     */
     unregister(eventName) {
         this.log('unregister', eventName);
         if (this.forceBrowserDevMode_)
@@ -481,8 +548,10 @@ class Rpc extends Wrapper {
             return typeof x === 'string';
         }
         if (this.environment_ === Environment.CLIENT) {
+            // client
             return await this.call(playerOrEventName, args);
         }
+        // server
         if (this.environment_ === Environment.SERVER &&
             _is1StParamPlayer(playerOrEventName) &&
             _is2NdParamEventName(eventNameOrArgs)) {
@@ -499,6 +568,7 @@ class Rpc extends Wrapper {
             playerOrEventName.call(Events.LOCAL_EVENT_LISTENER, [dataRaw]);
             return (await this.responseHandler(state.uuid)).data;
         }
+        // browser
         if (this.environment_ === Environment.BROWSER &&
             !_is1StParamPlayer(playerOrEventName) &&
             !_is2NdParamEventName(eventNameOrArgs)) {
@@ -516,6 +586,23 @@ class Rpc extends Wrapper {
             return (await this.responseHandler(state.uuid)).data;
         }
     }
+    /**
+     * Calls a server-side event from browser or client
+     *
+     * @template Arguments - An array of argument types to be passed to the server event
+     * @template EventName - A string representing the server event name or union of names
+     * @template Return - The type of the value returned by the server event
+     *
+     * @param {EventName} eventName - The name of the server event to be called
+     * @param {Arguments} [args] - Optional arguments to pass to the server event
+     * @returns {Promise<Return>} A promise resolving to the return value of the server event
+     *
+     * @example
+     * // Calls an event on server
+     * callServer<[], string, object>('onDataRequest').then(response => {
+     *   console.log(`Received: ${response}`) //             ^ object
+     * })
+     */
     async callServer(eventName, args) {
         this.log('callServer', eventName, args);
         if (this.forceBrowserDevMode_)
@@ -582,6 +669,23 @@ class Rpc extends Wrapper {
         }
         return (await this.responseHandler(state.uuid)).data;
     }
+    /**
+     * Calls an event in current environment
+     *
+     * @template Arguments - An array of argument types to be passed to the event
+     * @template EventName - A string representing the event name or union of names
+     * @template Return - The type of the value returned by the event
+     *
+     * @param {EventName} eventName - The name of the event to be called
+     * @param {Arguments} [args] - Optional arguments to pass to the event
+     * @returns {Promise<Return>} A promise resolving to the return value of the event
+     *
+     * @example
+     * // Calls an event in current environment
+     * call<[], string, number>('getSomething').then(response => {
+     *   console.log(`Received: ${response}`) //      ^ number
+     * })
+     */
     async call(eventName, args) {
         this.log('call', eventName, args);
         if (this.forceBrowserDevMode_)
@@ -598,6 +702,9 @@ class Rpc extends Wrapper {
         };
         return await this.callSelf(state);
     }
+    /**
+     * redirects an event in cases of it calling its own environment
+     */
     async callSelf(state) {
         state = this.verifyEvent_(state);
         if (state.knownError) {
@@ -605,6 +712,9 @@ class Rpc extends Wrapper {
         }
         return await this.state_[state.eventName](...state.data);
     }
+    /**
+     * returns cross-environment response
+     */
     async responseHandler(uuid) {
         const responseEventName = Utils.generateResponseEventName(uuid);
         return new Promise((resolve, reject) => {
@@ -840,6 +950,8 @@ mp.keys.bind(Keys.VK_OEM_3, true, () => {
         mp.gui.cursor.show(true, true);
     }, 100);
 });
+//mp.events.call('toggleInterface', 'Auth', true)
+//mp.events.call('toggleInterface', 'Chat', true)
 
 const showLoading = (duration) => {
     setTimeout(() => {
@@ -867,6 +979,7 @@ const lerp = (a, b, t) => {
 };
 const createCamera = (pos, target) => {
     activeCamera = mp.cameras.new('default', new mp.Vector3(pos.x, pos.y, pos.z), new mp.Vector3(0, 0, pos.rot), 40);
+    // Камера сразу смотрит на целевую точку (to)
     activeCamera.pointAtCoord(target.x, target.y, target.z);
     activeCamera.setActive(true);
     mp.game.cam.renderScriptCams(true, false, 0, true, false);
@@ -875,6 +988,7 @@ const startCamMoving = (path) => {
     rpc.callServer('client:startNewCamera', [path.persCoord]);
     currentPath = path;
     startTime = Date.now();
+    // Удаляем предыдущий рендер-ивент если был
     if (renderEvent) {
         mp.events.remove(renderEvent);
     }
@@ -993,19 +1107,24 @@ const getRandomCameraIndex = () => {
 const startNextCameraMovement = async () => {
     if (!isCameraSpan)
         return;
+    // 1. Затемнение перед сменной камеры (кроме первого запуска)
     if (currentCameraIndex !== -1) {
         mp.game.cam.doScreenFadeOut(1500);
         await new Promise(resolve => setTimeout(resolve, 2000));
     }
+    // 2. Смена камеры (во время чёрного экрана)
     currentCameraIndex = getRandomCameraIndex();
     const path = coordsCamera[currentCameraIndex];
-    startCamMoving(path);
+    startCamMoving(path); // <-- Камера меняется НЕВИДИМО для игрока
+    // 3. Плавное появление
     mp.game.cam.doScreenFadeIn(1000);
     await new Promise(resolve => setTimeout(resolve, 1000));
-    const visibleDuration = path.duration - 3000;
+    // 4. Ждём оставшееся время (duration - fadeTime)
+    const visibleDuration = path.duration - 3000; // Вычитаем 2 секунды fade
     if (visibleDuration > 0) {
         await new Promise(resolve => setTimeout(resolve, visibleDuration));
     }
+    // 5. Следующий цикл
     startNextCameraMovement();
 };
 const enableAuth = () => {
@@ -1037,90 +1156,20 @@ const disableAuth = () => {
         mp.gui.cursor.show(false, false);
     }, 500);
     stopCamMoving();
-    showLoading(5000);
+    showLoading(3000);
     rpc.call('execute', [`window.App.authReducer.hideAuth()`]);
     setTimeout(() => {
         rpc.callServer('client:authPlayerVisible', [true]);
         mp.game.ui.displayRadar(true);
         mp.players.local.freezePosition(false);
-    }, 5000);
+    }, 3000);
 };
 rpc.register('cef:authEnabled', () => {
-    mp.console.logWarning('вызов enabled');
     enableAuth();
 });
 rpc.register('cef:authDisabled', () => {
     disableAuth();
 });
-
-const CHAT_MESSAGE_EVENT = 'chat:message';
-const buffer = [];
-let loaded = false;
-let opened = false;
-const toggleChat = (state) => {
-    rpc.callBrowser('chatActive', [state]);
-};
-const addMsg = (name, text, showTime, tile) => {
-    if (name) {
-        rpc.callBrowser('addMsg', [name, text, showTime, tile]);
-    }
-    else {
-        rpc.callBrowser('addString', [text, showTime, tile]);
-    }
-};
-rpc.register('chatloaded', () => {
-    for (const msg of buffer) {
-        addMsg(msg.name, msg.text, msg.showTime, msg.tile);
-    }
-    loaded = true;
-});
-rpc.register('chatmessage', (text) => {
-    rpc.call(CHAT_MESSAGE_EVENT, [text]);
-    rpc.callServer(CHAT_MESSAGE_EVENT, [text]);
-    toggleChat(true);
-    opened = true;
-});
-const pushMsg = (name, text, showTime, tile) => {
-    if (!loaded) {
-        buffer.push({ name, text, showTime, tile });
-    }
-    else {
-        addMsg(name, text, showTime, tile);
-    }
-};
-const pushLine = (text, showTime, tile) => {
-    pushMsg(null, text, showTime, tile);
-};
-rpc.register(CHAT_MESSAGE_EVENT, pushMsg);
-mp.keys.bind(Keys.VK_T, false, () => {
-    if (loaded && !opened) {
-        opened = true;
-        toggleChat(true);
-        rpc.callBrowser('openChat', [false]);
-    }
-});
-mp.keys.bind(Keys.VK_OEM_2, false, () => {
-    if (loaded && !opened) {
-        opened = true;
-        toggleChat(true);
-        rpc.callBrowser('openChat', [true]);
-    }
-});
-mp.keys.bind(Keys.VK_ESCAPE, false, () => {
-    if (loaded && opened) {
-        opened = false;
-        rpc.callBrowser('closeChat');
-        toggleChat(false);
-    }
-});
-mp.keys.bind(Keys.VK_ENTER, false, () => {
-    if (loaded && opened) {
-        opened = false;
-        rpc.callBrowser('closeChat');
-        toggleChat(false);
-    }
-});
-pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello');
 
 rpc.register('sendNotify', (typeNotify, msg, duration, pos) => {
     mp.console.logWarning(`Мы приняли на клиенте уведомление с сервера: ${msg}`);
@@ -1138,19 +1187,6 @@ rpc.register('sendNotify', (typeNotify, msg, duration, pos) => {
     rpc.call('execute', [code]);
 });
 
-rpc.browser = mp.browsers.new('package://cef/index.html');
-mp.events.add('guiReady', () => {
-    mp.gui.chat.show(false);
-    mp.console.logInfo('guiReady');
-    rpc.register('execute', (code) => {
-        mp.console.logWarning(`На клиенте мы приняли с клиента код и отправляем в CEF: ${code}`);
-        rpc.callBrowser('client:executeCode', [code]);
-    });
-});
-rpc.register('clientCmd', (text) => {
-    mp.console.logInfo(`[CEF]: ${text}`);
-});
-
 mp.events.add('browserDomReady', async (player) => {
     rpc.call('execute', [`window.App.welcomeReducer.showWelcome()`]);
     await setTimeout(() => {
@@ -1159,6 +1195,103 @@ mp.events.add('browserDomReady', async (player) => {
             rpc.call('execute', [`window.App.welcomeReducer.hideWelcome()`]);
         }, 200);
     }, 7100);
+});
+
+rpc.browser = mp.browsers.new('package://cef/index.html');
+mp.events.add('guiReady', () => {
+    mp.gui.chat.show(false);
+    mp.console.logInfo('guiReady');
+    rpc.register('execute', (commands) => {
+        // Преобразуем одиночную команду в массив
+        const commandsArray = Array.isArray(commands) ? commands : [commands];
+        // Логируем
+        mp.console.logWarning(`Принято команд: ${commandsArray.length}`);
+        // Передаем в CEF как массив
+        rpc.callBrowser('client:executeCode', commandsArray);
+    });
+});
+rpc.register('clientCmd', (text) => {
+    mp.console.logInfo(`[CEF]: ${text}`);
+});
+rpc.register('cef:setActiveAmbient', (toggle) => {
+    mp.storage.data.activeAmbient = toggle;
+    mp.storage.flush();
+});
+rpc.register('cef:changeLanguage', (lang) => {
+    mp.storage.data.language = lang;
+    mp.storage.flush();
+});
+
+mp.keys.bind(Keys.VK_F2, true, () => {
+    rpc.callServer('playerKnockout');
+});
+mp.keys.bind(Keys.VK_F6, true, () => {
+    rpc.callServer('playerReborn');
+});
+mp.keys.bind(Keys.VK_F5, true, () => {
+    const playerPos = mp.players.local.position;
+    mp.vehicles.new(mp.game.joaat("22stinger"), new mp.Vector3(playerPos.x + 2, playerPos.y, playerPos.z), {
+        numberPlate: "PATRIOT",
+        color: [[22, 21, 35], [22, 21, 35]]
+    });
+});
+const getRandomChance = () => {
+    const percent = Math.floor(Math.random() * 66);
+    const luck = Math.random() * 100 < percent;
+    return [percent, luck];
+};
+mp.events.add('playerDeath', async (player, reason, killer) => {
+    const [chance, luck] = getRandomChance();
+    player.hasVariable;
+    await rpc.callServer('client:getFormatedDateTime', [true, true, true]);
+    rpc.callServer('playerKnockout');
+    rpc.call('execute', [`window.App.deathReducer.showDeath('Juice', null)`]);
+    rpc.callBrowser('client:chanceReborn', [chance, luck]);
+    mp.console.logWarning(`LUCK: ${luck}`);
+    const playerPos = mp.players.local.position;
+    const getGroundZ = mp.game.gameplay.getGroundZFor3dCoord(playerPos.x, playerPos.y, playerPos.z, true, false);
+    rpc.callServer('client:playerDeath', [[player.position.x, player.position.y, getGroundZ]]);
+});
+rpc.register('server:getFormatedDateTime', (time) => {
+});
+
+// PLAYER
+rpc.register('player:freeze', (toggle) => {
+    mp.players.local.freezePosition(toggle);
+});
+rpc.register('player:isCollision', (toggle) => {
+    mp.players.local.setCollision(toggle, toggle);
+});
+rpc.register('player:godmode', (toggle) => {
+    mp.players.local.setInvincible(toggle);
+});
+// GRAPHICS
+rpc.register('graphics:startScreenEffect', (name, duration, looped) => {
+    mp.game.graphics.startScreenEffect(name, duration, looped);
+});
+rpc.register('graphics:stopAllScreenEffects', () => {
+    mp.game.graphics.stopAllScreenEffects();
+});
+// UI
+rpc.register('ui:displayRadar', (toggle) => {
+    mp.game.ui.displayRadar(toggle);
+});
+rpc.register('ui:setPauseMenuActive', (toggle) => {
+    mp.game.ui.setPauseMenuActive(toggle);
+});
+
+mp.events.add('playerReady', (player) => {
+    rpc.callBrowser('client:setActiveAmbient', [mp.storage.data.activeAmbient]);
+    mp.game.gameplay.setFadeOutAfterDeath(false);
+    mp.game.ui.displayCash(false);
+    mp.game.ui.displayAreaName(false);
+    mp.game.ui.displayAmmoThisFrame(false);
+    if (mp.storage.data.language !== undefined) {
+        rpc.callBrowser('client:setLanguage', [mp.storage.data.language]);
+    }
+    else {
+        rpc.callBrowser('client:setLanguage', ['ru']);
+    }
 });
 
 if (openInterfaces.has('Auth')) {
