@@ -1,0 +1,42 @@
+name: Discord Commit Details
+on: push
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Полная история коммитов
+
+      - name: Extract commit data
+        id: extract-commit
+        run: |
+          echo "COMMIT_HASH=$(git log -1 --pretty=%H)" >> $GITHUB_ENV
+          echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%s)" >> $GITHUB_ENV
+          echo "COMMIT_BODY=$(git log -1 --pretty=%b)" >> $GITHUB_ENV
+
+      - name: Send to Discord
+        uses: Ilshidur/action-discord@master
+        with:
+          args: |
+            **New commit in REDSTAR-RAGE** ([${{
+              env.COMMIT_HASH
+            }}](https://github.com/PATRIOT8680/REDSTAR-RAGE/commit/${{
+              env.COMMIT_HASH
+            }}))
+            **Author:** ${{
+              env.COMMIT_AUTHOR
+            }}
+            **Message:** ${{
+              env.COMMIT_MESSAGE
+            }}
+            **Description:**
+            ```
+            ${{
+              env.COMMIT_BODY || 'No description'
+            }}
+            ```
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
