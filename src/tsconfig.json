@@ -1,5 +1,5 @@
 {
- "exclude": ["node_modules", "cef"],
+ "exclude": ["node_modules", "cef", ".env"],
  "compileOnSave": true,
  "compilerOptions": {
     "target": "esnext",
