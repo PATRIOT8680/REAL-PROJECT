@@ -19,10 +19,15 @@
 + A welcome menu with a user agreement warning has been created and enabled.
 + Added localization (server translation into different languages) with 5 languages: Russian, English, French, Spanish, German. Main language: Russian.
 
-## [DEV] 0.0.5
+## [PRE-DEV] 0.0.5
 + Death System
 + Email Verify (after registration)
 + Ambients in interfaces
 + Change language in interfaces
 + The tsconfig compiler and distribution have been rewritten in parts of the project
 + The system of server and game time
+(18.07.2025)
++ Fixed moving camera in authorization
++ Fix time in death menu
++ Fixing dependencies in the project
++ Improving the project architecture
