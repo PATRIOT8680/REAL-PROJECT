@@ -1,59 +1,34 @@
 import { rpc } from '../../../utils/rpc'
-import { isInterfaceVisible } from '../../main/toogleInterface'
 import { showLoading } from '../loading'
-import Keys from '../../../utils/keys'
-import { IAllCameras, startCamMoving, stopCamMoving } from 'client/game/movingCamera'
-import { coordsCamera } from './coordsCamera'
+import { stopCamMoving } from '../../../game/movingCamera'
+import { startNextCameraMovement } from './nextCameraMoving'
 
-let currentCameraIndex = -1
-let cameraTimeout: NodeJS.Timeout | null = null
-let isCameraSpan: boolean = false
+interface CameraState {
+  currentIndex: number
+  isSpanActive: boolean
+  isTransition: boolean
+  timeout: NodeJS.Timeout | null
+  interval: NodeJS.Timeout | null
+}
 
-const getRandomCameraIndex = (): number => {
-    if (coordsCamera.length <= 1) return 0;
-    
-    let newIndex;
-    do {
-        newIndex = Math.floor(Math.random() * coordsCamera.length);
-    } while (newIndex === currentCameraIndex);
-    
-    return newIndex
+export const cameraState: CameraState = {
+  currentIndex: -1,
+  isSpanActive: false,
+  isTransition: false,
+  timeout: null,
+  interval: null
 };
 
-const startNextCameraMovement = async () => {
-  if (!isCameraSpan) return
 
-  // 1. Затемнение перед сменной камеры (кроме первого запуска)
-  if (currentCameraIndex !== -1) {
-    mp.game.cam.doScreenFadeOut(1500);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-  }
-
-  // 2. Смена камеры (во время чёрного экрана)
-  currentCameraIndex = getRandomCameraIndex();
-  const path = coordsCamera[currentCameraIndex];
-  startCamMoving(path); // <-- Камера меняется НЕВИДИМО для игрока
-
-  // 3. Плавное появление
-  mp.game.cam.doScreenFadeIn(1000);
-  await new Promise(resolve => setTimeout(resolve, 1000));
-
-  // 4. Ждём оставшееся время (duration - fadeTime)
-  const visibleDuration = path.duration - 3000; // Вычитаем 2 секунды fade
-  if (visibleDuration > 0) {
-      await new Promise(resolve => setTimeout(resolve, visibleDuration));
-  }
-
-  // 5. Следующий цикл
-  startNextCameraMovement();
-};
 
 const enableAuth = () => {
-  isCameraSpan = true
+  cameraState.isSpanActive = true
+  cameraState.isTransition = false
 
   rpc.call('execute', [`window.App.authReducer.showAuth()`])
   rpc.callServer('client:authPlayerVisible', [false])
   mp.game.ui.displayRadar(false)
+  mp.game.graphics.disableScreenblurFade()
   mp.players.local.freezePosition(true)
 
   setTimeout(() => {
@@ -80,15 +55,34 @@ const enableAuth = () => {
 
 
 const disableAuth = () => {
-  isCameraSpan = false
+  cameraState.isSpanActive = false
+
+  try {
+    if (cameraState.timeout) {
+      clearTimeout(cameraState.timeout)
+      cameraState.timeout = null
+    }
+    
+    if (cameraState.interval) {
+      clearInterval(cameraState.interval)
+      cameraState.interval = null
+    }
+  } catch (e) {
+    console.error("Disable auth timer error:", e)
+  }
 
   setTimeout(() => {
     mp.gui.cursor.show(false, false)
   }, 500)
 
-  if (cameraTimeout) {
-    clearTimeout(cameraTimeout)
-    cameraTimeout = null
+  if (cameraState.isTransition) {
+    mp.game.cam.doScreenFadeIn(0)
+    stopCamMoving()
+  }
+
+  if (cameraState.timeout) {
+    clearTimeout(cameraState.timeout)
+    cameraState.timeout = null
   }
   stopCamMoving()
 
