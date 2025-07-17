@@ -12,31 +12,26 @@ jobs:
       - name: Extract commit data
         id: extract-commit
         run: |
-          echo "COMMIT_HASH=$(git log -1 --pretty=%H)" >> $GITHUB_ENV
-          echo "COMMIT_AUTHOR=$(git log -1 --pretty=%an)" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%s)" >> $GITHUB_ENV
-          echo "COMMIT_BODY=$(git log -1 --pretty=%b)" >> $GITHUB_ENV
+          COMMIT_HASH=$(git log -1 --pretty=%H)
+          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+          COMMIT_MESSAGE=$(git log -1 --pretty=%s | sed 's/"/\\"/g')
+          COMMIT_BODY=$(git log -1 --pretty=%b | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          
+          echo "COMMIT_HASH=${COMMIT_HASH}" >> $GITHUB_ENV
+          echo "COMMIT_AUTHOR=${COMMIT_AUTHOR}" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
+          echo "COMMIT_BODY=${COMMIT_BODY}" >> $GITHUB_ENV
 
       - name: Send to Discord
         uses: Ilshidur/action-discord@master
         with:
           args: |
-            **New commit in REDSTAR-RAGE** ([${{
-              env.COMMIT_HASH
-            }}](https://github.com/PATRIOT8680/REDSTAR-RAGE/commit/${{
-              env.COMMIT_HASH
-            }}))
-            **Author:** ${{
-              env.COMMIT_AUTHOR
-            }}
-            **Message:** ${{
-              env.COMMIT_MESSAGE
-            }}
+            **New commit in REDSTAR-RAGE** ([${{ env.COMMIT_HASH }}](https://github.com/PATRIOT8680/REDSTAR-RAGE/commit/${{ env.COMMIT_HASH }}))
+            **Author:** ${{ env.COMMIT_AUTHOR }}
+            **Message:** ${{ env.COMMIT_MESSAGE }}
             **Description:**
             ```
-            ${{
-              env.COMMIT_BODY || 'No description'
-            }}
+            ${{ env.COMMIT_BODY || 'No description' }}
             ```
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}

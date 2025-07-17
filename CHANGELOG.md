@@ -31,3 +31,4 @@
 + Fix time in death menu
 + Fixing dependencies in the project
 + Improving the project architecture
++ test
