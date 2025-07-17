@@ -1,5 +1,4 @@
 {
- "exclude": ["node_modules", "cef", ".env"],
  "compileOnSave": true,
  "compilerOptions": {
     "target": "esnext",
@@ -17,6 +16,7 @@
     "types": [
       "./node_modules/@ragempcommunity/types-server",
       "./node_modules/@ragempcommunity/types-client",
+      "./node_modules/@ragempcommunity/types-cef",
       "./node_modules/@types/node",
     ]
  },
@@ -24,4 +24,10 @@
     "client/**/*.ts",
     "server/**/*.ts"
   ],
+  "exclude": [
+    "../client_packages/client",
+    "../packages/core",
+    "./node_modules",
+    "./cef"
+  ]
 }

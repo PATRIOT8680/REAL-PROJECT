@@ -11,7 +11,7 @@ const Fate: FC<IFate> = ({ setTimeLeft }) => {
       setTimeLeft(300)
       window.App.deathReducer.selectFateDeath('ems')
     } else {
-      setTimeLeft(15)
+      setTimeLeft(120)
       window.App.deathReducer.selectFateDeath('death')
     }
   }
