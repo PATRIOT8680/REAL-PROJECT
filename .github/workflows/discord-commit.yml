@@ -19,12 +19,12 @@ jobs:
           BODY=$(git log -1 --pretty=%b | sed '/^$/d' | while read -r line; do echo "- $line"; done)
           
           echo "DISCORD_MESSAGE<<EOF" >> $GITHUB_ENV
-          echo "[$MESSAGE]" >> $GITHUB_ENV
-          echo "Автор: $AUTHOR" >> $GITHUB_ENV
-          echo "Ветка: ${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          echo "💬 # Commit: $MESSAGE" >> $GITHUB_ENV
+          echo "👤 Author: $AUTHOR" >> $GITHUB_ENV
+          echo "🌿 Branch: ${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
           echo "" >> $GITHUB_ENV
-          echo "Изменения:" >> $GITHUB_ENV
-          echo "$BODY" >> $GITHUB_ENV
+          echo "**Изменения:**" >> $GITHUB_ENV
+          echo "```$BODY```" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Send to Discord
