@@ -9,31 +9,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract commit data
-        id: extract-commit
+      - name: Format commit message
+        id: format-commit
         run: |
           SHORT_HASH=$(git log -1 --pretty=%h)
-          COMMIT_URL="https://github.com/PATRIOT8680/REDSTAR-RAGE/commit/$(git log -1 --pretty=%H)"
-          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
-          COMMIT_MESSAGE=$(git log -1 --pretty=%s)
-          COMMIT_BODY=$(git log -1 --pretty=%b | sed '/^$/d' | sed 's/^/+ /' | sed ':a;N;$!ba;s/\n/\\n/g')
+          AUTHOR=$(git log -1 --pretty=%an)
+          MESSAGE=$(git log -1 --pretty=%s)
+          BODY=$(git log -1 --pretty=%b | sed '/^$/d' | sed 's/^/- /' | sed ':a;N;$!ba;s/\n/\\n/g')
           
-          echo "SHORT_HASH=${SHORT_HASH}" >> $GITHUB_ENV
-          echo "COMMIT_URL=${COMMIT_URL}" >> $GITHUB_ENV
-          echo "COMMIT_AUTHOR=${COMMIT_AUTHOR}" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
-          echo "COMMIT_BODY=${COMMIT_BODY}" >> $GITHUB_ENV
+          echo "MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "🔹 **$MESSAGE**" >> $GITHUB_ENV
+          echo "🔸 Автор: $AUTHOR" >> $GITHUB_ENV
+          echo "🔸 Ветка: ${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+          echo "**Изменения:**" >> $GITHUB_ENV
+          echo "$BODY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Send to Discord
         uses: Ilshidur/action-discord@master
         with:
-          args: |
-            **🔄 Новый коммит в REDSTAR-RAGE** · \`${{ env.SHORT_HASH }}\`
-            **${{ env.COMMIT_MESSAGE }}**
-            
-            **Изменения:**
-            ${{ env.COMMIT_BODY || 'Без описания' }}
-            
-            👤 ${{ env.COMMIT_AUTHOR }} · 🌿 ${{ github.ref_name }} · [Просмотреть](${{ env.COMMIT_URL }})
+          args: ${{ env.MESSAGE }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
