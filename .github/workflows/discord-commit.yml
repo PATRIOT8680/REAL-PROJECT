@@ -16,7 +16,7 @@ jobs:
           AUTHOR=$(git log -1 --pretty=%an)
           MESSAGE=$(git log -1 --pretty=%s)
           # Форматируем тело коммита: убираем пустые строки и сохраняем переносы
-          BODY=$(git log -1 --pretty=%b | sed '/^$/d' | while read -r line; do echo "- $line"; done)
+          BODY=$(git log -1 --pretty=%b | sed '/^$/d' | while read -r line; do echo "> - $line"; done)
           
           echo "DISCORD_MESSAGE<<EOF" >> $GITHUB_ENV
           echo "> **Commit: $MESSAGE**" >> $GITHUB_ENV
