@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Полная история коммитов
+          fetch-depth: 0
 
       - name: Extract commit data
         id: extract-commit
@@ -17,6 +17,12 @@ jobs:
           COMMIT_MESSAGE=$(git log -1 --pretty=%s | sed 's/"/\\"/g')
           COMMIT_BODY=$(git log -1 --pretty=%b | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
           
+          SHORT_HASH=$(echo ${COMMIT_HASH} | cut -c1-7)
+          REPO_URL="https://github.com/PATRIOT8680/REDSTAR-RAGE"
+          COMMIT_URL="${REPO_URL}/commit/${COMMIT_HASH}"
+          
+          echo "SHORT_HASH=${SHORT_HASH}" >> $GITHUB_ENV
+          echo "COMMIT_URL=${COMMIT_URL}" >> $GITHUB_ENV
           echo "COMMIT_HASH=${COMMIT_HASH}" >> $GITHUB_ENV
           echo "COMMIT_AUTHOR=${COMMIT_AUTHOR}" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
@@ -26,12 +32,44 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: |
-            **New commit in REDSTAR-RAGE** ([${{ env.COMMIT_HASH }}](https://github.com/PATRIOT8680/REDSTAR-RAGE/commit/${{ env.COMMIT_HASH }}))
-            **Author:** ${{ env.COMMIT_AUTHOR }}
-            **Message:** ${{ env.COMMIT_MESSAGE }}
-            **Description:**
-            ```
-            ${{ env.COMMIT_BODY || 'No description' }}
-            ```
+            {
+              "username": "GitHub Commit Bot",
+              "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+              "embeds": [
+                {
+                  "title": "${{ env.COMMIT_MESSAGE }}",
+                  "url": "${{ env.COMMIT_URL }}",
+                  "color": 5814783,
+                  "fields": [
+                    {
+                      "name": "Repository",
+                      "value": "[REDSTAR-RAGE](${{ env.REPO_URL }})",
+                      "inline": true
+                    },
+                    {
+                      "name": "Branch",
+                      "value": "${{ github.ref_name }}",
+                      "inline": true
+                    },
+                    {
+                      "name": "Commit Hash",
+                      "value": "[`${{ env.SHORT_HASH }}`](${{ env.COMMIT_URL }})",
+                      "inline": true
+                    },
+                    {
+                      "name": "Author",
+                      "value": "${{ env.COMMIT_AUTHOR }}",
+                      "inline": true
+                    }
+                  ],
+                  "description": "${{ env.COMMIT_BODY || 'No description provided' }}",
+                  "footer": {
+                    "text": "Commit pushed at",
+                    "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                  },
+                  "timestamp": "${{ github.event.head_commit.timestamp }}"
+                }
+              ]
+            }
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
