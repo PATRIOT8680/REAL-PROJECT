@@ -1,0 +1,168 @@
+.death-player.reborn {
+  -webkit-animation: fadeInBG 4s ease forwards;
+          animation: fadeInBG 4s ease forwards;
+}
+.death-player:has(#closed-death) {
+  -webkit-animation: fadeOutDeath 1s ease forwards;
+          animation: fadeOutDeath 1s ease forwards;
+}
+.death-player .reborn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  height: 100%;
+}
+.death-player .reborn .text-block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+}
+.death-player .reborn .text-block .title {
+  font-family: "Bellflower", sans-serif;
+  font-weight: 400;
+  font-size: 7.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #0cffaa;
+  text-shadow: 0 0 7rem #0cffaa;
+  -webkit-animation: tracking-in-contract-bck-bottom 1s ease;
+          animation: tracking-in-contract-bck-bottom 1s ease;
+}
+.death-player .reborn .text-block .description {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #fff;
+  -webkit-animation: tracking-in-contract-bck-bottom 1s ease;
+          animation: tracking-in-contract-bck-bottom 1s ease;
+}
+.death-player .reborn .line {
+  width: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  -webkit-animation: fadeInLine 4s ease forwards;
+          animation: fadeInLine 4s ease forwards;
+}
+
+@-webkit-keyframes fadeInLine {
+  from {
+    height: 0%;
+  }
+  to {
+    height: 38%;
+  }
+}
+
+@keyframes fadeInLine {
+  from {
+    height: 0%;
+  }
+  to {
+    height: 38%;
+  }
+}
+@-webkit-keyframes tracking-in-contract-bck-bottom {
+  0% {
+    letter-spacing: 1em;
+    -webkit-transform: scale(2.1);
+            transform: scale(2.1);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes tracking-in-contract-bck-bottom {
+  0% {
+    letter-spacing: 1em;
+    -webkit-transform: scale(2.1);
+            transform: scale(2.1);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    opacity: 1;
+  }
+}
+@-webkit-keyframes fadeInBG {
+  from {
+    -webkit-box-shadow: inset 0 0 250px 200px rgba(22, 21, 35, 0.7);
+            box-shadow: inset 0 0 250px 200px rgba(22, 21, 35, 0.7);
+    background: rgba(22, 21, 35, 0.01);
+  }
+  to {
+    -webkit-box-shadow: inset 0 0 250px 400px rgb(22, 21, 35);
+            box-shadow: inset 0 0 250px 400px rgb(22, 21, 35);
+    background: rgb(22, 21, 35);
+  }
+}
+@keyframes fadeInBG {
+  from {
+    -webkit-box-shadow: inset 0 0 250px 200px rgba(22, 21, 35, 0.7);
+            box-shadow: inset 0 0 250px 200px rgba(22, 21, 35, 0.7);
+    background: rgba(22, 21, 35, 0.01);
+  }
+  to {
+    -webkit-box-shadow: inset 0 0 250px 400px rgb(22, 21, 35);
+            box-shadow: inset 0 0 250px 400px rgb(22, 21, 35);
+    background: rgb(22, 21, 35);
+  }
+}
+@-webkit-keyframes fadeOutDeath {
+  from {
+    -webkit-box-shadow: inset 0 0 250px 400px rgb(22, 21, 35);
+            box-shadow: inset 0 0 250px 400px rgb(22, 21, 35);
+    background: rgb(22, 21, 35);
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    -webkit-box-shadow: inset 0 0 250px 400px rgba(22, 21, 35, 0);
+            box-shadow: inset 0 0 250px 400px rgba(22, 21, 35, 0);
+    background: rgba(22, 21, 35, 0);
+  }
+}
+@keyframes fadeOutDeath {
+  from {
+    -webkit-box-shadow: inset 0 0 250px 400px rgb(22, 21, 35);
+            box-shadow: inset 0 0 250px 400px rgb(22, 21, 35);
+    background: rgb(22, 21, 35);
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    -webkit-box-shadow: inset 0 0 250px 400px rgba(22, 21, 35, 0);
+            box-shadow: inset 0 0 250px 400px rgba(22, 21, 35, 0);
+    background: rgba(22, 21, 35, 0);
+  }
+}

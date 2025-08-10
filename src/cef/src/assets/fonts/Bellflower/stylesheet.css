@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Bellflower';
+    src: url('Bellflower.woff2') format('woff2'),
+        url('Bellflower.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

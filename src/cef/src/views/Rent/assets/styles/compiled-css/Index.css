@@ -1,0 +1,56 @@
+.rent {
+  width: 100%;
+  height: 100%;
+}
+.rent .container {
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background: rgba(22, 21, 35, 0.98);
+  border-radius: 15px;
+  width: 900px;
+  height: 720px;
+  -webkit-animation: fadeIn 1.1s ease forwards;
+          animation: fadeIn 1.1s ease forwards;
+}
+.rent .container .bg svg {
+  position: absolute;
+  z-index: -1;
+  -webkit-filter: blur(150px);
+          filter: blur(150px);
+}
+.rent .container .bg #one_elipse {
+  top: -100px;
+  left: -100px;
+}
+.rent .container .bg #two_elipse {
+  bottom: -100px;
+  right: -100px;
+}
+.rent .container .header .left .header-2 span {
+  color: white;
+  font-family: "Ponter", sans-serif;
+  font-weight: 400;
+}
+
+@-webkit-keyframes fadeIn {
+  from {
+    top: 150%;
+  }
+  to {
+    top: 50%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    top: 150%;
+  }
+  to {
+    top: 50%;
+  }
+}

@@ -1,0 +1,48 @@
+$MBF: "MBF Moonlander", sans-serif
+$Montserrat: "Montserrat", sans-serif
+$PFDisplay: "PF DinDisplay Pro", sans-serif
+$Ponter: "Ponter", sans-serif
+  
+.rent
+  width: 100%
+  height: 100%
+
+  .container
+    overflow: hidden
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    background: rgba(22, 21, 35, 0.98)
+    border-radius: 15px
+    width: 900px
+    height: 720px
+    animation: fadeIn 1.1s ease forwards
+
+    .bg
+      svg
+        position: absolute
+        z-index: -1
+        filter: blur(150px)
+
+      #one_elipse
+        top: -100px
+        left: -100px
+
+      #two_elipse
+        bottom: -100px
+        right: -100px
+
+    .header
+      .left
+        .header-2
+          span
+            color: #ffff
+            font-family: $Ponter
+            font-weight: 400
+
+@keyframes fadeIn
+  from
+    top: 150%
+  to
+    top: 50%
