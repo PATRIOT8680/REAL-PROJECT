@@ -1,0 +1,56 @@
+$Montserrat: "Montserrat", sans-serif
+
+.login-form
+  gap: 2rem
+
+  .pers-img
+    width: 20rem
+    opacity: 0.08
+
+  .header-section
+    .title
+      .lines
+        div
+          border-radius: 2px
+          width: 47px
+          height: 3.5px
+          box-shadow: 0 0 9px 1px rgba(255, 22, 78, 0.5)
+          background: #ff164e
+
+        .line-1
+          position: absolute
+          margin-top: -1.5rem
+          margin-left: -0.4rem
+          animation: fadeInLine1 1.5s ease forwards
+
+        .line-2
+          position: absolute
+          margin-top: 1rem
+          margin-left: 10.5rem
+          animation: fadeInLine2 1.5s ease forwards
+
+    .description
+      width: 16rem
+
+  .description-project
+    width: 81%
+    font-family: $Montserrat
+    font-weight: 500
+    font-size: .61rem
+    text-align: justify
+    line-height: 145%
+    color: #ebf7ff94
+    user-select: none
+
+
+@keyframes fadeInLine1
+  from
+    transform: translate(-70px, 0)
+  100%
+    transform: translate(0, 0)
+
+@keyframes fadeInLine2
+  from
+    transform: translate(70px, 0)
+  100%
+    transform: translate(0, 0)

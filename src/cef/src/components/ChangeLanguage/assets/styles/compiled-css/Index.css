@@ -1,0 +1,249 @@
+.change-language {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  z-index: 200;
+}
+.change-language .current-lng.closed {
+  position: relative;
+  -webkit-animation: fadeOutCurrentLang 0.8s ease forwards;
+          animation: fadeOutCurrentLang 0.8s ease forwards;
+}
+.change-language .current-lng.open {
+  position: relative;
+  -webkit-animation: fadeInCurrentLang 1s ease forwards;
+          animation: fadeInCurrentLang 1s ease forwards;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  background: white;
+}
+.change-language .current-lng.open .flag {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  -webkit-box-shadow: 0 0 13px 0 rgba(22, 21, 35, 0.35);
+          box-shadow: 0 0 13px 0 rgba(22, 21, 35, 0.35);
+}
+.change-language .current-lng.open .name {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  color: #161523;
+}
+.change-language .current-lng.open svg path {
+  stroke: #161523;
+  stroke-opacity: 1;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.change-language .current-lng {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+  outline: none;
+  border: none;
+  height: 2.5rem;
+  padding: 0 1.2rem 0 1.2rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.change-language .current-lng:hover {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  background: white;
+}
+.change-language .current-lng:hover .flag {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  -webkit-box-shadow: 0 0 13px 0 rgba(22, 21, 35, 0.35);
+          box-shadow: 0 0 13px 0 rgba(22, 21, 35, 0.35);
+}
+.change-language .current-lng:hover .name {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  color: #161523;
+}
+.change-language .current-lng:hover svg path {
+  stroke: #161523;
+  stroke-opacity: 1;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.change-language .current-lng .flag {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.change-language .current-lng .name {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: white;
+}
+.change-language .current-lng #icon-open {
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.change-language .current-lng #icon-closed {
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+  -webkit-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+.change-language .current-lng svg path {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.change-language .list-languages {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+}
+.change-language .list-languages .lang-option {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+  outline: none;
+  border: none;
+  height: 2.5rem;
+  padding: 0 1.2rem 0 1.2rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  position: relative;
+  -webkit-animation: fadeInLangOption 1s ease forwards;
+          animation: fadeInLangOption 1s ease forwards;
+}
+.change-language .list-languages .lang-option:hover {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  background: white;
+}
+.change-language .list-languages .lang-option:hover .flag {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  -webkit-box-shadow: 0 0 13px 0 rgba(22, 21, 35, 0.35);
+          box-shadow: 0 0 13px 0 rgba(22, 21, 35, 0.35);
+}
+.change-language .list-languages .lang-option:hover .name {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  color: #161523;
+}
+.change-language .list-languages .lang-option .flag {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.change-language .list-languages .lang-option .name {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: white;
+}
+
+@-webkit-keyframes fadeInLangOption {
+  from {
+    opacity: 0;
+    bottom: -15rem;
+  }
+  to {
+    opacity: 1;
+    bottom: 0;
+  }
+}
+
+@keyframes fadeInLangOption {
+  from {
+    opacity: 0;
+    bottom: -15rem;
+  }
+  to {
+    opacity: 1;
+    bottom: 0;
+  }
+}
+@-webkit-keyframes fadeInCurrentLang {
+  from {
+    bottom: -10rem;
+  }
+  to {
+    bottom: 0;
+  }
+}
+@keyframes fadeInCurrentLang {
+  from {
+    bottom: -10rem;
+  }
+  to {
+    bottom: 0;
+  }
+}
+@-webkit-keyframes fadeOutCurrentLang {
+  from {
+    bottom: 12rem;
+  }
+  to {
+    bottom: 0;
+  }
+}
+@keyframes fadeOutCurrentLang {
+  from {
+    bottom: 12rem;
+  }
+  to {
+    bottom: 0;
+  }
+}

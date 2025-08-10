@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "typeRoots": [
+      "node_modules/@ragempcommunity",
+      "node_modules/@types/node",
+      "./src/types/global.d.ts"
+		],
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "exclude": ["./node_modules"]
+}
