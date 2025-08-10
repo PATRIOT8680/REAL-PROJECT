@@ -51,31 +51,31 @@ registerCMD('setdim', (player: PlayerMp, [target, dimension]: [string, number]) 
 })
 
 registerCMD('veh', (player: PlayerMp, [target, model, r, g, b, numberPlate]) => {
-  if (model === undefined || !target) {
-    send(player, `<b>Используйте /veh [playerID?] [model] [r?] [g?] [b?] [numberPlate?]</b>`, false, 'admin')
-    return
-  }
-
-  const targetId = parseInt(target, 10)
-  const foundTarget = mp.players.at(targetId)
-
-  if (!foundTarget) {
-    send(player, `<b>Игрок #${target} не найден!</b>`, false, 'admin')
-    return
-  }
-
-  let vehicle: VehicleMp
-
   try {
-    const pos = foundTarget.position
-    vehicle = mp.vehicles.new(mp.joaat(model), new mp.Vector3(pos.x, pos.y, pos.z), {
-      heading: foundTarget.rotation.z * (180 / Math.PI),
-      color: [[255, 255, 255], [255, 255, 255]],
-      dimension: foundTarget.dimension,
-      numberPlate: numberPlate || 'ADMIN'
+    if (model === undefined || target === undefined) {
+      send(player, `<b>Используйте /veh [playerID?] [model] [r?] [g?] [b?] [numberPlate?]</b>`, false, 'admin')
+      return
+    }
+    if (!model) {
+      send(player, `<b>Модель ${model} не существует!</b>`, false, 'admin')
+      return
+    }
+
+    const targetId = mp.players.at(parseInt(target, 10))
+    if (!targetId) {
+      send(player, `<b>Игрок #${target} не найден!</b>`, false, 'admin')
+      return
+    }
+
+    let targetPos = target.position
+    let vehicle: VehicleMp = mp.vehicles.new(mp.joaat(model), targetPos, {
+      engine: true,
+      color: [[r, g, b], [r, g, b]],
+      numberPlate: numberPlate
     })
-    foundTarget.putIntoVehicle(vehicle, 0)
+
+
   } catch (e) {
-    send(player, `<b>Транспорт ${model} не найден!</b>`, false, 'admin')
+    console.error(`err: ${e}`)
   }
 })
