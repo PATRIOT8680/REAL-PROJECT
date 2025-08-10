@@ -1,107 +1,94 @@
-//type CommandHandler = (player: PlayerMp, args: string[]) => void
+import { rpc } from '../utils/rpc'
 
-//const cmdHandlers: Record<string, CommandHandler> = {}
-//const mutedPlayers: Map<PlayerMp, boolean> = new Map()
-//const CHAT_MESSAGE_EVENT = 'chat:message'
+type CommandHandler = (player: PlayerMp, args: string[]) => void
 
-//export const send = (player: PlayerMp | null, msg: string, showTime: boolean, tile?: string) => {
-//  if (!player) {
-//    console.error('[CHAT SEND] player не должен быть равен null. Используй chat.broadcast')
-//    return
-//  } else {
-//    const data = {
-//      msg: msg,
-//      showTime: showTime,
-//      tile: tile
-//    }
-    
-//    player.call(CHAT_MESSAGE_EVENT, data)
-//  }
-//}
+const cmdHandlers: Record<string, CommandHandler> = {}
+const mutedPlayers: Map<PlayerMp, boolean> = new Map()
+const CHAT_MESSAGE_EVENT = 'chat:message'
 
-//export const broadcast = (msg: string, showTime: boolean, tile?: string) => {
-//  const data = {
-//    msg: msg,
-//    showTime: showTime,
-//    tile: tile
-//  }
-//  mp.events.call(CHAT_MESSAGE_EVENT, data)
-//}
+export const send = (player: PlayerMp | null, msg: string, showTime: boolean, tile?: string) => {
+  if (!player) {
+    console.error('[CHAT SEND] player не должен быть равен null. Используй chat.broadcast')
+    return
+  } else {
+    mp.players.forEach(p => {
+      rpc.callClient(p, CHAT_MESSAGE_EVENT, [null, msg, showTime, tile])
+    })
+  }
+}
 
-//export const registerCMD = (cmd: string, callback) => {
-//  if (cmdHandlers[cmd] !== undefined) {
-//    mp.console.logError(`Не удалось зарегистрировать команду (/${cmd}), которая уже зарегистрирована!`)
-//  } else {
-//    cmdHandlers[cmd] = callback
-//  }
-//}
+export const broadcast = (msg: string, showTime: boolean, tile?: string) => {
+  mp.players.forEach(p => {
+    rpc.callClient(p, CHAT_MESSAGE_EVENT, [null, msg, showTime, tile])
+  })
+}
 
-//export const mutePlayer = (player: PlayerMp, state: boolean) => {
-//  mutedPlayers.set(player, state)
-//}
+export const registerCMD = (cmd: string, callback) => {
+  if (cmdHandlers[cmd] !== undefined) {
+    console.log(`Не удалось зарегистрировать команду (/${cmd}), которая уже зарегистрирована!`)
+  } else {
+    cmdHandlers[cmd] = callback
+  }
+}
 
-//export const setupPlayer = (player) => {
-//  player.sendMessage = (msg: string, showTime: boolean) => {
-//    send(player, msg, showTime)
-//  }
+export const mutePlayer = (player: PlayerMp, state: boolean) => {
+  mutedPlayers.set(player, state)
+}
 
-//  player.mutePlayer = (state: boolean) => {
-//    mutePlayer(player, state)
-//  }
-//}
+export const setupPlayer = (player) => {
+  player.sendMessage = (msg: string, showTime: boolean) => {
+    send(player, msg, showTime)
+  }
 
-//const invokeCMD = (player: PlayerMp, cmd: string, args: string[]) => {
-//  cmd = cmd.toLowerCase()
-//  const callback = cmdHandlers[cmd]
+  player.mutePlayer = (state: boolean) => {
+    mutePlayer(player, state)
+  }
+}
 
-//  if (callback) {
-//    callback(player, args)
-//  } else {
-//    send(player, `{E52B50} Команда не найдена! (/${cmd})`, false)
-//  }
-//}
+const invokeCMD = (player: PlayerMp, cmd: string, args: string[]) => {
+  cmd = cmd.toLowerCase()
+  const callback = cmdHandlers[cmd]
 
-//mp.events.add(CHAT_MESSAGE_EVENT, (player: PlayerMp, ...args: any[]) => {
-//  var [msg, showTime, tile] = args as [string, boolean, string?]
-//  if (msg.startsWith('/')) {
-//    msg = msg.trim().slice(1)
+  if (callback) {
+    callback(player, args)
+  } else {
+    send(player, `{ffcbbb} <b>Команда не найдена! (/${cmd})</b>`, false)
+  }
+}
 
-//    if (msg.length > 0) {
-//      const args = msg.split(" ")
-//      const cmd = args.shift() as string
+rpc.register(CHAT_MESSAGE_EVENT, (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+  if (msg.startsWith('/')) {
+    msg = msg.trim().slice(1)
 
-//      invokeCMD(player, cmd, args)
-//    }
-//  } else {
-//    if (mutedPlayers.has(player) && mutedPlayers.get(player)) {
-//      send(player, '{E52B50} У вас бан-чат!', false)
-//      return
-//    }
+    if (msg.length > 0) {
+      const args = msg.split(" ")
+      const cmd = args.shift() as string
 
-//    msg = msg.trim()
+      invokeCMD(player, cmd, args)
+    }
+  } else {
+    if (mutedPlayers.has(player) && mutedPlayers.get(player)) {
+      send(player, '{E52B50} У вас бан-чат!', false)
+      return
+    }
 
-//    if (msg.length > 0) {
-//      const formattedMsg = msg.replace(/</g, "&lt;").replace(/'/g, "&#39;").replace(/"/g, "&#34;");
+    msg = msg.trim()
 
-//      const data = {
-//        playerName: player.name,
-//        formattedMsg: formattedMsg,
-//        showTime: showTime,
-//        tile: tile
-//      }
+    if (msg.length > 0) {
+      const formattedMsg = msg.replace(/</g, "&lt;").replace(/'/g, "&#39;").replace(/"/g, "&#34;");
 
-//      mp.events.call(CHAT_MESSAGE_EVENT, data);
-//    }
-//  }
-//})
+      mp.players.forEach(p => {
+        rpc.callClient(p, CHAT_MESSAGE_EVENT, [player.name, formattedMsg, showTime, tile])
+      })
+    }
+  }
+})
 
 
-//mp.events.add('sendMsg', (player: PlayerMp, ...args: any[]) => { 
-//  const [msg, showTime, tile]= args as [string, boolean, string?]
-//  send(player, msg, showTime, tile);
-//});
+rpc.register('sendMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+  send(player, msg, showTime, tile);
+})
 
-//mp.events.add('broadcastMsg', (...args: any[]) => {
-//  const [msg, showTime, tile] = args as [string, boolean, string?]
-//  broadcast(msg, showTime, tile);
-//})
+rpc.register('broadcastMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+  broadcast(msg, showTime, tile);
+})

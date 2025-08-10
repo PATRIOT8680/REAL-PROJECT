@@ -5,9 +5,10 @@
 	"main": "index.ts",
 	"type": "commonjs",
 	"scripts": {
+    "start": "npm run build && cd .. && ragemp-server.exe",
+    "dev": "cd cef && npm run dev",
 		"build:cef": "cd cef && npm run build",
-		"build": "rollup -c --bundleConfigAsCjs && npm run build:cef && cd .. && ragemp-server.exe",
-		"dev:cef": "cd cef && npm run dev"
+		"build": "rollup -c --bundleConfigAsCjs && npm run build:cef"
 	},
 	"dependencies": {
 		"@entityseven/rage-fw-rpc": "^0.2.5",

@@ -20,6 +20,7 @@ const toggleChat = (state: boolean) => {
 }
 
 const addMsg = (name: string | null, text: string, showTime: boolean, tile?: string) => {
+  mp.console.logError(`const addMsg: ${text}`)
   if (name) {
     rpc.callBrowser('addMsg', [name, text, showTime, tile])
   } else {
@@ -35,7 +36,8 @@ rpc.register('chatloaded', () => {
 })
 
 rpc.register('chatmessage', (text: string) => {
-  rpc.call(CHAT_MESSAGE_EVENT, [text])
+  mp.console.logError(`register:chatmessage: ${text}`)
+  //rpc.call(CHAT_MESSAGE_EVENT, [text])
   rpc.callServer(CHAT_MESSAGE_EVENT, [text])
   toggleChat(true)
   opened = true
@@ -43,8 +45,10 @@ rpc.register('chatmessage', (text: string) => {
 
 export const pushMsg = (name: string | null, text: string, showTime: boolean, tile?: string) => {
   if(!loaded) {
+    mp.console.logError(`pushMsg (no loaded): ${text}`)
     buffer.push({name, text, showTime, tile})
   } else {
+    mp.console.logError(`pushMsg (loaded): ${text}`)
     addMsg(name, text, showTime, tile)
   }
 }

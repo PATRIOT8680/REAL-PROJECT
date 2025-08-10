@@ -1,5 +1,7 @@
 'use strict';
 
+var fs = require('fs');
+var path = require('path');
 var mysql = require('mysql2');
 var chalk = require('chalk');
 var bcrypt = require('bcryptjs');
@@ -22,6 +24,8 @@ function _interopNamespaceDefault(e) {
   return Object.freeze(n);
 }
 
+var fs__namespace = /*#__PURE__*/_interopNamespaceDefault(fs);
+var path__namespace = /*#__PURE__*/_interopNamespaceDefault(path);
 var mysql__namespace = /*#__PURE__*/_interopNamespaceDefault(mysql);
 
 mp.events.add('playerJoin', (player) => {
@@ -41,39 +45,6 @@ mp.events.add('playerJoin', (player) => {
     player.heading = 144;
     player.health = 100;
 });
-
-const data = mysql__namespace.createPool({
-    host: 'localhost',
-    user: 'root',
-    database: 'redstar',
-    password: 'Patriot86',
-    port: 3306
-});
-const mysql2 = {
-    isConnected: false,
-    sql: 'SELECT * FROM accounts'
-};
-const makeConnection = () => {
-    data.getConnection((err, connection) => {
-        if (err) {
-            console.log(chalk.blueBright('• MYSQL • База данных не подключена! Повторная попытка через 2 секунды...'));
-            setTimeout(makeConnection, 2000);
-        }
-        else {
-            connection.query(mysql2.sql, (errQuery) => {
-                if (errQuery) {
-                    mysql2.isConnected = false;
-                    console.log(chalk.bgRed('• MYSQL •') + chalk.red(` Ошибка подключения к БД! (Err: ${errQuery})`));
-                }
-                else {
-                    mysql2.isConnected = true;
-                    console.log(chalk.bgGreen('• MYSQL •') + chalk.green(' База данных подключена!'));
-                }
-            });
-        }
-    });
-};
-makeConnection();
 
 var Environment;
 (function (Environment) {
@@ -828,6 +799,231 @@ const rpc = new Rpc({
     debugLogs: false
 });
 
+const cmdHandlers = {};
+const mutedPlayers = new Map();
+const CHAT_MESSAGE_EVENT = 'chat:message';
+const send = (player, msg, showTime, tile) => {
+    if (!player) {
+        console.error('[CHAT SEND] player не должен быть равен null. Используй chat.broadcast');
+        return;
+    }
+    else {
+        mp.players.forEach(p => {
+            rpc.callClient(p, CHAT_MESSAGE_EVENT, [null, msg, showTime, tile]);
+        });
+    }
+};
+const broadcast = (msg, showTime, tile) => {
+    mp.players.forEach(p => {
+        rpc.callClient(p, CHAT_MESSAGE_EVENT, [null, msg, showTime, tile]);
+    });
+};
+const registerCMD = (cmd, callback) => {
+    if (cmdHandlers[cmd] !== undefined) {
+        console.log(`Не удалось зарегистрировать команду (/${cmd}), которая уже зарегистрирована!`);
+    }
+    else {
+        cmdHandlers[cmd] = callback;
+    }
+};
+const invokeCMD = (player, cmd, args) => {
+    cmd = cmd.toLowerCase();
+    const callback = cmdHandlers[cmd];
+    if (callback) {
+        callback(player, args);
+    }
+    else {
+        send(player, `{ffcbbb} <b>Команда не найдена! (/${cmd})</b>`, false);
+    }
+};
+rpc.register(CHAT_MESSAGE_EVENT, (player, msg, showTime, tile) => {
+    if (msg.startsWith('/')) {
+        msg = msg.trim().slice(1);
+        if (msg.length > 0) {
+            const args = msg.split(" ");
+            const cmd = args.shift();
+            invokeCMD(player, cmd, args);
+        }
+    }
+    else {
+        if (mutedPlayers.has(player) && mutedPlayers.get(player)) {
+            send(player, '{E52B50} У вас бан-чат!', false);
+            return;
+        }
+        msg = msg.trim();
+        if (msg.length > 0) {
+            const formattedMsg = msg.replace(/</g, "&lt;").replace(/'/g, "&#39;").replace(/"/g, "&#34;");
+            mp.players.forEach(p => {
+                rpc.callClient(p, CHAT_MESSAGE_EVENT, [player.name, formattedMsg, showTime, tile]);
+            });
+        }
+    }
+});
+rpc.register('sendMsg', (player, msg, showTime, tile) => {
+    send(player, msg, showTime, tile);
+});
+rpc.register('broadcastMsg', (player, msg, showTime, tile) => {
+    broadcast(msg, showTime, tile);
+});
+
+registerCMD('me', (player, args) => {
+    const text = args.join(' ');
+    if (!text) {
+        send(player, 'Используйте <b>/me [текст]</b>', false);
+        return;
+    }
+    broadcast(`{FFA96C}<b>Гражданин #${player.socialClub} ${text}</b>`, true, 'me');
+});
+registerCMD('do', (player, args) => {
+    const text = args.join(' ');
+    if (!text) {
+        send(player, 'Используйте <b>/do [текст]</b>', false);
+        return;
+    }
+    const formatedText = text.charAt(0).toUpperCase() + text.slice(1);
+    const finalText = formatedText.endsWith('.') ? formatedText : formatedText + '.';
+    broadcast(`{9FFF97}<b>${finalText} (${player.socialClub})</b>`, true, 'do');
+});
+registerCMD('try', (player, args) => {
+    const text = args.join(' ');
+    const outcomes = ['successful', 'unsuccessful'];
+    const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+    if (!text) {
+        send(player, 'Используйте <b>/try [текст]</b>', false);
+        return;
+    }
+    if (randomOutcome === 'successful') {
+        broadcast(`{00FF51}<b>[${player.socialClub}]: ${text} => (Удачно 😄)</b>`, true, 'try');
+    }
+    else {
+        broadcast(`{FF0037}<b>[${player.socialClub}]: ${text} => (Неудачно 😞)</b>`, true, 'try');
+    }
+});
+registerCMD('todo', (player, args) => {
+    const text = args.join(' ');
+    const parts = text.split('*');
+    const action = parts[0]?.trim();
+    const sayChar = parts[1]?.trim();
+    if (!text) {
+        send(player, 'Используйте <b>/todo [действие персонажа (Что сделав?) * фраза персонажа]</b>', false);
+    }
+    else if (!action) {
+        send(player, 'Не указано действие персонажа! (Вопрос: Что сделав?)', false);
+    }
+    else if (!sayChar) {
+        send(player, 'Не указана фраза вашего персонажа!', false);
+    }
+    else {
+        const formatedAction = action.charAt(0).toUpperCase() + action.slice(1);
+        const formatedSayChar = sayChar.charAt(0).toUpperCase() + sayChar.slice(1);
+        broadcast(`<b>${formatedAction}, ${player.socialClub} сказал: "${formatedSayChar}"</b>`, true, 'todo');
+    }
+});
+registerCMD('testadmin', (player, args) => {
+    const text = args.join(' ');
+    send(player, `<b>${text}</b>`, true, 'admin');
+});
+
+registerCMD('getpos', (player, [target, ...namePos]) => {
+    const targetId = parseInt(target, 10);
+    const fullNamePos = namePos.join(' ');
+    const foundTarget = mp.players.at(targetId);
+    const filePath = 'E:/PROJECTS/REDSTAR-RAGE/A • targetPosition.txt';
+    if (!target || !namePos.length) {
+        send(player, 'Используйте <b>/getpos [targetId] [name pos]</b>', false);
+        return;
+    }
+    else if (!foundTarget) {
+        send(player, `{ff3030}<b>Игрок #${target} не найден!</b>`, false, 'admin');
+        return;
+    }
+    const locationTarget = `\n-- [${foundTarget.name} • ${fullNamePos}]: ${foundTarget.position.x}, ${foundTarget.position.y}, ${foundTarget.position.z} || ${foundTarget.rotation.x}, ${foundTarget.rotation.y}, ${foundTarget.rotation.z * (180 / Math.PI)}\n [JSON]: { "x": ${foundTarget.position.x}, "y": ${foundTarget.position.y}, "z": ${foundTarget.position.z}, "rot": ${foundTarget.rotation.z * (180 / Math.PI)} }\n`;
+    const dirPath = path__namespace.dirname(filePath);
+    if (!fs__namespace.existsSync(dirPath)) {
+        fs__namespace.mkdirSync(dirPath, { recursive: true });
+    }
+    fs__namespace.appendFile(filePath, locationTarget, (err) => {
+        if (err) {
+            send(player, `{ff3030}<b>Ошибка при записи позиции игрока!</b> (${err})`, false);
+        }
+        else {
+            send(player, `{0eeb15}Позиция <b>Игрока #${target} успешно записана!</b>`, true, 'admin');
+        }
+    });
+});
+registerCMD('setdim', (player, [target, dimension]) => {
+    const targetId = parseInt(target, 10);
+    const foundTarget = mp.players.at(targetId);
+    if (!target || !dimension) {
+        send(player, 'Используйте <b>/getpos [targetId] [name pos]</b>', false);
+        return;
+    }
+    else if (!foundTarget) {
+        send(player, `{ff3030}<b>Игрок #${target} не найден!</b>`, false, 'admin');
+        return;
+    }
+    foundTarget.dimension = dimension;
+});
+registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
+    if (model === undefined || !target) {
+        send(player, `<b>Используйте /veh [playerID?] [model] [r?] [g?] [b?] [numberPlate?]</b>`, false, 'admin');
+        return;
+    }
+    const targetId = parseInt(target, 10);
+    const foundTarget = mp.players.at(targetId);
+    if (!foundTarget) {
+        send(player, `<b>Игрок #${target} не найден!</b>`, false, 'admin');
+        return;
+    }
+    let vehicle;
+    try {
+        const pos = foundTarget.position;
+        vehicle = mp.vehicles.new(mp.joaat(model), new mp.Vector3(pos.x, pos.y, pos.z), {
+            heading: foundTarget.rotation.z * (180 / Math.PI),
+            color: [[255, 255, 255], [255, 255, 255]],
+            dimension: foundTarget.dimension,
+            numberPlate: numberPlate || 'ADMIN'
+        });
+        foundTarget.putIntoVehicle(vehicle, 0);
+    }
+    catch (e) {
+        send(player, `<b>Транспорт ${model} не найден!</b>`, false, 'admin');
+    }
+});
+
+const data = mysql__namespace.createPool({
+    host: 'localhost',
+    user: 'root',
+    database: 'redstar',
+    password: 'Patriot86',
+    port: 3306
+});
+const mysql2 = {
+    isConnected: false,
+    sql: 'SELECT * FROM accounts'
+};
+const makeConnection = () => {
+    data.getConnection((err, connection) => {
+        if (err) {
+            console.log(chalk.blueBright('• MYSQL • База данных не подключена! Повторная попытка через 2 секунды...'));
+            setTimeout(makeConnection, 2000);
+        }
+        else {
+            connection.query(mysql2.sql, (errQuery) => {
+                if (errQuery) {
+                    mysql2.isConnected = false;
+                    console.log(chalk.bgRed('• MYSQL •') + chalk.red(` Ошибка подключения к БД! (Err: ${errQuery})`));
+                }
+                else {
+                    mysql2.isConnected = true;
+                    console.log(chalk.bgGreen('• MYSQL •') + chalk.green(' База данных подключена!'));
+                }
+            });
+        }
+    });
+};
+makeConnection();
+
 const transporter$1 = nodemailer.createTransport({
     service: 'yandex',
     host: 'smtp.yandex.ru',
@@ -1163,6 +1359,7 @@ rpc.register('client:playerDeath', (player, [posX, posY, posZ]) => {
 });
 const playerKill = async (player) => {
     player.spawn(new mp.Vector3(-1221.006591796875, -100.9054946899414, 42.5238037109375));
+    rpc.callClient(player, 'gui:cursorVisible', [false]);
     rpc.callClient(player, 'ui:setPauseMenuActive', [true]);
     rpc.callClient(player, 'ui:displayRadar', [true]);
     rpc.callClient(player, 'player:freeze', [false]);
@@ -1181,6 +1378,7 @@ const playerKnockout = (player) => {
     else {
         rpc.callClient(player, 'player:isCollision', [false]);
     }
+    rpc.callClient(player, 'gui:cursorVisible', [true]);
     rpc.callClient(player, 'player:freeze', [true]);
     rpc.callClient(player, 'ui:setPauseMenuActive', [false]);
     rpc.callClient(player, 'ui:displayRadar', [false]);
@@ -1200,7 +1398,11 @@ const playerReborn = (player) => {
     rpc.callClient(player, 'player:godmode', [false]);
     rpc.callClient(player, 'ui:setPauseMenuActive', [true]);
     rpc.callClient(player, 'graphics:stopAllScreenEffects');
+    rpc.callClient(player, 'gui:cursorVisible', [false]);
     rpc.callClient(player, 'execute', ['window.App.deathReducer.showDeath(``, `reborn`)']);
+    setTimeout(() => {
+        rpc.callClient(player, 'execute', [`window.App.chatReducer.showChat()`]);
+    }, 5000);
 };
 rpc.register('playerKill', (player) => {
     playerKill(player);

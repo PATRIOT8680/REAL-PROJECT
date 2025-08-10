@@ -30,10 +30,7 @@ const enableAuth = () => {
   mp.game.ui.displayRadar(false)
   mp.game.graphics.disableScreenblurFade()
   mp.players.local.freezePosition(true)
-
-  setTimeout(() => {
-    mp.gui.cursor.show(true, true)
-  }, 500)
+  mp.gui.cursor.visible = true
 
   startNextCameraMovement()
 
@@ -71,9 +68,7 @@ const disableAuth = () => {
     console.error("Disable auth timer error:", e)
   }
 
-  setTimeout(() => {
-    mp.gui.cursor.show(false, false)
-  }, 500)
+  mp.gui.cursor.visible = false
 
   if (cameraState.isTransition) {
     mp.game.cam.doScreenFadeIn(0)
@@ -87,6 +82,7 @@ const disableAuth = () => {
   stopCamMoving()
 
   showLoading(3000)
+  rpc.call('execute', [`window.App.chatReducer.showChat()`])
   rpc.call('execute', [`window.App.authReducer.hideAuth()`])
   setTimeout(() => {
     rpc.callServer('client:authPlayerVisible', [true])

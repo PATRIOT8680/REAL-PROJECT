@@ -14,6 +14,7 @@ rpc.register('client:playerDeath', (player: PlayerMp, [posX, posY, posZ] : [numb
 export const playerKill = async (player: PlayerMp) => {
   player.spawn(new mp.Vector3(-1221.006591796875, -100.9054946899414, 42.5238037109375))
 
+  rpc.callClient(player, 'gui:cursorVisible', [false])
   rpc.callClient(player, 'ui:setPauseMenuActive', [true])
   rpc.callClient(player, 'ui:displayRadar', [true])
   rpc.callClient(player, 'player:freeze', [false])
@@ -36,6 +37,7 @@ export const playerKnockout = (player: PlayerMp) => {
     rpc.callClient(player, 'player:isCollision', [false])
   }
 
+  rpc.callClient(player, 'gui:cursorVisible', [true])
   rpc.callClient(player, 'player:freeze', [true])
   rpc.callClient(player, 'ui:setPauseMenuActive', [false])
   rpc.callClient(player, 'ui:displayRadar', [false])
@@ -60,7 +62,12 @@ export const playerReborn = (player: PlayerMp) => {
   rpc.callClient(player, 'player:godmode', [false])
   rpc.callClient(player, 'ui:setPauseMenuActive', [true])
   rpc.callClient(player, 'graphics:stopAllScreenEffects')
+  rpc.callClient(player, 'gui:cursorVisible', [false])
   rpc.callClient(player, 'execute', ['window.App.deathReducer.showDeath(``, `reborn`)'])
+
+  setTimeout(() => {
+    rpc.callClient(player, 'execute', [`window.App.chatReducer.showChat()`])
+  }, 5000)
 }
 
 rpc.register('playerKill', (player: PlayerMp) => {

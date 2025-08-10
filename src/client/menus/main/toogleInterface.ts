@@ -17,21 +17,10 @@ const handleInterfaceVisibility = (interfaceName: string, isVisible: boolean) =>
 };
 
 rpc.register('toggleInterface', (interfaceName: string, isVisible: boolean, duration?: number) => {
-    setTimeout(() => {
-      mp.gui.cursor.show(true, true);
-    }, 500)
-    mp.gui.cursor.visible = true
-    rpc.callBrowser(`cef:${isVisible ? 'show' : 'hide'}${interfaceName}`, [duration]);
-    handleInterfaceVisibility(interfaceName, isVisible);
-});
-
-
-mp.keys.bind(Keys.VK_OEM_3, true, () => {
-  const visibleCursor = false
-
   setTimeout(() => {
-    mp.gui.cursor.show(!visibleCursor, !visibleCursor)
-  }, 100)
+    mp.gui.cursor.show(true, true);
+  }, 500)
+  mp.gui.cursor.visible = true
+  rpc.callBrowser(`cef:${isVisible ? 'show' : 'hide'}${interfaceName}`, [duration]);
+  handleInterfaceVisibility(interfaceName, isVisible);
 })
-//mp.events.call('toggleInterface', 'Auth', true)
-//mp.events.call('toggleInterface', 'Chat', true)

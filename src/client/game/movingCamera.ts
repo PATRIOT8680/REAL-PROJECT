@@ -43,7 +43,6 @@ export const startCamMoving = (path: IAllCameras) => {
   currentPath = path;
   startTime = Date.now();
 
-  // Удаляем предыдущий рендер-ивент если был
   if (renderEvent) {
       mp.events.remove(renderEvent);
   }

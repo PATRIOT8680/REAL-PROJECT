@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from 'react'
+import { useState, useRef, useEffect, FormEvent } from 'react'
+import type { KeyboardEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../reducers/rootReducer'
+import { rpc } from '../../main'
 
 import './assets/style/compiled-css/Index.css'
 
@@ -14,7 +16,7 @@ const Chat = () => {
   const [buffer, setBuffer] = useState<string[]>([])
   const [currentBufferIndex, setCurrentBufferIndex] = useState<number>(-1)
   const [inputValue, setInputValue] = useState<string>('')
-  const arrayActions = ['/do', '/me', '/try', '/todo']
+  const arrayActions = ['/do', '/me', '/try', '/todo', '']
 
   const chatboxRef = useRef<HTMLDivElement | null>(null)
   const msgRef = useRef<HTMLDivElement | null>(null)
@@ -25,38 +27,14 @@ const Chat = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const blurRef = useRef<HTMLDivElement | null>(null)
 
-  mp.trigger('chat:testMsg', inputValue)
-
   useEffect(() => {
-    mp.events.add('chatActive', (isActive: boolean) => { setChatActive(isActive) })
-    mp.events.add('addString', (text: string, showTime: boolean, tile: string) => addString(colorify(text), showTime, tile))
-    mp.events.add('addMsg', addMsg)
-    mp.events.add('openChat', openChat)
-    mp.events.add('closeChat', closeChat)
-    mp.trigger('chatloaded')
+    rpc.register('chatActive', (isActive: boolean) => { setChatActive(isActive) })
+    rpc.register('addString', (text: string, showTime: boolean, tile: string) => addString(colorify(text), showTime, tile))
+    rpc.register('addMsg', addMsg)
+    rpc.register('openChat', openChat)
+    rpc.register('closeChat', closeChat)
+    rpc.callClient('chatloaded')
 
-    if (chatboxRef.current) {
-      chatboxRef.current.classList.add('active')
-
-      startChatboxActiveRef.current = setTimeout(() => {
-        chatboxRef.current?.classList.remove('active')
-      }, 12000)
-    }
-
-    return () => {
-      mp.events.add('addString', () => {})
-      mp.events.add('addMsg', () => {})
-      mp.events.add('openChat', () => {})
-      mp.events.add('closeChat', () => {})
-      
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-        timeoutRef.current = null
-      }
-    }
-  }, [])
-
-  useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault()
 
@@ -78,11 +56,66 @@ const Chat = () => {
     }
 
     return () => {
+      rpc.unregister('addString')
+      rpc.unregister('addMsg')
+      rpc.unregister('openChat')
+      rpc.unregister('closeChat')
+      rpc.unregister('chatActive')
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+
       if (msgListElement) {
         msgListElement.removeEventListener('wheel', handleWheel)
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (chatboxRef.current && blurRef.current) {
+      if (chatActive) {
+        chatboxRef.current.classList.add('active')
+        blurRef.current.classList.add('active')
+
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = null;
+        }
+      } else {
+        timeoutRef.current = setTimeout(() => {
+          chatboxRef.current?.classList.remove('active')
+          blurRef.current?.classList.remove('active')
+        }, 20000)
+      }
+    }
+  }, [chatActive])
+
+  useEffect(() => {
+    const handleKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+      }
+    };
+
+    const listElement = msgListRef.current;
+    if (listElement) {
+      listElement.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      if (listElement) {
+        listElement.removeEventListener('keydown', handleKeyDown);
+      }
+    };
+  }, []);
+
+  //const handleMsgList = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  //  if (e.key === ' ' || e.key === 'Spacebar') {
+  //    e.preventDefault()
+  //  }
+  //};
 
   const colorify = (text: string) => {
 		let matches: { found: string; index: number }[] = []
@@ -144,7 +177,7 @@ const Chat = () => {
       timeoutRef.current = null
     }
 
-    mp.trigger('cursorVisible', true)
+    rpc.callClient('cursorVisible', [true])
 
     if (insertSlash) {
       setInputValue('/')
@@ -156,45 +189,22 @@ const Chat = () => {
       msgInputRef.current.querySelector('input')?.focus()
     }
 
-    if (chatboxRef.current) {
-      chatboxRef.current.classList.add('active')
-    }
-
-    if (blurRef.current) {
-      blurRef.current.classList.add('active')
-    }
-
     setChatActive(true)
   }
 
   const closeChat = () => {
-    if (chatVisible) {
-      mp.trigger('cursorVisible', false)
-
-      if (msgInputRef.current) {
-        msgInputRef.current.querySelector('input')?.blur()
-        msgInputRef.current.style.display = 'none'
-      }
-
-      if (chatboxRef.current && blurRef.current) {
-        blurRef.current?.classList.remove('active')
-        
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current)
-        }
-        
-        timeoutRef.current = setTimeout(() => {
-          chatboxRef.current?.classList.remove('active')
-          setChatActive(false)
-          timeoutRef.current = null
-        }, 12000)
-      }
+    if (chatVisible && msgInputRef.current) {
+      msgInputRef.current.style.transition = 'none';
+      msgInputRef.current.style.display = 'none';
+      rpc.callClient('cursorVisible', [false])
+      setChatActive(false)
     }
   }
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    mp.trigger('chatmessage', inputValue)
+    rpc.callClient('clientCmd', [`handleSubmit: ${inputValue}`])
+    rpc.callClient('chatmessage', [inputValue])
     saveBuffer()
     closeChat()
     setInputValue('')
@@ -205,9 +215,17 @@ const Chat = () => {
       event.preventDefault()
       const currentIndex = arrayActions.indexOf(inputValue.trim())
       const nextAction = (currentIndex + 1) % arrayActions.length
-      setInputValue(arrayActions[nextAction] + ' ')
+      
+      if (arrayActions[nextAction] === '') {
+        setInputValue('')
+      } else {
+        setInputValue(arrayActions[nextAction] + ' ')
+      }
+      
       inputTextRef.current?.focus()
-    } else if (event.key === 'ArrowDown') {
+    } 
+
+    if (event.key === 'ArrowDown') {
       event.preventDefault()
       if (currentBufferIndex > 0) {
         loadBuffer(currentBufferIndex - 1)
@@ -215,12 +233,19 @@ const Chat = () => {
         setCurrentBufferIndex(-1)
         setInputValue('')
       }
-    } else if (event.key === 'ArrowUp') {
+    }
+
+    if (event.key === 'ArrowUp') {
       event.preventDefault()
       if (currentBufferIndex < buffer.length - 1) {
         loadBuffer(currentBufferIndex + 1)
       }
     }
+
+    //if (event.code === 'Space') {
+    //  event.preventDefault()
+    //  return
+    //}
   }
 
   const saveBuffer = () => {
@@ -244,15 +269,8 @@ const Chat = () => {
       msgListRef.current.scrollTo({
         left: 0,
         top: msgListRef.current.scrollHeight,
-        behavior: 'smooth'
       })
     }
-    clearTimeout(timeoutRef.current!)
-    timeoutRef.current = setTimeout(() => {
-      if (msgListRef.current) {
-        msgListRef.current.classList.remove('active')
-      }
-    }, 12000)
   }
 
   const getCurrentTimeInMoscow = () => {
@@ -282,13 +300,18 @@ const Chat = () => {
     }
   }
 
-  const addMsg = ([name, text]: [string, string]) => {
+  const addMsg = (name: string, text: string) => {
+    rpc.callClient('clientCmd', [`ADD MSG SEND: ${name}, ${text}`])
 		const coloredText = colorify(text)
 		addString(`<b>Гражданин #19383</b> • ${coloredText}`, true)
 	}
 
   const handleActionInput = (action: string) => {
-    setInputValue(action + ' ')
+    if (action === '') {
+      setInputValue('');
+    } else {
+      setInputValue(action + ' ');
+    }
 
     if (inputTextRef.current) {
       inputTextRef.current.focus()
@@ -300,16 +323,18 @@ const Chat = () => {
 			<div className='div-effect' ref={blurRef}></div>
 			<div className='chatbox' ref={chatboxRef}>
         <span className='title'>Игровой чат</span>
-				<div className='msgList' ref={msgListRef}>
+				<div className='msgList' ref={msgListRef} tabIndex={0}>
 					<div className='messages' ref={msgRef}>
-						{/*<span className='time'>19:45</span>
-            <span className="tile" id='admin'>ADMIN</span>
-						<p><b>Создавая</b> персонажа, учитывайте, что больше изменить внешность не сможете, за исключением покупки за RED COINS</p>
+						{/*<p><span className="tile" id='hello'>HELLO</span> <b>Ваше приключение начинается на X REDSTAR ROLEPLAY</b></p>
             <p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.
 Создавайте его с умом, так как потом не изменить!</p>
             <p>Чтобы продолжить игру, введите свои данные от аккаунты</p>
             <p>Создавая персонажа, учитывайте, что больше изменить внешность не сможете, за исключением покупки за RED COINS</p>
             <p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.
+Создавайте его с умом, так как потом не изменить!</p>
+<p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.
+Создавайте его с умом, так как потом не изменить!</p>
+<p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.
 Создавайте его с умом, так как потом не изменить!</p>*/}
 					</div>
 				</div>
@@ -329,15 +354,18 @@ const Chat = () => {
 								placeholder='Введите сообщение...'
 								onKeyDown={handleKeyDown}
                 ref={inputTextRef}
+                autoFocus={true}
 							/>
 						</div>
 						<div className='action-btns'>
-							<button className='action' type='button' onClick={() => handleActionInput('/do')}>/do</button>
-							<button className='action' type='button' onClick={() => handleActionInput('/me')}>/me</button>
-							<button className='action' type='button' onClick={() => handleActionInput('/try')}>/try</button>
-							<button className='action' type='button' onClick={() => handleActionInput('/todo')}>/todo</button>
+              <span>TAB</span>
+							<button className='action' type='button' onClick={() => handleActionInput('/do')}>DO</button>
+							<button className='action' type='button' onClick={() => handleActionInput('/me')}>ME</button>
+							<button className='action' type='button' onClick={() => handleActionInput('/try')}>TRY</button>
+							<button className='action' type='button' onClick={() => handleActionInput('/todo')}>TODO</button>
+              <button className='action' type='button' onClick={() => handleActionInput('')}>IC</button>
 						</div>
-            <span className='help-action'>TAB • быстрая смена команды</span>
+            {/*<span className='help-action'><span>TAB</span> <span>быстрая смена команды</span></span>*/}
 					</form>
 				</div>
 			</div>
