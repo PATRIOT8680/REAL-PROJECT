@@ -1,6 +1,6 @@
 import { rpc } from '../utils/rpc'
 
-//import './chat'
+import './chat'
 import './auth/main'
 
 rpc.register('cef:serverCmd', (msg: string) => {

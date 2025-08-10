@@ -31,3 +31,8 @@ rpc.register('ui:displayRadar', (toggle: boolean) => {
 rpc.register('ui:setPauseMenuActive', (toggle: boolean) => {
   mp.game.ui.setPauseMenuActive(toggle)
 })
+
+// GUI
+rpc.register('gui:cursorVisible', (toggle: boolean) => {
+  mp.gui.cursor.visible = toggle
+})

@@ -33,10 +33,10 @@ mp.events.add('playerDeath', async (player: PlayerMp, reason: number, killer: Pl
   timeDeath = await rpc.callServer('client:getFormatedDateTime', [true, true, true]);
 
   rpc.callServer('playerKnockout')
-  rpc.call('execute', [`window.App.deathReducer.showDeath('Juice', null)`])
+  rpc.call('execute', [`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`])
+  rpc.call('execute', [`window.App.chatReducer.hideChat()`])
   rpc.callBrowser('client:chanceReborn', [chance, luck])
-  mp.console.logWarning(`LUCK: ${luck}`)
-  
+
   const playerPos = mp.players.local.position
   const getGroundZ = mp.game.gameplay.getGroundZFor3dCoord(playerPos.x, playerPos.y, playerPos.z, true, false)
 
@@ -46,4 +46,8 @@ mp.events.add('playerDeath', async (player: PlayerMp, reason: number, killer: Pl
 
 rpc.register('server:getFormatedDateTime', (time: string) => {
   timeDeath = time
+})
+
+rpc.register('cef:death:selectedFate', () => {
+  mp.gui.cursor.visible = false
 })

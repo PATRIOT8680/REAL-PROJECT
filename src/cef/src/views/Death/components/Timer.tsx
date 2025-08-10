@@ -1,6 +1,6 @@
 import '../assets/styles/compiled-css/Timer.css'
 
-import { FC, useRef, useEffect, useState } from 'react'
+import { FC, useRef, useEffect, useState, memo } from 'react'
 import { Howler, Howl } from 'howler'
 import { rpc } from '../../../main'
 import { sys } from '../../../../shared/sys'
@@ -58,4 +58,4 @@ const Timer: FC<ITimer> = ({ timeLeft, setTimeLeft }) => {
   )
 }
 
-export default Timer
+export default memo(Timer)

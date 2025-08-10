@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef } from 'react'
+import { FC, useState, useEffect, useRef, memo } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../reducers/rootReducer'
 import { Howler, Howl } from 'howler'
@@ -89,4 +89,4 @@ const DeathPlayer = () => {
   )
 }
 
-export default DeathPlayer
+export default memo(DeathPlayer)

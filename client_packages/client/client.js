@@ -752,6 +752,25 @@ const rpc = new Rpc({
     debugLogs: false,
 });
 
+const openInterfaces = new Set();
+const handleInterfaceVisibility = (interfaceName, isVisible) => {
+    mp.console.logInfo(`Interface: ${interfaceName}, Visible: ${isVisible}`);
+    if (isVisible) {
+        openInterfaces.add(interfaceName);
+    }
+    else {
+        openInterfaces.delete(interfaceName);
+    }
+};
+rpc.register('toggleInterface', (interfaceName, isVisible, duration) => {
+    setTimeout(() => {
+        mp.gui.cursor.show(true, true);
+    }, 500);
+    mp.gui.cursor.visible = true;
+    rpc.callBrowser(`cef:${isVisible ? 'show' : 'hide'}${interfaceName}`, [duration]);
+    handleInterfaceVisibility(interfaceName, isVisible);
+});
+
 global.Keys = {
     VK_LBUTTON: 0x01,
     VK_RBUTTON: 0x02,
@@ -927,32 +946,6 @@ global.Keys = {
 };
 var Keys = global.Keys;
 
-const openInterfaces = new Set();
-const handleInterfaceVisibility = (interfaceName, isVisible) => {
-    mp.console.logInfo(`Interface: ${interfaceName}, Visible: ${isVisible}`);
-    if (isVisible) {
-        openInterfaces.add(interfaceName);
-    }
-    else {
-        openInterfaces.delete(interfaceName);
-    }
-};
-rpc.register('toggleInterface', (interfaceName, isVisible, duration) => {
-    setTimeout(() => {
-        mp.gui.cursor.show(true, true);
-    }, 500);
-    mp.gui.cursor.visible = true;
-    rpc.callBrowser(`cef:${isVisible ? 'show' : 'hide'}${interfaceName}`, [duration]);
-    handleInterfaceVisibility(interfaceName, isVisible);
-});
-mp.keys.bind(Keys.VK_OEM_3, true, () => {
-    setTimeout(() => {
-        mp.gui.cursor.show(true, true);
-    }, 100);
-});
-//mp.events.call('toggleInterface', 'Auth', true)
-//mp.events.call('toggleInterface', 'Chat', true)
-
 const showLoading = (duration) => {
     setTimeout(() => {
         mp.gui.cursor.show(false, false);
@@ -988,7 +981,6 @@ const startCamMoving = (path) => {
     rpc.callServer('client:startNewCamera', [path.persCoord]);
     currentPath = path;
     startTime = Date.now();
-    // Удаляем предыдущий рендер-ивент если был
     if (renderEvent) {
         mp.events.remove(renderEvent);
     }
@@ -1184,9 +1176,7 @@ const enableAuth = () => {
     mp.game.ui.displayRadar(false);
     mp.game.graphics.disableScreenblurFade();
     mp.players.local.freezePosition(true);
-    setTimeout(() => {
-        mp.gui.cursor.show(true, true);
-    }, 500);
+    mp.gui.cursor.visible = true;
     startNextCameraMovement();
     if (mp.storage.data.auth !== undefined) {
         rpc.callBrowser('client:auth:saveLogin', [mp.storage.data.auth.login]);
@@ -1216,9 +1206,7 @@ const disableAuth = () => {
     catch (e) {
         console.error("Disable auth timer error:", e);
     }
-    setTimeout(() => {
-        mp.gui.cursor.show(false, false);
-    }, 500);
+    mp.gui.cursor.visible = false;
     if (cameraState.isTransition) {
         mp.game.cam.doScreenFadeIn(0);
         stopCamMoving();
@@ -1229,6 +1217,7 @@ const disableAuth = () => {
     }
     stopCamMoving();
     showLoading(3000);
+    rpc.call('execute', [`window.App.chatReducer.showChat()`]);
     rpc.call('execute', [`window.App.authReducer.hideAuth()`]);
     setTimeout(() => {
         rpc.callServer('client:authPlayerVisible', [true]);
@@ -1261,6 +1250,7 @@ rpc.register('sendNotify', (typeNotify, msg, duration, pos) => {
 
 mp.events.add('browserDomReady', async (player) => {
     rpc.call('execute', [`window.App.welcomeReducer.showWelcome()`]);
+    mp.gui.cursor.visible = true;
     await setTimeout(() => {
         rpc.call('cef:authEnabled', []);
         setTimeout(() => {
@@ -1269,18 +1259,91 @@ mp.events.add('browserDomReady', async (player) => {
     }, 7100);
 });
 
+const CHAT_MESSAGE_EVENT = 'chat:message';
+const buffer = [];
+let loaded = false;
+let opened = false;
+const toggleChat = (state) => {
+    rpc.callBrowser('chatActive', [state]);
+};
+const addMsg = (name, text, showTime, tile) => {
+    mp.console.logError(`const addMsg: ${text}`);
+    if (name) {
+        rpc.callBrowser('addMsg', [name, text, showTime, tile]);
+    }
+    else {
+        rpc.callBrowser('addString', [text, showTime, tile]);
+    }
+};
+rpc.register('chatloaded', () => {
+    for (const msg of buffer) {
+        addMsg(msg.name, msg.text, msg.showTime, msg.tile);
+    }
+    loaded = true;
+});
+rpc.register('chatmessage', (text) => {
+    mp.console.logError(`register:chatmessage: ${text}`);
+    //rpc.call(CHAT_MESSAGE_EVENT, [text])
+    rpc.callServer(CHAT_MESSAGE_EVENT, [text]);
+    toggleChat(true);
+    opened = true;
+});
+const pushMsg = (name, text, showTime, tile) => {
+    if (!loaded) {
+        mp.console.logError(`pushMsg (no loaded): ${text}`);
+        buffer.push({ name, text, showTime, tile });
+    }
+    else {
+        mp.console.logError(`pushMsg (loaded): ${text}`);
+        addMsg(name, text, showTime, tile);
+    }
+};
+const pushLine = (text, showTime, tile) => {
+    pushMsg(null, text, showTime, tile);
+};
+rpc.register(CHAT_MESSAGE_EVENT, pushMsg);
+mp.keys.bind(Keys.VK_T, false, () => {
+    if (loaded && !opened) {
+        opened = true;
+        toggleChat(true);
+        rpc.callBrowser('openChat', [false]);
+    }
+});
+mp.keys.bind(Keys.VK_OEM_2, false, () => {
+    if (loaded && !opened) {
+        opened = true;
+        toggleChat(true);
+        rpc.callBrowser('openChat', [true]);
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    if (loaded && opened) {
+        opened = false;
+        rpc.callBrowser('closeChat');
+        toggleChat(false);
+    }
+});
+mp.keys.bind(Keys.VK_ENTER, false, () => {
+    if (loaded && opened) {
+        opened = false;
+        rpc.callBrowser('closeChat');
+        toggleChat(false);
+    }
+});
+pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello');
+
 rpc.browser = mp.browsers.new('package://cef/index.html');
 mp.events.add('guiReady', () => {
     mp.gui.chat.show(false);
     mp.console.logInfo('guiReady');
     rpc.register('execute', (commands) => {
-        // Преобразуем одиночную команду в массив
         const commandsArray = Array.isArray(commands) ? commands : [commands];
-        // Логируем
         mp.console.logWarning(`Принято команд: ${commandsArray.length}`);
-        // Передаем в CEF как массив
         rpc.callBrowser('client:executeCode', commandsArray);
     });
+});
+mp.keys.bind(Keys.VK_OEM_3, false, () => {
+    mp.gui.cursor.visible = !mp.gui.cursor.visible;
 });
 rpc.register('clientCmd', (text) => {
     mp.console.logInfo(`[CEF]: ${text}`);
@@ -1292,6 +1355,9 @@ rpc.register('cef:setActiveAmbient', (toggle) => {
 rpc.register('cef:changeLanguage', (lang) => {
     mp.storage.data.language = lang;
     mp.storage.flush();
+});
+rpc.register('cursorVisible', (toggle) => {
+    mp.gui.cursor.visible = toggle;
 });
 
 mp.keys.bind(Keys.VK_F2, true, () => {
@@ -1317,14 +1383,17 @@ mp.events.add('playerDeath', async (player, reason, killer) => {
     player.hasVariable;
     await rpc.callServer('client:getFormatedDateTime', [true, true, true]);
     rpc.callServer('playerKnockout');
-    rpc.call('execute', [`window.App.deathReducer.showDeath('Juice', null)`]);
+    rpc.call('execute', [`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`]);
+    rpc.call('execute', [`window.App.chatReducer.hideChat()`]);
     rpc.callBrowser('client:chanceReborn', [chance, luck]);
-    mp.console.logWarning(`LUCK: ${luck}`);
     const playerPos = mp.players.local.position;
     const getGroundZ = mp.game.gameplay.getGroundZFor3dCoord(playerPos.x, playerPos.y, playerPos.z, true, false);
     rpc.callServer('client:playerDeath', [[player.position.x, player.position.y, getGroundZ]]);
 });
 rpc.register('server:getFormatedDateTime', (time) => {
+});
+rpc.register('cef:death:selectedFate', () => {
+    mp.gui.cursor.visible = false;
 });
 
 // PLAYER
@@ -1350,6 +1419,10 @@ rpc.register('ui:displayRadar', (toggle) => {
 });
 rpc.register('ui:setPauseMenuActive', (toggle) => {
     mp.game.ui.setPauseMenuActive(toggle);
+});
+// GUI
+rpc.register('gui:cursorVisible', (toggle) => {
+    mp.gui.cursor.visible = toggle;
 });
 
 mp.events.add('playerReady', (player) => {
