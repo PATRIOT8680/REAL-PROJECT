@@ -71,10 +71,12 @@ registerCMD('veh', (player: PlayerMp, [target, model, r, g, b, numberPlate]) => 
     let vehicle: VehicleMp = mp.vehicles.new(mp.joaat(model), targetPos, {
       engine: true,
       color: [[r, g, b], [r, g, b]],
-      numberPlate: numberPlate
+      numberPlate: numberPlate,
+      dimension: targetId.dimension,
+      heading: targetId.rotation.z * (180 / Math.PI)
     })
 
-
+    targetId.putIntoVehicle(vehicle, -1)
   } catch (e) {
     console.error(`err: ${e}`)
   }
