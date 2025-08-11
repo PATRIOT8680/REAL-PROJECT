@@ -44,10 +44,6 @@ const enableAuth = () => {
     }
     mp.storage.flush()
   })
-
-  rpc.register('client:auth:saveLogin', (login) => {
-    mp.storage.data.authLogin = login
-  })
 }
 
 
@@ -98,4 +94,5 @@ rpc.register('cef:authEnabled', () => {
 
 rpc.register('cef:authDisabled', () => {
   disableAuth()
+  global.loginPlayer = true
 })
