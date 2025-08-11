@@ -9,6 +9,7 @@ import './game/movingCamera'
 import './player/death'
 import './player/events'
 import './player/connected'
+import './player/nametags'
 
 if (openInterfaces.has('Auth')) {
 	mp.console.logInfo('Меню авторизации ВКЛЮЧЕНО!')

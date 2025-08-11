@@ -23,4 +23,5 @@ dist-ssr
 *.sw?
 bin
 resources
+src/server/database/mysql.ts
 .codegpt
