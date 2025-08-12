@@ -13,6 +13,23 @@ mp.keys.bind(global.Keys.VK_F9, false, () => {
 
 
 mp.events.add('render', () => {
+  mp.peds.forEachInStreamRange((ped: PedMp) => {
+    const pedPos = ped.getBoneCoords(12844, 0, 0, 0)
+    const localPos = mp.players.local.position
+
+    const distance = mp.game.gameplay.getDistanceBetweenCoords(
+        localPos.x, localPos.y, localPos.z,
+        pedPos.x, pedPos.y, pedPos.z,
+        true
+    )
+
+    if (distance < 15) return
+    const { x, y } = mp.game.graphics.world3dToScreen2d(new mp.Vector3(pedPos.x, pedPos.y, pedPos.z + 0.5))
+
+    if (x && y) {
+      drawTag(x, y, `Ped «${ped.remoteId}»`, [255, 255, 255, 255])
+    }
+  })
   mp.players.forEachInStreamRange((player: PlayerMp) => {
     if (player.handle === 0 || player === mp.players.local) return
 
