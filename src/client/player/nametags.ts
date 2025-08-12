@@ -14,6 +14,8 @@ mp.keys.bind(global.Keys.VK_F9, false, () => {
 
 mp.events.add('render', () => {
   mp.players.forEachInStreamRange((player: PlayerMp) => {
+    if (player.handle === 0 || player === mp.players.local) return
+
     const targetPos = player.getBoneCoords(12844, 0, 0, 0)
     const localPos = mp.players.local.position
 
