@@ -1,9 +1,10 @@
 {
 	"maxplayers" : 100,
-	"name" : "RAGE:MP Unofficial server", 
-	"gamemode" : "freeroam", 
+	"name" : "REAL RP • Development [CLOSED] [DEV]",
+	"language": "ru",
+	"gamemode" : "roleplay", 
 	"stream-distance" : 300.0,
-	"announce" : false,
+	"announce" : true,
 	"csharp" : "disabled",
 	"port": 22005
 }

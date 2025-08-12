@@ -1187,9 +1187,6 @@ const enableAuth = () => {
         };
         mp.storage.flush();
     });
-    rpc.register('client:auth:saveLogin', (login) => {
-        mp.storage.data.authLogin = login;
-    });
 };
 const disableAuth = () => {
     cameraState.isSpanActive = false;
@@ -1230,6 +1227,7 @@ rpc.register('cef:authEnabled', () => {
 });
 rpc.register('cef:authDisabled', () => {
     disableAuth();
+    global.loginPlayer = true;
 });
 
 rpc.register('sendNotify', (typeNotify, msg, duration, pos) => {
@@ -1436,6 +1434,28 @@ mp.events.add('playerReady', (player) => {
     }
     else {
         rpc.callBrowser('client:setLanguage', ['ru']);
+    }
+});
+
+const target = mp.players.local;
+const maxDistance = 17 * 17;
+mp.nametags.enabled = false;
+mp.keys.bind(global.Keys.VK_F9, false, () => {
+});
+mp.events.add('render', (nametags) => {
+    if (nametags && nametags.forEach) {
+        nametags.forEach(([player, x, y, distance]) => {
+            if (player.handle === 0 || player === target)
+                return;
+            if (distance > maxDistance)
+                return;
+            mp.game.graphics.drawText(`(${player.remoteId} Pidor)`, [x, y], {
+                font: 4,
+                color: [255, 255, 255, 255],
+                scale: [0.35, 0.35],
+                outline: true
+            });
+        });
     }
 });
 

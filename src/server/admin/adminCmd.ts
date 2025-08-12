@@ -52,32 +52,43 @@ registerCMD('setdim', (player: PlayerMp, [target, dimension]: [string, number]) 
 
 registerCMD('veh', (player: PlayerMp, [target, model, r, g, b, numberPlate]) => {
   try {
+    // Проверка обязательных аргументов
     if (model === undefined || target === undefined) {
-      send(player, `<b>Используйте /veh [playerID?] [model] [r?] [g?] [b?] [numberPlate?]</b>`, false, 'admin')
-      return
-    }
-    if (!model) {
-      send(player, `<b>Модель ${model} не существует!</b>`, false, 'admin')
+      send(player, `<b>Используйте /veh [playerID] [model] [r?] [g?] [b?] [numberPlate?]</b>`, false, 'admin')
       return
     }
 
-    const targetId = mp.players.at(parseInt(target, 10))
-    if (!targetId) {
+    // Поиск целевого игрока
+    const targetPlayer = mp.players.at(parseInt(target, 10))
+    if (!targetPlayer) {
       send(player, `<b>Игрок #${target} не найден!</b>`, false, 'admin')
       return
     }
 
-    let targetPos = target.position
-    let vehicle: VehicleMp = mp.vehicles.new(mp.joaat(model), targetPos, {
+    // Получаем позицию и поворот игрока
+    const { position, heading, dimension } = targetPlayer
+    
+    // Создаем транспорт
+    const vehicle = mp.vehicles.new(mp.joaat(model), new mp.Vector3(
+      position.x,
+      position.y,
+      position.z + 1.0  // +1.0 чтобы не спавнить под землей
+    ), {
       engine: true,
-      color: [[r, g, b], [r, g, b]],
-      numberPlate: numberPlate,
-      dimension: targetId.dimension,
-      heading: targetId.rotation.z * (180 / Math.PI)
+      color: [
+        [r || 255, g || 255, b || 255],  // Первичный цвет (по умолчанию белый)
+        [r || 255, g || 255, b || 255]   // Вторичный цвет
+      ],
+      numberPlate: numberPlate || 'ADMIN',
+      dimension: dimension,
+      heading: heading  // Используем heading вместо rotation.z
     })
 
-    targetId.putIntoVehicle(vehicle, -1)
+    // Помещаем игрока в транспорт
+    targetPlayer.putIntoVehicle(vehicle, 0)
+
   } catch (e) {
-    console.error(`Error: ${e}`)
+    console.error(`Ошибка при создании транспорта: ${e}`)
+    send(player, `<b>Ошибка при создании транспорта: ${e.message}</b>`, false, 'admin')
   }
 })
