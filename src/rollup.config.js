@@ -5,8 +5,18 @@ const clientConfig = {
   input: './client/index.ts',
   output: {
     file: path.resolve(__dirname, '../client_packages/client/client.js'),
-    format: 'cjs',
+    format: 'es', // Измените на ES модули для клиента
   },
+  external: [
+    '@entityseven/rage-fw-rpc',
+    'rage-rpc',
+    'rage-server',
+    'rage-client',
+    'fs',
+    'path',
+    'node:fs',
+    'node:path'
+  ],
   plugins: [
     typescript({
       tsconfig: './client/tsconfig.json',
