@@ -3,5 +3,5 @@
  "compilerOptions": {
     "types": ["../node_modules/@ragempcommunity/types-server", "../node_modules/@types/node", "./@types"]
  },
- "include": ["./**/*.ts"]
+ "include": ["./**/*.ts", "../types/variables.d.ts"]
 }

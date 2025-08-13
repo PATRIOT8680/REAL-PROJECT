@@ -9,7 +9,9 @@ const clientConfig = {
   },
   plugins: [
     typescript({
-      tsconfig: './tsconfig.json',
+      tsconfig: './client/tsconfig.json',
+      include: ['client/**/*.ts'],
+      exclude: ['server/**/*.ts']
     }),
   ],
 };
@@ -22,7 +24,9 @@ const serverConfig = {
   },
   plugins: [
     typescript({
-      tsconfig: './tsconfig.json',
+      tsconfig: './server/tsconfig.json',
+      include: ['server/**/*.ts'],
+      exclude: ['client/**/*.ts']
     }),
   ],
 };
