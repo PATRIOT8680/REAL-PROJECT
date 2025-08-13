@@ -1,8 +1,6 @@
-'use strict';
+import { Rpc } from '@entityseven/rage-fw-rpc';
 
-var rageFwRpc = require('@entityseven/rage-fw-rpc');
-
-const rpc = new rageFwRpc.Rpc({
+const rpc = new Rpc({
     debugLogs: false,
 });
 
