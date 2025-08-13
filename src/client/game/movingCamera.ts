@@ -70,44 +70,6 @@ export const startCamMoving = (path: IAllCameras) => {
     });
 };
 
-// export const startCamMoving = (path: IAllCameras) => {
-//   rpc.callServer('client:startNewCamera', [path.persCoord])
-
-//   currentPath = path;
-//   startTime = Date.now();
-
-//   if (renderEvent) {
-//     mp.events.remove(renderEvent);
-//   }
-
-//   createCamera(path.from, path.to);
-
-//   renderEvent = 'render'
-//   let ev = new mp.Event("render", (player, reason, killer) =>
-//     {
-//         if (!activeCamera || !currentPath) return
-
-//         const now = Date.now()
-//         const progress = Math.min((now - startTime) / currentPath.duration, 1)
-
-//         const x = lerp(currentPath.from.x, currentPath.to.x, progress)
-//         const y = lerp(currentPath.from.y, currentPath.to.y, progress)
-//         const z = lerp(currentPath.from.z, currentPath.to.z, progress)
-
-//         activeCamera.setCoord(x, y, z);
-        
-//         activeCamera.pointAtCoord(currentPath.to.x, currentPath.to.y, currentPath.to.z);
-
-//         if (progress >= 1) {
-//             stopCamMoving();
-//         }
-//     });
-//     ev.destroy();
-//   mp.events.add(renderEvent, () => {
-      
-//   });
-// };
-
 export const stopCamMoving = () => {
     if (ev) {
         ev.destroy()
