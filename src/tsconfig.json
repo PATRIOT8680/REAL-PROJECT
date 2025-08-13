@@ -9,6 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowImportingTsExtensions": false,
+    "suppressImplicitAnyIndexErrors": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "sourceMap": false,
