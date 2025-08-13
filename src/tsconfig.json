@@ -18,7 +18,7 @@
       "./node_modules/@ragempcommunity/types-client",
       "./node_modules/@ragempcommunity/types-cef",
       "./node_modules/@entityseven/rage-fw-rpc",
-      "./node_modules/@types/node"
+      "./node_modules/@types/node",
     ]
  },
   "exclude": [
@@ -27,4 +27,8 @@
     "./node_modules",
     "./cef"
   ],
+  "include": [
+    "./@types/variables.d.ts",
+    "./@types/shim.d.ts"
+  ]
 }

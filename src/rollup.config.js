@@ -13,7 +13,7 @@ const clientConfig = {
     resolve(), // Добавлено
     commonjs(), // Добавлено
     typescript({
-      tsconfig: './client/tsconfig.json', // Указываем конкретный tsconfig для клиента
+      tsconfig: 'client/tsconfig.json', // Указываем конкретный tsconfig для клиента
       include: ['client/**/*.ts'],
       exclude: ['server/**/*.ts']
     }),
@@ -28,7 +28,7 @@ const serverConfig = {
   },
   plugins: [
     typescript({
-      tsconfig: './server/tsconfig.json',
+      tsconfig: 'server/tsconfig.json',
       include: ['server/**/*.ts'],
       exclude: ['client/**/*.ts']
     }),
