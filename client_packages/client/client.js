@@ -771,6 +771,47 @@ rpc.register('toggleInterface', (interfaceName, isVisible, duration) => {
     handleInterfaceVisibility(interfaceName, isVisible);
 });
 
+// const drawTags = () => {
+//   const { position } = mp.players.local
+//
+//   mp.players.forEachInStreamRange(player => {
+//     const targetPos = player.position
+//     const distance = mp.game.system.vdist(position.x, position.y, position.z, targetPos.x, targetPos.y, targetPos.z)
+//
+//     if (distance > 50) return
+//
+//     mp.game.graphics.drawText(`Местный <${player.remoteId}>`, [targetPos.x, targetPos.y, targetPos.z], {
+//       font: 0,
+//       color: [255, 255, 255, 255],
+//       scale: [0.3, 0.3],
+//       outline: true,
+//     })
+//   })
+// }
+//
+// mp.events.add('render', drawTags)
+const maxDistance = 25 * 25;
+mp.nametags.enabled = false;
+mp.events.add('render', (nametags) => {
+    const graphics = mp.game.graphics;
+    const screenRes = graphics.getScreenResolution();
+    nametags.forEach(nametag => {
+        let [player, x, y, distance] = nametag;
+        if (distance <= maxDistance) {
+            let scale = (distance / maxDistance);
+            if (scale < 0.6)
+                scale = 0.6;
+            y -= scale * (0.005 * (screenRes.y / 1080));
+            mp.game.graphics.drawText(`Местный <${player.remoteId}>`, [x, y], {
+                font: 0,
+                color: [255, 255, 255, 255],
+                scale: [0.35, 0.35],
+                outline: true
+            });
+        }
+    });
+});
+
 global.Keys = {
     VK_LBUTTON: 0x01,
     VK_RBUTTON: 0x02,
@@ -964,7 +1005,6 @@ rpc.register('client:showLoading', showLoading);
 mp.console.logError('');
 
 let activeCamera = null;
-let renderEvent = null;
 let currentPath = null;
 let startTime = 0;
 const lerp = (a, b, t) => {
@@ -977,16 +1017,17 @@ const createCamera = (pos, target) => {
     activeCamera.setActive(true);
     mp.game.cam.renderScriptCams(true, false, 0, true, false);
 };
+let ev = null;
 const startCamMoving = (path) => {
     rpc.callServer('client:startNewCamera', [path.persCoord]);
     currentPath = path;
     startTime = Date.now();
-    if (renderEvent) {
-        mp.events.remove(renderEvent);
+    if (ev) {
+        // mp.events.remove(renderEvent);
+        ev.destroy();
     }
     createCamera(path.from, path.to);
-    renderEvent = 'render';
-    mp.events.add(renderEvent, () => {
+    ev = new mp.Event("render", (player, reason, killer) => {
         if (!activeCamera || !currentPath)
             return;
         const now = Date.now();
@@ -1001,10 +1042,37 @@ const startCamMoving = (path) => {
         }
     });
 };
+// export const startCamMoving = (path: IAllCameras) => {
+//   rpc.callServer('client:startNewCamera', [path.persCoord])
+//   currentPath = path;
+//   startTime = Date.now();
+//   if (renderEvent) {
+//     mp.events.remove(renderEvent);
+//   }
+//   createCamera(path.from, path.to);
+//   renderEvent = 'render'
+//   let ev = new mp.Event("render", (player, reason, killer) =>
+//     {
+//         if (!activeCamera || !currentPath) return
+//         const now = Date.now()
+//         const progress = Math.min((now - startTime) / currentPath.duration, 1)
+//         const x = lerp(currentPath.from.x, currentPath.to.x, progress)
+//         const y = lerp(currentPath.from.y, currentPath.to.y, progress)
+//         const z = lerp(currentPath.from.z, currentPath.to.z, progress)
+//         activeCamera.setCoord(x, y, z);
+//         activeCamera.pointAtCoord(currentPath.to.x, currentPath.to.y, currentPath.to.z);
+//         if (progress >= 1) {
+//             stopCamMoving();
+//         }
+//     });
+//     ev.destroy();
+//   mp.events.add(renderEvent, () => {
+//   });
+// };
 const stopCamMoving = () => {
-    if (renderEvent) {
-        mp.events.remove(renderEvent);
-        renderEvent = null;
+    if (ev) {
+        ev.destroy();
+        ev = null;
     }
     destroyCamera();
 };
@@ -1434,28 +1502,6 @@ mp.events.add('playerReady', (player) => {
     }
     else {
         rpc.callBrowser('client:setLanguage', ['ru']);
-    }
-});
-
-const target = mp.players.local;
-const maxDistance = 17 * 17;
-mp.nametags.enabled = false;
-mp.keys.bind(global.Keys.VK_F9, false, () => {
-});
-mp.events.add('render', (nametags) => {
-    if (nametags && nametags.forEach) {
-        nametags.forEach(([player, x, y, distance]) => {
-            if (player.handle === 0 || player === target)
-                return;
-            if (distance > maxDistance)
-                return;
-            mp.game.graphics.drawText(`(${player.remoteId} Pidor)`, [x, y], {
-                font: 4,
-                color: [255, 255, 255, 255],
-                scale: [0.35, 0.35],
-                outline: true
-            });
-        });
     }
 });
 
