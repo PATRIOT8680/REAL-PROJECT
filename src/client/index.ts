@@ -1,6 +1,6 @@
 import { openInterfaces } from './menus/main/toogleInterface'
 
-import './player/gametag'
+import './player/nametags'
 import './menus/global'
 //import './admin/noclip.js'
 //import './player/toogleAnim'

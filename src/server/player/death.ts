@@ -13,6 +13,7 @@ rpc.register('client:playerDeath', (player: PlayerMp, [posX, posY, posZ] : [numb
 
 export const playerKill = async (player: PlayerMp) => {
   player.spawn(new mp.Vector3(-1221.006591796875, -100.9054946899414, 42.5238037109375))
+  player.setVariable('player_knockout', false)
 
   rpc.callClient(player, 'gui:cursorVisible', [false])
   rpc.callClient(player, 'ui:setPauseMenuActive', [true])
@@ -30,6 +31,7 @@ export const playerKill = async (player: PlayerMp) => {
 
 export const playerKnockout = (player: PlayerMp) => {
   player.health = 0
+  player.setVariable('player_knockout', true)
 
   if (player.vehicle) {
     rpc.callClient(player, 'player:isCollision', [true])
