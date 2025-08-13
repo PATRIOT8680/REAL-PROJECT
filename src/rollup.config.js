@@ -1,25 +1,19 @@
 import typescript from 'rollup-plugin-typescript2';
 import path from 'path';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 const clientConfig = {
   input: './client/index.ts',
   output: {
     file: path.resolve(__dirname, '../client_packages/client/client.js'),
-    format: 'es', // Измените на ES модули для клиента
+    format: 'cjs',
   },
-  external: [
-    '@entityseven/rage-fw-rpc',
-    'rage-rpc',
-    'rage-server',
-    'rage-client',
-    'fs',
-    'path',
-    'node:fs',
-    'node:path'
-  ],
   plugins: [
+    resolve(), // Добавлено
+    commonjs(), // Добавлено
     typescript({
-      tsconfig: './client/tsconfig.json',
+      tsconfig: './client/tsconfig.json', // Указываем конкретный tsconfig для клиента
       include: ['client/**/*.ts'],
       exclude: ['server/**/*.ts']
     }),
