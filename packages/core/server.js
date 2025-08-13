@@ -40,7 +40,7 @@ mp.events.add('playerJoin', (player) => {
 mp.events.add('playerJoin', (player) => {
     player.dimension = player.id;
     console.log(`${player.socialClub} подключился!!! dim: ${player.dimension}`);
-    player.model = 0x65978363;
+    player.model = mp.joaat('mp_m_freemode_01');
     player.spawn(new mp.Vector3(3335.050537109375, 5162.82177734375, 18.2938232421875));
     player.heading = 144;
     player.health = 100;
@@ -1502,3 +1502,12 @@ rpc.register('client:getFormatedDateTime', (player, date, time, fullTime) => {
 mp.events.add('packagesLoaded', () => {
     initTimeSystem();
 });
+
+const pedPos = new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375);
+for (let i = 0; i < 3; i++) {
+    mp.peds.new(mp.joaat('mp_f_stripperlite'), pedPos, {
+        dynamic: false,
+        frozen: false,
+        invincible: false,
+    });
+}
