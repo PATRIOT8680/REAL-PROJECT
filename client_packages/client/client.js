@@ -1,6 +1,806 @@
-import { Rpc } from '@entityseven/rage-fw-rpc';
+'use strict';
 
-const rpc = new Rpc({
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+var dist;
+var hasRequiredDist;
+
+function requireDist () {
+	if (hasRequiredDist) return dist;
+	hasRequiredDist = 1;
+	var __defProp = Object.defineProperty;
+	var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+	var __getOwnPropNames = Object.getOwnPropertyNames;
+	var __hasOwnProp = Object.prototype.hasOwnProperty;
+	var __export = (target, all) => {
+	  for (var name in all)
+	    __defProp(target, name, { get: all[name], enumerable: true });
+	};
+	var __copyProps = (to, from, except, desc) => {
+	  if (from && typeof from === "object" || typeof from === "function") {
+	    for (let key of __getOwnPropNames(from))
+	      if (!__hasOwnProp.call(to, key) && key !== except)
+	        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+	  }
+	  return to;
+	};
+	var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+	var __async = (__this, __arguments, generator) => {
+	  return new Promise((resolve, reject) => {
+	    var fulfilled = (value) => {
+	      try {
+	        step(generator.next(value));
+	      } catch (e) {
+	        reject(e);
+	      }
+	    };
+	    var rejected = (value) => {
+	      try {
+	        step(generator.throw(value));
+	      } catch (e) {
+	        reject(e);
+	      }
+	    };
+	    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+	    step((generator = generator.apply(__this, __arguments)).next());
+	  });
+	};
+
+	// src/index.ts
+	var src_exports = {};
+	__export(src_exports, {
+	  Rpc: () => Rpc
+	});
+	dist = __toCommonJS(src_exports);
+
+	// src/utils.ts
+	var Utils = class {
+	  // todo type for dev browser
+	  static getEnvironment() {
+	    if ("joaat" in mp) return "SERVER" /* SERVER */;
+	    if ("game" in mp && "joaat" in mp.game)
+	      return "CLIENT" /* CLIENT */;
+	    if (window && "mp" in window) return "BROWSER" /* BROWSER */;
+	    return "UNKNOWN" /* UNKNOWN */;
+	  }
+	  static prepareExecution(data) {
+	    return JSON.parse(data);
+	  }
+	  static prepareTransfer(data) {
+	    return JSON.stringify(data);
+	  }
+	  static generateUUID() {
+	    let uuid = "", random;
+	    for (let i = 0; i < 32; i++) {
+	      random = Math.random() * 16 | 0;
+	      if (i === 8 || i === 12 || i === 16 || i === 20) {
+	        uuid += "-";
+	      }
+	      uuid += (i === 12 ? 4 : i === 16 ? random & 3 | 8 : random).toString(16);
+	    }
+	    return uuid;
+	  }
+	  static generateResponseEventName(uuid) {
+	    return `${"__rpc:response" /* EVENT_RESPONSE */}_${uuid}`;
+	  }
+	  static errorUnknownEnvironment(environment) {
+	    if (environment === "UNKNOWN" /* UNKNOWN */)
+	      throw new Error("Unknown environment" /* UNKNOWN_ENVIRONMENT */);
+	  }
+	};
+	var nativeClientEvents = /* @__PURE__ */ new Set([
+	  "browserCreated",
+	  "browserDomReady",
+	  "browserLoadingFailed",
+	  "playerEnterCheckpoint",
+	  "playerExitCheckpoint",
+	  "consoleCommand",
+	  "click",
+	  "playerChat",
+	  "playerCommand",
+	  "playerDeath",
+	  "playerJoin",
+	  "playerQuit",
+	  "playerReady",
+	  "playerResurrect",
+	  "playerRuleTriggered",
+	  "playerSpawn",
+	  "playerWeaponShot",
+	  "dummyEntityCreated",
+	  "dummyEntityDestroyed",
+	  "entityControllerChange",
+	  "incomingDamage",
+	  "outgoingDamage",
+	  "meleeActionDamage",
+	  "playerEnterVehicle",
+	  "playerLeaveVehicle",
+	  "playerStartTalking",
+	  "playerStopTalking",
+	  "entityStreamIn",
+	  "entityStreamOut",
+	  "render",
+	  "playerCreateWaypoint",
+	  "playerReachWaypoint",
+	  "playerEnterColshape",
+	  "playerExitColshape",
+	  "explosion",
+	  "projectile",
+	  "uncaughtException",
+	  "unhandledRejection"
+	]);
+	var nativeServerEvents = /* @__PURE__ */ new Set([
+	  "entityCreated",
+	  // 'entityDestroyed',
+	  "entityModelChange",
+	  "incomingConnection",
+	  "packagesLoaded",
+	  "playerChat",
+	  "playerCommand",
+	  "playerDamage",
+	  "playerDeath",
+	  "playerEnterCheckpoint",
+	  "playerEnterColshape",
+	  "playerEnterVehicle",
+	  "playerExitCheckpoint",
+	  "playerExitColshape",
+	  "playerExitVehicle",
+	  "playerJoin",
+	  "playerQuit",
+	  "playerReachWaypoint",
+	  "playerReady",
+	  "playerSpawn",
+	  "playerStartEnterVehicle",
+	  "playerStartExitVehicle",
+	  "playerStreamIn",
+	  "playerStreamOut",
+	  "playerWeaponChange",
+	  "serverShutdown",
+	  "trailerAttached",
+	  "vehicleDamage",
+	  "vehicleDeath",
+	  "vehicleHornToggle",
+	  "vehicleSirenToggle"
+	]);
+
+	// src/wrapper.ts
+	var Wrapper = class {
+	  constructor(options = {
+	    forceBrowserDevMode: false
+	  }) {
+	    this.environment_ = "UNKNOWN" /* UNKNOWN */;
+	    this.console_ = this.environment_ === "CLIENT" /* CLIENT */ ? mp.console.logInfo : console.log;
+	    this.debug_ = false;
+	    this.forceBrowserDevMode_ = false;
+	    if (options.forceBrowserDevMode) {
+	      this.environment_ = "UNKNOWN" /* UNKNOWN */;
+	      this.state_ = window;
+	    } else {
+	      this.environment_ = Utils.getEnvironment();
+	      this.state_ = this.environment_ === "BROWSER" /* BROWSER */ ? window : commonjsGlobal;
+	    }
+	    this.forceBrowserDevMode_ = !!options.forceBrowserDevMode;
+	  }
+	  // checks if event is available (registered) in current environment
+	  verifyEvent_(data) {
+	    let rpcData = typeof data === "string" ? Utils.prepareExecution(data) : data;
+	    if (!this.state_[rpcData.eventName]) {
+	      rpcData.knownError = "Event not registered" /* EVENT_NOT_REGISTERED */;
+	    }
+	    return rpcData;
+	  }
+	  triggerError_(rpcData, error) {
+	    const errorMessage = [
+	      `${rpcData.knownError}`,
+	      `Caller: ${rpcData.calledFrom}`,
+	      `Receiver: ${this.environment_}`,
+	      `Event: ${rpcData.eventName}`
+	    ];
+	    if (error) {
+	      errorMessage.push(`Additional Info: ${error}`);
+	    }
+	    throw new Error(errorMessage.join("\n | "));
+	  }
+	  log(method, eventName, ...args) {
+	    if (this.debug_)
+	      this.console_("RPC | [" + method + "] " + eventName + ":", ...args);
+	  }
+	};
+
+	// src/server.ts
+	var Server = class extends Wrapper {
+	  constructor(options = {
+	    forceBrowserDevMode: false
+	  }) {
+	    super(options);
+	    if (!!options.forceBrowserDevMode) return;
+	    mp.events.add(
+	      "__rpc:serverListener" /* SERVER_EVENT_LISTENER */,
+	      (player, dataRaw) => __async(this, null, function* () {
+	        this.emit(player, dataRaw);
+	      })
+	    );
+	  }
+	  /**
+	   * NOT INTENDED FOR OUT-OF-CONTEXT USE
+	   */
+	  _resolveEmitDestination(player, dataRaw) {
+	    let state = Utils.prepareExecution(dataRaw);
+	    switch (state.calledTo) {
+	      case "SERVER" /* SERVER */:
+	        this.emit(player, dataRaw);
+	        break;
+	      default:
+	        this.emitClient(player, dataRaw);
+	        break;
+	    }
+	  }
+	  emitClient(player, dataRaw) {
+	    player.call("__rpc:listener" /* LOCAL_EVENT_LISTENER */, [dataRaw]);
+	  }
+	  // called to server
+	  emit(player, dataRaw) {
+	    return __async(this, null, function* () {
+	      let state = Utils.prepareExecution(dataRaw);
+	      const responseEventName = Utils.generateResponseEventName(state.uuid);
+	      state = this.verifyEvent_(state);
+	      if (state.knownError) {
+	        this.triggerError_(state, state.knownError);
+	      }
+	      const response = yield this.state_[state.eventName](
+	        player,
+	        ...Array.isArray(state.data) ? state.data : []
+	      );
+	      const responseState = {
+	        uuid: Utils.generateUUID(),
+	        eventName: state.eventName,
+	        calledFrom: "SERVER" /* SERVER */,
+	        calledTo: state.calledFrom,
+	        knownError: void 0,
+	        data: response,
+	        type: "response" /* RESPONSE */
+	      };
+	      switch (state.calledFrom) {
+	        case "SERVER" /* SERVER */:
+	          try {
+	            mp.events.call(
+	              responseEventName,
+	              Utils.prepareTransfer(responseState)
+	            );
+	          } catch (e) {
+	          }
+	          break;
+	        default:
+	          try {
+	            player.call(responseEventName, [
+	              Utils.prepareTransfer(responseState)
+	            ]);
+	          } catch (e) {
+	          }
+	          break;
+	      }
+	    });
+	  }
+	};
+
+	// src/client.ts
+	var Client = class extends Wrapper {
+	  constructor(options = {
+	    forceBrowserDevMode: false
+	  }) {
+	    super(options);
+	    this._browser = null;
+	  }
+	  set browser(browser) {
+	    this._browser = browser;
+	  }
+	  /**
+	   * NOT INTENDED FOR OUT-OF-CONTEXT USE
+	   */
+	  _resolveEmitDestination(dataRaw) {
+	    const state = Utils.prepareExecution(dataRaw);
+	    switch (state.calledTo) {
+	      case "SERVER" /* SERVER */:
+	        this.emitServer(dataRaw);
+	        break;
+	      case "BROWSER" /* BROWSER */:
+	        this.emitBrowser(dataRaw);
+	        break;
+	      case "CLIENT" /* CLIENT */:
+	        this.emit(state);
+	        break;
+	      default:
+	        this.triggerError_(state, "Unknown environment" /* UNKNOWN_ENVIRONMENT */);
+	        break;
+	    }
+	  }
+	  // called to client
+	  emit(state) {
+	    return __async(this, null, function* () {
+	      this.errorNoBrowser();
+	      state = this.verifyEvent_(state);
+	      if (state.knownError) {
+	        this.triggerError_(state, state.knownError);
+	      }
+	      const responseEventName = Utils.generateResponseEventName(state.uuid);
+	      const response = yield this.state_[state.eventName](
+	        ...Array.isArray(state.data) ? state.data : []
+	      );
+	      const responseState = {
+	        uuid: Utils.generateUUID(),
+	        eventName: state.eventName,
+	        calledFrom: state.calledTo,
+	        calledTo: state.calledFrom,
+	        knownError: void 0,
+	        data: response,
+	        type: "response" /* RESPONSE */
+	      };
+	      switch (state.calledFrom) {
+	        case "CLIENT" /* CLIENT */:
+	          try {
+	            mp.events.call(
+	              responseEventName,
+	              Utils.prepareTransfer(responseState)
+	            );
+	          } catch (e) {
+	          }
+	          break;
+	        case "SERVER" /* SERVER */:
+	          try {
+	            mp.events.callRemote(
+	              responseEventName,
+	              Utils.prepareTransfer(responseState)
+	            );
+	          } catch (e) {
+	          }
+	          break;
+	        case "BROWSER" /* BROWSER */:
+	          try {
+	            this._browser.call(
+	              responseEventName,
+	              Utils.prepareTransfer(responseState)
+	            );
+	          } catch (e) {
+	          }
+	          break;
+	      }
+	    });
+	  }
+	  // called to server
+	  emitServer(dataRaw) {
+	    this.errorNoBrowser();
+	    const state = Utils.prepareExecution(dataRaw);
+	    if (state.calledFrom === "BROWSER" /* BROWSER */) {
+	      const responseEventName = Utils.generateResponseEventName(
+	        state.uuid
+	      );
+	      const timeout = setTimeout(() => {
+	        clearTimeout(timeout);
+	        mp.events.remove(responseEventName);
+	      }, 1e4);
+	      mp.events.add(responseEventName, (responseDataRaw) => {
+	        this._browser.call(responseEventName, responseDataRaw);
+	        clearTimeout(timeout);
+	        mp.events.remove(responseEventName);
+	      });
+	    }
+	    mp.events.callRemote("__rpc:serverListener" /* SERVER_EVENT_LISTENER */, dataRaw);
+	  }
+	  // called to browser
+	  emitBrowser(dataRaw) {
+	    this.errorNoBrowser();
+	    const state = Utils.prepareExecution(dataRaw);
+	    if (state.calledFrom === "SERVER" /* SERVER */) {
+	      const responseEventName = Utils.generateResponseEventName(
+	        state.uuid
+	      );
+	      const timeout = setTimeout(() => {
+	        clearTimeout(timeout);
+	        mp.events.remove(responseEventName);
+	      }, 1e4);
+	      mp.events.add(responseEventName, (responseDataRaw) => {
+	        mp.events.callRemote(responseEventName, responseDataRaw);
+	        clearTimeout(timeout);
+	        mp.events.remove(responseEventName);
+	      });
+	    }
+	    this._browser.call("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
+	  }
+	  errorNoBrowser() {
+	    if (!this._browser) throw new Error("You need to initialize browser first" /* NO_BROWSER */);
+	  }
+	};
+
+	// src/browser.ts
+	var Browser = class extends Wrapper {
+	  constructor(options = {
+	    forceBrowserDevMode: false
+	  }) {
+	    super(options);
+	  }
+	  /**
+	   * NOT INTENDED FOR OUT-OF-CONTEXT USE
+	   */
+	  _resolveEmitDestination(dataRaw) {
+	    let state = Utils.prepareExecution(dataRaw);
+	    switch (state.calledTo) {
+	      case "BROWSER" /* BROWSER */:
+	        this.emit(dataRaw);
+	        break;
+	      default:
+	        this.emitClient(dataRaw);
+	        break;
+	    }
+	  }
+	  emitClient(dataRaw) {
+	    mp.trigger("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
+	  }
+	  // called to browser
+	  emit(dataRaw) {
+	    return __async(this, null, function* () {
+	      let state = Utils.prepareExecution(dataRaw);
+	      const responseEventName = Utils.generateResponseEventName(state.uuid);
+	      state = this.verifyEvent_(state);
+	      if (state.knownError) {
+	        this.triggerError_(state, state.knownError);
+	      }
+	      const response = yield this.state_[state.eventName](
+	        ...Array.isArray(state.data) ? state.data : []
+	      );
+	      const responseState = {
+	        uuid: Utils.generateUUID(),
+	        eventName: state.eventName,
+	        calledFrom: "SERVER" /* SERVER */,
+	        calledTo: state.calledFrom,
+	        knownError: void 0,
+	        data: response,
+	        type: "response" /* RESPONSE */
+	      };
+	      const responseDataRaw = Utils.prepareTransfer(responseState);
+	      switch (state.calledFrom) {
+	        case "BROWSER" /* BROWSER */:
+	          try {
+	            mp.events.call(responseEventName, responseDataRaw);
+	          } catch (e) {
+	          }
+	          break;
+	        default:
+	          try {
+	            mp.trigger(responseEventName, responseDataRaw);
+	          } catch (e) {
+	          }
+	          break;
+	      }
+	    });
+	  }
+	};
+
+	// src/index.ts
+	var Rpc = class extends Wrapper {
+	  constructor(options = {
+	    forceBrowserDevMode: false,
+	    debugLogs: false
+	  }) {
+	    super(options);
+	    this._server = new Server(options);
+	    this._client = new Client(options);
+	    this._browser = new Browser(options);
+	    this.debug_ = !!options.debugLogs;
+	    if (options.forceBrowserDevMode) return;
+	    if (this.environment_ === "UNKNOWN" /* UNKNOWN */)
+	      throw new Error("Unknown environment" /* UNKNOWN_ENVIRONMENT */);
+	    mp.events.add(
+	      "__rpc:listener" /* LOCAL_EVENT_LISTENER */,
+	      (player, dataRaw) => __async(this, null, function* () {
+	        switch (this.environment_) {
+	          case "SERVER" /* SERVER */:
+	            this._server._resolveEmitDestination(
+	              player,
+	              dataRaw
+	            );
+	            break;
+	          case "CLIENT" /* CLIENT */:
+	            dataRaw = player;
+	            this._client._resolveEmitDestination(dataRaw);
+	            break;
+	          case "BROWSER" /* BROWSER */:
+	            dataRaw = player;
+	            this._browser._resolveEmitDestination(dataRaw);
+	            break;
+	        }
+	      })
+	    );
+	  }
+	  set browser(browser) {
+	    this._client.browser = browser;
+	  }
+	  /**
+	   * Registers a callback function for a specified event
+	   *
+	   * @template CallbackArguments - An array of argument types that the callback function accepts
+	   * @template CallbackReturn - The type of the value returned by the callback function
+	   * @template EventName - A string representing the event name or union of names
+	   *
+	   * @param {EventName} eventName - The name of the event to register the callback for
+	   * @param {(...args: CallbackArguments) => CallbackReturn} cb - The callback function that is called when the event is triggered
+	   *
+	   * @returns {void}
+	   *
+	   * @example
+	   * register<[PlayerMp]>('playerJoin', (player) => {
+	   *   console.log(`Connected: ${player.socialClub}`)
+	   * })
+	   */
+	  register(eventName, cb) {
+	    this.log("register", eventName, cb);
+	    if (this.forceBrowserDevMode_) return;
+	    Utils.errorUnknownEnvironment(this.environment_);
+	    if (this.environment_ === "CLIENT" /* CLIENT */ && nativeClientEvents.has(eventName) || this.environment_ === "SERVER" /* SERVER */ && nativeServerEvents.has(eventName)) {
+	      mp.events.add(eventName, cb);
+	    } else {
+	      this.state_[eventName] = cb;
+	    }
+	  }
+	  /**
+	   * Unregisters callback function for a specified event
+	   *
+	   * @template EventName - A string representing the event name or union of names
+	   *
+	   * @param {EventName} eventName - The name of the event to register the callback for
+	   *
+	   * @returns {void}
+	   *
+	   * @example
+	   * unregister('playerJoin')
+	   */
+	  unregister(eventName) {
+	    this.log("unregister", eventName);
+	    if (this.forceBrowserDevMode_) return;
+	    Utils.errorUnknownEnvironment(this.environment_);
+	    delete this.state_[eventName];
+	  }
+	  callClient(playerOrEventName, eventNameOrArgs, args) {
+	    return __async(this, null, function* () {
+	      _is1StParamPlayer(playerOrEventName) ? this.log(
+	        "callClient",
+	        eventNameOrArgs,
+	        playerOrEventName,
+	        eventNameOrArgs,
+	        args
+	      ) : this.log(
+	        "callClient",
+	        playerOrEventName,
+	        eventNameOrArgs
+	      );
+	      if (this.forceBrowserDevMode_) return;
+	      Utils.errorUnknownEnvironment(this.environment_);
+	      function _is1StParamPlayer(x) {
+	        return typeof x === "object";
+	      }
+	      function _is2NdParamEventName(x) {
+	        return typeof x === "string";
+	      }
+	      if (this.environment_ === "CLIENT" /* CLIENT */) {
+	        return yield this.call(
+	          playerOrEventName,
+	          args
+	        );
+	      }
+	      if (this.environment_ === "SERVER" /* SERVER */ && _is1StParamPlayer(playerOrEventName) && _is2NdParamEventName(eventNameOrArgs)) {
+	        const state = {
+	          uuid: Utils.generateUUID(),
+	          eventName: eventNameOrArgs,
+	          calledTo: "CLIENT" /* CLIENT */,
+	          calledFrom: this.environment_,
+	          knownError: void 0,
+	          data: args,
+	          type: "event" /* EVENT */
+	        };
+	        const dataRaw = Utils.prepareTransfer(state);
+	        playerOrEventName.call("__rpc:listener" /* LOCAL_EVENT_LISTENER */, [dataRaw]);
+	        return (yield this.responseHandler(state.uuid)).data;
+	      }
+	      if (this.environment_ === "BROWSER" /* BROWSER */ && !_is1StParamPlayer(playerOrEventName) && !_is2NdParamEventName(eventNameOrArgs)) {
+	        const state = {
+	          uuid: Utils.generateUUID(),
+	          eventName: playerOrEventName,
+	          calledTo: "CLIENT" /* CLIENT */,
+	          calledFrom: this.environment_,
+	          knownError: void 0,
+	          data: eventNameOrArgs,
+	          type: "event" /* EVENT */
+	        };
+	        const dataRaw = Utils.prepareTransfer(state);
+	        mp.trigger("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
+	        return (yield this.responseHandler(state.uuid)).data;
+	      }
+	    });
+	  }
+	  /**
+	   * Calls a server-side event from browser or client
+	   *
+	   * @template Arguments - An array of argument types to be passed to the server event
+	   * @template EventName - A string representing the server event name or union of names
+	   * @template Return - The type of the value returned by the server event
+	   *
+	   * @param {EventName} eventName - The name of the server event to be called
+	   * @param {Arguments} [args] - Optional arguments to pass to the server event
+	   * @returns {Promise<Return>} A promise resolving to the return value of the server event
+	   *
+	   * @example
+	   * // Calls an event on server
+	   * callServer<[], string, object>('onDataRequest').then(response => {
+	   *   console.log(`Received: ${response}`) //             ^ object
+	   * })
+	   */
+	  callServer(eventName, args) {
+	    return __async(this, null, function* () {
+	      this.log("callServer", eventName, args);
+	      if (this.forceBrowserDevMode_)
+	        return void 0;
+	      Utils.errorUnknownEnvironment(this.environment_);
+	      const state = {
+	        uuid: Utils.generateUUID(),
+	        eventName,
+	        calledTo: "SERVER" /* SERVER */,
+	        calledFrom: this.environment_,
+	        knownError: void 0,
+	        data: args,
+	        type: "event" /* EVENT */
+	      };
+	      const dataRaw = Utils.prepareTransfer(state);
+	      switch (this.environment_) {
+	        case "SERVER" /* SERVER */:
+	          return this.callSelf(state);
+	        case "CLIENT" /* CLIENT */:
+	          mp.events.callRemote("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
+	          break;
+	        case "BROWSER" /* BROWSER */:
+	          mp.trigger("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
+	          break;
+	      }
+	      return (yield this.responseHandler(state.uuid)).data;
+	    });
+	  }
+	  callBrowser(playerOrEventName, eventNameOrArgs, args) {
+	    return __async(this, null, function* () {
+	      _is1StParamPlayer(playerOrEventName) ? this.log(
+	        "DEV callClient",
+	        eventNameOrArgs,
+	        playerOrEventName,
+	        eventNameOrArgs,
+	        args
+	      ) : this.log(
+	        "DEV callClient",
+	        playerOrEventName,
+	        eventNameOrArgs
+	      );
+	      if (this.forceBrowserDevMode_) return;
+	      Utils.errorUnknownEnvironment(this.environment_);
+	      function _is1StParamPlayer(x) {
+	        return typeof x === "object";
+	      }
+	      function _is2NdParamEventName(x) {
+	        return typeof x === "string";
+	      }
+	      const state = {
+	        uuid: Utils.generateUUID(),
+	        eventName: !_is1StParamPlayer(playerOrEventName) ? playerOrEventName : _is2NdParamEventName(eventNameOrArgs) ? eventNameOrArgs : "",
+	        calledTo: "BROWSER" /* BROWSER */,
+	        calledFrom: this.environment_,
+	        knownError: void 0,
+	        data: _is1StParamPlayer(playerOrEventName) ? args : eventNameOrArgs,
+	        type: "event" /* EVENT */
+	      };
+	      const dataRaw = Utils.prepareTransfer(state);
+	      switch (this.environment_) {
+	        case "BROWSER" /* BROWSER */:
+	          return this.callSelf(state);
+	        case "CLIENT" /* CLIENT */:
+	          mp.events.callRemote("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
+	          break;
+	        case "SERVER" /* SERVER */:
+	          playerOrEventName.call(
+	            "__rpc:listener" /* LOCAL_EVENT_LISTENER */,
+	            [dataRaw]
+	          );
+	          break;
+	      }
+	      return (yield this.responseHandler(state.uuid)).data;
+	    });
+	  }
+	  /**
+	   * Calls an event in current environment
+	   *
+	   * @template Arguments - An array of argument types to be passed to the event
+	   * @template EventName - A string representing the event name or union of names
+	   * @template Return - The type of the value returned by the event
+	   *
+	   * @param {EventName} eventName - The name of the event to be called
+	   * @param {Arguments} [args] - Optional arguments to pass to the event
+	   * @returns {Promise<Return>} A promise resolving to the return value of the event
+	   *
+	   * @example
+	   * // Calls an event in current environment
+	   * call<[], string, number>('getSomething').then(response => {
+	   *   console.log(`Received: ${response}`) //      ^ number
+	   * })
+	   */
+	  call(eventName, args) {
+	    return __async(this, null, function* () {
+	      this.log("call", eventName, args);
+	      if (this.forceBrowserDevMode_)
+	        return void 0;
+	      Utils.errorUnknownEnvironment(this.environment_);
+	      let state = {
+	        uuid: Utils.generateUUID(),
+	        eventName,
+	        calledTo: this.environment_,
+	        calledFrom: this.environment_,
+	        knownError: void 0,
+	        data: args,
+	        type: "event" /* EVENT */
+	      };
+	      return yield this.callSelf(state);
+	    });
+	  }
+	  /**
+	   * redirects an event in cases of it calling its own environment
+	   */
+	  callSelf(state) {
+	    return __async(this, null, function* () {
+	      state = this.verifyEvent_(state);
+	      if (state.knownError) {
+	        this.triggerError_(state, state.knownError);
+	      }
+	      return yield this.state_[state.eventName](...state.data);
+	    });
+	  }
+	  /**
+	   * returns cross-environment response
+	   */
+	  responseHandler(uuid) {
+	    return __async(this, null, function* () {
+	      const responseEventName = Utils.generateResponseEventName(uuid);
+	      return new Promise((resolve, reject) => {
+	        const timeout = setTimeout(() => {
+	          clearTimeout(timeout);
+	          mp.events.remove(responseEventName);
+	          reject("Response was timed out after 10s of inactivity" /* EVENT_RESPONSE_TIMEOUT */);
+	        }, 1e4);
+	        mp.events.add(
+	          responseEventName,
+	          (player, dataRaw) => {
+	            switch (this.environment_) {
+	              case "SERVER" /* SERVER */:
+	                resolve(Utils.prepareExecution(dataRaw));
+	                clearTimeout(timeout);
+	                mp.events.remove(responseEventName);
+	                break;
+	              case "CLIENT" /* CLIENT */:
+	                dataRaw = player;
+	                resolve(Utils.prepareExecution(dataRaw));
+	                clearTimeout(timeout);
+	                mp.events.remove(responseEventName);
+	                break;
+	              case "BROWSER" /* BROWSER */:
+	                dataRaw = player;
+	                resolve(Utils.prepareExecution(dataRaw));
+	                clearTimeout(timeout);
+	                mp.events.remove(responseEventName);
+	                break;
+	            }
+	          }
+	        );
+	      });
+	    });
+	  }
+	};
+	return dist;
+}
+
+var distExports = requireDist();
+
+const rpc = new distExports.Rpc({
     debugLogs: false,
 });
 

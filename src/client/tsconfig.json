@@ -1,17 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "types": [
-      "../node_modules/@ragempcommunity/types-client",
-      "../node_modules/@types/node"
-    ],
-    "lib": ["ESNext", "DOM"]
+    "types": ["../node_modules/@ragempcommunity/types-client", "../node_modules/@types/node", "./@types", "../node_modules/@entityseven/rage-fw-rpc"],
   },
-  "include": ["./**/*.ts"],
-  "exclude": [
-    "../server/**/*",
-    "**/*.d.ts"
-  ]
+  "include": ["./**/*.ts"]
 }

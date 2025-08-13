@@ -17,6 +17,7 @@
       "./node_modules/@ragempcommunity/types-server",
       "./node_modules/@ragempcommunity/types-client",
       "./node_modules/@ragempcommunity/types-cef",
+      "./node_modules/@entityseven/rage-fw-rpc",
       "./node_modules/@types/node"
     ]
  },
