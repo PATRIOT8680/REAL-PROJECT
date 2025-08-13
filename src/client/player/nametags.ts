@@ -57,15 +57,15 @@ const drawNametags = (player: PlayerMp, x: number, y: number, displayName: strin
     health = health <= 100 ? health / 100 : (health - 100) / 100
 
     if (armour <= 0) {
-      mp.game.graphics.drawRect(x, y, width, height, 81, 80, 80, 255)
-      mp.game.graphics.drawRect(x - width / 2 * (1 - health), y, width * health, height, 0, 255, 128, 255)
+      mp.game.graphics.drawRect(x, y, width, height, 81, 80, 80, 255, false)
+      mp.game.graphics.drawRect(x - width / 2 * (1 - health), y, width * health, height, 0, 255, 128, 255, false)
     } else {
-      mp.game.graphics.drawRect(x, y, width, height, 81, 80, 80, 255)
-      mp.game.graphics.drawRect(x - width / 2 * (1 - health), y, width * health, height, 0, 200, 255, 255)
+      mp.game.graphics.drawRect(x, y, width, height, 81, 80, 80, 255, false)
+      mp.game.graphics.drawRect(x - width / 2 * (1 - health), y, width * health, height, 0, 200, 255, 255, false)
 
       y -= 0.007
-      mp.game.graphics.drawRect(x, y, width, height, 81, 80, 80, 255)
-      mp.game.graphics.drawRect(x - width / 2 * (1 - armour), y, width * armour, height, 0, 132, 255, 255)
+      mp.game.graphics.drawRect(x, y, width, height, 81, 80, 80, 255, false)
+      mp.game.graphics.drawRect(x - width / 2 * (1 - armour), y, width * armour, height, 0, 132, 255, 255, false)
     }
   }
 }

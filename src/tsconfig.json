@@ -9,7 +9,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowImportingTsExtensions": false,
-    "suppressImplicitAnyIndexErrors": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "sourceMap": false,
@@ -18,7 +17,7 @@
       "./node_modules/@ragempcommunity/types-server",
       "./node_modules/@ragempcommunity/types-client",
       "./node_modules/@ragempcommunity/types-cef",
-      "./node_modules/@types/node",
+      "./node_modules/@types/node"
     ]
  },
   "exclude": [
@@ -26,5 +25,5 @@
     "../packages/core",
     "./node_modules",
     "./cef"
-  ]
+  ],
 }

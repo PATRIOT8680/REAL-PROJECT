@@ -29,7 +29,6 @@ const getRandomChance = (): [number, boolean] => {
 
 mp.events.add('playerDeath', async (player: PlayerMp, reason: number, killer: PlayerMp) => {
   const [chance, luck] = getRandomChance()
-  player.hasVariable
   timeDeath = await rpc.callServer('client:getFormatedDateTime', [true, true, true]);
 
   rpc.callServer('playerKnockout')
