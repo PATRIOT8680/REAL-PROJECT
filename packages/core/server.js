@@ -45,6 +45,7 @@ mp.events.add('playerJoin', (player) => {
     player.spawn(new mp.Vector3(3335.050537109375, 5162.82177734375, 18.2938232421875));
     player.heading = 144;
     player.health = 100;
+    player.armour = 200;
 });
 
 const rpc = new rageFwRpc.Rpc({

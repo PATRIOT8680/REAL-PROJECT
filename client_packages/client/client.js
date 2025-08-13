@@ -823,63 +823,6 @@ rpc.register('toggleInterface', (interfaceName, isVisible, duration) => {
     handleInterfaceVisibility(interfaceName, isVisible);
 });
 
-const maxDistance = 25 * 25;
-const width = 0.025;
-const height = 0.004;
-let visibleNametags = true;
-let playerTarget = null;
-let playerAimAt = null;
-mp.nametags.enabled = false;
-mp.keys.bind(global.Keys.VK_F9, false, () => {
-    visibleNametags = !visibleNametags;
-});
-mp.events.add('render', (nametags) => {
-    const graphics = mp.game.graphics;
-    const screenRes = graphics.getScreenResolution();
-    playerAimAt = mp.game.player.getEntityIsFreeAimingAt();
-    playerTarget = mp.players.local;
-    if (visibleNametags) {
-        nametags.forEach(nametag => {
-            let [player, x, y, distance] = nametag;
-            if (distance <= maxDistance) {
-                let scale = (distance / maxDistance);
-                if (scale < 0.4)
-                    scale = 0.4;
-                y -= scale * (0.005 * (screenRes.y / 1080));
-                if (player.getVariable('player_knockout')) {
-                    mp.console.logWarning('В нокауте');
-                }
-                drawNametags(player, x, y, `Гражданин [ID: ${player.remoteId}]`, [255, 255, 255, 255]);
-            }
-        });
-    }
-});
-const drawNametags = (player, x, y, displayName, color) => {
-    mp.game.graphics.drawText(displayName, [x, y], {
-        font: 0,
-        color: color,
-        scale: [0.35, 0.35],
-        outline: true
-    });
-    if (playerTarget && player.handle === playerTarget.handle && playerAimAt) {
-        y += 0.05;
-        let health = player.getHealth();
-        let armour = player.getArmour() / 100;
-        health = health <= 100 ? health / 100 : (health - 100) / 100;
-        if (armour <= 0) {
-            mp.game.graphics.drawRect(x, y, width, height, 81, 80, 80, 255, false);
-            mp.game.graphics.drawRect(x - width / 2 * (1 - health), y, width * health, height, 0, 255, 128, 255, false);
-        }
-        else {
-            mp.game.graphics.drawRect(x, y, width, height, 81, 80, 80, 255, false);
-            mp.game.graphics.drawRect(x - width / 2 * (1 - health), y, width * health, height, 0, 200, 255, 255, false);
-            y -= 0.007;
-            mp.game.graphics.drawRect(x, y, width, height, 81, 80, 80, 255, false);
-            mp.game.graphics.drawRect(x - width / 2 * (1 - armour), y, width * armour, height, 0, 132, 255, 255, false);
-        }
-    }
-};
-
 global.Keys = {
     VK_LBUTTON: 0x01,
     VK_RBUTTON: 0x02,
@@ -1054,6 +997,69 @@ global.Keys = {
     VK_OEM_CLEAR: 0xFE
 };
 var Keys = global.Keys;
+
+const maxDistance = 20 * 20;
+let width = 0.032;
+const height = 0.006;
+let visibleNametags = true;
+mp.nametags.enabled = false;
+mp.keys.bind(Keys.VK_F9, false, () => {
+    visibleNametags = !visibleNametags;
+});
+mp.events.add('render', (nametags) => {
+    const graphics = mp.game.graphics;
+    graphics.getScreenResolution();
+    mp.game.player.getEntityIsFreeAimingAt();
+    mp.players.local;
+    if (visibleNametags) {
+        nametags.forEach(nametag => {
+            let [player, x, y, distance] = nametag;
+            if (distance <= maxDistance) {
+                // let scale = (maxDistance / distance)
+                // if (scale > 0.27) scale = 0.27
+                // y -= scale * (0.005 * (screenRes.y / 1080))
+                if (player.getVariable('player_knockout')) {
+                    mp.console.logWarning('В нокауте');
+                }
+                drawNametags(player, x, y + 0.05, `Гражданин [ID: ${player.remoteId}]`, [255, 255, 255, 255], 0.27, distance);
+            }
+        });
+    }
+});
+const drawNametags = (player, x, y, displayName, color, scale, distance) => {
+    const distanceFactor = Math.min(1, distance / maxDistance);
+    // 2. Общий подъем для ВСЕХ элементов (текст + полоски)
+    const liftAmount = 0.04 * distanceFactor; // Поднимаем на 2% экрана при макс. дистанции
+    // 3. Уменьшение scale текста (но не менее 70% от базового)
+    const textScale = Math.max(0.7, 1 - distanceFactor * 0.3) * scale;
+    // 4. Позиция текста (поднимается вверх)
+    const textY = y - liftAmount;
+    mp.game.graphics.drawText(displayName, [x, textY], {
+        font: 0,
+        color: color,
+        scale: [textScale, textScale],
+        outline: true
+    });
+    //if (playerAimAt !== undefined) {
+    const healthBarY = (textY - 0.03) + 0.057;
+    let health = player.getHealth();
+    let armour = player.getArmour() / 100;
+    let x2 = x - width / 2;
+    health = health <= 100 ? health / 100 : (health - 100) / 100;
+    if (armour <= 0) {
+        mp.game.graphics.drawRect(x, healthBarY, width, height, 81, 80, 80, 255, false);
+        mp.game.graphics.drawRect(x - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
+    }
+    else {
+        width = 0.025;
+        mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
+        mp.game.graphics.drawRect(x2 - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
+        x2 = (x + width / 2) + 0.002;
+        mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
+        mp.game.graphics.drawRect(x2 - width / 2 * (1 - armour), healthBarY, width * armour, height, 0, 132, 255, 255, false);
+    }
+    //}
+};
 
 const showLoading = (duration) => {
     setTimeout(() => {
@@ -1471,6 +1477,9 @@ mp.keys.bind(Keys.VK_F2, true, () => {
 });
 mp.keys.bind(Keys.VK_F6, true, () => {
     rpc.callServer('playerReborn');
+});
+mp.keys.bind(Keys.VK_F7, true, () => {
+    mp.players.local.setArmour(100);
 });
 mp.keys.bind(Keys.VK_F5, true, () => {
     const playerPos = mp.players.local.position;

@@ -9,6 +9,10 @@ mp.keys.bind(Keys.VK_F6, true, () => {
   rpc.callServer('playerReborn')
 })
 
+mp.keys.bind(Keys.VK_F7, true, () => {
+  mp.players.local.setArmour(100)
+})
+
 mp.keys.bind(Keys.VK_F5, true, () => {
   const playerPos = mp.players.local.position
   mp.vehicles.new(mp.game.joaat("22stinger"), new mp.Vector3(playerPos.x + 2, playerPos.y, playerPos.z), 
