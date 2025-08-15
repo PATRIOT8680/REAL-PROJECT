@@ -57,7 +57,7 @@ const drawNametags = (player: PlayerMp, x: number, y: number, displayName: strin
     const scaleSprite = 0.7 * scale
     drawSprite('commonmenutu', 'team_deathmatch', [x - 0.05, textY - 0.05], [scaleSprite, scaleSprite], 0, [255, 13, 74, 255])
 
-    mp.game.graphics.drawText(`Без сознания... (${deathInSeconds} sec)`, [x, textY + 0.1],
+    mp.game.graphics.drawText(`Без сознания... (${deathInSeconds} sec.)`, [x, textY + 0.1],
       {
         font: 0,
         color: [255, 13, 74, 255],
