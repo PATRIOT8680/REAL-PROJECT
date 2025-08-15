@@ -53,7 +53,9 @@ const drawNametags = (player: PlayerMp, x: number, y: number, displayName: strin
   )
 
   if (player.getVariable('player_knockout')) {
-    drawSprite('commonmenutu', 'team_deathmatch', [x - 0.05, textY - 0.05], [0.7, 0.7], 0, [255, 13, 74, 255])
+    const scale = Math.max(0.1, 1 - distance / 25)
+    const scaleSprite = 0.7 * scale
+    drawSprite('commonmenutu', 'team_deathmatch', [x - 0.05, textY - 0.05], [scaleSprite, scaleSprite], 0, [255, 13, 74, 255])
 
     mp.game.graphics.drawText(`Без сознания... (${deathInSeconds} sec)`, [x, textY + 0.1],
       {
