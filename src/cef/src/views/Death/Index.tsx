@@ -76,7 +76,7 @@ const DeathPlayer = () => {
               <Header />
               <Timer timeLeft={timeLeft} setTimeLeft={setTimeLeft} />
             </div>
-            { deathState.fate === null && <Fate setTimeLeft={setTimeLeft} />} 
+            { deathState.fate === null && <Fate timeLeft={timeLeft} setTimeLeft={setTimeLeft} />}
             { deathState.fate !== null && <InfoDeath killer={deathState.killer} chanceReborn={chanceReborn} timeDead={timeDead} /> }
           </>
         )}
