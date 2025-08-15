@@ -57,6 +57,7 @@ export const playerReborn = (player: PlayerMp) => {
   player.health = 100
   player.stopAnimation()
   player.spawn(playerPos)
+  player.setVariable('player_knockout', false)
 
   rpc.callClient(player, 'ui:displayRadar', [true])
   rpc.callClient(player, 'player:freeze', [false])

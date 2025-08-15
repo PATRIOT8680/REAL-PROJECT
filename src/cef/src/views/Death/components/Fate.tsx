@@ -3,12 +3,13 @@ import { FC } from 'react'
 import { rpc } from '../../../main'
 
 interface IFate {
+  timeLeft: number,
   setTimeLeft: (seconds: number) => void
 }
 
-const Fate: FC<IFate> = ({ setTimeLeft }) => {
+const Fate: FC<IFate> = ({ timeLeft, setTimeLeft }) => {
   const handleSelectFate = (fate: 'ems' | 'death') => {
-    rpc.callClient('cef:death:selectedFate')
+    rpc.callClient('cef:death:selectedFate', [timeLeft])
     if (fate === 'ems') {
       setTimeLeft(300)
       window.App.deathReducer.selectFateDeath('ems')

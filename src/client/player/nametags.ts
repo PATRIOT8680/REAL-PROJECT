@@ -1,4 +1,5 @@
 import Keys from '../utils/keys'
+import { deathInSeconds } from "./death"
 
 const maxDistance = 20*20
 let width = 0.032
@@ -49,6 +50,25 @@ const drawNametags = (player: PlayerMp, x: number, y: number, displayName: strin
       outline: true
     }
   )
+
+  if (player.getVariable('player_knockout')) {
+    mp.game.graphics.drawSprite('commonmenutu', 'team_deathmatch',
+        x - 0.3, textY,
+        0.7, 0.7,
+        0,
+        255, 13, 74, 255,
+        false
+    )
+
+    mp.game.graphics.drawText(`Без сознания... (${deathInSeconds} sec)`, [x, textY + 0.1],
+      {
+        font: 0,
+        color: [255, 13, 74, 255],
+        scale: [textScale, textScale],
+        outline: true
+      }
+    )
+  }
 
   if (playerAimAt !== undefined) {
     const healthBarY = (textY - 0.03) + 0.057
