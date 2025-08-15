@@ -10,7 +10,8 @@ import { welcomeReducer } from './menus/welcome';
 import { deathReducer } from './menus/death';
 
 // Elements
-import { sendNotifyReducer } from './elements/notify';
+import { sendNotifyReducer } from './elements/notify'
+import { playerInfoReducer } from "./elements/playerInfo"
 
 export type RootState = {
 	// Menus
@@ -22,6 +23,7 @@ export type RootState = {
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
+  playerInfoReducer: ReturnType<typeof playerInfoReducer>
 }
 
 export const rootReducer = combineReducers({
@@ -33,5 +35,6 @@ export const rootReducer = combineReducers({
   deathReducer,
 
   // Elements
-  sendNotifyReducer
+  sendNotifyReducer,
+  playerInfoReducer,
 });

@@ -35,10 +35,6 @@ const App = () => {
   const dispatch = useDispatch()
   const { shouldPlayAudio, shouldChangeLanguage } = useVisibleMenus()
 
-  const [sid, setSid] = useState('')
-  const [playerName, setPlayerName] = useState('Patriot Adminov')
-  const [playerId, setPlayerId] = useState<number | undefined>(undefined)
-
   const { playRandomAmbient, stopAmbient } = useMenuAmbients()
   const [ambientActive, setAmbientActive] = useState(false);
 
@@ -48,6 +44,7 @@ const App = () => {
   const welcomeVisible = useSelector((state: RootState) => state.welcomeReducer.isVisible)
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
+  const playerInfoReducer = useSelector((state: RootState) => state.playerInfoReducer)
   
 
   useEffect(() => {
@@ -57,11 +54,6 @@ const App = () => {
 
     rpc.register('client:setActiveAmbient', (toggle: boolean) => {
       setAmbientActive(toggle)
-    })
-
-    rpc.register('server:player:local:info', (sid: string, id: number) => {
-      setSid(sid)
-      setPlayerId(id)
     })
 
     return () => {
@@ -93,8 +85,8 @@ const App = () => {
     <>
       <div className="server-info">
         <span className="text">REDSTAR GAMEMODE (pre-dev: v0.0.5)</span>
-        <span className="text">{playerName && ` • ${playerName}`} {sid && `(#${sid})`} </span>
-        <span className="text">{playerId !== undefined && ` • ID: ${playerId}`}</span>
+        <span className="text">{playerInfoReducer.sid ? ` • #${playerInfoReducer.sid}` : ''}</span>
+        <span className="text"> • ID: {playerInfoReducer.id}</span>
       </div>
       { authVisible && <Auth /> }
       { chatVisible && <Chat /> }

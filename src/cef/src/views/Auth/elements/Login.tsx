@@ -25,12 +25,6 @@ const Login: FC<IAuthLogin> = ({ setCurrentForm, saveLogin, setSaveLogin }) => {
 
     rpc.register('client:auth:saveLogin', saveLoginHandler)
 
-    rpc.register('server:loginSuccess', () => {
-      rpc.callClient('cef:authDisabled')
-			setSaveLogin('')
-			setPassword('')
-    })
-
     return () => {
       rpc.unregister('server:loginSuccess')
       rpc.unregister('client:auth:saveLogin')

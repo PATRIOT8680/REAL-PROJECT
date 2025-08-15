@@ -10,6 +10,7 @@ import { deathStore } from "./menus/death";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
+import { playerInfoStore } from "./elements/playerInfo.ts";
 
 export const store = createStore(rootReducer);
 
@@ -28,5 +29,6 @@ window.App = {
   deathReducer: deathStore,
 
   // Elements
-  sendNotifyReducer: sendNotifyStore
+  sendNotifyReducer: sendNotifyStore,
+  playerInfoReducer: playerInfoStore,
 };

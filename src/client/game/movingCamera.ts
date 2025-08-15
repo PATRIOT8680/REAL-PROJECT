@@ -49,7 +49,7 @@ export const startCamMoving = (path: IAllCameras) => {
 
     createCamera(path.from, path.to);
 
-    ev = new mp.Event("render", (player, reason, killer) =>
+    ev = new mp.Event("render", () =>
     {
         if (!activeCamera || !currentPath) return
 
