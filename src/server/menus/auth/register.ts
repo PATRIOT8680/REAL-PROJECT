@@ -63,10 +63,10 @@ export const registerUser = (player: PlayerMp, login: string, email: string, pas
           return
         } else {
           player.dimension = 0
-          rpc.callBrowser(player, 'server:player:local:info', [sid, player.id])
+          player.setVariable('login_player', login)
           rpc.callClient(player, 'server:auth:saveLogin', [login])
           rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom'])
-          rpc.callBrowser(player, 'server:regSuccess')
+          rpc.callBrowser(player, 'server:authSuccess')
           console.log(`User ${login} created. sid: ${sid}`)
           console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`))
         }

@@ -29,11 +29,11 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
 
         if (match) {
           player.dimension = 0
+          player.setVariable('login_player', login)
           player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375))
           rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно авторизовались!`, 4000, 'bottom'])
-          rpc.callClient(player, 'server:auth:saveLogin', [login]).catch(() => {});
-          rpc.callBrowser(player, 'server:loginSuccess').catch(() => {});
-          rpc.callBrowser(player, 'server:player:local:info', [user.sid, player.id]).catch(() => {});
+          rpc.callClient(player, 'server:auth:saveLogin', [login])
+          rpc.callBrowser(player, 'server:authSuccess')
           console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`))
         } else {
           rpc.callClient(player, 'sendNotify', ['err', 'Неверный логин или пароль!', 5000, 'right'])

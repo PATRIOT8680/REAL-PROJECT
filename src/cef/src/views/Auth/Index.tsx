@@ -47,7 +47,7 @@ const Auth = () => {
       setCurrentForm('verify-email')
     })
 
-    rpc.register('server:regSuccess', () => {
+    rpc.register('server:authSuccess', () => {
       rpc.callClient('cef:authDisabled')
     })
     

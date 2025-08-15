@@ -257,8 +257,8 @@ registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
 const data = mysql__namespace.createPool({
     host: 'localhost',
     user: 'root',
-    database: 'realrp',
-    password: 'Real#PR86',
+    database: 'redstar',
+    password: 'Patriot86',
     port: 3306
 });
 const mysql2 = {
@@ -416,10 +416,10 @@ const registerUser = (player, login, email, password) => {
                 }
                 else {
                     player.dimension = 0;
-                    rpc.callBrowser(player, 'server:player:local:info', [sid, player.id]);
+                    player.setVariable('login_player', login);
                     rpc.callClient(player, 'server:auth:saveLogin', [login]);
                     rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom']);
-                    rpc.callBrowser(player, 'server:regSuccess');
+                    rpc.callBrowser(player, 'server:authSuccess');
                     console.log(`User ${login} created. sid: ${sid}`);
                     console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`));
                 }
@@ -453,11 +453,11 @@ const loginUser = (player, login, password) => {
                 }
                 if (match) {
                     player.dimension = 0;
+                    player.setVariable('login_player', login);
                     player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375));
                     rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно авторизовались!`, 4000, 'bottom']);
-                    rpc.callClient(player, 'server:auth:saveLogin', [login]).catch(() => { });
-                    rpc.callBrowser(player, 'server:loginSuccess').catch(() => { });
-                    rpc.callBrowser(player, 'server:player:local:info', [user.sid, player.id]).catch(() => { });
+                    rpc.callClient(player, 'server:auth:saveLogin', [login]);
+                    rpc.callBrowser(player, 'server:authSuccess');
                     console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`));
                 }
                 else {
@@ -767,3 +767,33 @@ for (let i = 0; i < 3; i++) {
         invincible: false,
     });
 }
+
+const getSid = (login) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM accounts WHERE login = ?';
+        data.query(sql, [login], (err, result) => {
+            if (err)
+                reject(err);
+            else
+                resolve(result[0].sid);
+        });
+    });
+};
+
+const getDataAccount = async (player, login, dataKey) => {
+    const dataMap = {
+        sid: () => getSid(login)
+    };
+    if (!dataMap[dataKey])
+        return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
+    return dataMap[dataKey]();
+};
+rpc.register('getDataAccount', async (player, dataKey) => {
+    const login = player.getVariable('login_player');
+    if (!login) {
+        console.error(chalk.red(`Игрок ${login} не авторизован!`));
+        return;
+    }
+    const result = await getDataAccount(player, login, dataKey);
+    return result;
+});

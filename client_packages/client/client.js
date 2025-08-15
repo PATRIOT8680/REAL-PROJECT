@@ -1002,6 +1002,7 @@ const maxDistance = 20 * 20;
 let width = 0.032;
 const height = 0.006;
 let visibleNametags = true;
+let playerAimAt = null;
 mp.nametags.enabled = false;
 mp.keys.bind(Keys.VK_F9, false, () => {
     visibleNametags = !visibleNametags;
@@ -1009,15 +1010,12 @@ mp.keys.bind(Keys.VK_F9, false, () => {
 mp.events.add('render', (nametags) => {
     const graphics = mp.game.graphics;
     graphics.getScreenResolution();
-    mp.game.player.getEntityIsFreeAimingAt();
+    playerAimAt = mp.game.player.getEntityIsFreeAimingAt();
     mp.players.local;
     if (visibleNametags) {
         nametags.forEach(nametag => {
             let [player, x, y, distance] = nametag;
             if (distance <= maxDistance) {
-                // let scale = (maxDistance / distance)
-                // if (scale > 0.27) scale = 0.27
-                // y -= scale * (0.005 * (screenRes.y / 1080))
                 if (player.getVariable('player_knockout')) {
                     mp.console.logWarning('В нокауте');
                 }
@@ -1028,11 +1026,8 @@ mp.events.add('render', (nametags) => {
 });
 const drawNametags = (player, x, y, displayName, color, scale, distance) => {
     const distanceFactor = Math.min(1, distance / maxDistance);
-    // 2. Общий подъем для ВСЕХ элементов (текст + полоски)
-    const liftAmount = 0.04 * distanceFactor; // Поднимаем на 2% экрана при макс. дистанции
-    // 3. Уменьшение scale текста (но не менее 70% от базового)
+    const liftAmount = 0.04 * distanceFactor;
     const textScale = Math.max(0.7, 1 - distanceFactor * 0.3) * scale;
-    // 4. Позиция текста (поднимается вверх)
     const textY = y - liftAmount;
     mp.game.graphics.drawText(displayName, [x, textY], {
         font: 0,
@@ -1040,25 +1035,25 @@ const drawNametags = (player, x, y, displayName, color, scale, distance) => {
         scale: [textScale, textScale],
         outline: true
     });
-    //if (playerAimAt !== undefined) {
-    const healthBarY = (textY - 0.03) + 0.057;
-    let health = player.getHealth();
-    let armour = player.getArmour() / 100;
-    let x2 = x - width / 2;
-    health = health <= 100 ? health / 100 : (health - 100) / 100;
-    if (armour <= 0) {
-        mp.game.graphics.drawRect(x, healthBarY, width, height, 81, 80, 80, 255, false);
-        mp.game.graphics.drawRect(x - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
+    if (playerAimAt !== undefined) {
+        const healthBarY = (textY - 0.03) + 0.057;
+        let health = player.getHealth();
+        let armour = player.getArmour() / 100;
+        let x2 = x - width / 2;
+        health = health <= 100 ? health / 100 : (health - 100) / 100;
+        if (armour <= 0) {
+            mp.game.graphics.drawRect(x, healthBarY, width, height, 81, 80, 80, 255, false);
+            mp.game.graphics.drawRect(x - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
+        }
+        else {
+            width = 0.025;
+            mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
+            mp.game.graphics.drawRect(x2 - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
+            x2 = (x + width / 2) + 0.002;
+            mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
+            mp.game.graphics.drawRect(x2 - width / 2 * (1 - armour), healthBarY, width * armour, height, 0, 132, 255, 255, false);
+        }
     }
-    else {
-        width = 0.025;
-        mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
-        mp.game.graphics.drawRect(x2 - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
-        x2 = (x + width / 2) + 0.002;
-        mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
-        mp.game.graphics.drawRect(x2 - width / 2 * (1 - armour), healthBarY, width * armour, height, 0, 132, 255, 255, false);
-    }
-    //}
 };
 
 const showLoading = (duration) => {
@@ -1091,16 +1086,16 @@ const createCamera = (pos, target) => {
     activeCamera.setActive(true);
     mp.game.cam.renderScriptCams(true, false, 0, true, false);
 };
-let ev = null;
+let ev$1 = null;
 const startCamMoving = (path) => {
     rpc.callServer('client:startNewCamera', [path.persCoord]);
     currentPath = path;
     startTime = Date.now();
-    if (ev) {
-        ev.destroy();
+    if (ev$1) {
+        ev$1.destroy();
     }
     createCamera(path.from, path.to);
-    ev = new mp.Event("render", (player, reason, killer) => {
+    ev$1 = new mp.Event("render", () => {
         if (!activeCamera || !currentPath)
             return;
         const now = Date.now();
@@ -1116,9 +1111,9 @@ const startCamMoving = (path) => {
     });
 };
 const stopCamMoving = () => {
-    if (ev) {
-        ev.destroy();
-        ev = null;
+    if (ev$1) {
+        ev$1.destroy();
+        ev$1 = null;
     }
     destroyCamera();
 };
@@ -1341,6 +1336,9 @@ rpc.register('cef:authEnabled', () => {
 });
 rpc.register('cef:authDisabled', () => {
     disableAuth();
+    rpc.callServer('getDataAccount', ['sid']).then((sid) => {
+        rpc.call('execute', [`window.App.playerInfoReducer.setSid(${sid})`]);
+    });
     global.loginPlayer = true;
 });
 
@@ -1545,11 +1543,142 @@ mp.events.add('playerReady', (player) => {
     mp.game.ui.displayCash(false);
     mp.game.ui.displayAreaName(false);
     mp.game.ui.displayAmmoThisFrame(false);
+    rpc.call('execute', [`window.App.playerInfoReducer.setID(${mp.players.local.remoteId})`]);
     if (mp.storage.data.language !== undefined) {
         rpc.callBrowser('client:setLanguage', [mp.storage.data.language]);
     }
     else {
         rpc.callBrowser('client:setLanguage', ['ru']);
+    }
+});
+
+global.noclip = {
+    active: false,
+    shiftBoost: false,
+    ctrlSlowing: false,
+    f: 2.0,
+    w: 2.0,
+    h: 2.0,
+    point_distance: 1000,
+    speed: 0.15
+};
+const ids = {
+    W: 32,
+    S: 33,
+    A: 34,
+    D: 35,
+    Space: 321,
+    Shift: 340,
+    LCtrl: 326,
+    RMB: 25
+};
+let ev = null;
+const localplayer = mp.players.local;
+const noclip = global.noclip;
+const camera = mp.cameras.new('gameplay');
+const controls = mp.game.controls;
+let direction = null;
+const startNoclip = () => {
+    if (ev) {
+        ev.destroy();
+        ev = null;
+    }
+    ev = new mp.Event("render", () => {
+        if (noclip.active) {
+            let updated = false;
+            const pos = mp.players.local.position;
+            direction = camera.getDirection();
+            camera.getCoord();
+            if (controls.isControlPressed(0, ids.Shift))
+                noclip.speed = 1.0;
+            else if (controls.isControlPressed(0, ids.RMB))
+                noclip.speed = 0.02;
+            else
+                noclip.speed = 0.15;
+            if (controls.isControlPressed(0, ids.W)) {
+                if (noclip.f < 8.0)
+                    noclip.f *= 1.025;
+                pos.x += direction.x * noclip.f * noclip.speed;
+                pos.y += direction.y * noclip.f * noclip.speed;
+                pos.z += direction.z * noclip.f * noclip.speed;
+                updated = true;
+            }
+            else if (controls.isControlPressed(0, ids.S)) {
+                if (noclip.f < 8.0)
+                    noclip.f *= 1.025;
+                pos.x -= direction.x * noclip.f * noclip.speed;
+                pos.y -= direction.y * noclip.f * noclip.speed;
+                pos.z -= direction.z * noclip.f * noclip.speed;
+                updated = true;
+            }
+            else
+                noclip.f = 2.0;
+            if (controls.isControlPressed(0, ids.A)) {
+                if (noclip.l < 8.0)
+                    noclip.l *= 1.025;
+                pos.x += (-direction.y) * noclip.l * noclip.speed;
+                pos.y += direction.x * noclip.l * noclip.speed;
+                updated = true;
+            }
+            else if (controls.isControlPressed(0, ids.D)) {
+                if (noclip.l < 8.0)
+                    noclip.l *= 1.05;
+                pos.x -= (-direction.y) * noclip.l * noclip.speed;
+                pos.y -= direction.x * noclip.l * noclip.speed;
+                updated = true;
+            }
+            else
+                noclip.l = 2.0;
+            if (controls.isControlPressed(0, ids.Space)) {
+                if (noclip.h < 8.0)
+                    noclip.h *= 1.025;
+                pos.z += noclip.h * noclip.speed;
+                updated = true;
+            }
+            else if (controls.isControlPressed(0, ids.LCtrl)) {
+                if (noclip.h < 8.0)
+                    noclip.h *= 1.05;
+                pos.z -= noclip.h * noclip.speed;
+                updated = true;
+            }
+            else
+                noclip.h = 2.0;
+            if (updated)
+                localplayer.setCoordsNoOffset(pos.x, pos.y, pos.z, false, false, false);
+        }
+    });
+};
+const stopNoclip = () => {
+    if (ev) {
+        ev.destroy();
+        ev = null;
+    }
+    noclip.f = 2.0;
+    noclip.w = 2.0;
+    noclip.h = 2.0;
+    noclip.speed = 0.15;
+};
+mp.keys.bind(Keys.VK_F8, false, () => {
+    if (!global.loginPlayer)
+        return;
+    noclip.active = !noclip.active;
+    direction = camera.getDirection();
+    camera.getCoord();
+    localplayer.setInvincible(noclip.active);
+    localplayer.freezePosition(noclip.active);
+    localplayer.setCollision(!noclip.active, !noclip.active);
+    localplayer.setAlpha(noclip.active ? 50 : 255);
+    rpc.call('sendNotify', ['info', noclip.active ? 'Полёт включен' : 'Полёт отключен', 1200, 'top']);
+    if (!noclip.active && !controls.isControlPressed(0, ids.Space)) {
+        const pos = mp.players.local.position;
+        pos.z = mp.game.gameplay.getGroundZFor3DCoord(pos.x, pos.y, pos.z, true, false);
+        mp.players.local.setCoordsNoOffset(pos.x, pos.y, pos.z, false, false, false);
+    }
+    if (noclip.active) {
+        startNoclip();
+    }
+    else {
+        stopNoclip();
     }
 });
 
