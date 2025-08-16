@@ -46,6 +46,9 @@ const startNoclip = () => {
       direction = camera.getDirection()
       coords = camera.getCoord()
 
+      const heading = Math.atan2(direction.x, direction.y) * (180 / Math.PI);
+      mp.players.local.setRotation(0, 0, heading, 2, true);
+
       if(controls.isControlPressed(0, ids.Shift)) noclip.speed = 1.0
       else if(controls.isControlPressed(0, ids.RMB)) noclip.speed = 0.02
       else noclip.speed = 0.15

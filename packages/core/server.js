@@ -257,8 +257,8 @@ registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
 const data = mysql__namespace.createPool({
     host: 'localhost',
     user: 'root',
-    database: 'redstar',
-    password: 'Patriot86',
+    database: 'realrp',
+    password: 'Real#PR86',
     port: 3306
 });
 const mysql2 = {
@@ -657,6 +657,7 @@ const playerReborn = (player) => {
     player.health = 100;
     player.stopAnimation();
     player.spawn(playerPos);
+    player.setVariable('player_knockout', false);
     rpc.callClient(player, 'ui:displayRadar', [true]);
     rpc.callClient(player, 'player:freeze', [false]);
     rpc.callClient(player, 'player:isCollision', [true]);
@@ -780,20 +781,39 @@ const getSid = (login) => {
     });
 };
 
-const getDataAccount = async (player, login, dataKey) => {
+const getDataAccount = async (player, login, dataKey, targetID) => {
+    const targetPlayer = mp.players.at(targetID);
+    if (!targetPlayer) {
+        console.error(chalk.red(`[RPC] Игрок с ID ${targetID} не найден!`));
+        return null;
+    }
+    const targetLogin = targetPlayer.getVariable('login_player');
+    if (!targetLogin) {
+        console.error(chalk.red(`[RPC] У игрока ${targetID} нет логина!`));
+        return null;
+    }
     const dataMap = {
-        sid: () => getSid(login)
+        sid: () => getSid(targetLogin)
     };
     if (!dataMap[dataKey])
         return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
     return dataMap[dataKey]();
 };
-rpc.register('getDataAccount', async (player, dataKey) => {
+rpc.register('getDataAccount', async (player, dataKey, targetID) => {
     const login = player.getVariable('login_player');
     if (!login) {
         console.error(chalk.red(`Игрок ${login} не авторизован!`));
         return;
     }
-    const result = await getDataAccount(player, login, dataKey);
+    console.log(`СИД для ${login}: ${await getDataAccount(player, login, dataKey, targetID)}`);
+    const result = await getDataAccount(player, login, dataKey, targetID);
     return result;
+});
+
+// rpc.register('playerVisible', (player: PlayerMp, toggle: boolean) => {
+//   player.visible = toggle
+//   player.setVariable('playerVisible', toggle)
+// })
+rpc.register('getIdPlayer', (player) => {
+    return player.id;
 });

@@ -1,20 +1,20 @@
 import '../assets/styles/compiled-css/Fate.css'
-import { FC } from 'react'
+import { FC, useRef } from 'react'
 import { rpc } from '../../../main'
 
 interface IFate {
-  timeLeft: number,
   setTimeLeft: (seconds: number) => void
 }
 
-const Fate: FC<IFate> = ({ timeLeft, setTimeLeft }) => {
+const Fate: FC<IFate> = ({ setTimeLeft }) => {
   const handleSelectFate = (fate: 'ems' | 'death') => {
-    rpc.callClient('cef:death:selectedFate', [timeLeft])
     if (fate === 'ems') {
       setTimeLeft(300)
+      rpc.callClient('cef:death:selectedFate', [300])
       window.App.deathReducer.selectFateDeath('ems')
     } else {
       setTimeLeft(120)
+      rpc.callClient('cef:death:selectedFate', [120])
       window.App.deathReducer.selectFateDeath('death')
     }
   }

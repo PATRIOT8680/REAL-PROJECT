@@ -36,3 +36,7 @@ rpc.register('ui:setPauseMenuActive', (toggle: boolean) => {
 rpc.register('gui:cursorVisible', (toggle: boolean) => {
   mp.gui.cursor.visible = toggle
 })
+
+rpc.register('getId', () => {
+  return mp.players.local.remoteId
+})
