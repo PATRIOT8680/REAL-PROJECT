@@ -7,6 +7,7 @@ import { chatStore } from "./menus/chat";
 import { loadingStore } from "./menus/loading";
 import { welcomeStore } from "./menus/welcome";
 import { deathStore } from "./menus/death";
+import { hudStore } from "./menus/hud.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -27,6 +28,7 @@ window.App = {
   loadingReducer: loadingStore,
   welcomeReducer: welcomeStore,
   deathReducer: deathStore,
+  hudReducer: hudStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,

@@ -8,6 +8,7 @@ import { chatReducer } from './menus/chat';
 import { loadingReducer } from './menus/loading';
 import { welcomeReducer } from './menus/welcome';
 import { deathReducer } from './menus/death';
+import { hudReducer } from "./menus/hud.ts";
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
@@ -20,6 +21,7 @@ export type RootState = {
   loadingReducer: ReturnType<typeof loadingReducer>
   welcomeReducer: ReturnType<typeof welcomeReducer>
   deathReducer: ReturnType<typeof deathReducer>
+  hudReducer: ReturnType<typeof hudReducer>
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
@@ -33,6 +35,7 @@ export const rootReducer = combineReducers({
   loadingReducer,
   welcomeReducer,
   deathReducer,
+  hudReducer,
 
   // Elements
   sendNotifyReducer,

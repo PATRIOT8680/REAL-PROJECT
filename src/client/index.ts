@@ -10,6 +10,7 @@ import './player/death'
 import './player/events'
 import './player/connected'
 import './admin/noclip'
+import './player/voice'
 
 if (openInterfaces.has('Auth')) {
 	mp.console.logInfo('Меню авторизации ВКЛЮЧЕНО!')

@@ -257,8 +257,8 @@ registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
 const data = mysql__namespace.createPool({
     host: 'localhost',
     user: 'root',
-    database: 'realrp',
-    password: 'Real#PR86',
+    database: 'redstar',
+    password: 'Patriot86',
     port: 3306
 });
 const mysql2 = {
@@ -816,4 +816,20 @@ rpc.register('getDataAccount', async (player, dataKey, targetID) => {
 // })
 rpc.register('getIdPlayer', (player) => {
     return player.id;
+});
+
+rpc.register('client:voice:new', (player, target) => {
+    if (target)
+        player.enableVoiceTo(target);
+});
+rpc.register('client:voice:deleted', (player, target) => {
+    if (target)
+        player.disableVoiceTo(target);
+});
+
+rpc.register('toggleNoclip', (player, toggle) => {
+    if (toggle)
+        player.alpha = 50;
+    else
+        player.alpha = 255;
 });

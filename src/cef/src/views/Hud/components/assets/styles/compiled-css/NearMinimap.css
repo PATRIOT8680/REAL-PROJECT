@@ -1,0 +1,12 @@
+.near-minimap .text.active {
+  color: #0AFFA7;
+}
+.near-minimap .text {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ff0d4a;
+}

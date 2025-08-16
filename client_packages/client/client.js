@@ -1360,9 +1360,10 @@ const disableAuth = () => {
     }
     stopCamMoving();
     showLoading(3000);
-    rpc.call('execute', [`window.App.chatReducer.showChat()`]);
     rpc.call('execute', [`window.App.authReducer.hideAuth()`]);
     setTimeout(() => {
+        rpc.call('execute', [`window.App.chatReducer.showChat()`]);
+        rpc.call('execute', [`window.App.hudReducer.showHud()`]);
         rpc.callServer('client:authPlayerVisible', [true]);
         mp.game.ui.displayRadar(true);
         mp.players.local.freezePosition(false);
@@ -1410,6 +1411,7 @@ const CHAT_MESSAGE_EVENT = 'chat:message';
 const buffer = [];
 let loaded = false;
 let opened = false;
+global.chatOpened = false;
 const toggleChat = (state) => {
     rpc.callBrowser('chatActive', [state]);
 };
@@ -1453,6 +1455,7 @@ mp.keys.bind(Keys.VK_T, false, () => {
     if (loaded && !opened) {
         opened = true;
         toggleChat(true);
+        global.chatOpened = true;
         rpc.callBrowser('openChat', [false]);
     }
 });
@@ -1466,6 +1469,7 @@ mp.keys.bind(Keys.VK_OEM_2, false, () => {
 mp.keys.bind(Keys.VK_ESCAPE, false, () => {
     if (loaded && opened) {
         opened = false;
+        global.chatOpened = false;
         rpc.callBrowser('closeChat');
         toggleChat(false);
     }
@@ -1473,9 +1477,16 @@ mp.keys.bind(Keys.VK_ESCAPE, false, () => {
 mp.keys.bind(Keys.VK_ENTER, false, () => {
     if (loaded && opened) {
         opened = false;
+        global.chatOpened = false;
         rpc.callBrowser('closeChat');
         toggleChat(false);
     }
+});
+rpc.register('chat:pushMsg', (name, text, showTime, tile) => {
+    pushMsg(name, text, showTime, tile);
+});
+rpc.register('chat:pushLine', (text, showTime, tile) => {
+    pushLine(text, showTime, tile);
 });
 pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello');
 
@@ -1619,6 +1630,7 @@ const camera = mp.cameras.new('gameplay');
 const controls = mp.game.controls;
 let direction = null;
 const startNoclip = () => {
+    rpc.callServer('toggleNoclip', [true]);
     if (ev) {
         ev.destroy();
         ev = null;
@@ -1691,6 +1703,7 @@ const startNoclip = () => {
     });
 };
 const stopNoclip = () => {
+    rpc.callServer('toggleNoclip', [false]);
     if (ev) {
         ev.destroy();
         ev = null;
@@ -1709,7 +1722,6 @@ mp.keys.bind(Keys.VK_F8, false, () => {
     localplayer.setInvincible(noclip.active);
     localplayer.freezePosition(noclip.active);
     localplayer.setCollision(!noclip.active, !noclip.active);
-    localplayer.setAlpha(noclip.active ? 50 : 255);
     rpc.call('sendNotify', ['info', noclip.active ? 'Полёт включен' : 'Полёт отключен', 1200, 'top']);
     if (!noclip.active && !controls.isControlPressed(0, ids.Space)) {
         const pos = mp.players.local.position;
@@ -1723,6 +1735,100 @@ mp.keys.bind(Keys.VK_F8, false, () => {
         stopNoclip();
     }
 });
+
+const maxDist = 7;
+let mutePlayer = false;
+mp.keys.bind(Keys.VK_B, true, () => {
+    mp.console.logInfo(`chatOpened: ${global.chatOpened} & loginPlayer: ${global.loginPlayer}`);
+    if (global.chatOpened || !global.loginPlayer)
+        return;
+    if (mutePlayer)
+        return rpc.call('pushLine', ['{FF2701}<b>У вас бан-войс!</b>']);
+    mp.voiceChat.muted = false;
+    mp.console.logWarning('Войс включен');
+    rpc.call('execute', ['window.voiceComponent.enable()']);
+});
+mp.keys.bind(Keys.VK_B, false, () => {
+    mp.voiceChat.muted = true;
+    mp.console.logWarning('Войс выключен');
+    rpc.call('execute', ['window.voiceComponent.disable()']);
+});
+mp.keys.bind(Keys.VK_F10, false, () => {
+    mp.voiceChat.muted = true;
+    setTimeout(() => {
+        if (!mp.voiceChat.muted)
+            return;
+        else {
+            mp.voiceChat.cleanupAndReload(true, true, true);
+            rpc.call('execute', [`window.App.sendNotifyReducer.sendNotify('success', 'Войс-чат был успешно перезагружен!', 3000, 'bottom')`]);
+        }
+    }, 100);
+});
+let voiceManager = {
+    list: [],
+    new(player) {
+        if (this.list.indexOf(player) !== -1) {
+            rpc.callServer('client:voice:new', [player]);
+            this.list.push(player);
+            {
+                player.voiceVolume = 1;
+            }
+            {
+                player.voice3d = true;
+            }
+        }
+    },
+    delete(player, removedVoice) {
+        let index = this.list.indexOf(player);
+        if (index !== -1) {
+            this.list.splice(index, 1);
+        }
+        if (removedVoice) {
+            rpc.callServer('client:voice:delete', [player]);
+        }
+    }
+};
+mp.events.add('playerQuit', (player) => {
+    voiceManager.delete(player, false);
+});
+rpc.register('switchVoice', (state) => {
+    mutePlayer = state;
+    mp.voiceChat.muted = state;
+    if (mutePlayer) {
+        rpc.call('execute', ['window.voiceComponent.disabled()']);
+    }
+    else {
+        rpc.call('execute', ['window.voiceComponent.enabled()']);
+    }
+});
+setInterval(() => {
+    let localplayer = mp.players.local;
+    let localPos = localplayer.position;
+    mp.players.forEachInStreamRange((player) => {
+        if (player !== localplayer) {
+            const playerPos = player.position;
+            let dist = mp.game.system.vdist(playerPos.x, playerPos.y, playerPos.z, localPos.x, localPos.y, localPos.z);
+            if (dist <= maxDist) {
+                voiceManager.new(player);
+            }
+        }
+    });
+    voiceManager.list.forEach((player) => {
+        if (player.handle !== 0) {
+            const playerPos = player.position;
+            let dist = mp.game.system.vdist(playerPos.x, playerPos.y, playerPos.z, localPos.x, localPos.y, localPos.z);
+            if (dist > maxDist) {
+                voiceManager.delete(player, true);
+            }
+            else {
+                player.voiceVolume = 1 - (dist / maxDist);
+            }
+        }
+        else {
+            voiceManager.delete(player, true);
+        }
+    });
+}, 500);
 
 if (openInterfaces.has('Auth')) {
     mp.console.logInfo('Меню авторизации ВКЛЮЧЕНО!');
