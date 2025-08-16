@@ -94,7 +94,7 @@ rpc.register('cef:authEnabled', () => {
 
 rpc.register('cef:authDisabled', () => {
   disableAuth()
-  rpc.callServer('getDataAccount', ['sid']).then((sid: number) => {
+  rpc.callServer('getDataAccount', ['sid', mp.players.local.remoteId]).then((sid: number) => {
     rpc.call('execute', [`window.App.playerInfoReducer.setSid(${sid})`])
   })
   global.loginPlayer = true

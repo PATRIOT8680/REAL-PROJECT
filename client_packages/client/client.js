@@ -998,12 +998,33 @@ global.Keys = {
 };
 var Keys = global.Keys;
 
+const drawSprite = (dist, name, pos, scale, heading, color, layer) => {
+    const resolution = mp.game.graphics.getScreenActiveResolution(0, 0);
+    const textureResolution = mp.game.graphics.getTextureResolution(dist, name);
+    const _scale = [
+        (scale[0] * textureResolution.x) / resolution.x,
+        (scale[1] * textureResolution.y) / resolution.y
+    ];
+    if (mp.game.graphics.hasStreamedTextureDictLoaded(dist)) {
+        mp.game.graphics.drawSprite(dist, name, pos[0], pos[1], _scale[0], _scale[1], heading, color[0], color[1], color[2], color[3], false);
+    }
+    else
+        mp.game.graphics.requestStreamedTextureDict(dist, true);
+};
+
 const maxDistance = 20 * 20;
 let width = 0.032;
 const height = 0.006;
 let visibleNametags = true;
 let playerAimAt = null;
+const playerSids = new Map();
 mp.nametags.enabled = false;
+const requestPlayerSid = (player) => {
+    rpc.callServer('getDataAccount', ['sid', player.remoteId]).then((statID) => {
+        mp.console.logWarning(`SID nametag (ID: ${player.remoteId}): ${statID}`);
+        playerSids.set(player.remoteId, statID);
+    });
+};
 mp.keys.bind(Keys.VK_F9, false, () => {
     visibleNametags = !visibleNametags;
 });
@@ -1015,11 +1036,12 @@ mp.events.add('render', (nametags) => {
     if (visibleNametags) {
         nametags.forEach(nametag => {
             let [player, x, y, distance] = nametag;
+            const sid = playerSids.get(player.remoteId);
+            if (global.loginPlayer && sid === undefined) {
+                requestPlayerSid(player);
+            }
             if (distance <= maxDistance) {
-                if (player.getVariable('player_knockout')) {
-                    mp.console.logWarning('В нокауте');
-                }
-                drawNametags(player, x, y + 0.05, `Гражданин [ID: ${player.remoteId}]`, [255, 255, 255, 255], 0.27, distance);
+                drawNametags(player, x, y + 0.05, `Гражданин #${sid} [ID: ${player.remoteId}]`, [255, 255, 255, 255], 0.27, distance);
             }
         });
     }
@@ -1035,6 +1057,15 @@ const drawNametags = (player, x, y, displayName, color, scale, distance) => {
         scale: [textScale, textScale],
         outline: true
     });
+    if (player.getVariable('player_knockout')) {
+        drawSprite('commonmenutu', 'team_deathmatch', [x, textY - 0.015], [0.8, 0.8], 0, [255, 13, 74, 255]);
+        mp.game.graphics.drawText('Без сознания...', [x, textY + 0.02], {
+            font: 4,
+            color: [255, 13, 74, 255],
+            scale: [textScale + 0.09, textScale + 0.09],
+            outline: true
+        });
+    }
     if (playerAimAt !== undefined) {
         const healthBarY = (textY - 0.03) + 0.057;
         let health = player.getHealth();
@@ -1055,6 +1086,12 @@ const drawNametags = (player, x, y, displayName, color, scale, distance) => {
         }
     }
 };
+mp.events.add('playerJoin', (player) => {
+    requestPlayerSid(player);
+});
+mp.events.add('playerQuit', (player) => {
+    playerSids.delete(player.remoteId);
+});
 
 const showLoading = (duration) => {
     setTimeout(() => {
@@ -1336,7 +1373,7 @@ rpc.register('cef:authEnabled', () => {
 });
 rpc.register('cef:authDisabled', () => {
     disableAuth();
-    rpc.callServer('getDataAccount', ['sid']).then((sid) => {
+    rpc.callServer('getDataAccount', ['sid', mp.players.local.remoteId]).then((sid) => {
         rpc.call('execute', [`window.App.playerInfoReducer.setSid(${sid})`]);
     });
     global.loginPlayer = true;
@@ -1504,7 +1541,7 @@ mp.events.add('playerDeath', async (player, reason, killer) => {
 });
 rpc.register('server:getFormatedDateTime', (time) => {
 });
-rpc.register('cef:death:selectedFate', () => {
+rpc.register('cef:death:selectedFate', (timeLeft) => {
     mp.gui.cursor.visible = false;
 });
 
@@ -1535,6 +1572,9 @@ rpc.register('ui:setPauseMenuActive', (toggle) => {
 // GUI
 rpc.register('gui:cursorVisible', (toggle) => {
     mp.gui.cursor.visible = toggle;
+});
+rpc.register('getId', () => {
+    return mp.players.local.remoteId;
 });
 
 mp.events.add('playerReady', (player) => {
@@ -1589,6 +1629,8 @@ const startNoclip = () => {
             const pos = mp.players.local.position;
             direction = camera.getDirection();
             camera.getCoord();
+            const heading = Math.atan2(direction.x, direction.y) * (180 / Math.PI);
+            mp.players.local.setRotation(0, 0, heading, 2, true);
             if (controls.isControlPressed(0, ids.Shift))
                 noclip.speed = 1.0;
             else if (controls.isControlPressed(0, ids.RMB))
@@ -1644,7 +1686,7 @@ const startNoclip = () => {
             else
                 noclip.h = 2.0;
             if (updated)
-                localplayer.setCoordsNoOffset(pos.x, pos.y, pos.z, false, false, false);
+                mp.players.local.setCoordsNoOffset(pos.x, pos.y, pos.z, false, false, false);
         }
     });
 };

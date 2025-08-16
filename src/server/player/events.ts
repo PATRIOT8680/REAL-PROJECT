@@ -4,3 +4,7 @@ import { rpc } from '../utils/rpc'
 //   player.visible = toggle
 //   player.setVariable('playerVisible', toggle)
 // })
+
+rpc.register('getIdPlayer', (player: PlayerMp) => {
+  return player.id
+})

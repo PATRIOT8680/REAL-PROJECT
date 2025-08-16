@@ -24,7 +24,6 @@ mp.keys.bind(Keys.VK_F5, true, () => {
 
 
 let timeDeath: string = ''
-export let deathInSeconds: number
 
 const getRandomChance = (): [number, boolean] => {
   const percent = Math.floor(Math.random() * 66)
@@ -53,6 +52,5 @@ rpc.register('server:getFormatedDateTime', (time: string) => {
 })
 
 rpc.register('cef:death:selectedFate', (timeLeft: number) => {
-  deathInSeconds = timeLeft
   mp.gui.cursor.visible = false
 })

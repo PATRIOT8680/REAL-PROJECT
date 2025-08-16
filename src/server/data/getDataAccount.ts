@@ -3,9 +3,21 @@ import { rpc } from '../utils/rpc'
 
 import { getSid } from "./account/sid";
 
-export const getDataAccount = async (player: PlayerMp, login: string, dataKey: string): Promise<any> => {
+export const getDataAccount = async (player: PlayerMp, login: string, dataKey: string, targetID): Promise<any> => {
+  const targetPlayer = mp.players.at(targetID)
+  if (!targetPlayer) {
+    console.error(chalk.red(`[RPC] Игрок с ID ${targetID} не найден!`))
+    return null
+  }
+
+  const targetLogin = targetPlayer.getVariable('login_player')
+  if (!targetLogin) {
+    console.error(chalk.red(`[RPC] У игрока ${targetID} нет логина!`));
+    return null;
+  }
+  
   const dataMap = {
-    sid: () => getSid(login)
+    sid: () => getSid(targetLogin)
   }
 
   if (!dataMap[dataKey]) return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`))
@@ -13,7 +25,7 @@ export const getDataAccount = async (player: PlayerMp, login: string, dataKey: s
   return dataMap[dataKey]()
 }
 
-rpc.register('getDataAccount', async (player: PlayerMp, dataKey: string) => {
+rpc.register('getDataAccount', async (player: PlayerMp, dataKey: string, targetID: number) => {
   const login = player.getVariable('login_player')
 
   if (!login) {
@@ -21,6 +33,7 @@ rpc.register('getDataAccount', async (player: PlayerMp, dataKey: string) => {
     return
   }
 
-  const result = await getDataAccount(player, login, dataKey)
+  console.log(`СИД для ${login}: ${await getDataAccount(player, login, dataKey, targetID)}`)
+  const result = await getDataAccount(player, login, dataKey, targetID)
   return result
 })

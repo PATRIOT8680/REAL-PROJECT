@@ -1,6 +1,6 @@
 import Keys from '../utils/keys'
-import { deathInSeconds } from "./death"
 import { drawSprite } from "../utils/drawSprite"
+import { rpc } from '../utils/rpc'
 
 const maxDistance = 20*20
 let width = 0.032
@@ -8,8 +8,16 @@ const height = 0.006
 let visibleNametags: boolean = true
 let playerTarget: PlayerMp = null
 let playerAimAt = null
+const playerSids = new Map<number, number>();
 
 mp.nametags.enabled = false
+
+const requestPlayerSid = (player: PlayerMp) => {
+  rpc.callServer('getDataAccount', ['sid', player.remoteId]).then((statID: number) => {
+    mp.console.logWarning(`SID nametag (ID: ${player.remoteId}): ${statID}`)
+    playerSids.set(player.remoteId, statID)
+  })
+}
 
 mp.keys.bind(Keys.VK_F9, false, () => {
   visibleNametags = !visibleNametags
@@ -24,13 +32,14 @@ mp.events.add('render', (nametags) => {
   if (visibleNametags) {
     nametags.forEach(nametag => {
       let [player, x, y, distance] = nametag
+      const sid = playerSids.get(player.remoteId)
+
+      if (global.loginPlayer && sid === undefined) {
+        requestPlayerSid(player)
+      }
 
       if(distance <= maxDistance) {
-        if (player.getVariable('player_knockout')) {
-          mp.console.logWarning('В нокауте')
-        }
-
-        drawNametags(player, x, y + 0.05, `Гражданин [ID: ${player.remoteId}]`, [255, 255, 255, 255], 0.27, distance)
+        drawNametags(player, x, y + 0.05, `Гражданин #${sid} [ID: ${player.remoteId}]`, [255, 255, 255, 255], 0.27, distance)
       }
     })
   }
@@ -53,13 +62,13 @@ const drawNametags = (player: PlayerMp, x: number, y: number, displayName: strin
   )
 
   if (player.getVariable('player_knockout')) {
-    drawSprite('commonmenutu', 'team_deathmatch', [x - 0.05, textY - 0.05 ], [0.3, 0.3], 0, [255, 13, 74, 255])
+    drawSprite('commonmenutu', 'team_deathmatch', [x, textY - 0.015], [0.8, 0.8], 0, [255, 13, 74, 255])
 
-    mp.game.graphics.drawText(`Без сознания... (${deathInSeconds} sec.)`, [x, textY - 0.05],
+    mp.game.graphics.drawText('Без сознания...', [x, textY + 0.02],
       {
-        font: 0,
+        font: 4,
         color: [255, 13, 74, 255],
-        scale: [textScale, textScale],
+        scale: [textScale + 0.09, textScale + 0.09],
         outline: true
       }
     )
@@ -89,3 +98,11 @@ const drawNametags = (player: PlayerMp, x: number, y: number, displayName: strin
     }
   }
 }
+
+mp.events.add('playerJoin', (player: PlayerMp) => {
+  requestPlayerSid(player)
+})
+
+mp.events.add('playerQuit', (player: PlayerMp) => {
+  playerSids.delete(player.remoteId)
+})
