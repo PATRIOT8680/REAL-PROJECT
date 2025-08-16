@@ -5,4 +5,3 @@ export const showAuth = () => {
 export const hideAuth = () => {
 	return { type: 'HIDE_AUTH' }
 }
-

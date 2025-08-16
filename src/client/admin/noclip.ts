@@ -34,6 +34,8 @@ let direction = null
 let coords = null
 
 const startNoclip = () => {
+  rpc.callServer('toggleNoclip', [true])
+
   if (ev) {
     ev.destroy()
     ev = null
@@ -95,6 +97,8 @@ const startNoclip = () => {
 }
 
 const stopNoclip = () => {
+  rpc.callServer('toggleNoclip', [false])
+
   if (ev) {
     ev.destroy()
     ev = null
@@ -116,7 +120,6 @@ mp.keys.bind(Keys.VK_F8, false, () => {
   localplayer.setInvincible(noclip.active)
   localplayer.freezePosition(noclip.active)
   localplayer.setCollision(!noclip.active, !noclip.active)
-  localplayer.setAlpha(noclip.active ? 50 : 255)
 
   rpc.call('sendNotify', ['info', noclip.active ? 'Полёт включен' : 'Полёт отключен', 1200, 'top'])
 

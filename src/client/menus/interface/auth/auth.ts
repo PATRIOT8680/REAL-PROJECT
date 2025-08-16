@@ -78,9 +78,10 @@ const disableAuth = () => {
   stopCamMoving()
 
   showLoading(3000)
-  rpc.call('execute', [`window.App.chatReducer.showChat()`])
   rpc.call('execute', [`window.App.authReducer.hideAuth()`])
   setTimeout(() => {
+    rpc.call('execute', [`window.App.chatReducer.showChat()`])
+    rpc.call('execute', [`window.App.hudReducer.showHud()`])
     rpc.callServer('client:authPlayerVisible', [true])
     mp.game.ui.displayRadar(true)
     mp.players.local.freezePosition(false)

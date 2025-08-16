@@ -25,6 +25,7 @@ import Loading from "./views/Loading/Index"
 import Welcome from "./views/Welcome/Index"
 import Rent from "./views/Rent/Index"
 import DeathPlayer from "./views/Death/Index"
+import Hud from "./views/Hud/Index"
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -42,6 +43,8 @@ const App = () => {
   const authVisible = useSelector((state: RootState) => state.authReducer.isVisible)
   const chatVisible = useSelector((state: RootState) => state.chatReducer.isVisible)
   const welcomeVisible = useSelector((state: RootState) => state.welcomeReducer.isVisible)
+  const hudVisible = useSelector((state: RootState) => state.hudReducer.isVisible)
+
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
   const playerInfoReducer = useSelector((state: RootState) => state.playerInfoReducer)
@@ -94,6 +97,7 @@ const App = () => {
       <Loading />
       {/*<Rent />*/}
       { deathReducer.isVisible && <DeathPlayer />  }
+      { hudVisible && <Hud /> }
 
       <div className="language_ambients">
         { shouldChangeLanguage && <ChangeLanguage /> }

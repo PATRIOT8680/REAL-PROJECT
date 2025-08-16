@@ -14,6 +14,7 @@ const buffer: IMessage[] = []
 
 let loaded = false
 let opened = false
+global.chatOpened = false
 
 const toggleChat = (state: boolean) => {
   rpc.callBrowser('chatActive', [state])
@@ -63,6 +64,7 @@ mp.keys.bind(Keys.VK_T, false, () => {
   if (loaded && !opened) {
     opened = true
     toggleChat(true)
+    global.chatOpened = true
     rpc.callBrowser('openChat', [false])
   }
 })
@@ -78,17 +80,27 @@ mp.keys.bind(Keys.VK_OEM_2, false, () => {
 mp.keys.bind(Keys.VK_ESCAPE, false, () => {
   if (loaded && opened) {
     opened = false
-      rpc.callBrowser('closeChat')
-      toggleChat(false)
+    global.chatOpened = false
+    rpc.callBrowser('closeChat')
+    toggleChat(false)
   }
 })
 
 mp.keys.bind(Keys.VK_ENTER, false, () => {
   if (loaded && opened) {
     opened = false
+    global.chatOpened = false
     rpc.callBrowser('closeChat')
     toggleChat(false)
   }
+})
+
+rpc.register('chat:pushMsg', (name: string | null, text: string, showTime: boolean, tile?: string) => {
+  pushMsg(name, text, showTime, tile)
+})
+
+rpc.register('chat:pushLine', (text: string, showTime: boolean, tile?: string) => {
+  pushLine(text, showTime, tile)
 })
 
 pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello')
