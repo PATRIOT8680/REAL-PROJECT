@@ -34,7 +34,7 @@ mp.events.add('render', (nametags) => {
       let [player, x, y, distance] = nametag
       const sid = playerSids.get(player.remoteId)
 
-      if (global.loginPlayer && sid === undefined) {
+      if (global.loginPlayer && (sid === null || sid === undefined)) {
         requestPlayerSid(player)
       }
 

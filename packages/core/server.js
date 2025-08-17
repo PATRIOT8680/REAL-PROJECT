@@ -257,8 +257,8 @@ registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
 const data = mysql__namespace.createPool({
     host: 'localhost',
     user: 'root',
-    database: 'redstar',
-    password: 'Patriot86',
+    database: 'realrp',
+    password: 'Real#PR86',
     port: 3306
 });
 const mysql2 = {
@@ -818,13 +818,16 @@ rpc.register('getIdPlayer', (player) => {
     return player.id;
 });
 
-rpc.register('client:voice:new', (player, target) => {
+//import { rpc } from '../utils/rpc'
+mp.events.add('client:voice:new', (player, target) => {
     if (target)
         player.enableVoiceTo(target);
+    console.log(`voice.new (id: ${player.id} => ${target.id})`);
 });
-rpc.register('client:voice:deleted', (player, target) => {
+mp.events.add('client:voice:deleted', (player, target) => {
     if (target)
         player.disableVoiceTo(target);
+    console.log(`voice.deleted (id: ${player.id} => ${target.id})`);
 });
 
 rpc.register('toggleNoclip', (player, toggle) => {

@@ -9,22 +9,21 @@ interface IVoiceManager {
 
 const voice3d = true
 const autovolume = false
-const maxDist = 7
+const maxDist = 10.0
 let mutePlayer = false
 
 mp.keys.bind(Keys.VK_B, true, () => {
-  mp.console.logInfo(`chatOpened: ${global.chatOpened} & loginPlayer: ${global.loginPlayer}`)
+  const testMsg = `chatOpened: ${global.chatOpened} & loginPlayer: ${global.loginPlayer}`
+  rpc.callServer('cef:serverCmd', [testMsg.toString()])
   if (global.chatOpened || !global.loginPlayer) return
-  if (mutePlayer) return rpc.call('pushLine', ['{FF2701}<b>У вас бан-войс!</b>'])
+  if (mutePlayer) return rpc.call('chat:pushLine', ['{FF2701}<b>У вас бан-войс!</b>'])
 
   mp.voiceChat.muted = false
-  mp.console.logWarning('Войс включен')
   rpc.call('execute', ['window.voiceComponent.enable()'])
 })
 
 mp.keys.bind(Keys.VK_B, false, () => {
   mp.voiceChat.muted = true
-  mp.console.logWarning('Войс выключен')
   rpc.call('execute', ['window.voiceComponent.disable()'])
 })
 
@@ -42,15 +41,16 @@ mp.keys.bind(Keys.VK_F10, false, () => {
 let voiceManager: IVoiceManager = {
   list: [],
 
-  new(player: PlayerMp)  {
-    if (this.list.indexOf(player) !== -1) {
-      rpc.callServer('client:voice:new', [player])
+  new(player: any)  {
+    if (this.list.indexOf(player) === -1) {
+      mp.events.callRemote('client:voice:new', player)
       this.list.push(player)
+      player.isListening = true
 
       if (autovolume) {
         player.voiceAutoVolume = true
       } else {
-        player.voiceVolume = 1
+        player.voiceVolume = 1.0
       }
 
       if (voice3d) {
@@ -59,21 +59,26 @@ let voiceManager: IVoiceManager = {
     }
   },
 
-  delete(player: PlayerMp, removedVoice: boolean) {
+  delete(player: any, removedVoice: boolean) {
     let index = this.list.indexOf(player)
 
     if (index !== -1) {
       this.list.splice(index, 1)
     }
 
+    player.isListening = false
+
     if (removedVoice) {
-      rpc.callServer('client:voice:delete', [player])
+      mp.events.callRemote('client:voice:deleted', player)
     }
   }
 }
 
-mp.events.add('playerQuit', (player: PlayerMp) => {
-  voiceManager.delete(player, false)
+mp.events.add('playerQuit', (player: any) => {
+  if(player.isListening)
+	{
+		voiceManager.delete(player, false)
+	}
 })
 
 rpc.register('switchVoice', (state: boolean) => {
@@ -91,12 +96,13 @@ setInterval(() => {
   let localplayer = mp.players.local
   let localPos = localplayer.position
 
-  mp.players.forEachInStreamRange((player: PlayerMp) => {
-    if (player !== localplayer) {
+  mp.players.forEachInStreamRange((player: any) => {
+    if (player !== localplayer && !player.isListening) {
       const playerPos = player.position
       let dist = mp.game.system.vdist(playerPos.x, playerPos.y, playerPos.z, localPos.x, localPos.y, localPos.z)
 
       if (dist <= maxDist) {
+        mp.console.logWarning(`${voiceManager.list}`)
         voiceManager.new(player)
       }
     }
@@ -110,7 +116,7 @@ setInterval(() => {
       if (dist > maxDist) {
         voiceManager.delete(player, true)
       } else if (!autovolume) {
-        player.voiceVolume = 1 - (dist / maxDist)
+        player.voiceVolume = 1.0 - (dist / maxDist)
       }
     } else {
       voiceManager.delete(player, true)
