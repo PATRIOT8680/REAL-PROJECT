@@ -3,6 +3,7 @@ import * as path from 'path'
 
 import { registerCMD } from '../menus/chat'
 import { send } from '../menus/chat'
+import { rpc } from '../utils/rpc'
 
 registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...string[]]) => {
     const targetId = parseInt(target, 10)
@@ -91,4 +92,32 @@ registerCMD('veh', (player: PlayerMp, [target, model, r, g, b, numberPlate]) => 
     console.error(`Ошибка при создании транспорта: ${e}`)
     send(player, `<b>Ошибка при создании транспорта: ${e.message}</b>`, false, 'admin')
   }
+})
+
+registerCMD('banvoice', (player: PlayerMp, [target]) => {
+  if (target === undefined) {
+    return send(player, `<b>Используйте /banvoice [playerID]`, false, 'admin')
+  }
+
+  // if (target.getVariable('player_mute')) {
+  //   return send(player, `<b>Игроку уже выдан бан-войс!</b>`, false, 'admin')
+  // }
+
+  const targetPlayer = mp.players.at(parseInt(target, 10))
+  rpc.callClient(targetPlayer, 'player:mute', [true])
+  send(targetPlayer, `<b>Вам выдан бан-войс!</b>`, true)
+})
+
+registerCMD('unbanvoice', (player: PlayerMp, [target]) => {
+  if (target === undefined) {
+    return send(player, `<b>Используйте /unbanvoice [playerID]</b>`, false, 'admin')
+  }
+
+  // if (!target.getVariable('player_mute')) {
+  //   return send(player, `<b>У игрока нет бан-войса!</b>`, false, 'admin')
+  // }
+
+  const targetPlayer = mp.players.at(parseInt(target, 10))
+  rpc.callClient(targetPlayer, 'player:mute', [false])
+  send(targetPlayer, `<b>С вас снят бан-войс!</b>`, true)
 })

@@ -8,3 +8,7 @@ import { rpc } from '../utils/rpc'
 rpc.register('getIdPlayer', (player: PlayerMp) => {
   return player.id
 })
+
+rpc.register('player:mute', (player: PlayerMp, state: boolean) => {
+  player.setVariable('player_mute', state)
+})
