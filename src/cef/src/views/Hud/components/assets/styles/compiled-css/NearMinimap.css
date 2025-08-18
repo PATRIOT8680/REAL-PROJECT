@@ -1,3 +1,7 @@
+.near-minimap {
+  position: relative;
+  z-index: 100;
+}
 .near-minimap .text.active {
   color: #0AFFA7;
 }

@@ -10,20 +10,22 @@ interface IVoiceManager {
 const voice3d = true
 const autovolume = false
 const maxDist = 10.0
-let mutePlayer = false
+global.mutePlayer = false
 
 mp.keys.bind(Keys.VK_B, true, () => {
   const testMsg = `chatOpened: ${global.chatOpened} & loginPlayer: ${global.loginPlayer}`
   rpc.callServer('cef:serverCmd', [testMsg.toString()])
   if (global.chatOpened || !global.loginPlayer) return
-  if (mutePlayer) return rpc.call('chat:pushLine', ['{FF2701}<b>У вас бан-войс!</b>'])
+  if (global.mutePlayer) return rpc.call('chat:pushLine', ['{FF2701}<b>У вас бан-войс!</b>'])
 
   mp.voiceChat.muted = false
+  global.activeVoice = true
   rpc.call('execute', ['window.voiceComponent.enable()'])
 })
 
 mp.keys.bind(Keys.VK_B, false, () => {
   mp.voiceChat.muted = true
+  global.activeVoice = false
   rpc.call('execute', ['window.voiceComponent.disable()'])
 })
 
@@ -82,10 +84,10 @@ mp.events.add('playerQuit', (player: any) => {
 })
 
 rpc.register('switchVoice', (state: boolean) => {
-  mutePlayer = state
+  global.mutePlayer = state
   mp.voiceChat.muted = state
 
-  if (mutePlayer) {
+  if (global.mutePlayer) {
     rpc.call('execute', ['window.voiceComponent.disabled()'])
   } else {
     rpc.call('execute', ['window.voiceComponent.enabled()'])

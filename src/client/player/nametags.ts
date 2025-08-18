@@ -2,7 +2,7 @@ import Keys from '../utils/keys'
 import { drawSprite } from "../utils/drawSprite"
 import { rpc } from '../utils/rpc'
 
-const maxDistance = 20*20
+const maxDistance = 400
 let width = 0.032
 const height = 0.006
 let visibleNametags: boolean = true
@@ -14,7 +14,6 @@ mp.nametags.enabled = false
 
 const requestPlayerSid = (player: PlayerMp) => {
   rpc.callServer('getDataAccount', ['sid', player.remoteId]).then((statID: number) => {
-    mp.console.logWarning(`SID nametag (ID: ${player.remoteId}): ${statID}`)
     playerSids.set(player.remoteId, statID)
   })
 }
@@ -74,7 +73,19 @@ const drawNametags = (player: PlayerMp, x: number, y: number, displayName: strin
     )
   }
 
-  if (playerAimAt !== undefined) {
+  if (global.activeVoice) {
+    if (global.mutePlayer) return drawSprite('mpleaderboard', 'leaderboard_audio_mute', [x + 0.03, textY], [0.7, 0.7], 0, [255, 255, 255, 255])
+
+    if (distance > 280) {
+      drawSprite('mpleaderboard', 'leaderboard_audio_3', [x + 0.03, textY], [0.7, 0.7], 0, [255, 255, 255, 255])
+    } else if (distance < 280 && distance > 110) {
+      drawSprite('mpleaderboard', 'leaderboard_audio_2', [x + 0.03, textY], [0.7, 0.7], 0, [255, 255, 255, 255])
+    } else if (distance < 110) {
+      drawSprite('mpleaderboard', 'leaderboard_audio_1', [x + 0.03, textY], [0.7, 0.7], 0, [255, 255, 255, 255])
+    }
+  }
+
+  if (playerAimAt !== undefined && !player.getVariable('player_knockout')) {
     const healthBarY = (textY - 0.03) + 0.057
 
     let health = player.getHealth()
