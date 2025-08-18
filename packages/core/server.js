@@ -253,6 +253,28 @@ registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
         send(player, `<b>Ошибка при создании транспорта: ${e.message}</b>`, false, 'admin');
     }
 });
+registerCMD('banvoice', (player, [target]) => {
+    if (target === undefined) {
+        return send(player, `<b>Используйте /banvoice [playerID]`, false, 'admin');
+    }
+    // if (target.getVariable('player_mute')) {
+    //   return send(player, `<b>Игроку уже выдан бан-войс!</b>`, false, 'admin')
+    // }
+    const targetPlayer = mp.players.at(parseInt(target, 10));
+    rpc.callClient(targetPlayer, 'player:mute', [true]);
+    send(targetPlayer, `<b>Вам выдан бан-войс!</b>`, true);
+});
+registerCMD('unbanvoice', (player, [target]) => {
+    if (target === undefined) {
+        return send(player, `<b>Используйте /unbanvoice [playerID]</b>`, false, 'admin');
+    }
+    // if (!target.getVariable('player_mute')) {
+    //   return send(player, `<b>У игрока нет бан-войса!</b>`, false, 'admin')
+    // }
+    const targetPlayer = mp.players.at(parseInt(target, 10));
+    rpc.callClient(targetPlayer, 'player:mute', [false]);
+    send(targetPlayer, `<b>С вас снят бан-войс!</b>`, true);
+});
 
 const data = mysql__namespace.createPool({
     host: 'localhost',
@@ -817,17 +839,17 @@ rpc.register('getDataAccount', async (player, dataKey, targetID) => {
 rpc.register('getIdPlayer', (player) => {
     return player.id;
 });
+rpc.register('player:mute', (player, state) => {
+    player.setVariable('player_mute', state);
+});
 
-//import { rpc } from '../utils/rpc'
 mp.events.add('client:voice:new', (player, target) => {
     if (target)
         player.enableVoiceTo(target);
-    console.log(`voice.new (id: ${player.id} => ${target.id})`);
 });
 mp.events.add('client:voice:deleted', (player, target) => {
     if (target)
         player.disableVoiceTo(target);
-    console.log(`voice.deleted (id: ${player.id} => ${target.id})`);
 });
 
 rpc.register('toggleNoclip', (player, toggle) => {

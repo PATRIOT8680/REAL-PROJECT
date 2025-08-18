@@ -1021,7 +1021,6 @@ const playerSids = new Map();
 mp.nametags.enabled = false;
 const requestPlayerSid = (player) => {
     rpc.callServer('getDataAccount', ['sid', player.remoteId]).then((statID) => {
-        mp.console.logWarning(`SID nametag (ID: ${player.remoteId}): ${statID}`);
         playerSids.set(player.remoteId, statID);
     });
 };
@@ -1041,51 +1040,67 @@ mp.events.add('render', (nametags) => {
                 requestPlayerSid(player);
             }
             if (distance <= maxDistance) {
-                drawNametags(player, x, y + 0.05, `Гражданин #${sid} [ID: ${player.remoteId}]`, [255, 255, 255, 255], 0.27, distance);
+                const distanceFactor = Math.min(1, distance / maxDistance);
+                const liftAmount = 0.04 * distanceFactor;
+                const textScale = Math.max(0.7, 1 - distanceFactor * 0.3);
+                const textY = y - liftAmount;
+                mp.game.graphics.drawText(`Гражданин #${sid + 101522}`, [x, textY + 0.05], {
+                    font: 0,
+                    color: [255, 255, 255, distance > 15 * 15 ? 180 : 255],
+                    scale: [textScale * 0.25, textScale * 0.25],
+                    outline: true
+                });
+                mp.game.graphics.drawText(`(ID: ${player.remoteId + 567})`, [x, textY + 0.03], {
+                    font: 0,
+                    color: [255, 255, 255, distance > 15 * 15 ? 180 : 255],
+                    scale: [textScale * 0.25, textScale * 0.25],
+                    outline: true
+                });
+                if (player.getVariable('player_knockout')) {
+                    drawSprite('commonmenutu', 'team_deathmatch', [player.isVoiceActive ? x + 0.006 : x, textY + 0.018], [textScale * 0.8, textScale * 0.8], 0, [255, 13, 74, 255]);
+                    mp.game.graphics.drawText('Без сознания...', [x, textY + 0.073], {
+                        font: 4,
+                        color: [255, 13, 74, 255],
+                        scale: [textScale * 0.35, textScale * 0.35],
+                        outline: true
+                    });
+                }
+                if (player.getVariable('player_mute'))
+                    return drawSprite('mpleaderboard', 'leaderboard_audio_mute', [player.getVariable('player_knockout') ? x - 0.006 : x, textY + 0.018], [textScale * 0.7, textScale * 0.7], 0, [255, 255, 255, 255]);
+                if (player.isVoiceActive) {
+                    if (distance > 15 * 15) {
+                        drawSprite('mpleaderboard', 'leaderboard_audio_1', [player.getVariable('player_knockout') ? x - 0.006 : x, textY + 0.018], [textScale * 0.7, textScale * 0.7], 0, [255, 255, 255, 255]);
+                    }
+                    else if (distance < 15 * 15 && distance > 10 * 10) {
+                        drawSprite('mpleaderboard', 'leaderboard_audio_2', [player.getVariable('player_knockout') ? x - 0.006 : x, textY + 0.018], [textScale * 0.7, textScale * 0.7], 0, [255, 255, 255, 255]);
+                    }
+                    else if (distance < 10 * 10) {
+                        drawSprite('mpleaderboard', 'leaderboard_audio_3', [player.getVariable('player_knockout') ? x - 0.006 : x, textY + 0.018], [textScale * 0.7, textScale * 0.7], 0, [255, 255, 255, 255]);
+                    }
+                }
+                if (playerAimAt !== undefined && !player.getVariable('player_knockout')) {
+                    const healthBarY = textY + 0.08;
+                    let health = player.getHealth();
+                    let armour = player.getArmour() / 100;
+                    let x2 = x - width / 2;
+                    health = health <= 100 ? health / 100 : (health - 100) / 100;
+                    if (armour <= 0) {
+                        mp.game.graphics.drawRect(x, healthBarY, width, height, 81, 80, 80, 255, false);
+                        mp.game.graphics.drawRect(x - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
+                    }
+                    else {
+                        width = 0.025;
+                        mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
+                        mp.game.graphics.drawRect(x2 - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
+                        x2 = (x + width / 2) + 0.002;
+                        mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
+                        mp.game.graphics.drawRect(x2 - width / 2 * (1 - armour), healthBarY, width * armour, height, 0, 132, 255, 255, false);
+                    }
+                }
             }
         });
     }
 });
-const drawNametags = (player, x, y, displayName, color, scale, distance) => {
-    const distanceFactor = Math.min(1, distance / maxDistance);
-    const liftAmount = 0.04 * distanceFactor;
-    const textScale = Math.max(0.7, 1 - distanceFactor * 0.3) * scale;
-    const textY = y - liftAmount;
-    mp.game.graphics.drawText(displayName, [x, textY], {
-        font: 0,
-        color: color,
-        scale: [textScale, textScale],
-        outline: true
-    });
-    if (player.getVariable('player_knockout')) {
-        drawSprite('commonmenutu', 'team_deathmatch', [x, textY - 0.015], [0.8, 0.8], 0, [255, 13, 74, 255]);
-        mp.game.graphics.drawText('Без сознания...', [x, textY + 0.02], {
-            font: 4,
-            color: [255, 13, 74, 255],
-            scale: [textScale + 0.09, textScale + 0.09],
-            outline: true
-        });
-    }
-    if (playerAimAt !== undefined) {
-        const healthBarY = (textY - 0.03) + 0.057;
-        let health = player.getHealth();
-        let armour = player.getArmour() / 100;
-        let x2 = x - width / 2;
-        health = health <= 100 ? health / 100 : (health - 100) / 100;
-        if (armour <= 0) {
-            mp.game.graphics.drawRect(x, healthBarY, width, height, 81, 80, 80, 255, false);
-            mp.game.graphics.drawRect(x - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
-        }
-        else {
-            width = 0.025;
-            mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
-            mp.game.graphics.drawRect(x2 - width / 2 * (1 - health), healthBarY, width * health, height, 0, 255, 128, 255, false);
-            x2 = (x + width / 2) + 0.002;
-            mp.game.graphics.drawRect(x2, healthBarY, width, height, 81, 80, 80, 255, false);
-            mp.game.graphics.drawRect(x2 - width / 2 * (1 - armour), healthBarY, width * armour, height, 0, 132, 255, 255, false);
-        }
-    }
-};
 mp.events.add('playerJoin', (player) => {
     requestPlayerSid(player);
 });
@@ -1737,21 +1752,20 @@ mp.keys.bind(Keys.VK_F8, false, () => {
 });
 
 const maxDist = 10.0;
-let mutePlayer = false;
 mp.keys.bind(Keys.VK_B, true, () => {
-    const testMsg = `chatOpened: ${global.chatOpened} & loginPlayer: ${global.loginPlayer}`;
-    rpc.callServer('cef:serverCmd', [testMsg.toString()]);
     if (global.chatOpened || !global.loginPlayer)
         return;
-    if (mutePlayer)
+    if (global.mutePlayer)
         return rpc.call('chat:pushLine', ['{FF2701}<b>У вас бан-войс!</b>']);
     mp.voiceChat.muted = false;
-    mp.console.logWarning('Войс включен');
+    global.activeVoice = true;
+    mp.players.local.playFacialAnim("mic_chatter", "mp_facial");
     rpc.call('execute', ['window.voiceComponent.enable()']);
 });
 mp.keys.bind(Keys.VK_B, false, () => {
     mp.voiceChat.muted = true;
-    mp.console.logWarning('Войс выключен');
+    global.activeVoice = false;
+    mp.players.local.playFacialAnim("mood_normal_1", "facials@gen_male@variations@normal");
     rpc.call('execute', ['window.voiceComponent.disable()']);
 });
 mp.keys.bind(Keys.VK_F10, false, () => {
@@ -1768,32 +1782,25 @@ mp.keys.bind(Keys.VK_F10, false, () => {
 let voiceManager = {
     list: [],
     new(player) {
-        mp.console.logError('voice.new сработал');
         if (this.list.indexOf(player) === -1) {
             mp.events.callRemote('client:voice:new', player);
             this.list.push(player);
             player.isListening = true;
-            mp.console.logError(`voice.new сработал и прошел проверку ${this.list.indexOf(player)}`);
             {
-                mp.console.logError('дефолт громкость');
                 player.voiceVolume = 1.0;
             }
             {
-                mp.console.logError('3d включен');
                 player.voice3d = true;
             }
         }
     },
     delete(player, removedVoice) {
         let index = this.list.indexOf(player);
-        mp.console.logError('voice.deleted сработал');
         if (index !== -1) {
-            mp.console.logError('удаляем с list');
             this.list.splice(index, 1);
         }
         player.isListening = false;
         if (removedVoice) {
-            mp.console.logError('отправляем запрос на удаление на сервере');
             mp.events.callRemote('client:voice:deleted', player);
         }
     }
@@ -1803,10 +1810,20 @@ mp.events.add('playerQuit', (player) => {
         voiceManager.delete(player, false);
     }
 });
-rpc.register('switchVoice', (state) => {
-    mutePlayer = state;
-    mp.voiceChat.muted = state;
-    if (mutePlayer) {
+mp.events.add('playerStartTalking', (player) => {
+    if (!player || !mp.players.exists(player) || player.type !== 'player')
+        return;
+    player.playFacialAnim("mic_chatter", "mp_facial");
+});
+mp.events.add('playerStopTalking', (player) => {
+    if (!player || !mp.players.exists(player) || player.type !== 'player')
+        return;
+    player.playFacialAnim("mood_normal_1", "facials@gen_male@variations@normal");
+});
+rpc.register('player:mute', (state) => {
+    rpc.callServer('player:mute', [state]);
+    mp.voiceChat.muted = true;
+    if (state) {
         rpc.call('execute', ['window.voiceComponent.disabled()']);
     }
     else {
@@ -1818,34 +1835,26 @@ setInterval(() => {
     let localPos = localplayer.position;
     mp.players.forEachInStreamRange((player) => {
         if (player !== localplayer && !player.isListening) {
-            //if(!player.isListening) {
             const playerPos = player.position;
-            mp.console.logError('forEachInStreamRange: player !== localplayer');
             let dist = mp.game.system.vdist(playerPos.x, playerPos.y, playerPos.z, localPos.x, localPos.y, localPos.z);
             if (dist <= maxDist) {
-                mp.console.logError('dist <= maxDist, создаем voice');
                 mp.console.logWarning(`${voiceManager.list}`);
                 voiceManager.new(player);
             }
-            //}
         }
     });
     voiceManager.list.forEach((player) => {
         if (player.handle !== 0) {
             const playerPos = player.position;
-            mp.console.logError('list.forEach: player.handle !== 0');
             let dist = mp.game.system.vdist(playerPos.x, playerPos.y, playerPos.z, localPos.x, localPos.y, localPos.z);
             if (dist > maxDist) {
-                mp.console.logError('dist > maxDist, удаляем voice');
                 voiceManager.delete(player, true);
             }
             else {
-                mp.console.logError('autovolume не используется. используем дефолт громкость');
                 player.voiceVolume = 1.0 - (dist / maxDist);
             }
         }
         else {
-            mp.console.logError('player.handle === 0. удаляем voice');
             voiceManager.delete(player, true);
         }
     });
