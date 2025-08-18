@@ -18,7 +18,6 @@ const NearMinimap = memo(() => {
   return (
     <>
       <div className="near-minimap">
-        <button className="changeActive" onClick={() => setVoiceActive(!voiceActive)}>Сменить активность войса</button>
         { voiceActive ? (
             <span className={`text ${voiceActive && 'active'}`}>Войс ВКЛЮЧЕН</span>
         ) : (
