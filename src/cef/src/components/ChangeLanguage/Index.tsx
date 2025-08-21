@@ -1,8 +1,7 @@
 import './assets/styles/compiled-css/Index.css'
 
 import { useState } from 'react'
-import { useTranslation } from "react-i18next"
-import { rpc } from '../../main'
+import { rce } from "../../modules/rce.ts";
 import { i18n } from '../../locales'
 
 const ChangeLanguage = () => {
@@ -31,7 +30,7 @@ const ChangeLanguage = () => {
 
   const changeLanguage = (language: string) => {
     setLanguage(language)
-    rpc.callClient('cef:changeLanguage', [language])
+    rce.triggerClient('cef:changeLanguage', language)
     i18n.changeLanguage(language)
     setIsListOpen(false)
   }

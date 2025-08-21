@@ -1,7 +1,7 @@
 import { data } from "../../database/mysql";
 import chalk from 'chalk'
 import bcrypt from 'bcryptjs'
-import { rpc } from '../../utils/rpc'
+import { rce } from '../../utils/rce'
 
 import { User } from './main';
 
@@ -14,7 +14,7 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
     }
 
     if (Array.isArray(results) && results.length === 0) {
-      rpc.callClient(player, 'sendNotify', ['err', `Аккаунт "${login}" не найден!`, 4500, 'right'])
+      rce.triggerClient(player, 'sendNotify', 'err', `Аккаунт "${login}" не найден!`, 4500, 'right')
       return
     }
 
@@ -31,12 +31,12 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
           player.dimension = 0
           player.setVariable('login_player', login)
           player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375))
-          rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно авторизовались!`, 4000, 'bottom'])
-          rpc.callClient(player, 'server:auth:saveLogin', [login])
-          rpc.callBrowser(player, 'server:authSuccess')
+          rce.triggerClients('sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom')
+          rce.triggerClient(player, 'server:auth:saveLogin', login)
+          rce.triggerCef(player, 'server:authSuccess')
           console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`))
         } else {
-          rpc.callClient(player, 'sendNotify', ['err', 'Неверный логин или пароль!', 5000, 'right'])
+          rce.triggerClient(player, 'sendNotify', 'err', 'Неверный логин или пароль!', 5000, 'right')
         }
       })
     }

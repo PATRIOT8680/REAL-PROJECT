@@ -1,7 +1,9 @@
-mp.events.add('client:voice:new', (player: PlayerMp, target: PlayerMp) => {
+import { rce } from "../utils/rce";
+
+rce.registerClient('client:voice:new', (player: PlayerMp, target: PlayerMp) => {
   if (target) player.enableVoiceTo(target)
 })
 
-mp.events.add('client:voice:deleted', (player: PlayerMp, target: PlayerMp) => {
+rce.registerClient('client:voice:deleted', (player: PlayerMp, target: PlayerMp) => {
   if (target) player.disableVoiceTo(target)
 })

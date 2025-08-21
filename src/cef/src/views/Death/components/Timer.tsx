@@ -1,10 +1,8 @@
 import '../assets/styles/compiled-css/Timer.css'
 
-import { FC, useRef, useEffect, useState, memo } from 'react'
-import { Howler, Howl } from 'howler'
-import { rpc } from '../../../main'
+import { FC, useRef, useEffect, memo } from 'react'
+import { Howl } from 'howler'
 import { sys } from '../../../../shared/sys'
-
 
 import tickTimer from '../assets/audio/tick-timer.mp3'
 import endTimerSound from '../assets/audio/end-timer.mp3'

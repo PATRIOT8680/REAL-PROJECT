@@ -1,42 +1,42 @@
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
 // PLAYER
-rpc.register('player:freeze', (toggle: boolean) => {
+rce.registerServer('player:freeze', (toggle: boolean) => {
   mp.players.local.freezePosition(toggle)
 })
 
-rpc.register('player:isCollision', (toggle: boolean) => {
+rce.registerServer('player:isCollision', (toggle: boolean) => {
   mp.players.local.setCollision(toggle, toggle)
 })
 
-rpc.register('player:godmode', (toggle: boolean) => {
+rce.registerServer('player:godmode', (toggle: boolean) => {
   mp.players.local.setInvincible(toggle)
 })
 
 
 // GRAPHICS
-rpc.register('graphics:startScreenEffect', (name: string, duration: number, looped: boolean) => {
+rce.registerServer('graphics:startScreenEffect', (name: string, duration: number, looped: boolean) => {
   mp.game.graphics.startScreenEffect(name, duration, looped)
 })
 
-rpc.register('graphics:stopAllScreenEffects', () => {
+rce.registerServer('graphics:stopAllScreenEffects', () => {
   mp.game.graphics.stopAllScreenEffects()
 })
 
 // UI
-rpc.register('ui:displayRadar', (toggle: boolean) => {
+rce.registerServer('ui:displayRadar', (toggle: boolean) => {
   mp.game.ui.displayRadar(toggle)
 })
 
-rpc.register('ui:setPauseMenuActive', (toggle: boolean) => {
+rce.registerServer('ui:setPauseMenuActive', (toggle: boolean) => {
   mp.game.ui.setPauseMenuActive(toggle)
 })
 
 // GUI
-rpc.register('gui:cursorVisible', (toggle: boolean) => {
+rce.registerServer('gui:cursorVisible', (toggle: boolean) => {
   mp.gui.cursor.visible = toggle
 })
 
-rpc.register('getId', () => {
+rce.registerServer('getId', () => {
   return mp.players.local.remoteId
 })

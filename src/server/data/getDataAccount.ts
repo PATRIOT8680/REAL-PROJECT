@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
 import { getSid } from "./account/sid";
 
@@ -25,7 +25,7 @@ export const getDataAccount = async (player: PlayerMp, login: string, dataKey: s
   return dataMap[dataKey]()
 }
 
-rpc.register('getDataAccount', async (player: PlayerMp, dataKey: string, targetID: number) => {
+rce.registerClientAndCef('getDataAccount', async (player: PlayerMp, dataKey: string, targetID: number) => {
   const login = player.getVariable('login_player')
 
   if (!login) {

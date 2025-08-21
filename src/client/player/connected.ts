@@ -1,16 +1,18 @@
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
+import { gui } from '../menus/global'
 
 mp.events.add('playerReady', (player: PlayerMp) => {
-  rpc.callBrowser('client:setActiveAmbient', [mp.storage.data.activeAmbient])
+  rce.trigger('sendNotify', 'success', 'Тестовое сообщение', 6000, 'top')
+  rce.triggerCef('client:setActiveAmbient', mp.storage.data.activeAmbient)
   mp.game.gameplay.setFadeOutAfterDeath(false)
   mp.game.ui.displayCash(false)
   mp.game.ui.displayAreaName(false)
   mp.game.ui.displayAmmoThisFrame(false)
-  rpc.call('execute', [`window.App.playerInfoReducer.setID(${mp.players.local.remoteId})`])
+  gui.execute(`window.App.playerInfoReducer.setID(${mp.players.local.remoteId})`)
 
   if (mp.storage.data.language !== undefined) {
-    rpc.callBrowser('client:setLanguage', [mp.storage.data.language])
+    rce.triggerCef('client:setLanguage', mp.storage.data.language)
   } else {
-    rpc.callBrowser('client:setLanguage', ['ru'])
+    rce.triggerCef('client:setLanguage', 'ru')
   }
 })

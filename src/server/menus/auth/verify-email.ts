@@ -1,4 +1,4 @@
-import { rpc } from '../../utils/rpc'
+import { rce } from '../../utils/rce'
 import { data } from "../../database/mysql";
 import chalk from 'chalk'
 import bcrypt from 'bcryptjs'
@@ -76,8 +76,8 @@ export const sendCodeVerify = (player: PlayerMp, email: string) => {
       return
     }
 
-    rpc.callBrowser(player, 'server:verify:successSendCode')
-    rpc.callClient(player, 'sendNotify', ['info', `Код отправлен на почту "${email}". Если письма нет, то проверьте раздел "СПАМ"!`, 7000, 'bottom'])
+    rce.triggerCef(player, 'server:verify:successSendCode')
+    rce.triggerClient(player, 'sendNotify', 'info', `Код отправлен на почту "${email}". Если письма нет, то проверьте раздел "СПАМ"!`, 7000, 'bottom')
   })
 }
 
@@ -87,6 +87,6 @@ export const verifyEmail = (player: PlayerMp, code: string, login: string, email
     delete verifyCodes[player.id]
     registerUser(player, login, email, password)
   } else {
-    rpc.callClient(player, 'sendNotify', ['err', `Неверный код подтверждения!`, 4500, 'bottom'])
+    rce.triggerClient(player, 'sendNotify', 'err', `Неверный код подтверждения!`, 4500, 'bottom')
   }
 }

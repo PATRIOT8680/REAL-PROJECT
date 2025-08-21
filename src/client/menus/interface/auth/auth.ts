@@ -1,7 +1,8 @@
-import { rpc } from '../../../utils/rpc'
+import { rce } from '../../../utils/rce'
 import { showLoading } from '../loading'
 import { stopCamMoving } from '../../../game/movingCamera'
 import { startNextCameraMovement } from './nextCameraMoving'
+import { gui } from '../../global'
 
 interface CameraState {
   currentIndex: number
@@ -25,8 +26,8 @@ const enableAuth = () => {
   cameraState.isSpanActive = true
   cameraState.isTransition = false
 
-  rpc.call('execute', [`window.App.authReducer.showAuth()`])
-  rpc.callServer('client:authPlayerVisible', [false])
+  rce.trigger('execute', `window.App.authReducer.showAuth()`)
+  rce.triggerServer('client:authPlayerVisible', false)
   mp.game.ui.displayRadar(false)
   mp.game.graphics.disableScreenblurFade()
   mp.players.local.freezePosition(true)
@@ -35,10 +36,10 @@ const enableAuth = () => {
   startNextCameraMovement()
 
   if (mp.storage.data.auth !== undefined) {
-    rpc.callBrowser('client:auth:saveLogin', [mp.storage.data.auth.login])
+    rce.triggerCef('client:auth:saveLogin', mp.storage.data.auth.login)
   }
 
-  rpc.register('server:auth:saveLogin', (login: string) => {
+  rce.registerServer('server:auth:saveLogin', (login: string) => {
     mp.storage.data.auth = {
       login: login
     }
@@ -78,25 +79,25 @@ const disableAuth = () => {
   stopCamMoving()
 
   showLoading(3000)
-  rpc.call('execute', [`window.App.authReducer.hideAuth()`])
+  gui.execute('window.App.authReducer.hideAuth()')
   setTimeout(() => {
-    rpc.call('execute', [`window.App.chatReducer.showChat()`])
-    rpc.call('execute', [`window.App.hudReducer.showHud()`])
-    rpc.callServer('client:authPlayerVisible', [true])
+    gui.execute('window.App.chatReducer.showChat()')
+    gui.execute('window.App.hudReducer.showHud()')
+    rce.triggerServer('client:authPlayerVisible', true)
     mp.game.ui.displayRadar(true)
     mp.players.local.freezePosition(false)
   }, 3000)
 }
 
 
-rpc.register('cef:authEnabled', () => {
+rce.registerAll('cef:authEnabled', () => {
   enableAuth()
 })
 
-rpc.register('cef:authDisabled', () => {
+rce.registerAll('cef:authDisabled', () => {
   disableAuth()
-  rpc.callServer('getDataAccount', ['sid', mp.players.local.remoteId]).then((sid: number) => {
-    rpc.call('execute', [`window.App.playerInfoReducer.setSid(${sid})`])
-  })
+  mp.console.logError('cef:authDisabled сработал!!!!!')
+  const statID = rce.callServer('getDataAccount', 'sid', mp.players.local.remoteId)
+  rce.trigger('execute', `window.App.playerInfoReducer.setSid(${statID})`)
   global.loginPlayer = true
 })

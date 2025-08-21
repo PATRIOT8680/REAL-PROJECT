@@ -1,4 +1,4 @@
-import { rpc } from "../utils/rpc"
+import { rce } from "../utils/rce"
 import Keys from '../utils/keys'
 
 import './interface/auth/auth'
@@ -8,16 +8,27 @@ import './interface/loading'
 import './interface/auth/coordsCamera'
 import './interface/chat'
 
-rpc.browser = mp.browsers.new('package://cef/index.html')
-
 mp.events.add('guiReady', () => {
   mp.gui.chat.show(false)
   mp.console.logInfo('guiReady')
+  gui.browser.active = true
 
-  rpc.register('execute', (commands) => {
+  rce.registerAll('execute', (commands) => {
     const commandsArray = Array.isArray(commands) ? commands : [commands]
     mp.console.logWarning(`Принято команд: ${commandsArray.length}`)
-    rpc.callBrowser('client:executeCode', commandsArray)
+
+    mp.browsers.forEach(browser => {
+      if (browser && browser.execute) {
+        try {
+          commandsArray.forEach(code => {
+            mp.console.logInfo(`Команда в сторону CEF: ${commands}`)
+            gui.execute(code);
+          });
+        } catch (e) {
+          mp.console.logError(`Ошибка выполнения кода в браузере: ${e}`);
+        }
+      }
+    });
   })
 })
 
@@ -25,20 +36,35 @@ mp.keys.bind(Keys.VK_OEM_3, false, () => {
   mp.gui.cursor.visible = !mp.gui.cursor.visible
 })
 
-rpc.register('clientCmd', (text: string) => {
+
+rce.registerAll('clientCmd', (text: string) => {
   mp.console.logInfo(`[CEF]: ${text}`)
 })
 
-rpc.register('cef:setActiveAmbient', (toggle: boolean) => {
+rce.registerAll('cef:setActiveAmbient', (toggle: boolean) => {
   mp.storage.data.activeAmbient = toggle
   mp.storage.flush()
 })
 
-rpc.register('cef:changeLanguage', (lang: string) => {
+rce.registerAll('cef:changeLanguage', (lang: string) => {
   mp.storage.data.language = lang
   mp.storage.flush()
 })
 
-rpc.register('cursorVisible', (toggle: boolean) => {
+rce.registerAll('cursorVisible', (toggle: boolean) => {
   mp.gui.cursor.visible = toggle
 })
+
+
+
+export const gui = {
+  browser: mp.browsers.new('package://cef/index.html'),
+  execute: (command) => {
+    mp.console.logInfo(`(1) Получили команду execute: ${command}`)
+    if (mp.browsers.exists(gui.browser) && gui.browser.active)
+    {
+      mp.console.logInfo(`(2) Прошли проверку. Получили команду execute: ${command}`)
+      gui.browser.execute(command)
+    }
+  }
+}

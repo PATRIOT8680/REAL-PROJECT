@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["../node_modules/@ragempcommunity/types-client", "../node_modules/@types/node", "./@types", "../node_modules/@entityseven/rage-fw-rpc"],
   },
-  "include": ["./**/*.ts"]
+  "include": ["./**/*.ts", "../shared/CustomEventBase.ts"]
 }

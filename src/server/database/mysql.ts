@@ -1,12 +1,11 @@
-import { log } from 'console'
 import * as mysql from 'mysql2'
 import chalk from 'chalk'
 
 export const data = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  database: 'realrp',
-  password: 'Real#PR86',
+  database: 'redstar',
+  password: 'Patriot86',
   port: 3306
 })
 

@@ -1,14 +1,9 @@
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
-// rpc.register('playerVisible', (player: PlayerMp, toggle: boolean) => {
-//   player.visible = toggle
-//   player.setVariable('playerVisible', toggle)
-// })
-
-rpc.register('getIdPlayer', (player: PlayerMp) => {
+rce.registerClientAndCef('getIdPlayer', (player: PlayerMp) => {
   return player.id
 })
 
-rpc.register('player:mute', (player: PlayerMp, state: boolean) => {
+rce.registerClientAndCef('player:mute', (player: PlayerMp, state: boolean) => {
   player.setVariable('player_mute', state)
 })

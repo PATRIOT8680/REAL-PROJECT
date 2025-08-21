@@ -1,7 +1,7 @@
 import '../assets/styles/compiled-css/FinishHim.css'
 import { useEffect, useRef, useState } from 'react'
 import { Howl, Howler } from 'howler'
-import { rpc } from '../../../main'
+import { rce } from "../../../modules/rce.ts";
 
 import finishSound from '../assets/audio/finish_him.mp3'
 
@@ -17,7 +17,7 @@ const FinishHim = () => {
     soundRef.current.play()
     setTimeout(() => {
       setClosedDeath(true)
-      rpc.callServer('playerKill')
+      rce.triggerServer('playerKill')
       setTimeout(() => {
         window.App.deathReducer.hideDeath()
       }, 1000)

@@ -1,6 +1,6 @@
 import './assets/compiled-css/Index.css'
 import { FC, useState, useEffect } from 'react'
-import { rpc } from '../../main'
+import { rce } from "../../modules/rce.ts";
 
 interface IBtnAmbient {
   playRandomAmbient: () => void,
@@ -13,11 +13,11 @@ const BtnAmbient: FC<IBtnAmbient> = ({ playRandomAmbient, stopAmbient, ambientAc
 
   const handleClickBtnAmbient = () => {
     if (ambientActive) {
-      rpc.callClient('cef:setActiveAmbient', [false])
+      rce.triggerClient('cef:setActiveAmbient', false)
       setActiveAmbient(false)
       stopAmbient()
     } else {
-      rpc.callClient('cef:setActiveAmbient', [true])
+      rce.triggerClient('cef:setActiveAmbient', true)
       setActiveAmbient(true)
       playRandomAmbient()
     }

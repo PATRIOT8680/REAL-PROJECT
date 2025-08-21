@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import useMenuAmbients from './hooks/useMenuAmbients'
 import { RootState } from "./reducers/rootReducer"
-import { visibleMenu } from "./hooks/visibleMenu"
 import { useNotify } from "./components/Notify/NotifyProvider"
 import './assets/styles/compiled-css/Index.css'
-import { rpc } from "./main"
+import { rce } from "./modules/rce.ts"
+import { CustomEventHandler } from "../../shared/CustomEventBase.ts";
 import { i18n } from "./locales"
 
 // Fonts
@@ -34,7 +34,9 @@ import ChangeLanguage from "./components/ChangeLanguage/Index"
 
 const App = () => {
   const dispatch = useDispatch()
+  let ev: CustomEventHandler
   const { shouldPlayAudio, shouldChangeLanguage } = useVisibleMenus()
+  rce.clearRegisterAll()
 
   const { playRandomAmbient, stopAmbient } = useMenuAmbients()
   const [ambientActive, setAmbientActive] = useState(false);
@@ -51,24 +53,19 @@ const App = () => {
   
 
   useEffect(() => {
-    rpc.register('client:setLanguage', (lang: string) => {
+    ev = rce.register('client:setLanguage', (lang: string) => {
       i18n.changeLanguage(lang)
     })
 
-    rpc.register('client:setActiveAmbient', (toggle: boolean) => {
+    ev = rce.register('client:setActiveAmbient', (toggle: boolean) => {
       setAmbientActive(toggle)
     })
 
     return () => {
-      rpc.unregister('client:setActiveAmbient')
-      rpc.unregister('server:player:local:info')
+      rce.clearRegister('client:setActiveAmbient')
+      rce.clearRegister('server:player:local:info')
     }
   }, [])
-  
-
-  useEffect(() => {
-    visibleMenu(dispatch)
-  }, [dispatch])
 
   useEffect(() => {
     if (sendNotifyReducer) {

@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react'
 import { IPropsAuth } from '../Index'
 import { useTranslation } from 'react-i18next'
 import '../assets/styles/compiled-css/Register.css'
-import { rpc } from '../../../main'
+import { rce } from "../../../modules/rce.ts";
 
 import reg_pers from '../assets/img/reg-pers.png'
 import bg_title from '../assets/img/reg-title.svg'
@@ -63,9 +63,9 @@ const Register: FC<IPropsAuth> = ({ setCurrentForm, setRegisterData }) => {
           password: password.toLowerCase()
         })
       }
-      rpc.callServer('cef:auth:regAccount', [login.toLowerCase(), email.toLowerCase(), password.toLowerCase()])
+      rce.triggerServer('cef:auth:regAccount', login.toLowerCase(), email.toLowerCase(), password.toLowerCase())
 		} catch (e) {
-      rpc.callClient('clientCmd', [`[AUTH] Ошибка регистрации: ${e}`])
+      rce.triggerClient('clientCmd', `[AUTH] Ошибка регистрации: ${e}`)
 		}
 	}
 

@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { rpc } from "../../../main.tsx"
+import { rce } from "../../../modules/rce.ts";
+import { CustomEventHandler } from "../../../../../shared/CustomEventBase.ts";
 import '../assets/styles/compiled-css/Login.css'
 
 import login_pers from '../assets/img/login-pers.png'
@@ -15,6 +16,7 @@ interface IAuthLogin {
 }
 
 const Login: FC<IAuthLogin> = ({ setCurrentForm, saveLogin, setSaveLogin }) => {
+	let ev: CustomEventHandler
 	const [password, setPassword] = useState('')
   const { t } = useTranslation('auth')
 
@@ -23,11 +25,10 @@ const Login: FC<IAuthLogin> = ({ setCurrentForm, saveLogin, setSaveLogin }) => {
 			setSaveLogin(login)
 		}
 
-    rpc.register('client:auth:saveLogin', saveLoginHandler)
+    ev = rce.register('client:auth:saveLogin', saveLoginHandler)
 
     return () => {
-      rpc.unregister('server:loginSuccess')
-      rpc.unregister('client:auth:saveLogin')
+			rce.clearRegister('client:auth:saveLogin')
     }
   }, [])
 
@@ -66,7 +67,7 @@ const Login: FC<IAuthLogin> = ({ setCurrentForm, saveLogin, setSaveLogin }) => {
 		}
 
     try {
-      rpc.callServer('cef:auth:loginAccount', [saveLogin.toLocaleLowerCase(), password.toLocaleLowerCase()])
+      rce.triggerServer('cef:auth:loginAccount', saveLogin.toLocaleLowerCase(), password.toLocaleLowerCase())
     } catch (e) {
       console.error(`[AUTH] Ошибка авторизации: ${e}`)
     }

@@ -1,5 +1,5 @@
 import Keys from '../utils/keys'
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
 global.noclip = {
   active: false,
@@ -34,7 +34,7 @@ let direction = null
 let coords = null
 
 const startNoclip = () => {
-  rpc.callServer('toggleNoclip', [true])
+  rce.triggerServer('toggleNoclip', true)
 
   if (ev) {
     ev.destroy()
@@ -97,7 +97,7 @@ const startNoclip = () => {
 }
 
 const stopNoclip = () => {
-  rpc.callServer('toggleNoclip', [false])
+  rce.triggerServer('toggleNoclip', false)
 
   if (ev) {
     ev.destroy()
@@ -121,7 +121,7 @@ mp.keys.bind(Keys.VK_F8, false, () => {
   localplayer.freezePosition(noclip.active)
   localplayer.setCollision(!noclip.active, !noclip.active)
 
-  rpc.call('sendNotify', ['info', noclip.active ? 'Полёт включен' : 'Полёт отключен', 1200, 'top'])
+  rce.trigger('sendNotify', 'info', noclip.active ? 'Полёт включен' : 'Полёт отключен', 1200, 'top')
 
   if (!noclip.active && !controls.isControlPressed(0, ids.Space)) {
     const pos = mp.players.local.position

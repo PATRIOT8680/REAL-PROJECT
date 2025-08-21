@@ -1,4 +1,4 @@
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
 type CommandHandler = (player: PlayerMp, args: string[]) => void
 
@@ -12,14 +12,14 @@ export const send = (player: PlayerMp | null, msg: string, showTime: boolean, ti
     return
   } else {
     mp.players.forEach(p => {
-      rpc.callClient(p, CHAT_MESSAGE_EVENT, [null, msg, showTime, tile])
+      rce.triggerClient(p, CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
     })
   }
 }
 
 export const broadcast = (msg: string, showTime: boolean, tile?: string) => {
   mp.players.forEach(p => {
-    rpc.callClient(p, CHAT_MESSAGE_EVENT, [null, msg, showTime, tile])
+    rce.triggerClient(p, CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
   })
 }
 
@@ -56,7 +56,9 @@ const invokeCMD = (player: PlayerMp, cmd: string, args: string[]) => {
   }
 }
 
-rpc.register(CHAT_MESSAGE_EVENT, (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+rce.registerClientAndCef(CHAT_MESSAGE_EVENT, (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+  console.log(`Сообщение дошло до сервера. Сообщение: ${msg}`)
+
   if (msg.startsWith('/')) {
     msg = msg.trim().slice(1)
 
@@ -77,18 +79,19 @@ rpc.register(CHAT_MESSAGE_EVENT, (player: PlayerMp, msg: string, showTime: boole
     if (msg.length > 0) {
       const formattedMsg = msg.replace(/</g, "&lt;").replace(/'/g, "&#39;").replace(/"/g, "&#34;");
 
-      mp.players.forEach(p => {
-        rpc.callClient(p, CHAT_MESSAGE_EVENT, [player.name, formattedMsg, showTime, tile])
-      })
+      //mp.players.forEach(p => {
+        console.log(`Сообщение прошло проверки. Сообщение: ${msg}`)
+        rce.triggerClients(CHAT_MESSAGE_EVENT, player.name, formattedMsg, showTime, tile)
+      //})
     }
   }
 })
 
 
-rpc.register('sendMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+rce.registerClientAndCef('sendMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
   send(player, msg, showTime, tile);
 })
 
-rpc.register('broadcastMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+rce.registerClientAndCef('broadcastMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
   broadcast(msg, showTime, tile);
 })
