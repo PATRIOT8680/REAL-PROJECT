@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { rpc } from '../../../main'
+import { rce } from "../../../modules/rce.ts";
 import '../assets/styles/compiled-css/VerifyEmail.css'
+import { CustomEventHandler } from "../../../../../shared/CustomEventBase.ts";
 
 import svg_password from '../assets/img/password.svg'
 
@@ -12,11 +13,12 @@ interface IVerify {
 }
 
 const VerifyEmail = ({ login, email, password } : IVerify) => {
+  let ev: CustomEventHandler
   const { t } = useTranslation('auth')
   const [code, setCode] = useState('')
   const [isCodeSent, setIsCodeSent] = useState<boolean>(false)
 
-  rpc.register('server:verify:successSendCode', () => {
+  ev = rce.register('server:verify:successSendCode', () => {
     setIsCodeSent(true)
   })
 
@@ -27,7 +29,7 @@ const VerifyEmail = ({ login, email, password } : IVerify) => {
     }
 
     console.log(email)
-    rpc.callServer('cef:auth:sendCodeVerify', [email])
+    rce.triggerServer('cef:auth:sendCodeVerify', email)
     await setTimeout(() => {
       setIsCodeSent(false)
     }, 90000)
@@ -39,7 +41,7 @@ const VerifyEmail = ({ login, email, password } : IVerify) => {
       return
     }
 
-    rpc.callServer('cef:auth:verifyEmail', [code, login, email, password])
+    rce.triggerServer('cef:auth:verifyEmail', code, login, email, password)
   }
 
   useEffect(() => {
@@ -48,7 +50,7 @@ const VerifyEmail = ({ login, email, password } : IVerify) => {
     }, 90000)
 
     return () => {
-      rpc.unregister('server:verify:successSendCode')
+      rce.clearRegister('server:verify:successSendCode')
     }
   }, [isCodeSent])
 

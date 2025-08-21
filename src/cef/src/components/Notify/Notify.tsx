@@ -1,6 +1,5 @@
 import { FC, Dispatch, useRef, useState, useEffect } from 'react'
 import { TypeNotify, TypePos } from '../../actions/elements/notify'
-import { rpc } from '../../main';
 import './assets/styles/compiled-css/Notify.css'
 
 interface INotification {
@@ -21,13 +20,10 @@ const Notify: FC<INotification> = ({ id, typeNotify, msg, dispatch, duration }) 
   const startTime = useRef<number>(Date.now())
 
   if (!msg) return null
-  rpc.callClient('clientCmd', [`[CEF][NOTIFY] Создание уведомления ID ${id}:, ${{ typeNotify, msg }}`]);
 
   useEffect(() => {
-    rpc.callClient('clientCmd', [`[CEF][NOTIFY] Уведомление ${id} отображено`]);
     handleStartTimer()
     return () => {
-      rpc.callClient('clientCmd', [`[CEF][NOTIFY] Уведомление ${id} удалено`]);
       clearTimeout(timer.current)
       clearTimeout(exitTimeout.current)
     }

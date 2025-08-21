@@ -1,4 +1,4 @@
-import { rpc } from '../../utils/rpc'
+import { rce } from '../../utils/rce'
 import Keys from '../../utils/keys'
 
 export const openInterfaces = new Set()
@@ -16,11 +16,11 @@ const handleInterfaceVisibility = (interfaceName: string, isVisible: boolean) =>
     }
 };
 
-rpc.register('toggleInterface', (interfaceName: string, isVisible: boolean, duration?: number) => {
+rce.registerAll('toggleInterface', (interfaceName: string, isVisible: boolean, duration?: number) => {
   setTimeout(() => {
     mp.gui.cursor.show(true, true);
   }, 500)
   mp.gui.cursor.visible = true
-  rpc.callBrowser(`cef:${isVisible ? 'show' : 'hide'}${interfaceName}`, [duration]);
+  rce.triggerCef(`cef:${isVisible ? 'show' : 'hide'}${interfaceName}`, duration);
   handleInterfaceVisibility(interfaceName, isVisible);
 })

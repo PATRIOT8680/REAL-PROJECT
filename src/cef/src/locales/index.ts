@@ -1,6 +1,5 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { rpc } from '../main';
 
 const languages = ['ru', 'en', 'fr', 'es', 'de'];
 const namespaces = ['auth', 'loading', 'welcome'];

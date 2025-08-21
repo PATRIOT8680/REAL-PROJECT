@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { rpc } from '../../main'
+import { rce } from "../../modules/rce.ts";
+import { CustomEventHandler } from "../../../../shared/CustomEventBase.ts";
 
 import { hideAuth } from '../../actions/menus/auth'
 
@@ -29,6 +30,7 @@ export interface IPropsAuth {
 }
 
 const Auth = () => {
+  let ev: CustomEventHandler
 	const dispatch = useDispatch()
   const [saveLogin, setSaveLogin] = useState<string>('')
 	const [currentForm, setCurrentForm] = useState<'login' | 'register' | 'recovery' | 'verify-email'>('login')
@@ -38,27 +40,19 @@ const Auth = () => {
     password: ''
   })
 
-  useEffect(() => {
-    rpc.register('server:auth:loggingAuth', (message: string) => {
-      rpc.callClient('clientCmd', [`${message}`])
+    ev = rce.register('server:auth:loggingAuth', (message: string) => {
+      rce.triggerClient('clientCmd', `${message}`)
     })
 
-    rpc.register('server:auth:showVerify', () => {
+    ev = rce.register('server:auth:showVerify', () => {
       setCurrentForm('verify-email')
     })
 
-    rpc.register('server:authSuccess', () => {
-      rpc.callClient('cef:authDisabled')
+    ev = rce.register('server:authSuccess', () => {
+      rce.triggerClient('clientCmd', 'server:authSuccess ПРИНЯТ')
+      rce.triggerClient('cef:authDisabled')
     })
-    
-    return () => {
-      rpc.unregister('server:auth:loggingAuth')
-      rpc.unregister('server:auth:showVerify')
-      rpc.unregister('server:regSuccess')
-    }
-  }, [])
 
-  
 
 	return (
 		<>

@@ -1,16 +1,15 @@
-import { useState, useRef, useEffect, FormEvent } from 'react'
+import { useState, useRef, useEffect, FormEvent, useCallback } from 'react'
 import type { KeyboardEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../reducers/rootReducer'
-import { rpc } from '../../main'
-
+import { rce } from "../../modules/rce.ts";
 import './assets/style/compiled-css/Index.css'
 
-import { showChat, hideChat } from '../../actions/menus/chat'
-
 import chat_svg from './assets/img/chat.svg'
+import {CustomEventHandler} from "../../../../shared/CustomEventBase.ts";
 
 const Chat = () => {
+  let ev: CustomEventHandler
   const chatVisible = useSelector((state: RootState) => state.chatReducer.isVisible)
   const [chatActive, setChatActive] = useState<boolean>(false)
   const [buffer, setBuffer] = useState<string[]>([])
@@ -28,12 +27,7 @@ const Chat = () => {
   const blurRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    rpc.register('chatActive', (isActive: boolean) => { setChatActive(isActive) })
-    rpc.register('addString', (text: string, showTime: boolean, tile: string) => addString(colorify(text), showTime, tile))
-    rpc.register('addMsg', addMsg)
-    rpc.register('openChat', openChat)
-    rpc.register('closeChat', closeChat)
-    rpc.callClient('chatloaded')
+    rce.triggerClient('chatloaded')
 
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault()
@@ -56,11 +50,7 @@ const Chat = () => {
     }
 
     return () => {
-      rpc.unregister('addString')
-      rpc.unregister('addMsg')
-      rpc.unregister('openChat')
-      rpc.unregister('closeChat')
-      rpc.unregister('chatActive')
+      ev.destroy();
 
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
@@ -170,6 +160,7 @@ const Chat = () => {
   }
 
   const openChat = (insertSlash: boolean) => {
+    rce.triggerClient('clientCmd', 'ку ку. чат открыт')
     if (startChatboxActiveRef.current) clearTimeout(startChatboxActiveRef.current)
 
     if (timeoutRef.current) {
@@ -177,7 +168,7 @@ const Chat = () => {
       timeoutRef.current = null
     }
 
-    rpc.callClient('cursorVisible', [true])
+    rce.triggerClient('cursorVisible', true)
 
     if (insertSlash) {
       setInputValue('/')
@@ -196,15 +187,16 @@ const Chat = () => {
     if (chatVisible && msgInputRef.current) {
       msgInputRef.current.style.transition = 'none';
       msgInputRef.current.style.display = 'none';
-      rpc.callClient('cursorVisible', [false])
+      rce.triggerClient('cursorVisible', false)
       setChatActive(false)
     }
   }
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    rpc.callClient('clientCmd', [`handleSubmit: ${inputValue}`])
-    rpc.callClient('chatmessage', [inputValue])
+    console.log('Подтвердили сообщение! Отправляем на сторону клиента chatmessage')
+    rce.triggerClient('clientCmd', `handleSubmit: ${inputValue}`)
+    rce.triggerClient('chatmessage', inputValue)
     saveBuffer()
     closeChat()
     setInputValue('')
@@ -300,11 +292,12 @@ const Chat = () => {
     }
   }
 
-  const addMsg = (name: string, text: string) => {
-    rpc.callClient('clientCmd', [`ADD MSG SEND: ${name}, ${text}`])
+  const addMsg = useCallback((name: string, text: string, showTime: boolean, tile: string) => {
+    rce.triggerClient('clientCmd', `ADD MSG SEND: ${name}, ${text}`)
+    console.log(`Окей. Пришло сообщение (server -> client -> cef). В CEF делаем addMsg: ${text}`)
 		const coloredText = colorify(text)
 		addString(`<b>Гражданин #19383</b> • ${coloredText}`, true)
-	}
+	}, [])
 
   const handleActionInput = (action: string) => {
     if (action === '') {
@@ -317,6 +310,16 @@ const Chat = () => {
       inputTextRef.current.focus()
     }
   }
+
+  ev = rce.register('chatActive', (isActive: boolean) => {
+    setChatActive(isActive)
+  });
+  ev = rce.register('addString', (text: string, showTime: boolean, tile: string) =>
+      addString(colorify(text), showTime, tile)
+  );
+  ev = rce.register('addMsg', addMsg);
+  ev = rce.register('openChat', openChat);
+  ev = rce.register('closeChat', closeChat);
 
   return (
 		<>

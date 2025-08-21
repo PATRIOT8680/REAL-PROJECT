@@ -1,6 +1,6 @@
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
-rpc.register('toggleNoclip', (player: PlayerMp, toggle: boolean) => {
+rce.registerClient('toggleNoclip', (player: PlayerMp, toggle: boolean) => {
   if (toggle) player.alpha = 50
   else player.alpha = 255
 })

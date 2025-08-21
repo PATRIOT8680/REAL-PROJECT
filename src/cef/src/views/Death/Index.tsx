@@ -2,7 +2,8 @@ import { FC, useState, useEffect, useRef, memo } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../reducers/rootReducer'
 import { Howler, Howl } from 'howler'
-import { rpc } from '../../main'
+import { rce } from "../../modules/rce.ts";
+import { CustomEventHandler } from "../../../../shared/CustomEventBase.ts";
 import './assets/styles/compiled-css/Index.css'
 
 import Header from './components/Header'
@@ -16,6 +17,7 @@ import Reborn from './pages/Reborn'
 import deathSound from './assets/audio/death_sound.mp3'
 
 const DeathPlayer = () => {
+  let ev: CustomEventHandler
   const deathState = useSelector((state: RootState) => state.deathReducer)
   const [chanceReborn, setChanceReporn] = useState<number>(34)
   const [timeDead, setTimeDead] = useState<string>('')
@@ -30,20 +32,20 @@ const DeathPlayer = () => {
 
   useEffect(() => {
     if (deathState.instant !== 'finish' && deathState.instant !== 'reborn') sound.current.play()
-    rpc.callServer('cef:getFormatedDateTime', [true, true, false])
+    rce.triggerServer('getFormatedDateTime', true, true, false)
     
-    rpc.register('server:getFormatedDateTime', (dateTime: string) => {
+    ev = rce.register('getFormatedDateTime', (dateTime: string) => {
       setTimeDead(dateTime)
     })
 
-    rpc.register('client:chanceReborn', (chance: number, luck: boolean) => {
+    ev = rce.register('client:chanceReborn', (chance: number, luck: boolean) => {
       setChanceReporn(chance)
       setLuck(luck)
     })
 
     return () => {
-      rpc.unregister('server:getFormatedDateTime')
-      rpc.unregister('client:chanceReborn')
+      rce.clearRegister('server:getFormatedDateTime')
+      rce.clearRegister('client:chanceReborn')
       sound.current.stop()
       sound.current.unload()
     }
@@ -57,11 +59,11 @@ const DeathPlayer = () => {
 
     if (timeLeft <= 0 && luck) {
       setTimeout(() => {
-        rpc.callServer('playerReborn')
+        rce.triggerServer('playerReborn')
       }, 1000)
     } else if (timeLeft <= 0 && !luck) {
       setTimeout(() => {
-        rpc.callServer('playerKill')
+        rce.triggerServer('playerKill')
       }, 1000)
     }
 

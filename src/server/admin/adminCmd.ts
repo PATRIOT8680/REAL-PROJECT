@@ -3,7 +3,7 @@ import * as path from 'path'
 
 import { registerCMD } from '../menus/chat'
 import { send } from '../menus/chat'
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
 registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...string[]]) => {
     const targetId = parseInt(target, 10)
@@ -104,7 +104,7 @@ registerCMD('banvoice', (player: PlayerMp, [target]) => {
   // }
 
   const targetPlayer = mp.players.at(parseInt(target, 10))
-  rpc.callClient(targetPlayer, 'player:mute', [true])
+  rce.triggerClient(targetPlayer, 'player:mute', true)
   send(targetPlayer, `<b>Вам выдан бан-войс!</b>`, true)
 })
 
@@ -118,6 +118,6 @@ registerCMD('unbanvoice', (player: PlayerMp, [target]) => {
   // }
 
   const targetPlayer = mp.players.at(parseInt(target, 10))
-  rpc.callClient(targetPlayer, 'player:mute', [false])
+  rce.triggerClient(targetPlayer, 'player:mute', false)
   send(targetPlayer, `<b>С вас снят бан-войс!</b>`, true)
 })

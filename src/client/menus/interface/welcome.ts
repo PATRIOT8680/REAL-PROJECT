@@ -1,14 +1,16 @@
-import { rpc } from '../../utils/rpc'
+import { rce } from '../../utils/rce'
+import { gui } from '../global'
 
 mp.events.add('browserDomReady', async (player: PlayerMp) => {
-  rpc.call('execute', [`window.App.welcomeReducer.showWelcome()`])
+  mp.console.logWarning('browserDomReady')
+  gui.execute('window.App.welcomeReducer.showWelcome()')
   mp.gui.cursor.visible = true
 
   await setTimeout(() => {
-    rpc.call('cef:authEnabled', [])
+    rce.trigger('cef:authEnabled')
 
     setTimeout(() => {
-      rpc.call('execute', [`window.App.welcomeReducer.hideWelcome()`])
+      gui.execute('window.App.welcomeReducer.hideWelcome()')
     }, 200)
   }, 7100)
 })

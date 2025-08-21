@@ -1,6 +1,6 @@
 import '../assets/styles/compiled-css/Fate.css'
 import { FC, useRef } from 'react'
-import { rpc } from '../../../main'
+import { rce } from "../../../modules/rce.ts";
 
 interface IFate {
   setTimeLeft: (seconds: number) => void
@@ -10,11 +10,11 @@ const Fate: FC<IFate> = ({ setTimeLeft }) => {
   const handleSelectFate = (fate: 'ems' | 'death') => {
     if (fate === 'ems') {
       setTimeLeft(300)
-      rpc.callClient('cef:death:selectedFate', [300])
+      rce.triggerClient('cef:death:selectedFate', 300)
       window.App.deathReducer.selectFateDeath('ems')
     } else {
       setTimeLeft(120)
-      rpc.callClient('cef:death:selectedFate', [120])
+      rce.triggerClient('cef:death:selectedFate', 120)
       window.App.deathReducer.selectFateDeath('death')
     }
   }

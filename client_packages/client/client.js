@@ -1,807 +1,206 @@
 'use strict';
 
-var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-var dist;
-var hasRequiredDist;
-
-function requireDist () {
-	if (hasRequiredDist) return dist;
-	hasRequiredDist = 1;
-	var __defProp = Object.defineProperty;
-	var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-	var __getOwnPropNames = Object.getOwnPropertyNames;
-	var __hasOwnProp = Object.prototype.hasOwnProperty;
-	var __export = (target, all) => {
-	  for (var name in all)
-	    __defProp(target, name, { get: all[name], enumerable: true });
-	};
-	var __copyProps = (to, from, except, desc) => {
-	  if (from && typeof from === "object" || typeof from === "function") {
-	    for (let key of __getOwnPropNames(from))
-	      if (!__hasOwnProp.call(to, key) && key !== except)
-	        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-	  }
-	  return to;
-	};
-	var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-	var __async = (__this, __arguments, generator) => {
-	  return new Promise((resolve, reject) => {
-	    var fulfilled = (value) => {
-	      try {
-	        step(generator.next(value));
-	      } catch (e) {
-	        reject(e);
-	      }
-	    };
-	    var rejected = (value) => {
-	      try {
-	        step(generator.throw(value));
-	      } catch (e) {
-	        reject(e);
-	      }
-	    };
-	    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
-	    step((generator = generator.apply(__this, __arguments)).next());
-	  });
-	};
-
-	// src/index.ts
-	var src_exports = {};
-	__export(src_exports, {
-	  Rpc: () => Rpc
-	});
-	dist = __toCommonJS(src_exports);
-
-	// src/utils.ts
-	var Utils = class {
-	  // todo type for dev browser
-	  static getEnvironment() {
-	    if ("joaat" in mp) return "SERVER" /* SERVER */;
-	    if ("game" in mp && "joaat" in mp.game)
-	      return "CLIENT" /* CLIENT */;
-	    if (window && "mp" in window) return "BROWSER" /* BROWSER */;
-	    return "UNKNOWN" /* UNKNOWN */;
-	  }
-	  static prepareExecution(data) {
-	    return JSON.parse(data);
-	  }
-	  static prepareTransfer(data) {
-	    return JSON.stringify(data);
-	  }
-	  static generateUUID() {
-	    let uuid = "", random;
-	    for (let i = 0; i < 32; i++) {
-	      random = Math.random() * 16 | 0;
-	      if (i === 8 || i === 12 || i === 16 || i === 20) {
-	        uuid += "-";
-	      }
-	      uuid += (i === 12 ? 4 : i === 16 ? random & 3 | 8 : random).toString(16);
-	    }
-	    return uuid;
-	  }
-	  static generateResponseEventName(uuid) {
-	    return `${"__rpc:response" /* EVENT_RESPONSE */}_${uuid}`;
-	  }
-	  static errorUnknownEnvironment(environment) {
-	    if (environment === "UNKNOWN" /* UNKNOWN */)
-	      throw new Error("Unknown environment" /* UNKNOWN_ENVIRONMENT */);
-	  }
-	};
-	var nativeClientEvents = /* @__PURE__ */ new Set([
-	  "browserCreated",
-	  "browserDomReady",
-	  "browserLoadingFailed",
-	  "playerEnterCheckpoint",
-	  "playerExitCheckpoint",
-	  "consoleCommand",
-	  "click",
-	  "playerChat",
-	  "playerCommand",
-	  "playerDeath",
-	  "playerJoin",
-	  "playerQuit",
-	  "playerReady",
-	  "playerResurrect",
-	  "playerRuleTriggered",
-	  "playerSpawn",
-	  "playerWeaponShot",
-	  "dummyEntityCreated",
-	  "dummyEntityDestroyed",
-	  "entityControllerChange",
-	  "incomingDamage",
-	  "outgoingDamage",
-	  "meleeActionDamage",
-	  "playerEnterVehicle",
-	  "playerLeaveVehicle",
-	  "playerStartTalking",
-	  "playerStopTalking",
-	  "entityStreamIn",
-	  "entityStreamOut",
-	  "render",
-	  "playerCreateWaypoint",
-	  "playerReachWaypoint",
-	  "playerEnterColshape",
-	  "playerExitColshape",
-	  "explosion",
-	  "projectile",
-	  "uncaughtException",
-	  "unhandledRejection"
-	]);
-	var nativeServerEvents = /* @__PURE__ */ new Set([
-	  "entityCreated",
-	  // 'entityDestroyed',
-	  "entityModelChange",
-	  "incomingConnection",
-	  "packagesLoaded",
-	  "playerChat",
-	  "playerCommand",
-	  "playerDamage",
-	  "playerDeath",
-	  "playerEnterCheckpoint",
-	  "playerEnterColshape",
-	  "playerEnterVehicle",
-	  "playerExitCheckpoint",
-	  "playerExitColshape",
-	  "playerExitVehicle",
-	  "playerJoin",
-	  "playerQuit",
-	  "playerReachWaypoint",
-	  "playerReady",
-	  "playerSpawn",
-	  "playerStartEnterVehicle",
-	  "playerStartExitVehicle",
-	  "playerStreamIn",
-	  "playerStreamOut",
-	  "playerWeaponChange",
-	  "serverShutdown",
-	  "trailerAttached",
-	  "vehicleDamage",
-	  "vehicleDeath",
-	  "vehicleHornToggle",
-	  "vehicleSirenToggle"
-	]);
-
-	// src/wrapper.ts
-	var Wrapper = class {
-	  constructor(options = {
-	    forceBrowserDevMode: false
-	  }) {
-	    this.environment_ = "UNKNOWN" /* UNKNOWN */;
-	    this.console_ = this.environment_ === "CLIENT" /* CLIENT */ ? mp.console.logInfo : console.log;
-	    this.debug_ = false;
-	    this.forceBrowserDevMode_ = false;
-	    if (options.forceBrowserDevMode) {
-	      this.environment_ = "UNKNOWN" /* UNKNOWN */;
-	      this.state_ = window;
-	    } else {
-	      this.environment_ = Utils.getEnvironment();
-	      this.state_ = this.environment_ === "BROWSER" /* BROWSER */ ? window : commonjsGlobal;
-	    }
-	    this.forceBrowserDevMode_ = !!options.forceBrowserDevMode;
-	  }
-	  // checks if event is available (registered) in current environment
-	  verifyEvent_(data) {
-	    let rpcData = typeof data === "string" ? Utils.prepareExecution(data) : data;
-	    if (!this.state_[rpcData.eventName]) {
-	      rpcData.knownError = "Event not registered" /* EVENT_NOT_REGISTERED */;
-	    }
-	    return rpcData;
-	  }
-	  triggerError_(rpcData, error) {
-	    const errorMessage = [
-	      `${rpcData.knownError}`,
-	      `Caller: ${rpcData.calledFrom}`,
-	      `Receiver: ${this.environment_}`,
-	      `Event: ${rpcData.eventName}`
-	    ];
-	    if (error) {
-	      errorMessage.push(`Additional Info: ${error}`);
-	    }
-	    throw new Error(errorMessage.join("\n | "));
-	  }
-	  log(method, eventName, ...args) {
-	    if (this.debug_)
-	      this.console_("RPC | [" + method + "] " + eventName + ":", ...args);
-	  }
-	};
-
-	// src/server.ts
-	var Server = class extends Wrapper {
-	  constructor(options = {
-	    forceBrowserDevMode: false
-	  }) {
-	    super(options);
-	    if (!!options.forceBrowserDevMode) return;
-	    mp.events.add(
-	      "__rpc:serverListener" /* SERVER_EVENT_LISTENER */,
-	      (player, dataRaw) => __async(this, null, function* () {
-	        this.emit(player, dataRaw);
-	      })
-	    );
-	  }
-	  /**
-	   * NOT INTENDED FOR OUT-OF-CONTEXT USE
-	   */
-	  _resolveEmitDestination(player, dataRaw) {
-	    let state = Utils.prepareExecution(dataRaw);
-	    switch (state.calledTo) {
-	      case "SERVER" /* SERVER */:
-	        this.emit(player, dataRaw);
-	        break;
-	      default:
-	        this.emitClient(player, dataRaw);
-	        break;
-	    }
-	  }
-	  emitClient(player, dataRaw) {
-	    player.call("__rpc:listener" /* LOCAL_EVENT_LISTENER */, [dataRaw]);
-	  }
-	  // called to server
-	  emit(player, dataRaw) {
-	    return __async(this, null, function* () {
-	      let state = Utils.prepareExecution(dataRaw);
-	      const responseEventName = Utils.generateResponseEventName(state.uuid);
-	      state = this.verifyEvent_(state);
-	      if (state.knownError) {
-	        this.triggerError_(state, state.knownError);
-	      }
-	      const response = yield this.state_[state.eventName](
-	        player,
-	        ...Array.isArray(state.data) ? state.data : []
-	      );
-	      const responseState = {
-	        uuid: Utils.generateUUID(),
-	        eventName: state.eventName,
-	        calledFrom: "SERVER" /* SERVER */,
-	        calledTo: state.calledFrom,
-	        knownError: void 0,
-	        data: response,
-	        type: "response" /* RESPONSE */
-	      };
-	      switch (state.calledFrom) {
-	        case "SERVER" /* SERVER */:
-	          try {
-	            mp.events.call(
-	              responseEventName,
-	              Utils.prepareTransfer(responseState)
-	            );
-	          } catch (e) {
-	          }
-	          break;
-	        default:
-	          try {
-	            player.call(responseEventName, [
-	              Utils.prepareTransfer(responseState)
-	            ]);
-	          } catch (e) {
-	          }
-	          break;
-	      }
-	    });
-	  }
-	};
-
-	// src/client.ts
-	var Client = class extends Wrapper {
-	  constructor(options = {
-	    forceBrowserDevMode: false
-	  }) {
-	    super(options);
-	    this._browser = null;
-	  }
-	  set browser(browser) {
-	    this._browser = browser;
-	  }
-	  /**
-	   * NOT INTENDED FOR OUT-OF-CONTEXT USE
-	   */
-	  _resolveEmitDestination(dataRaw) {
-	    const state = Utils.prepareExecution(dataRaw);
-	    switch (state.calledTo) {
-	      case "SERVER" /* SERVER */:
-	        this.emitServer(dataRaw);
-	        break;
-	      case "BROWSER" /* BROWSER */:
-	        this.emitBrowser(dataRaw);
-	        break;
-	      case "CLIENT" /* CLIENT */:
-	        this.emit(state);
-	        break;
-	      default:
-	        this.triggerError_(state, "Unknown environment" /* UNKNOWN_ENVIRONMENT */);
-	        break;
-	    }
-	  }
-	  // called to client
-	  emit(state) {
-	    return __async(this, null, function* () {
-	      this.errorNoBrowser();
-	      state = this.verifyEvent_(state);
-	      if (state.knownError) {
-	        this.triggerError_(state, state.knownError);
-	      }
-	      const responseEventName = Utils.generateResponseEventName(state.uuid);
-	      const response = yield this.state_[state.eventName](
-	        ...Array.isArray(state.data) ? state.data : []
-	      );
-	      const responseState = {
-	        uuid: Utils.generateUUID(),
-	        eventName: state.eventName,
-	        calledFrom: state.calledTo,
-	        calledTo: state.calledFrom,
-	        knownError: void 0,
-	        data: response,
-	        type: "response" /* RESPONSE */
-	      };
-	      switch (state.calledFrom) {
-	        case "CLIENT" /* CLIENT */:
-	          try {
-	            mp.events.call(
-	              responseEventName,
-	              Utils.prepareTransfer(responseState)
-	            );
-	          } catch (e) {
-	          }
-	          break;
-	        case "SERVER" /* SERVER */:
-	          try {
-	            mp.events.callRemote(
-	              responseEventName,
-	              Utils.prepareTransfer(responseState)
-	            );
-	          } catch (e) {
-	          }
-	          break;
-	        case "BROWSER" /* BROWSER */:
-	          try {
-	            this._browser.call(
-	              responseEventName,
-	              Utils.prepareTransfer(responseState)
-	            );
-	          } catch (e) {
-	          }
-	          break;
-	      }
-	    });
-	  }
-	  // called to server
-	  emitServer(dataRaw) {
-	    this.errorNoBrowser();
-	    const state = Utils.prepareExecution(dataRaw);
-	    if (state.calledFrom === "BROWSER" /* BROWSER */) {
-	      const responseEventName = Utils.generateResponseEventName(
-	        state.uuid
-	      );
-	      const timeout = setTimeout(() => {
-	        clearTimeout(timeout);
-	        mp.events.remove(responseEventName);
-	      }, 1e4);
-	      mp.events.add(responseEventName, (responseDataRaw) => {
-	        this._browser.call(responseEventName, responseDataRaw);
-	        clearTimeout(timeout);
-	        mp.events.remove(responseEventName);
-	      });
-	    }
-	    mp.events.callRemote("__rpc:serverListener" /* SERVER_EVENT_LISTENER */, dataRaw);
-	  }
-	  // called to browser
-	  emitBrowser(dataRaw) {
-	    this.errorNoBrowser();
-	    const state = Utils.prepareExecution(dataRaw);
-	    if (state.calledFrom === "SERVER" /* SERVER */) {
-	      const responseEventName = Utils.generateResponseEventName(
-	        state.uuid
-	      );
-	      const timeout = setTimeout(() => {
-	        clearTimeout(timeout);
-	        mp.events.remove(responseEventName);
-	      }, 1e4);
-	      mp.events.add(responseEventName, (responseDataRaw) => {
-	        mp.events.callRemote(responseEventName, responseDataRaw);
-	        clearTimeout(timeout);
-	        mp.events.remove(responseEventName);
-	      });
-	    }
-	    this._browser.call("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
-	  }
-	  errorNoBrowser() {
-	    if (!this._browser) throw new Error("You need to initialize browser first" /* NO_BROWSER */);
-	  }
-	};
-
-	// src/browser.ts
-	var Browser = class extends Wrapper {
-	  constructor(options = {
-	    forceBrowserDevMode: false
-	  }) {
-	    super(options);
-	  }
-	  /**
-	   * NOT INTENDED FOR OUT-OF-CONTEXT USE
-	   */
-	  _resolveEmitDestination(dataRaw) {
-	    let state = Utils.prepareExecution(dataRaw);
-	    switch (state.calledTo) {
-	      case "BROWSER" /* BROWSER */:
-	        this.emit(dataRaw);
-	        break;
-	      default:
-	        this.emitClient(dataRaw);
-	        break;
-	    }
-	  }
-	  emitClient(dataRaw) {
-	    mp.trigger("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
-	  }
-	  // called to browser
-	  emit(dataRaw) {
-	    return __async(this, null, function* () {
-	      let state = Utils.prepareExecution(dataRaw);
-	      const responseEventName = Utils.generateResponseEventName(state.uuid);
-	      state = this.verifyEvent_(state);
-	      if (state.knownError) {
-	        this.triggerError_(state, state.knownError);
-	      }
-	      const response = yield this.state_[state.eventName](
-	        ...Array.isArray(state.data) ? state.data : []
-	      );
-	      const responseState = {
-	        uuid: Utils.generateUUID(),
-	        eventName: state.eventName,
-	        calledFrom: "SERVER" /* SERVER */,
-	        calledTo: state.calledFrom,
-	        knownError: void 0,
-	        data: response,
-	        type: "response" /* RESPONSE */
-	      };
-	      const responseDataRaw = Utils.prepareTransfer(responseState);
-	      switch (state.calledFrom) {
-	        case "BROWSER" /* BROWSER */:
-	          try {
-	            mp.events.call(responseEventName, responseDataRaw);
-	          } catch (e) {
-	          }
-	          break;
-	        default:
-	          try {
-	            mp.trigger(responseEventName, responseDataRaw);
-	          } catch (e) {
-	          }
-	          break;
-	      }
-	    });
-	  }
-	};
-
-	// src/index.ts
-	var Rpc = class extends Wrapper {
-	  constructor(options = {
-	    forceBrowserDevMode: false,
-	    debugLogs: false
-	  }) {
-	    super(options);
-	    this._server = new Server(options);
-	    this._client = new Client(options);
-	    this._browser = new Browser(options);
-	    this.debug_ = !!options.debugLogs;
-	    if (options.forceBrowserDevMode) return;
-	    if (this.environment_ === "UNKNOWN" /* UNKNOWN */)
-	      throw new Error("Unknown environment" /* UNKNOWN_ENVIRONMENT */);
-	    mp.events.add(
-	      "__rpc:listener" /* LOCAL_EVENT_LISTENER */,
-	      (player, dataRaw) => __async(this, null, function* () {
-	        switch (this.environment_) {
-	          case "SERVER" /* SERVER */:
-	            this._server._resolveEmitDestination(
-	              player,
-	              dataRaw
-	            );
-	            break;
-	          case "CLIENT" /* CLIENT */:
-	            dataRaw = player;
-	            this._client._resolveEmitDestination(dataRaw);
-	            break;
-	          case "BROWSER" /* BROWSER */:
-	            dataRaw = player;
-	            this._browser._resolveEmitDestination(dataRaw);
-	            break;
-	        }
-	      })
-	    );
-	  }
-	  set browser(browser) {
-	    this._client.browser = browser;
-	  }
-	  /**
-	   * Registers a callback function for a specified event
-	   *
-	   * @template CallbackArguments - An array of argument types that the callback function accepts
-	   * @template CallbackReturn - The type of the value returned by the callback function
-	   * @template EventName - A string representing the event name or union of names
-	   *
-	   * @param {EventName} eventName - The name of the event to register the callback for
-	   * @param {(...args: CallbackArguments) => CallbackReturn} cb - The callback function that is called when the event is triggered
-	   *
-	   * @returns {void}
-	   *
-	   * @example
-	   * register<[PlayerMp]>('playerJoin', (player) => {
-	   *   console.log(`Connected: ${player.socialClub}`)
-	   * })
-	   */
-	  register(eventName, cb) {
-	    this.log("register", eventName, cb);
-	    if (this.forceBrowserDevMode_) return;
-	    Utils.errorUnknownEnvironment(this.environment_);
-	    if (this.environment_ === "CLIENT" /* CLIENT */ && nativeClientEvents.has(eventName) || this.environment_ === "SERVER" /* SERVER */ && nativeServerEvents.has(eventName)) {
-	      mp.events.add(eventName, cb);
-	    } else {
-	      this.state_[eventName] = cb;
-	    }
-	  }
-	  /**
-	   * Unregisters callback function for a specified event
-	   *
-	   * @template EventName - A string representing the event name or union of names
-	   *
-	   * @param {EventName} eventName - The name of the event to register the callback for
-	   *
-	   * @returns {void}
-	   *
-	   * @example
-	   * unregister('playerJoin')
-	   */
-	  unregister(eventName) {
-	    this.log("unregister", eventName);
-	    if (this.forceBrowserDevMode_) return;
-	    Utils.errorUnknownEnvironment(this.environment_);
-	    delete this.state_[eventName];
-	  }
-	  callClient(playerOrEventName, eventNameOrArgs, args) {
-	    return __async(this, null, function* () {
-	      _is1StParamPlayer(playerOrEventName) ? this.log(
-	        "callClient",
-	        eventNameOrArgs,
-	        playerOrEventName,
-	        eventNameOrArgs,
-	        args
-	      ) : this.log(
-	        "callClient",
-	        playerOrEventName,
-	        eventNameOrArgs
-	      );
-	      if (this.forceBrowserDevMode_) return;
-	      Utils.errorUnknownEnvironment(this.environment_);
-	      function _is1StParamPlayer(x) {
-	        return typeof x === "object";
-	      }
-	      function _is2NdParamEventName(x) {
-	        return typeof x === "string";
-	      }
-	      if (this.environment_ === "CLIENT" /* CLIENT */) {
-	        return yield this.call(
-	          playerOrEventName,
-	          args
-	        );
-	      }
-	      if (this.environment_ === "SERVER" /* SERVER */ && _is1StParamPlayer(playerOrEventName) && _is2NdParamEventName(eventNameOrArgs)) {
-	        const state = {
-	          uuid: Utils.generateUUID(),
-	          eventName: eventNameOrArgs,
-	          calledTo: "CLIENT" /* CLIENT */,
-	          calledFrom: this.environment_,
-	          knownError: void 0,
-	          data: args,
-	          type: "event" /* EVENT */
-	        };
-	        const dataRaw = Utils.prepareTransfer(state);
-	        playerOrEventName.call("__rpc:listener" /* LOCAL_EVENT_LISTENER */, [dataRaw]);
-	        return (yield this.responseHandler(state.uuid)).data;
-	      }
-	      if (this.environment_ === "BROWSER" /* BROWSER */ && !_is1StParamPlayer(playerOrEventName) && !_is2NdParamEventName(eventNameOrArgs)) {
-	        const state = {
-	          uuid: Utils.generateUUID(),
-	          eventName: playerOrEventName,
-	          calledTo: "CLIENT" /* CLIENT */,
-	          calledFrom: this.environment_,
-	          knownError: void 0,
-	          data: eventNameOrArgs,
-	          type: "event" /* EVENT */
-	        };
-	        const dataRaw = Utils.prepareTransfer(state);
-	        mp.trigger("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
-	        return (yield this.responseHandler(state.uuid)).data;
-	      }
-	    });
-	  }
-	  /**
-	   * Calls a server-side event from browser or client
-	   *
-	   * @template Arguments - An array of argument types to be passed to the server event
-	   * @template EventName - A string representing the server event name or union of names
-	   * @template Return - The type of the value returned by the server event
-	   *
-	   * @param {EventName} eventName - The name of the server event to be called
-	   * @param {Arguments} [args] - Optional arguments to pass to the server event
-	   * @returns {Promise<Return>} A promise resolving to the return value of the server event
-	   *
-	   * @example
-	   * // Calls an event on server
-	   * callServer<[], string, object>('onDataRequest').then(response => {
-	   *   console.log(`Received: ${response}`) //             ^ object
-	   * })
-	   */
-	  callServer(eventName, args) {
-	    return __async(this, null, function* () {
-	      this.log("callServer", eventName, args);
-	      if (this.forceBrowserDevMode_)
-	        return void 0;
-	      Utils.errorUnknownEnvironment(this.environment_);
-	      const state = {
-	        uuid: Utils.generateUUID(),
-	        eventName,
-	        calledTo: "SERVER" /* SERVER */,
-	        calledFrom: this.environment_,
-	        knownError: void 0,
-	        data: args,
-	        type: "event" /* EVENT */
-	      };
-	      const dataRaw = Utils.prepareTransfer(state);
-	      switch (this.environment_) {
-	        case "SERVER" /* SERVER */:
-	          return this.callSelf(state);
-	        case "CLIENT" /* CLIENT */:
-	          mp.events.callRemote("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
-	          break;
-	        case "BROWSER" /* BROWSER */:
-	          mp.trigger("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
-	          break;
-	      }
-	      return (yield this.responseHandler(state.uuid)).data;
-	    });
-	  }
-	  callBrowser(playerOrEventName, eventNameOrArgs, args) {
-	    return __async(this, null, function* () {
-	      _is1StParamPlayer(playerOrEventName) ? this.log(
-	        "DEV callClient",
-	        eventNameOrArgs,
-	        playerOrEventName,
-	        eventNameOrArgs,
-	        args
-	      ) : this.log(
-	        "DEV callClient",
-	        playerOrEventName,
-	        eventNameOrArgs
-	      );
-	      if (this.forceBrowserDevMode_) return;
-	      Utils.errorUnknownEnvironment(this.environment_);
-	      function _is1StParamPlayer(x) {
-	        return typeof x === "object";
-	      }
-	      function _is2NdParamEventName(x) {
-	        return typeof x === "string";
-	      }
-	      const state = {
-	        uuid: Utils.generateUUID(),
-	        eventName: !_is1StParamPlayer(playerOrEventName) ? playerOrEventName : _is2NdParamEventName(eventNameOrArgs) ? eventNameOrArgs : "",
-	        calledTo: "BROWSER" /* BROWSER */,
-	        calledFrom: this.environment_,
-	        knownError: void 0,
-	        data: _is1StParamPlayer(playerOrEventName) ? args : eventNameOrArgs,
-	        type: "event" /* EVENT */
-	      };
-	      const dataRaw = Utils.prepareTransfer(state);
-	      switch (this.environment_) {
-	        case "BROWSER" /* BROWSER */:
-	          return this.callSelf(state);
-	        case "CLIENT" /* CLIENT */:
-	          mp.events.callRemote("__rpc:listener" /* LOCAL_EVENT_LISTENER */, dataRaw);
-	          break;
-	        case "SERVER" /* SERVER */:
-	          playerOrEventName.call(
-	            "__rpc:listener" /* LOCAL_EVENT_LISTENER */,
-	            [dataRaw]
-	          );
-	          break;
-	      }
-	      return (yield this.responseHandler(state.uuid)).data;
-	    });
-	  }
-	  /**
-	   * Calls an event in current environment
-	   *
-	   * @template Arguments - An array of argument types to be passed to the event
-	   * @template EventName - A string representing the event name or union of names
-	   * @template Return - The type of the value returned by the event
-	   *
-	   * @param {EventName} eventName - The name of the event to be called
-	   * @param {Arguments} [args] - Optional arguments to pass to the event
-	   * @returns {Promise<Return>} A promise resolving to the return value of the event
-	   *
-	   * @example
-	   * // Calls an event in current environment
-	   * call<[], string, number>('getSomething').then(response => {
-	   *   console.log(`Received: ${response}`) //      ^ number
-	   * })
-	   */
-	  call(eventName, args) {
-	    return __async(this, null, function* () {
-	      this.log("call", eventName, args);
-	      if (this.forceBrowserDevMode_)
-	        return void 0;
-	      Utils.errorUnknownEnvironment(this.environment_);
-	      let state = {
-	        uuid: Utils.generateUUID(),
-	        eventName,
-	        calledTo: this.environment_,
-	        calledFrom: this.environment_,
-	        knownError: void 0,
-	        data: args,
-	        type: "event" /* EVENT */
-	      };
-	      return yield this.callSelf(state);
-	    });
-	  }
-	  /**
-	   * redirects an event in cases of it calling its own environment
-	   */
-	  callSelf(state) {
-	    return __async(this, null, function* () {
-	      state = this.verifyEvent_(state);
-	      if (state.knownError) {
-	        this.triggerError_(state, state.knownError);
-	      }
-	      return yield this.state_[state.eventName](...state.data);
-	    });
-	  }
-	  /**
-	   * returns cross-environment response
-	   */
-	  responseHandler(uuid) {
-	    return __async(this, null, function* () {
-	      const responseEventName = Utils.generateResponseEventName(uuid);
-	      return new Promise((resolve, reject) => {
-	        const timeout = setTimeout(() => {
-	          clearTimeout(timeout);
-	          mp.events.remove(responseEventName);
-	          reject("Response was timed out after 10s of inactivity" /* EVENT_RESPONSE_TIMEOUT */);
-	        }, 1e4);
-	        mp.events.add(
-	          responseEventName,
-	          (player, dataRaw) => {
-	            switch (this.environment_) {
-	              case "SERVER" /* SERVER */:
-	                resolve(Utils.prepareExecution(dataRaw));
-	                clearTimeout(timeout);
-	                mp.events.remove(responseEventName);
-	                break;
-	              case "CLIENT" /* CLIENT */:
-	                dataRaw = player;
-	                resolve(Utils.prepareExecution(dataRaw));
-	                clearTimeout(timeout);
-	                mp.events.remove(responseEventName);
-	                break;
-	              case "BROWSER" /* BROWSER */:
-	                dataRaw = player;
-	                resolve(Utils.prepareExecution(dataRaw));
-	                clearTimeout(timeout);
-	                mp.events.remove(responseEventName);
-	                break;
-	            }
-	          }
-	        );
-	      });
-	    });
-	  }
-	};
-	return dist;
+class CustomEventBase {
+    static registerLocalIds = 1;
+    static registerHandles = new Map();
+    static clearRegister(eventName) {
+        this.registerHandles.forEach((value, key) => {
+            if (value[0] === eventName)
+                this.registerHandles.delete(key);
+        });
+    }
+    static clearRegisterAll() {
+        this.registerHandles.clear();
+    }
+    static register(eventName, handle) {
+        // Очистка старых обработчиков для этого события
+        this.clearRegister(eventName);
+        const id = `${this.registerLocalIds++}`;
+        this.registerHandles.set(id, [eventName, handle]);
+        return { destroy: () => this.registerHandles.delete(id) };
+    }
+    static trigger(eventName, ...args) {
+        this.registerHandles.forEach(([name, handle]) => {
+            if (name === eventName)
+                handle(...args);
+        });
+    }
+    static async call(eventName, ...args) {
+        for (const [name, handle] of this.registerHandles.values()) {
+            if (name === eventName)
+                return await handle(...args);
+        }
+        return null;
+    }
 }
 
-var distExports = requireDist();
-
-const rpc = new distExports.Rpc({
-    debugLogs: false,
+mp.events.add('setKey', (key) => {
+    rce.key = key;
+});
+class rce extends CustomEventBase {
+    static callServerResponse = 1;
+    static requestServerHandle = new Map();
+    static callServerResponseCEF = 1;
+    static requestServerHandleCEF = new Map();
+    static registerServerEvents = new Map();
+    static registerSocketEvents = new Map();
+    // Добавляем обработчики для событий из CEF
+    static cefHandlers = new Map();
+    static key;
+    static encryptEventName(eventName) {
+        return eventName
+            .split('')
+            .map(s => (s.charCodeAt(0) ^ rce.key).toString(16))
+            .join('g');
+    }
+    static triggerServer(eventName, ...args) {
+        mp.events.callRemote('trigger:client', rce.encryptEventName(eventName), JSON.stringify(args));
+    }
+    static callServer(eventName, ...args) {
+        const requestID = rce.callServerResponse++;
+        return new Promise((resolve, reject) => {
+            rce.requestServerHandle.set(requestID, resolve);
+            mp.events.callRemote('call:client', requestID, rce.encryptEventName(eventName), JSON.stringify(args));
+        });
+    }
+    static triggerCef(eventName, ...args) {
+        mp.browsers.forEach((browser) => {
+            mp.console.logWarning(`1.1. Отработал triggerCef, отправляем на сторону CEF: ${eventName}, ${args}`);
+            if (browser.active) {
+                mp.console.logWarning(`1.2. Отработал triggerCef, отправляем на сторону CEF: '${eventName}', '${JSON.stringify(args)}')'`);
+                browser.execute(`window.customevent.triggerCef('${eventName}', '${JSON.stringify(args)}');`);
+            }
+        });
+    }
+    static forceTriggerCef(eventName, ...args) {
+        mp.browsers.forEach(browser => {
+            browser.execute(`window.customevent.triggerCef('${eventName}', '${JSON.stringify(args)}');`);
+        });
+    }
+    static registerServer(eventName, handle) {
+        if (!this.registerServerEvents.has(eventName)) {
+            this.registerServerEvents.set(eventName, new Set());
+        }
+        this.registerServerEvents.get(eventName).add(handle);
+    }
+    static registerAll(name, handle) {
+        this.registerServer(name, handle);
+        CustomEventBase.register(name, handle);
+        // Также регистрируем для обработки событий из CEF
+        if (!this.cefHandlers.has(name)) {
+            this.cefHandlers.set(name, new Set());
+        }
+        this.cefHandlers.get(name).add(handle);
+    }
+    // Метод для вызова событий из CEF
+    static triggerFromCef(eventName, ...args) {
+        const handlers = this.cefHandlers.get(eventName);
+        if (handlers) {
+            handlers.forEach(handler => {
+                try {
+                    handler(...args);
+                }
+                catch (error) {
+                    mp.console.logError(`Error in CEF event ${eventName}:`, error);
+                }
+            });
+        }
+    }
+}
+// Обработчик для событий из CEF
+mp.events.add('triggerFromCef', (eventName, ...args) => {
+    mp.console.logError(`triggerFromCef сработал. Имя: ${eventName}, args: ${args}`);
+    rce.triggerFromCef(eventName, ...args);
+});
+// Остальной код без изменений
+mp.events.add("client:trigger:event", (eventname, argsstring) => triggerEvent(eventname, argsstring));
+let enableEventsLogging = mp.storage.data.enableEventsLoggin;
+const eventsCountMap = new Map();
+const triggerEvent = async (eventname, argsstring) => {
+    if (!eventsCountMap.has(eventname)) {
+        eventsCountMap.set(eventname, 0);
+    }
+    eventsCountMap.set(eventname, (eventsCountMap.get(eventname) + 1));
+    const handlers = rce.registerServerEvents.get(eventname);
+    if (enableEventsLogging) {
+        mp.console.logInfo(`event triggering started: ${eventname}`);
+    }
+    if (!handlers || handlers.size === 0)
+        return mp.console.logError("[CustomEvent] trigger non exists event " + eventname, true);
+    handlers.forEach(handler => {
+        try {
+            handler(...(JSON.parse(argsstring)));
+        }
+        catch (error) {
+            if (enableEventsLogging) {
+                mp.console.logError(`event (${eventname}) catch an error: ${error}`);
+            }
+        }
+    });
+    if (enableEventsLogging) {
+        mp.console.logInfo(`event triggering ended: ${eventname}`);
+    }
+};
+let splitTrigger = new Map();
+mp.events.add("client:trigger:event:split", async (tid, index, last, eventname, argsstring) => {
+    const handlers = rce.registerServerEvents.get(eventname);
+    if (!handlers || handlers.size === 0)
+        return mp.console.logError("[CustomEvent] trigger split non exists event " + eventname, true);
+    if (!splitTrigger.has(`${tid}_${eventname}`)) {
+        splitTrigger.set(`${tid}_${eventname}`, []);
+    }
+    let d = splitTrigger.get(`${tid}_${eventname}`);
+    d[index] = argsstring;
+    if (last) {
+        triggerEvent(eventname, d.join(''));
+    }
+    else {
+        splitTrigger.set(`${tid}_${eventname}`, d);
+    }
+});
+mp.events.add("client:call:event", async (eventname, requestID, argsstring) => {
+    try {
+        const handlers = rce.registerServerEvents.get(eventname);
+        if (!handlers || handlers.size === 0) {
+            mp.events.callRemote('client:call:event:result', requestID, null);
+            return;
+        }
+        // Вызываем первый обработчик (для обратной совместимости)
+        const handler = Array.from(handlers)[0];
+        let res = await handler(...(JSON.parse(argsstring)));
+        mp.events.callRemote('client:call:event:result', requestID, res);
+    }
+    catch (error) {
+        mp.console.logError(error, true);
+    }
+});
+mp.events.add('cef:trigger:event', (eventName, args) => {
+    rce.triggerCef(eventName, ...JSON.parse(args));
+    mp.console.logInfo(`(1) cef:trigger:event сработал на стороне клиента. ${eventName}, ${args}`);
+});
+mp.events.add('call:client:response', (requestID, res) => {
+    let resolve = rce.requestServerHandle.get(requestID);
+    if (!resolve)
+        return;
+    resolve(res);
+});
+mp.events.add('call:cef:response', (requestID, res) => {
+    mp.browsers.forEach((browser) => {
+        if (browser.eventReady)
+            browser.execute(`window.customevent.callServerResponseHandle(${requestID}, '${JSON.stringify(res)}');`);
+    });
+});
+mp.events.add('call:server', (requestID, eventName, ...args) => mp.events.callRemote('call:cef', requestID, rce.encryptEventName(eventName), ...args));
+mp.events.add('call:clientfromcef', async (requestID, eventName, ...args) => {
+    const fnd = await CustomEventBase.call(eventName, ...args);
+    mp.browsers.forEach((browser) => {
+        if (browser.eventReady)
+            browser.execute(`window.customevent.callClientResponseHandle(${requestID}, '${JSON.stringify(fnd)}');`);
+    });
+});
+mp.events.add('trigger:server', (name, args) => {
+    mp.events.callRemote('trigger:cef', rce.encryptEventName(name), args);
+    mp.console.logError(`НАМ ПРИШЛО НА КЛИЕНТ С CEF!!! name: ${name}, encryptname: ${rce.encryptEventName(name)}, args: ${args}`);
 });
 
 const openInterfaces = new Set();
@@ -814,12 +213,12 @@ const handleInterfaceVisibility = (interfaceName, isVisible) => {
         openInterfaces.delete(interfaceName);
     }
 };
-rpc.register('toggleInterface', (interfaceName, isVisible, duration) => {
+rce.registerAll('toggleInterface', (interfaceName, isVisible, duration) => {
     setTimeout(() => {
         mp.gui.cursor.show(true, true);
     }, 500);
     mp.gui.cursor.visible = true;
-    rpc.callBrowser(`cef:${isVisible ? 'show' : 'hide'}${interfaceName}`, [duration]);
+    rce.triggerCef(`cef:${isVisible ? 'show' : 'hide'}${interfaceName}`, duration);
     handleInterfaceVisibility(interfaceName, isVisible);
 });
 
@@ -1019,10 +418,9 @@ let visibleNametags = true;
 let playerAimAt = null;
 const playerSids = new Map();
 mp.nametags.enabled = false;
-const requestPlayerSid = (player) => {
-    rpc.callServer('getDataAccount', ['sid', player.remoteId]).then((statID) => {
-        playerSids.set(player.remoteId, statID);
-    });
+const requestPlayerSid = async (player) => {
+    const statID = await rce.callServer('getDataAccount', 'sid', player.remoteId);
+    playerSids.set(player.remoteId, statID);
 };
 mp.keys.bind(Keys.VK_F9, false, () => {
     visibleNametags = !visibleNametags;
@@ -1113,7 +511,7 @@ const showLoading = (duration) => {
         mp.gui.cursor.show(false, false);
         mp.gui.cursor.visible = false;
     }, 500);
-    rpc.call('execute', [`window.App.loadingReducer.showLoading(${duration})`]);
+    gui.execute(`window.App.loadingReducer.showLoading(${duration})`);
     mp.game.graphics.triggerScreenblurFadeIn(1000);
     mp.game.graphics.isScreenblurFadeRunning();
     mp.game.audio.playSoundFrontend(0, 'slow', 'SHORT_PLAYER_SWITCH_SOUND_SET', true);
@@ -1122,7 +520,7 @@ const showLoading = (duration) => {
         mp.game.audio.stopSound(0);
     }, duration);
 };
-rpc.register('client:showLoading', showLoading);
+rce.register('client:showLoading', showLoading);
 mp.console.logError('');
 
 let activeCamera = null;
@@ -1140,7 +538,7 @@ const createCamera = (pos, target) => {
 };
 let ev$1 = null;
 const startCamMoving = (path) => {
-    rpc.callServer('client:startNewCamera', [path.persCoord]);
+    rce.triggerServer('client:startNewCamera', path.persCoord);
     currentPath = path;
     startTime = Date.now();
     if (ev$1) {
@@ -1332,17 +730,17 @@ const cameraState = {
 const enableAuth = () => {
     cameraState.isSpanActive = true;
     cameraState.isTransition = false;
-    rpc.call('execute', [`window.App.authReducer.showAuth()`]);
-    rpc.callServer('client:authPlayerVisible', [false]);
+    rce.trigger('execute', `window.App.authReducer.showAuth()`);
+    rce.triggerServer('client:authPlayerVisible', false);
     mp.game.ui.displayRadar(false);
     mp.game.graphics.disableScreenblurFade();
     mp.players.local.freezePosition(true);
     mp.gui.cursor.visible = true;
     startNextCameraMovement();
     if (mp.storage.data.auth !== undefined) {
-        rpc.callBrowser('client:auth:saveLogin', [mp.storage.data.auth.login]);
+        rce.triggerCef('client:auth:saveLogin', mp.storage.data.auth.login);
     }
-    rpc.register('server:auth:saveLogin', (login) => {
+    rce.registerServer('server:auth:saveLogin', (login) => {
         mp.storage.data.auth = {
             login: login
         };
@@ -1375,27 +773,27 @@ const disableAuth = () => {
     }
     stopCamMoving();
     showLoading(3000);
-    rpc.call('execute', [`window.App.authReducer.hideAuth()`]);
+    gui.execute('window.App.authReducer.hideAuth()');
     setTimeout(() => {
-        rpc.call('execute', [`window.App.chatReducer.showChat()`]);
-        rpc.call('execute', [`window.App.hudReducer.showHud()`]);
-        rpc.callServer('client:authPlayerVisible', [true]);
+        gui.execute('window.App.chatReducer.showChat()');
+        gui.execute('window.App.hudReducer.showHud()');
+        rce.triggerServer('client:authPlayerVisible', true);
         mp.game.ui.displayRadar(true);
         mp.players.local.freezePosition(false);
     }, 3000);
 };
-rpc.register('cef:authEnabled', () => {
+rce.registerAll('cef:authEnabled', () => {
     enableAuth();
 });
-rpc.register('cef:authDisabled', () => {
+rce.registerAll('cef:authDisabled', () => {
     disableAuth();
-    rpc.callServer('getDataAccount', ['sid', mp.players.local.remoteId]).then((sid) => {
-        rpc.call('execute', [`window.App.playerInfoReducer.setSid(${sid})`]);
-    });
+    mp.console.logError('cef:authDisabled сработал!!!!!');
+    const statID = rce.callServer('getDataAccount', 'sid', mp.players.local.remoteId);
+    rce.trigger('execute', `window.App.playerInfoReducer.setSid(${statID})`);
     global.loginPlayer = true;
 });
 
-rpc.register('sendNotify', (typeNotify, msg, duration, pos) => {
+rce.registerAll('sendNotify', (typeNotify, msg, duration, pos) => {
     mp.console.logWarning(`Мы приняли на клиенте уведомление с сервера: ${msg}`);
     const safeMsg = JSON.stringify(msg);
     const safeTypeNotify = JSON.stringify(typeNotify);
@@ -1407,17 +805,18 @@ rpc.register('sendNotify', (typeNotify, msg, duration, pos) => {
     ${safeDuration}, 
     ${safePos}
   )`;
-    rpc.call('clientCmd', [`[CLIENT][RPC] Формируемый JS код:', ${code}`]);
-    rpc.call('execute', [code]);
+    rce.trigger('clientCmd', [`[CLIENT][RPC] Формируемый JS код:', ${code}`]);
+    gui.execute(code);
 });
 
 mp.events.add('browserDomReady', async (player) => {
-    rpc.call('execute', [`window.App.welcomeReducer.showWelcome()`]);
+    mp.console.logWarning('browserDomReady');
+    gui.execute('window.App.welcomeReducer.showWelcome()');
     mp.gui.cursor.visible = true;
     await setTimeout(() => {
-        rpc.call('cef:authEnabled', []);
+        rce.trigger('cef:authEnabled');
         setTimeout(() => {
-            rpc.call('execute', [`window.App.welcomeReducer.hideWelcome()`]);
+            gui.execute('window.App.welcomeReducer.hideWelcome()');
         }, 200);
     }, 7100);
 });
@@ -1428,64 +827,70 @@ let loaded = false;
 let opened = false;
 global.chatOpened = false;
 const toggleChat = (state) => {
-    rpc.callBrowser('chatActive', [state]);
+    rce.triggerCef('chatActive', state);
 };
 const addMsg = (name, text, showTime, tile) => {
     mp.console.logError(`const addMsg: ${text}`);
     if (name) {
-        rpc.callBrowser('addMsg', [name, text, showTime, tile]);
+        mp.console.logInfo(`Есть имя. Addmsg на сторону CEF: ${text}`);
+        rce.triggerCef('addMsg', name, text, showTime, tile);
     }
     else {
-        rpc.callBrowser('addString', [text, showTime, tile]);
+        mp.console.logInfo(`Нет имени. Addstring на сторону CEF: ${text}`);
+        rce.triggerCef('addString', text, showTime, tile);
     }
 };
-rpc.register('chatloaded', () => {
+rce.registerAll('chatloaded', () => {
     for (const msg of buffer) {
         addMsg(msg.name, msg.text, msg.showTime, msg.tile);
     }
     loaded = true;
 });
-rpc.register('chatmessage', (text) => {
+rce.registerAll('chatmessage', (text) => {
     mp.console.logError(`register:chatmessage: ${text}`);
     //rpc.call(CHAT_MESSAGE_EVENT, [text])
-    rpc.callServer(CHAT_MESSAGE_EVENT, [text]);
+    rce.triggerServer(CHAT_MESSAGE_EVENT, text);
     toggleChat(true);
     opened = true;
 });
 const pushMsg = (name, text, showTime, tile) => {
+    rce.triggerServer('cef:serverCMD', `Проверенное сообщение дошло до клиента: ${text}`);
+    mp.console.logInfo(`Проверенное сообщение дошло до клиента: ${text}`);
     if (!loaded) {
+        mp.console.logInfo(`Отправляем в буффер: ${text}`);
         mp.console.logError(`pushMsg (no loaded): ${text}`);
         buffer.push({ name, text, showTime, tile });
     }
     else {
         mp.console.logError(`pushMsg (loaded): ${text}`);
+        mp.console.logInfo(`Добавляем в чат: ${text}`);
         addMsg(name, text, showTime, tile);
     }
 };
 const pushLine = (text, showTime, tile) => {
     pushMsg(null, text, showTime, tile);
 };
-rpc.register(CHAT_MESSAGE_EVENT, pushMsg);
+rce.registerAll(CHAT_MESSAGE_EVENT, pushMsg);
 mp.keys.bind(Keys.VK_T, false, () => {
     if (loaded && !opened) {
         opened = true;
         toggleChat(true);
         global.chatOpened = true;
-        rpc.callBrowser('openChat', [false]);
+        rce.triggerCef('openChat', false);
     }
 });
 mp.keys.bind(Keys.VK_OEM_2, false, () => {
     if (loaded && !opened) {
         opened = true;
         toggleChat(true);
-        rpc.callBrowser('openChat', [true]);
+        rce.triggerCef('openChat', true);
     }
 });
 mp.keys.bind(Keys.VK_ESCAPE, false, () => {
     if (loaded && opened) {
         opened = false;
         global.chatOpened = false;
-        rpc.callBrowser('closeChat');
+        rce.triggerCef('closeChat');
         toggleChat(false);
     }
 });
@@ -1493,51 +898,73 @@ mp.keys.bind(Keys.VK_ENTER, false, () => {
     if (loaded && opened) {
         opened = false;
         global.chatOpened = false;
-        rpc.callBrowser('closeChat');
+        rce.triggerCef('closeChat');
         toggleChat(false);
     }
 });
-rpc.register('chat:pushMsg', (name, text, showTime, tile) => {
+rce.registerAll('chat:pushMsg', (name, text, showTime, tile) => {
     pushMsg(name, text, showTime, tile);
 });
-rpc.register('chat:pushLine', (text, showTime, tile) => {
+rce.registerAll('chat:pushLine', (text, showTime, tile) => {
     pushLine(text, showTime, tile);
 });
 pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello');
 
-rpc.browser = mp.browsers.new('package://cef/index.html');
 mp.events.add('guiReady', () => {
     mp.gui.chat.show(false);
     mp.console.logInfo('guiReady');
-    rpc.register('execute', (commands) => {
+    gui.browser.active = true;
+    rce.registerAll('execute', (commands) => {
         const commandsArray = Array.isArray(commands) ? commands : [commands];
         mp.console.logWarning(`Принято команд: ${commandsArray.length}`);
-        rpc.callBrowser('client:executeCode', commandsArray);
+        mp.browsers.forEach(browser => {
+            if (browser && browser.execute) {
+                try {
+                    commandsArray.forEach(code => {
+                        mp.console.logInfo(`Команда в сторону CEF: ${commands}`);
+                        gui.execute(code);
+                    });
+                }
+                catch (e) {
+                    mp.console.logError(`Ошибка выполнения кода в браузере: ${e}`);
+                }
+            }
+        });
     });
 });
 mp.keys.bind(Keys.VK_OEM_3, false, () => {
     mp.gui.cursor.visible = !mp.gui.cursor.visible;
 });
-rpc.register('clientCmd', (text) => {
+rce.registerAll('clientCmd', (text) => {
     mp.console.logInfo(`[CEF]: ${text}`);
 });
-rpc.register('cef:setActiveAmbient', (toggle) => {
+rce.registerAll('cef:setActiveAmbient', (toggle) => {
     mp.storage.data.activeAmbient = toggle;
     mp.storage.flush();
 });
-rpc.register('cef:changeLanguage', (lang) => {
+rce.registerAll('cef:changeLanguage', (lang) => {
     mp.storage.data.language = lang;
     mp.storage.flush();
 });
-rpc.register('cursorVisible', (toggle) => {
+rce.registerAll('cursorVisible', (toggle) => {
     mp.gui.cursor.visible = toggle;
 });
+const gui = {
+    browser: mp.browsers.new('package://cef/index.html'),
+    execute: (command) => {
+        mp.console.logInfo(`(1) Получили команду execute: ${command}`);
+        if (mp.browsers.exists(gui.browser) && gui.browser.active) {
+            mp.console.logInfo(`(2) Прошли проверку. Получили команду execute: ${command}`);
+            gui.browser.execute(command);
+        }
+    }
+};
 
 mp.keys.bind(Keys.VK_F2, true, () => {
-    rpc.callServer('playerKnockout');
+    rce.triggerServer('playerKnockout');
 });
 mp.keys.bind(Keys.VK_F6, true, () => {
-    rpc.callServer('playerReborn');
+    rce.triggerServer('playerReborn');
 });
 mp.keys.bind(Keys.VK_F7, true, () => {
     mp.players.local.setArmour(100);
@@ -1555,66 +982,69 @@ const getRandomChance = () => {
     return [percent, luck];
 };
 mp.events.add('playerDeath', async (player, reason, killer) => {
+    mp.console.logInfo('Сдох *_*');
     const [chance, luck] = getRandomChance();
-    await rpc.callServer('client:getFormatedDateTime', [true, true, true]);
-    rpc.callServer('playerKnockout');
-    rpc.call('execute', [`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`]);
-    rpc.call('execute', [`window.App.chatReducer.hideChat()`]);
-    rpc.callBrowser('client:chanceReborn', [chance, luck]);
+    await rce.callServer('getFormatedDateTime', true, true, true);
+    mp.console.logInfo('Сдох *_* 2');
+    rce.triggerServer('playerKnockout');
+    gui.execute(`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`);
+    gui.execute(`window.App.chatReducer.hideChat()`);
+    rce.triggerCef('client:chanceReborn', chance, luck);
     const playerPos = mp.players.local.position;
     const getGroundZ = mp.game.gameplay.getGroundZFor3dCoord(playerPos.x, playerPos.y, playerPos.z, true, false);
-    rpc.callServer('client:playerDeath', [[player.position.x, player.position.y, getGroundZ]]);
+    rce.triggerServer('client:playerDeath', [player.position.x, player.position.y, getGroundZ]);
 });
-rpc.register('server:getFormatedDateTime', (time) => {
+rce.registerServer('getFormatedDateTime', (time) => {
 });
-rpc.register('cef:death:selectedFate', (timeLeft) => {
+rce.registerAll('cef:death:selectedFate', (timeLeft) => {
     mp.gui.cursor.visible = false;
 });
 
 // PLAYER
-rpc.register('player:freeze', (toggle) => {
+rce.registerServer('player:freeze', (toggle) => {
     mp.players.local.freezePosition(toggle);
 });
-rpc.register('player:isCollision', (toggle) => {
+rce.registerServer('player:isCollision', (toggle) => {
     mp.players.local.setCollision(toggle, toggle);
 });
-rpc.register('player:godmode', (toggle) => {
+rce.registerServer('player:godmode', (toggle) => {
     mp.players.local.setInvincible(toggle);
 });
 // GRAPHICS
-rpc.register('graphics:startScreenEffect', (name, duration, looped) => {
+rce.registerServer('graphics:startScreenEffect', (name, duration, looped) => {
     mp.game.graphics.startScreenEffect(name, duration, looped);
 });
-rpc.register('graphics:stopAllScreenEffects', () => {
+rce.registerServer('graphics:stopAllScreenEffects', () => {
     mp.game.graphics.stopAllScreenEffects();
 });
 // UI
-rpc.register('ui:displayRadar', (toggle) => {
+rce.registerServer('ui:displayRadar', (toggle) => {
     mp.game.ui.displayRadar(toggle);
 });
-rpc.register('ui:setPauseMenuActive', (toggle) => {
+rce.registerServer('ui:setPauseMenuActive', (toggle) => {
     mp.game.ui.setPauseMenuActive(toggle);
 });
 // GUI
-rpc.register('gui:cursorVisible', (toggle) => {
+rce.registerServer('gui:cursorVisible', (toggle) => {
     mp.gui.cursor.visible = toggle;
 });
-rpc.register('getId', () => {
+rce.registerServer('getId', () => {
     return mp.players.local.remoteId;
 });
 
 mp.events.add('playerReady', (player) => {
-    rpc.callBrowser('client:setActiveAmbient', [mp.storage.data.activeAmbient]);
+    rce.trigger('sendNotify', 'success', 'Тестовое сообщение', 6000, 'top');
+    rce.triggerCef('client:setActiveAmbient', mp.storage.data.activeAmbient);
     mp.game.gameplay.setFadeOutAfterDeath(false);
     mp.game.ui.displayCash(false);
     mp.game.ui.displayAreaName(false);
     mp.game.ui.displayAmmoThisFrame(false);
-    rpc.call('execute', [`window.App.playerInfoReducer.setID(${mp.players.local.remoteId})`]);
+    gui.execute(`window.App.playerInfoReducer.setID(${mp.players.local.remoteId})`);
     if (mp.storage.data.language !== undefined) {
-        rpc.callBrowser('client:setLanguage', [mp.storage.data.language]);
+        rce.triggerCef('client:setLanguage', mp.storage.data.language);
     }
     else {
-        rpc.callBrowser('client:setLanguage', ['ru']);
+        rce.triggerCef('client:setLanguage', 'ru');
     }
 });
 
@@ -1645,7 +1075,7 @@ const camera = mp.cameras.new('gameplay');
 const controls = mp.game.controls;
 let direction = null;
 const startNoclip = () => {
-    rpc.callServer('toggleNoclip', [true]);
+    rce.triggerServer('toggleNoclip', true);
     if (ev) {
         ev.destroy();
         ev = null;
@@ -1718,7 +1148,7 @@ const startNoclip = () => {
     });
 };
 const stopNoclip = () => {
-    rpc.callServer('toggleNoclip', [false]);
+    rce.triggerServer('toggleNoclip', false);
     if (ev) {
         ev.destroy();
         ev = null;
@@ -1737,7 +1167,7 @@ mp.keys.bind(Keys.VK_F8, false, () => {
     localplayer.setInvincible(noclip.active);
     localplayer.freezePosition(noclip.active);
     localplayer.setCollision(!noclip.active, !noclip.active);
-    rpc.call('sendNotify', ['info', noclip.active ? 'Полёт включен' : 'Полёт отключен', 1200, 'top']);
+    rce.trigger('sendNotify', 'info', noclip.active ? 'Полёт включен' : 'Полёт отключен', 1200, 'top');
     if (!noclip.active && !controls.isControlPressed(0, ids.Space)) {
         const pos = mp.players.local.position;
         pos.z = mp.game.gameplay.getGroundZFor3DCoord(pos.x, pos.y, pos.z, true, false);
@@ -1756,17 +1186,17 @@ mp.keys.bind(Keys.VK_B, true, () => {
     if (global.chatOpened || !global.loginPlayer)
         return;
     if (global.mutePlayer)
-        return rpc.call('chat:pushLine', ['{FF2701}<b>У вас бан-войс!</b>']);
+        return rce.trigger('chat:pushLine', '{FF2701}<b>У вас бан-войс!</b>');
     mp.voiceChat.muted = false;
     global.activeVoice = true;
     mp.players.local.playFacialAnim("mic_chatter", "mp_facial");
-    rpc.call('execute', ['window.voiceComponent.enable()']);
+    gui.execute('window.voiceComponent.enable()');
 });
 mp.keys.bind(Keys.VK_B, false, () => {
     mp.voiceChat.muted = true;
     global.activeVoice = false;
     mp.players.local.playFacialAnim("mood_normal_1", "facials@gen_male@variations@normal");
-    rpc.call('execute', ['window.voiceComponent.disable()']);
+    gui.execute('window.voiceComponent.disable()');
 });
 mp.keys.bind(Keys.VK_F10, false, () => {
     mp.voiceChat.muted = true;
@@ -1775,7 +1205,7 @@ mp.keys.bind(Keys.VK_F10, false, () => {
             return;
         else {
             mp.voiceChat.cleanupAndReload(true, true, true);
-            rpc.call('execute', [`window.App.sendNotifyReducer.sendNotify('success', 'Войс-чат был успешно перезагружен!', 3000, 'bottom')`]);
+            gui.execute(`window.App.sendNotifyReducer.sendNotify('success', 'Войс-чат был успешно перезагружен!', 3000, 'bottom')`);
         }
     }, 100);
 });
@@ -1783,7 +1213,7 @@ let voiceManager = {
     list: [],
     new(player) {
         if (this.list.indexOf(player) === -1) {
-            mp.events.callRemote('client:voice:new', player);
+            rce.triggerServer('client:voice:new', player);
             this.list.push(player);
             player.isListening = true;
             {
@@ -1801,7 +1231,7 @@ let voiceManager = {
         }
         player.isListening = false;
         if (removedVoice) {
-            mp.events.callRemote('client:voice:deleted', player);
+            rce.triggerServer('client:voice:deleted', player);
         }
     }
 };
@@ -1820,14 +1250,14 @@ mp.events.add('playerStopTalking', (player) => {
         return;
     player.playFacialAnim("mood_normal_1", "facials@gen_male@variations@normal");
 });
-rpc.register('player:mute', (state) => {
-    rpc.callServer('player:mute', [state]);
+rce.registerServer('player:mute', (state) => {
+    rce.triggerServer('player:mute', state);
     mp.voiceChat.muted = true;
     if (state) {
-        rpc.call('execute', ['window.voiceComponent.disabled()']);
+        gui.execute('window.voiceComponent.disabled()');
     }
     else {
-        rpc.call('execute', ['window.voiceComponent.enabled()']);
+        gui.execute('window.voiceComponent.enabled()');
     }
 });
 setInterval(() => {

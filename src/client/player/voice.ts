@@ -1,5 +1,6 @@
 import Keys from '../utils/keys'
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
+import { gui } from '../menus/global'
 
 interface IVoiceManager {
   list: PlayerMp[],
@@ -13,19 +14,19 @@ const maxDist = 10.0
 
 mp.keys.bind(Keys.VK_B, true, () => {
   if (global.chatOpened || !global.loginPlayer) return
-  if (global.mutePlayer) return rpc.call('chat:pushLine', ['{FF2701}<b>У вас бан-войс!</b>'])
+  if (global.mutePlayer) return rce.trigger('chat:pushLine', '{FF2701}<b>У вас бан-войс!</b>')
 
   mp.voiceChat.muted = false
   global.activeVoice = true
   mp.players.local.playFacialAnim("mic_chatter", "mp_facial");
-  rpc.call('execute', ['window.voiceComponent.enable()'])
+  gui.execute('window.voiceComponent.enable()')
 })
 
 mp.keys.bind(Keys.VK_B, false, () => {
   mp.voiceChat.muted = true
   global.activeVoice = false
   mp.players.local.playFacialAnim("mood_normal_1", "facials@gen_male@variations@normal");
-  rpc.call('execute', ['window.voiceComponent.disable()'])
+  gui.execute('window.voiceComponent.disable()')
 })
 
 mp.keys.bind(Keys.VK_F10, false, () => {
@@ -34,7 +35,7 @@ mp.keys.bind(Keys.VK_F10, false, () => {
     if (!mp.voiceChat.muted) return
     else {
       mp.voiceChat.cleanupAndReload(true, true, true)
-      rpc.call('execute', [`window.App.sendNotifyReducer.sendNotify('success', 'Войс-чат был успешно перезагружен!', 3000, 'bottom')`])
+      gui.execute(`window.App.sendNotifyReducer.sendNotify('success', 'Войс-чат был успешно перезагружен!', 3000, 'bottom')`)
     }
   }, 100)
 })
@@ -44,7 +45,7 @@ let voiceManager: IVoiceManager = {
 
   new(player: any)  {
     if (this.list.indexOf(player) === -1) {
-      mp.events.callRemote('client:voice:new', player)
+      rce.triggerServer('client:voice:new', player)
       this.list.push(player)
       player.isListening = true
 
@@ -70,7 +71,7 @@ let voiceManager: IVoiceManager = {
     player.isListening = false
 
     if (removedVoice) {
-      mp.events.callRemote('client:voice:deleted', player)
+      rce.triggerServer('client:voice:deleted', player)
     }
   }
 }
@@ -94,14 +95,14 @@ mp.events.add('playerStopTalking', (player) =>
     player.playFacialAnim("mood_normal_1", "facials@gen_male@variations@normal");
 });
 
-rpc.register('player:mute', (state: boolean) => {
-  rpc.callServer('player:mute', [state])
+rce.registerServer('player:mute', (state: boolean) => {
+  rce.triggerServer('player:mute', state)
   mp.voiceChat.muted = true
 
   if (state) {
-    rpc.call('execute', ['window.voiceComponent.disabled()'])
+    gui.execute('window.voiceComponent.disabled()')
   } else {
-    rpc.call('execute', ['window.voiceComponent.enabled()'])
+    gui.execute('window.voiceComponent.enabled()')
   }
 })
 

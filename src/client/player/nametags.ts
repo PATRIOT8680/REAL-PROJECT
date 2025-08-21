@@ -1,6 +1,6 @@
 import Keys from '../utils/keys'
 import { drawSprite } from "../utils/drawSprite"
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
 const maxDistance = 20*20
 let width = 0.032
@@ -12,10 +12,9 @@ const playerSids = new Map<number, number>();
 
 mp.nametags.enabled = false
 
-const requestPlayerSid = (player: PlayerMp) => {
-  rpc.callServer('getDataAccount', ['sid', player.remoteId]).then((statID: number) => {
-    playerSids.set(player.remoteId, statID)
-  })
+const requestPlayerSid = async (player: PlayerMp) => {
+  const statID = await rce.callServer('getDataAccount', 'sid', player.remoteId)
+  playerSids.set(player.remoteId, statID)
 }
 
 mp.keys.bind(Keys.VK_F9, false, () => {

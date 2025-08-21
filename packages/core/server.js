@@ -1,7 +1,8 @@
 'use strict';
 
-var rageFwRpc = require('@entityseven/rage-fw-rpc');
+var jsonfile = require('jsonfile');
 var fs = require('fs');
+var perf_hooks = require('perf_hooks');
 var path = require('path');
 var mysql = require('mysql2');
 var chalk = require('chalk');
@@ -48,9 +49,445 @@ mp.events.add('playerJoin', (player) => {
     player.armour = 200;
 });
 
-const rpc = new rageFwRpc.Rpc({
-    forceBrowserDevMode: false,
-    debugLogs: false
+class CustomEventBase {
+    static registerLocalIds = 1;
+    static registerHandles = new Map();
+    static clearRegister(eventName) {
+        this.registerHandles.forEach((value, key) => {
+            if (value[0] === eventName)
+                this.registerHandles.delete(key);
+        });
+    }
+    static clearRegisterAll() {
+        this.registerHandles.clear();
+    }
+    static register(eventName, handle) {
+        // Очистка старых обработчиков для этого события
+        this.clearRegister(eventName);
+        const id = `${this.registerLocalIds++}`;
+        this.registerHandles.set(id, [eventName, handle]);
+        return { destroy: () => this.registerHandles.delete(id) };
+    }
+    static trigger(eventName, ...args) {
+        this.registerHandles.forEach(([name, handle]) => {
+            if (name === eventName)
+                handle(...args);
+        });
+    }
+    static async call(eventName, ...args) {
+        for (const [name, handle] of this.registerHandles.values()) {
+            if (name === eventName)
+                return await handle(...args);
+        }
+        return null;
+    }
+}
+
+class NoSQLbase {
+    inited = false;
+    get data() {
+        return this.datas;
+    }
+    set data(val) {
+        this.datas = val;
+        // this.save();
+    }
+    insert(...val) {
+        this.data.push(...val);
+        return this.data[this.data.length - 1];
+        // this.save();
+    }
+    remove(val) {
+        if (typeof val === "number") {
+            this.data.splice(val, 1);
+        }
+        else {
+            this.data.splice(this.data.indexOf(val), 1);
+        }
+    }
+    plusMinus(value, param, plus) {
+        for (let arg in value) {
+            if (typeof value[arg] !== "number") {
+                return console.error("Invalid argument type", arg, typeof value[arg], value[arg]);
+            }
+        }
+        let data = this.find(param);
+        if (data.length == 0)
+            return;
+        data.map(itm => {
+            for (let arg in value) {
+                if (typeof itm[arg] === "number") {
+                    if (plus) {
+                        // @ts-ignore
+                        itm[arg] += value[arg];
+                    }
+                    else {
+                        // @ts-ignore
+                        itm[arg] -= value[arg];
+                    }
+                }
+            }
+        });
+    }
+    increment(value, param) {
+        this.plusMinus(value, param, true);
+    }
+    decrement(value, param) {
+        this.plusMinus(value, param, false);
+    }
+    clear() {
+        this.data = [];
+    }
+    save() {
+        if (this.file == ":memory:")
+            return;
+        jsonfile.writeFileSync('./nosql/' + this.file + '.json', this.datas);
+    }
+    find(param) {
+        let data = [];
+        if (!param.limit)
+            param.limit = 1;
+        const check = (el) => {
+            let ok = true;
+            for (let arg in param.where) {
+                if (el[arg] != param.where[arg])
+                    ok = false;
+            }
+            return ok;
+        };
+        return this.data.filter(itm => {
+            if (data.length >= param.limit)
+                return false;
+            return check(itm);
+        });
+    }
+    findOne(param) {
+        let data = this.find({ ...param, limit: 1 });
+        if (data.length > 0)
+            return data[0];
+    }
+    datas;
+    onInitHandler;
+    file;
+    constructor(file = ":memory:", onInitHandler) {
+        this.file = file;
+        this.onInitHandler = onInitHandler;
+        this.data = [];
+        this.init().then(() => {
+            if (this.onInitHandler) {
+                this.onInitHandler();
+            }
+        });
+    }
+    init() {
+        return new Promise((resolve, reject) => {
+            if (this.inited)
+                return this.data;
+            if (!fs.existsSync('./nosql/')) {
+                fs.mkdirSync('./nosql/');
+            }
+            if (this.file == ":memory:")
+                return resolve(this.data);
+            if (this.file.includes('/')) {
+                if (this.file.indexOf('/') === 0)
+                    this.file = this.file.replace('/', '');
+                let urls = [];
+                this.file.split('/').map((url, index, array) => {
+                    if (index === array.length - 1)
+                        return;
+                    urls.push(url);
+                    if (!fs.existsSync(`./nosql/${urls.join('/')}`)) {
+                        fs.mkdirSync(`./nosql/${urls.join('/')}`);
+                    }
+                });
+            }
+            jsonfile.readFile('./nosql/' + this.file + '.json').then(obj => {
+                this.data = obj;
+                this.inited = true;
+                resolve(this.data);
+            }).catch(err => {
+                jsonfile.writeFile('./nosql/' + this.file + '.json', [], function (err) {
+                    if (err)
+                        console.error(err);
+                });
+                // system.debug.debug("Create new NoSQL instance " + this.file);
+                this.data = [];
+                this.inited = true;
+                resolve(this.data);
+            });
+        });
+    }
+}
+
+const PERFOMANCE_MIN_TIME = 20;
+const eventsPerfomanceTestResults = new NoSQLbase('perfomanceTest');
+class rce extends CustomEventBase {
+    static clientPoolLog = new Map();
+    static clientEvents = new Map();
+    static clientCallHandle = new Map();
+    static clientCallId = 0;
+    static key = rce.getRandomKey();
+    static getRandomKey() {
+        return Math.floor(Math.random() * (1000000000 - 1 + 1)) + 1;
+    }
+    static decryptEventName(eventName) {
+        return eventName
+            .split('g')
+            .filter(Boolean)
+            .map(s => String.fromCharCode(parseInt(s, 16) ^ rce.key))
+            .join('');
+    }
+    static encryptEventName(eventName) {
+        return eventName
+            .split('')
+            .map(s => (s.charCodeAt(0) ^ rce.key).toString(16))
+            .join('g');
+    }
+    static registerClientCef(name, handle) {
+        this.registerClient(name, handle);
+        this.registerCef(name, handle);
+    }
+    static registerClient(name, handle) {
+        const encryptedName = this.encryptEventName(name);
+        if (!this.clientEvents.has(encryptedName)) {
+            this.clientEvents.set(encryptedName, new Set());
+        }
+        this.clientEvents.get(encryptedName).add(handle);
+    }
+    static unregisterClient(name, handle) {
+        const encryptedName = this.encryptEventName(name);
+        const handlers = this.clientEvents.get(encryptedName);
+        if (handlers) {
+            handlers.delete(handle);
+        }
+    }
+    static cefEvents = new Map();
+    static registerCef(name, handle) {
+        const encryptedName = this.encryptEventName(name);
+        if (!this.cefEvents.has(encryptedName)) {
+            this.cefEvents.set(encryptedName, new Set());
+        }
+        this.cefEvents.get(encryptedName).add(handle);
+    }
+    static unregisterCef(name, handle) {
+        const encryptedName = this.encryptEventName(name);
+        const handlers = this.cefEvents.get(encryptedName);
+        if (handlers) {
+            handlers.delete(handle);
+        }
+    }
+    static registerClientAndCef(name, handle) {
+        this.registerClient(name, handle);
+        this.registerCef(name, handle);
+    }
+    static triggerCef(player, eventName, ...args) {
+        if (!mp.players.exists(player))
+            return;
+        console.log(`triggerCef сработал. name: ${eventName}, args: ${args}`);
+        player.call('cef:trigger:event', [eventName, JSON.stringify(args)]);
+    }
+    static triggerCefAll(eventName, ...args) {
+        mp.players.call('cef:trigger:event', [eventName, JSON.stringify(args)]);
+    }
+    static triggerClient(player, eventName, ...args) {
+        if (!mp.players.exists(player))
+            return;
+        return this.triggerCl(player, eventName, ...args);
+    }
+    static triggerClients(eventName, ...args) {
+        return this.triggerCl(mp.players, eventName, ...args);
+    }
+    static triggerCl(pl, eventName, ...args) {
+        const argsString = JSON.stringify(args);
+        if (argsString.length >= 32700) {
+            const ids = Math.floor(Math.random() * (999999 - 111111)) + 111111;
+            let arr = [];
+            for (let i = 0; i < argsString.length; i += 32500)
+                arr.push(argsString.slice(i, i + 32500));
+            arr.map((itm, index) => {
+                pl.call('client:trigger:event:split', [ids, index, index == (arr.length - 1), eventName, itm]);
+            });
+        }
+        else {
+            pl.call('client:trigger:event', [eventName, argsString]);
+        }
+    }
+    static callClient(player, eventName, ...args) {
+        return new Promise((resolve, reject) => {
+            if (!mp.players.exists(player))
+                return;
+            const reqId = parseInt(`${this.clientCallId++}`);
+            this.clientCallHandle.set(reqId, [resolve, reject]);
+            player.call('client:call:event', [eventName, reqId, JSON.stringify(args)]);
+        });
+    }
+    static callCef(player, eventName, ...args) {
+        return new Promise((resolve, reject) => {
+            if (!mp.players.exists(player))
+                return;
+            const reqId = parseInt(`${this.clientCallId++}`);
+            this.clientCallHandle.set(reqId, [resolve, reject]);
+            player.call('client:call:event', [eventName, reqId, JSON.stringify(args)]);
+        });
+    }
+}
+mp.events.add('client:call:event:result', (player, reqId, result) => {
+    let res = rce.clientCallHandle.get(reqId);
+    if (res)
+        res[0](result);
+    rce.clientCallHandle.delete(reqId);
+});
+mp.events.add('trigger:client', (player, name, argss) => {
+    const nowTm = Date.now() / 1000 | 0;
+    if (rce.clientPoolLog.has(`${player.id}_____${name}`)) {
+        const old = rce.clientPoolLog.get(`${player.id}_____${name}`);
+        if (old.last + 2 > nowTm) {
+            old.count++;
+            if (old.count === 10) ;
+            rce.clientPoolLog.set(`${player.id}_____${name}`, old);
+        }
+        else {
+            rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+        }
+    }
+    else {
+        rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+    }
+    const handlers = rce.clientEvents.get(name);
+    if (handlers) {
+        handlers.forEach(handler => {
+            const t1 = perf_hooks.performance.now();
+            handler(player, ...(JSON.parse(argss)));
+            const t2 = perf_hooks.performance.now();
+            const time = t2 - t1;
+            if (time > PERFOMANCE_MIN_TIME) {
+                console.debug(`Client event '${rce.decryptEventName(name)}' executed in ${time} ms}.`);
+                const existedResult = eventsPerfomanceTestResults.data.find(d => d.eventName == name);
+                if (!existedResult)
+                    eventsPerfomanceTestResults.insert({
+                        count: 1,
+                        averageExecutionTime: time,
+                        eventName: name
+                    });
+                else {
+                    existedResult.count++;
+                    existedResult.averageExecutionTime = (existedResult.averageExecutionTime + time) / existedResult.count;
+                }
+            }
+        });
+    }
+});
+mp.events.add('call:client', (player, requestID, name, argss) => {
+    const nowTm = Date.now() / 1000 | 0;
+    if (rce.clientPoolLog.has(`${player.id}_____${name}`)) {
+        const old = rce.clientPoolLog.get(`${player.id}_____${name}`);
+        if (old.last + 2 > nowTm) {
+            old.count++;
+            if (old.count === 10) ;
+            rce.clientPoolLog.set(`${player.id}_____${name}`, old);
+        }
+        else {
+            rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+        }
+    }
+    else {
+        rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+    }
+    const handlers = rce.clientEvents.get(name);
+    if (handlers) {
+        handlers.forEach(async (handler) => {
+            if (!mp.players.exists(player))
+                return;
+            let res;
+            try {
+                res = await handler(player, ...(JSON.parse(argss)));
+            }
+            catch (error) {
+                console.error(error);
+            }
+            if (!mp.players.exists(player))
+                return;
+            player.call('call:client:response', [requestID, res]);
+        });
+    }
+});
+mp.events.add('trigger:cef', (player, name, args) => {
+    console.log(`ДОШЛО ДО СЕРВЕРА: ${name}, ${args}`);
+    const nowTm = Date.now() / 1000 | 0;
+    if (rce.clientPoolLog.has(`${player.id}_CEF____${name}`)) {
+        const old = rce.clientPoolLog.get(`${player.id}_CEF____${name}`);
+        if (old.last + 2 > nowTm) {
+            old.count++;
+            if (old.count === 10) ;
+            rce.clientPoolLog.set(`${player.id}_CEF____${name}`, old);
+        }
+        else {
+            rce.clientPoolLog.set(`${player.id}_CEF____${name}`, { count: 1, last: nowTm });
+        }
+    }
+    else {
+        rce.clientPoolLog.set(`${player.id}_CEF____${name}`, { count: 1, last: nowTm });
+    }
+    const handlers = rce.cefEvents.get(name);
+    if (handlers) {
+        handlers.forEach(handler => {
+            const t1 = perf_hooks.performance.now();
+            handler(player, ...(JSON.parse(args)));
+            const t2 = perf_hooks.performance.now();
+            const time = t2 - t1;
+            if (time > PERFOMANCE_MIN_TIME) {
+                console.debug(`Client event '${rce.decryptEventName(name)}' executed in ${time} ms}.`);
+                const existedResult = eventsPerfomanceTestResults.data.find(d => d.eventName == name);
+                if (!existedResult)
+                    eventsPerfomanceTestResults.insert({
+                        count: 1,
+                        averageExecutionTime: time,
+                        eventName: name
+                    });
+                else {
+                    existedResult.count++;
+                    existedResult.averageExecutionTime = (existedResult.averageExecutionTime + time) / existedResult.count;
+                }
+            }
+        });
+    }
+});
+mp.events.add('call:cef', (player, requestID, name, ...args) => {
+    const nowTm = Date.now() / 1000 | 0;
+    if (rce.clientPoolLog.has(`${player.id}_CEF____${name}`)) {
+        const old = rce.clientPoolLog.get(`${player.id}_CEF____${name}`);
+        if (old.last + 2 > nowTm) {
+            old.count++;
+            if (old.count === 10) ;
+            rce.clientPoolLog.set(`${player.id}_CEF____${name}`, old);
+        }
+        else {
+            rce.clientPoolLog.set(`${player.id}_CEF____${name}`, { count: 1, last: nowTm });
+        }
+    }
+    else {
+        rce.clientPoolLog.set(`${player.id}_CEF____${name}`, { count: 1, last: nowTm });
+    }
+    const handlers = rce.cefEvents.get(name);
+    if (handlers) {
+        handlers.forEach(async (handler) => {
+            if (!mp.players.exists(player))
+                return;
+            let res;
+            try {
+                res = await handler(player, ...args);
+            }
+            catch (error) {
+                console.error(error);
+            }
+            if (!mp.players.exists(player))
+                return;
+            player.call('call:cef:response', [requestID, res]);
+        });
+    }
+});
+mp.events.add('playerJoin', (player) => {
+    player.call('setKey', [rce.key]);
 });
 
 const cmdHandlers = {};
@@ -63,13 +500,13 @@ const send = (player, msg, showTime, tile) => {
     }
     else {
         mp.players.forEach(p => {
-            rpc.callClient(p, CHAT_MESSAGE_EVENT, [null, msg, showTime, tile]);
+            rce.triggerClient(p, CHAT_MESSAGE_EVENT, null, msg, showTime, tile);
         });
     }
 };
 const broadcast = (msg, showTime, tile) => {
     mp.players.forEach(p => {
-        rpc.callClient(p, CHAT_MESSAGE_EVENT, [null, msg, showTime, tile]);
+        rce.triggerClient(p, CHAT_MESSAGE_EVENT, null, msg, showTime, tile);
     });
 };
 const registerCMD = (cmd, callback) => {
@@ -90,7 +527,8 @@ const invokeCMD = (player, cmd, args) => {
         send(player, `{ffcbbb} <b>Команда не найдена! (/${cmd})</b>`, false);
     }
 };
-rpc.register(CHAT_MESSAGE_EVENT, (player, msg, showTime, tile) => {
+rce.registerClientAndCef(CHAT_MESSAGE_EVENT, (player, msg, showTime, tile) => {
+    console.log(`Сообщение дошло до сервера. Сообщение: ${msg}`);
     if (msg.startsWith('/')) {
         msg = msg.trim().slice(1);
         if (msg.length > 0) {
@@ -107,16 +545,17 @@ rpc.register(CHAT_MESSAGE_EVENT, (player, msg, showTime, tile) => {
         msg = msg.trim();
         if (msg.length > 0) {
             const formattedMsg = msg.replace(/</g, "&lt;").replace(/'/g, "&#39;").replace(/"/g, "&#34;");
-            mp.players.forEach(p => {
-                rpc.callClient(p, CHAT_MESSAGE_EVENT, [player.name, formattedMsg, showTime, tile]);
-            });
+            //mp.players.forEach(p => {
+            console.log(`Сообщение прошло проверки. Сообщение: ${msg}`);
+            rce.triggerClients(CHAT_MESSAGE_EVENT, player.name, formattedMsg, showTime, tile);
+            //})
         }
     }
 });
-rpc.register('sendMsg', (player, msg, showTime, tile) => {
+rce.registerClientAndCef('sendMsg', (player, msg, showTime, tile) => {
     send(player, msg, showTime, tile);
 });
-rpc.register('broadcastMsg', (player, msg, showTime, tile) => {
+rce.registerClientAndCef('broadcastMsg', (player, msg, showTime, tile) => {
     broadcast(msg, showTime, tile);
 });
 
@@ -261,7 +700,7 @@ registerCMD('banvoice', (player, [target]) => {
     //   return send(player, `<b>Игроку уже выдан бан-войс!</b>`, false, 'admin')
     // }
     const targetPlayer = mp.players.at(parseInt(target, 10));
-    rpc.callClient(targetPlayer, 'player:mute', [true]);
+    rce.triggerClient(targetPlayer, 'player:mute', true);
     send(targetPlayer, `<b>Вам выдан бан-войс!</b>`, true);
 });
 registerCMD('unbanvoice', (player, [target]) => {
@@ -272,15 +711,15 @@ registerCMD('unbanvoice', (player, [target]) => {
     //   return send(player, `<b>У игрока нет бан-войса!</b>`, false, 'admin')
     // }
     const targetPlayer = mp.players.at(parseInt(target, 10));
-    rpc.callClient(targetPlayer, 'player:mute', [false]);
+    rce.triggerClient(targetPlayer, 'player:mute', false);
     send(targetPlayer, `<b>С вас снят бан-войс!</b>`, true);
 });
 
 const data = mysql__namespace.createPool({
     host: 'localhost',
     user: 'root',
-    database: 'realrp',
-    password: 'Real#PR86',
+    database: 'redstar',
+    password: 'Patriot86',
     port: 3306
 });
 const mysql2 = {
@@ -375,8 +814,8 @@ const sendCodeVerify = (player, email) => {
             console.log(chalk.bgRed('• NODEMAILER • ' + chalk.red(`Ошибка отправки почты (${email}): ${error}`)));
             return;
         }
-        rpc.callBrowser(player, 'server:verify:successSendCode');
-        rpc.callClient(player, 'sendNotify', ['info', `Код отправлен на почту "${email}". Если письма нет, то проверьте раздел "СПАМ"!`, 7000, 'bottom']);
+        rce.triggerCef(player, 'server:verify:successSendCode');
+        rce.triggerClient(player, 'sendNotify', 'info', `Код отправлен на почту "${email}". Если письма нет, то проверьте раздел "СПАМ"!`, 7000, 'bottom');
     });
 };
 const verifyEmail = (player, code, login, email, password) => {
@@ -385,7 +824,7 @@ const verifyEmail = (player, code, login, email, password) => {
         registerUser(player, login, email, password);
     }
     else {
-        rpc.callClient(player, 'sendNotify', ['err', `Неверный код подтверждения!`, 4500, 'bottom']);
+        rce.triggerClient(player, 'sendNotify', 'err', `Неверный код подтверждения!`, 4500, 'bottom');
     }
 };
 
@@ -401,14 +840,14 @@ const checkUser = (player, login, email, password) => {
         if (Array.isArray(users) && users.length > 0) {
             const existingSocialClub = users.find(user => user.socialClubName = socialClubName);
             if (existingSocialClub) {
-                rpc.callClient(player, 'sendNotify', ['err', `Пользователь с вашим Social Club уже зарегистрирован!`, 5500, 'right']);
+                rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с вашим Social Club уже зарегистрирован!`, 5500, 'right');
                 return;
             }
-            rpc.callClient(player, 'sendNotify', ['err', `Пользователь с данным Email / логином уже зарегистрирован!`, 5000, 'right']);
+            rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с данным Email / логином уже зарегистрирован!`, 5000, 'right');
             return;
         }
         sendCodeVerify(player, email);
-        rpc.callBrowser(player, 'server:auth:showVerify');
+        rce.triggerCef(player, 'server:auth:showVerify');
     });
 };
 const registerUser = (player, login, email, password) => {
@@ -439,9 +878,9 @@ const registerUser = (player, login, email, password) => {
                 else {
                     player.dimension = 0;
                     player.setVariable('login_player', login);
-                    rpc.callClient(player, 'server:auth:saveLogin', [login]);
-                    rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom']);
-                    rpc.callBrowser(player, 'server:authSuccess');
+                    rce.triggerClient(player, 'server:auth:saveLogin', login);
+                    rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom');
+                    rce.triggerCef(player, 'server:authSuccess');
                     console.log(`User ${login} created. sid: ${sid}`);
                     console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`));
                 }
@@ -463,7 +902,7 @@ const loginUser = (player, login, password) => {
             return;
         }
         if (Array.isArray(results) && results.length === 0) {
-            rpc.callClient(player, 'sendNotify', ['err', `Аккаунт "${login}" не найден!`, 4500, 'right']);
+            rce.triggerClient(player, 'sendNotify', 'err', `Аккаунт "${login}" не найден!`, 4500, 'right');
             return;
         }
         if (Array.isArray(results) && results.length > 0) {
@@ -477,13 +916,13 @@ const loginUser = (player, login, password) => {
                     player.dimension = 0;
                     player.setVariable('login_player', login);
                     player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375));
-                    rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно авторизовались!`, 4000, 'bottom']);
-                    rpc.callClient(player, 'server:auth:saveLogin', [login]);
-                    rpc.callBrowser(player, 'server:authSuccess');
+                    rce.triggerClients('sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom');
+                    rce.triggerClient(player, 'server:auth:saveLogin', login);
+                    rce.triggerCef(player, 'server:authSuccess');
                     console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`));
                 }
                 else {
-                    rpc.callClient(player, 'sendNotify', ['err', 'Неверный логин или пароль!', 5000, 'right']);
+                    rce.triggerClient(player, 'sendNotify', 'err', 'Неверный логин или пароль!', 5000, 'right');
                 }
             });
         }
@@ -563,12 +1002,12 @@ const sendRecoveryCode = (player, email) => {
                     console.log(chalk.bgRed('• NODEMAILER • ' + chalk.red(`Ошибка отправки почты (${email}): ${error}`)));
                     return;
                 }
-                rpc.callBrowser(player, 'server:recovery:successSendNotify');
-                rpc.callClient(player, 'sendNotify', ['info', `Код отправлен на почту "${email}". Если письма нет, то проверьте раздел "СПАМ"!`, 7000, 'right']);
+                rce.triggerCef(player, 'server:recovery:successSendNotify');
+                rce.triggerClient(player, 'sendNotify', 'info', `Код отправлен на почту "${email}". Если письма нет, то проверьте раздел "СПАМ"!`, 7000, 'right');
             });
         }
         else {
-            rpc.callClient(player, 'sendNotify', ['err', `Пользователь с данным Email не найден!`, 5000, 'right']);
+            rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с данным Email не найден!`, 5000, 'right');
         }
     });
 };
@@ -586,17 +1025,17 @@ const changePassRecovery = (player, email, code, newPass) => {
                     return;
                 }
                 delete recoveryCodes[player.id];
-                rpc.callBrowser(player, 'server:auth:changePassSuccess');
-                rpc.callClient(player, 'sendNotify', ['success', `Пароль для аккаунта "${email}" успешно изменён!`, 5000, 'right']);
+                rce.triggerCef(player, 'server:auth:changePassSuccess');
+                rce.triggerClient(player, 'sendNotify', 'success', `Пароль для аккаунта "${email}" успешно изменён!`, 5000, 'right');
             });
         });
     }
     else {
-        rpc.callClient(player, 'sendNotify', ['err', `Неверный код восстановления!`, 4500, 'right']);
+        rce.triggerClient(player, 'sendNotify', 'err', `Неверный код восстановления!`, 4500, 'right');
     }
 };
 
-rpc.register('client:authPlayerVisible', (player, visible) => {
+rce.registerClient('client:authPlayerVisible', (player, visible) => {
     if (visible === false) {
         player.alpha = 0;
     }
@@ -604,36 +1043,36 @@ rpc.register('client:authPlayerVisible', (player, visible) => {
         player.alpha = 255;
     }
 });
-rpc.register('client:startNewCamera', (player, coords) => {
+rce.registerClient('client:startNewCamera', (player, coords) => {
     player.position = new mp.Vector3(coords.x, coords.y, coords.z);
 });
-rpc.register('cef:auth:regAccount', (player, login, email, password) => {
+rce.registerCef('cef:auth:regAccount', (player, login, email, password) => {
     checkUser(player, login, email);
 });
-rpc.register('cef:auth:verifyEmail', (player, code, login, email, password) => {
+rce.registerCef('cef:auth:verifyEmail', (player, code, login, email, password) => {
     verifyEmail(player, code, login, email, password);
 });
-rpc.register('cef:auth:sendCodeVerify', (player, email) => {
+rce.registerCef('cef:auth:sendCodeVerify', (player, email) => {
     sendCodeVerify(player, email);
 });
-rpc.register('cef:auth:loginAccount', (player, login, password) => {
+rce.registerCef('cef:auth:loginAccount', (player, login, password) => {
     loginUser(player, login, password);
 });
-rpc.register('cef:auth:sendRecoveryCode', (player, email) => {
+rce.registerCef('cef:auth:sendRecoveryCode', (player, email) => {
     sendRecoveryCode(player, email);
 });
-rpc.register('cef:auth:changePassRecovery', (player, email, code, newPass) => {
+rce.registerCef('cef:auth:changePassRecovery', (player, email, code, newPass) => {
     changePassRecovery(player, email, code, newPass);
 });
 
-rpc.register('cef:serverCmd', (msg) => {
+rce.registerClientAndCef('cef:serverCmd', (player, msg) => {
     console.log(`[CEF]: ${msg}`);
 });
-mp.events.add('playerReady', (player) => {
-    player.call('server:webReady');
-});
+// rce.registerClientAndCef('playerReady', (player: PlayerMp) => {
+//   player.call('server:webReady')
+// })
 
-rpc.register('client:playerDeath', (player, [posX, posY, posZ]) => {
+rce.registerClient('client:playerDeath', (player, [posX, posY, posZ]) => {
     if (player.vehicle) {
         player.spawn(new mp.Vector3(posX, posY, posZ + 1));
     }
@@ -645,33 +1084,33 @@ rpc.register('client:playerDeath', (player, [posX, posY, posZ]) => {
 const playerKill = async (player) => {
     player.spawn(new mp.Vector3(-1221.006591796875, -100.9054946899414, 42.5238037109375));
     player.setVariable('player_knockout', false);
-    rpc.callClient(player, 'gui:cursorVisible', [false]);
-    rpc.callClient(player, 'ui:setPauseMenuActive', [true]);
-    rpc.callClient(player, 'ui:displayRadar', [true]);
-    rpc.callClient(player, 'player:freeze', [false]);
-    rpc.callClient(player, 'player:isCollision', [true]);
-    rpc.callClient(player, 'player:godmode', [false]);
+    rce.triggerClient(player, 'gui:cursorVisible', false);
+    rce.triggerClient(player, 'ui:setPauseMenuActive', true);
+    rce.triggerClient(player, 'ui:displayRadar', true);
+    rce.triggerClient(player, 'player:freeze', false);
+    rce.triggerClient(player, 'player:isCollision', true);
+    rce.triggerClient(player, 'player:godmode', false);
     await setTimeout(() => {
-        rpc.callClient(player, 'graphics:stopAllScreenEffects');
+        rce.triggerClient(player, 'graphics:stopAllScreenEffects');
     }, 4000);
-    rpc.callClient(player, 'execute', ['window.App.deathReducer.showDeath(``, `finish`)']);
+    rce.triggerClient(player, 'execute', ['window.App.deathReducer.showDeath(``, `finish`)']);
 };
 const playerKnockout = (player) => {
     player.health = 0;
     player.setVariable('player_knockout', true);
     if (player.vehicle) {
-        rpc.callClient(player, 'player:isCollision', [true]);
+        rce.triggerClient(player, 'player:isCollision', true);
     }
     else {
-        rpc.callClient(player, 'player:isCollision', [false]);
+        rce.triggerClient(player, 'player:isCollision', false);
     }
-    rpc.callClient(player, 'gui:cursorVisible', [true]);
-    rpc.callClient(player, 'player:freeze', [true]);
-    rpc.callClient(player, 'ui:setPauseMenuActive', [false]);
-    rpc.callClient(player, 'ui:displayRadar', [false]);
-    rpc.callClient(player, 'graphics:startScreenEffect', ['DeathFailMPIn', 0, true]);
+    rce.triggerClient(player, 'gui:cursorVisible', true);
+    rce.triggerClient(player, 'player:freeze', true);
+    rce.triggerClient(player, 'ui:setPauseMenuActive', false);
+    rce.triggerClient(player, 'ui:displayRadar', false);
+    rce.triggerClient(player, 'graphics:startScreenEffect', 'DeathFailMPIn', 0, true);
     setTimeout(() => {
-        rpc.callClient(player, 'player:godmode', [true]);
+        rce.triggerClient(player, 'player:godmode', true);
     }, 200);
 };
 const playerReborn = (player) => {
@@ -680,25 +1119,25 @@ const playerReborn = (player) => {
     player.stopAnimation();
     player.spawn(playerPos);
     player.setVariable('player_knockout', false);
-    rpc.callClient(player, 'ui:displayRadar', [true]);
-    rpc.callClient(player, 'player:freeze', [false]);
-    rpc.callClient(player, 'player:isCollision', [true]);
-    rpc.callClient(player, 'player:godmode', [false]);
-    rpc.callClient(player, 'ui:setPauseMenuActive', [true]);
-    rpc.callClient(player, 'graphics:stopAllScreenEffects');
-    rpc.callClient(player, 'gui:cursorVisible', [false]);
-    rpc.callClient(player, 'execute', ['window.App.deathReducer.showDeath(``, `reborn`)']);
+    rce.triggerClient(player, 'ui:displayRadar', true);
+    rce.triggerClient(player, 'player:freeze', false);
+    rce.triggerClient(player, 'player:isCollision', true);
+    rce.triggerClient(player, 'player:godmode', false);
+    rce.triggerClient(player, 'ui:setPauseMenuActive', true);
+    rce.triggerClient(player, 'graphics:stopAllScreenEffects');
+    rce.triggerClient(player, 'gui:cursorVisible', false);
+    rce.triggerClient(player, 'execute', 'window.App.deathReducer.showDeath(``, `reborn`)');
     setTimeout(() => {
-        rpc.callClient(player, 'execute', [`window.App.chatReducer.showChat()`]);
+        rce.triggerClient(player, 'execute', `window.App.chatReducer.showChat()`);
     }, 5000);
 };
-rpc.register('playerKill', (player) => {
+rce.registerClientAndCef('playerKill', (player) => {
     playerKill(player);
 });
-rpc.register('playerKnockout', (player) => {
+rce.registerClientAndCef('playerKnockout', (player) => {
     playerKnockout(player);
 });
-rpc.register('playerReborn', (player) => {
+rce.registerClientAndCef('playerReborn', (player) => {
     playerReborn(player);
 });
 
@@ -759,22 +1198,10 @@ const getFormatedDateTime = (date = true, time = true, fullTime = false) => {
     const timePart = time ? `${pad(hours)}:${pad(minutes)}${fullTime ? `:${pad(seconds)}` : ''}` : '';
     return [datePart, timePart].filter(Boolean).join(' ');
 };
-rpc.register('cef:getDateTime', (player, date, time) => {
-    const dateTime = getDateTime(date, time);
-    rpc.callBrowser(player, 'server:getDateTime', [dateTime]);
+rce.registerClientAndCef('getDateTime', (player, date, time) => {
+    return getDateTime(date, time);
 });
-rpc.register('client:getDateTime', (player, date, time) => {
-    const dateTime = getDateTime(date, time);
-    rpc.callClient(player, 'server:getDateTime', [dateTime]);
-});
-rpc.register('cef:getFormatedDateTime', (player, date, time, fullTime) => {
-    const dateTime = getFormatedDateTime(date, time, fullTime);
-    rpc.callBrowser(player, 'server:getFormatedDateTime', [dateTime]);
-    return getFormatedDateTime(date, time, fullTime);
-});
-rpc.register('client:getFormatedDateTime', (player, date, time, fullTime) => {
-    const dateTime = getFormatedDateTime(date, time, fullTime);
-    rpc.callClient(player, 'server:getFormatedDateTime', [dateTime]);
+rce.registerClientAndCef('getFormatedDateTime', (player, date, time, fullTime) => {
     return getFormatedDateTime(date, time, fullTime);
 });
 
@@ -783,7 +1210,7 @@ mp.events.add('packagesLoaded', () => {
 });
 
 const pedPos = new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375);
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 10; i++) {
     mp.peds.new(mp.joaat('mp_f_stripperlite'), pedPos, {
         dynamic: false,
         frozen: false,
@@ -821,7 +1248,7 @@ const getDataAccount = async (player, login, dataKey, targetID) => {
         return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
     return dataMap[dataKey]();
 };
-rpc.register('getDataAccount', async (player, dataKey, targetID) => {
+rce.registerClientAndCef('getDataAccount', async (player, dataKey, targetID) => {
     const login = player.getVariable('login_player');
     if (!login) {
         console.error(chalk.red(`Игрок ${login} не авторизован!`));
@@ -832,27 +1259,23 @@ rpc.register('getDataAccount', async (player, dataKey, targetID) => {
     return result;
 });
 
-// rpc.register('playerVisible', (player: PlayerMp, toggle: boolean) => {
-//   player.visible = toggle
-//   player.setVariable('playerVisible', toggle)
-// })
-rpc.register('getIdPlayer', (player) => {
+rce.registerClientAndCef('getIdPlayer', (player) => {
     return player.id;
 });
-rpc.register('player:mute', (player, state) => {
+rce.registerClientAndCef('player:mute', (player, state) => {
     player.setVariable('player_mute', state);
 });
 
-mp.events.add('client:voice:new', (player, target) => {
+rce.registerClient('client:voice:new', (player, target) => {
     if (target)
         player.enableVoiceTo(target);
 });
-mp.events.add('client:voice:deleted', (player, target) => {
+rce.registerClient('client:voice:deleted', (player, target) => {
     if (target)
         player.disableVoiceTo(target);
 });
 
-rpc.register('toggleNoclip', (player, toggle) => {
+rce.registerClient('toggleNoclip', (player, toggle) => {
     if (toggle)
         player.alpha = 50;
     else

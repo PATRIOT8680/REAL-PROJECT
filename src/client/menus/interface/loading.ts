@@ -1,4 +1,5 @@
-import { rpc } from '../../utils/rpc'
+import { rce } from '../../utils/rce'
+import { gui } from '../global'
 
 export const showLoading = (duration) => {
   setTimeout(() => {
@@ -6,7 +7,7 @@ export const showLoading = (duration) => {
     mp.gui.cursor.visible = false
   }, 500)
 
-  rpc.call('execute', [`window.App.loadingReducer.showLoading(${duration})`])
+  gui.execute(`window.App.loadingReducer.showLoading(${duration})`)
   mp.game.graphics.triggerScreenblurFadeIn(1000)
   mp.game.graphics.isScreenblurFadeRunning()
   mp.game.audio.playSoundFrontend(0, 'slow', 'SHORT_PLAYER_SWITCH_SOUND_SET', true);
@@ -17,5 +18,5 @@ export const showLoading = (duration) => {
   }, duration)
 }
 
-rpc.register('client:showLoading', showLoading);
+rce.register('client:showLoading', showLoading)
 mp.console.logError('')

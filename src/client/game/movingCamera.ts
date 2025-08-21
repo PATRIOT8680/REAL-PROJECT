@@ -1,4 +1,4 @@
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
 interface ICameraCoord {
     x: number;
@@ -38,7 +38,7 @@ export const createCamera = (pos: ICameraCoord, target: ICameraCoord) => {
 
 let ev = null
 export const startCamMoving = (path: IAllCameras) => {
-    rpc.callServer('client:startNewCamera', [path.persCoord])
+    rce.triggerServer('client:startNewCamera', path.persCoord)
 
     currentPath = path;
     startTime = Date.now();

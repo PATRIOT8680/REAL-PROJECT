@@ -1,7 +1,3 @@
-//import { registerCMD } from '../menus/chat'
-//import { send } from '../menus/chat'
-import { rpc } from '../utils/rpc'
-
 mp.events.add('playerJoin', (player: PlayerMp) => {
   player.dimension = player.id
   console.log(`${player.socialClub} подключился!!! dim: ${player.dimension}`)

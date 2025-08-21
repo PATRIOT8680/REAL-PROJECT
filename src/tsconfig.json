@@ -29,6 +29,7 @@
   ],
   "include": [
     "./@types/variables.d.ts",
-    "./@types/shim.d.ts"
+    "./@types/shim.d.ts",
+    "./shared/CustomEventBase.ts"
   ]
 }

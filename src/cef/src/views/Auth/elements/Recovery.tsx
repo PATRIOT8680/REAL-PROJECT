@@ -2,7 +2,8 @@ import { FC, useState, useEffect } from 'react'
 import { IPropsAuth } from '../Index'
 import { useTranslation } from 'react-i18next' 
 import '../assets/styles/compiled-css/Recovery.css'
-import { rpc } from '../../../main'
+import { rce } from "../../../modules/rce.ts";
+import { CustomEventHandler } from "../../../../../shared/CustomEventBase.ts";
 
 import recovery_pers from '../assets/img/recovery-pers.png'
 import bg_title from '../assets/img/recovery-title.svg'
@@ -10,28 +11,29 @@ import password_icon from '../assets/img/password.svg'
 import email_icon from '../assets/img/email.svg'
 
 const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
+	let ev: CustomEventHandler
   const [email, setEmail] = useState<string>('')
 	const [code, setCode] = useState<string>('')
   const [newPassword, setNewPassword] = useState<string>('')
   const [isCodeSent, setIsCodeSent] = useState<boolean>(false)
   const { t } = useTranslation('auth')
 
-  useEffect(() => {
-    rpc.register('server:recovery:successSendNotify', () => {
-      setIsCodeSent(true)
-    })
+	useEffect(() => {
+		ev = rce.register('server:recovery:successSendNotify', () => {
+			setIsCodeSent(true)
+		})
 
-    rpc.register('server:auth:changePassSuccess', () => {
-      setEmail('')
-      setCode('')
-      setNewPassword('')
-    })
+		ev = rce.register('server:auth:changePassSuccess', () => {
+			setEmail('')
+			setCode('')
+			setNewPassword('')
+		})
 
-    return () => {
-      rpc.unregister('server:recovery:successSendNotify')
-      rpc.unregister('server:auth:changePassSuccess')
-    }
-  }, [])
+		return () => {
+			rce.clearRegister('server:recovery:successSendNotify')
+			rce.clearRegister('server:auth:changePassSuccess')
+		}
+	}, [])
 
 	const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value
@@ -55,7 +57,7 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
       return
     }
 
-    rpc.callServer('cef:auth:sendRecoveryCode', [email])
+    rce.triggerServer('cef:auth:sendRecoveryCode', email)
 
     setTimeout(() => {
       setIsCodeSent(false)
@@ -68,7 +70,7 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
       return
     }
 
-    rpc.callServer('cef:auth:changePassRecovery', [email.toLowerCase(), code, newPassword.toLowerCase()])
+    rce.triggerServer('cef:auth:changePassRecovery', email.toLowerCase(), code, newPassword.toLowerCase())
   }
 
 	return (

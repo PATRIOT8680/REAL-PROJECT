@@ -1,4 +1,4 @@
-import { rpc } from '../../utils/rpc'
+import { rce } from '../../utils/rce'
 import { data } from "../../database/mysql";
 import chalk from 'chalk'
 import bcrypt from 'bcryptjs'
@@ -21,16 +21,16 @@ export const checkUser = (player: PlayerMp, login: string, email: string, passwo
     if (Array.isArray(users) && users.length > 0) {
       const existingSocialClub = users.find(user => user.socialClubName = socialClubName)
       if (existingSocialClub) {
-        rpc.callClient(player, 'sendNotify', ['err', `Пользователь с вашим Social Club уже зарегистрирован!`, 5500, 'right'])
+        rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с вашим Social Club уже зарегистрирован!`, 5500, 'right')
         return
       }
 
-      rpc.callClient(player, 'sendNotify', ['err', `Пользователь с данным Email / логином уже зарегистрирован!`, 5000, 'right'])
+      rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с данным Email / логином уже зарегистрирован!`, 5000, 'right')
       return
     }
 
     sendCodeVerify(player, email)
-    rpc.callBrowser(player, 'server:auth:showVerify')
+    rce.triggerCef(player, 'server:auth:showVerify')
   })
 }
 
@@ -64,9 +64,9 @@ export const registerUser = (player: PlayerMp, login: string, email: string, pas
         } else {
           player.dimension = 0
           player.setVariable('login_player', login)
-          rpc.callClient(player, 'server:auth:saveLogin', [login])
-          rpc.callClient(player, 'sendNotify', ['success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom'])
-          rpc.callBrowser(player, 'server:authSuccess')
+          rce.triggerClient(player, 'server:auth:saveLogin', login)
+          rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom')
+          rce.triggerCef(player, 'server:authSuccess')
           console.log(`User ${login} created. sid: ${sid}`)
           console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`))
         }

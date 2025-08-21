@@ -1,12 +1,13 @@
-import { rpc } from '../utils/rpc' 
+import { rce } from '../utils/rce'
+import { gui } from '../menus/global'
 import Keys from '../utils/keys'
 
 mp.keys.bind(Keys.VK_F2, true, () => {
-  rpc.callServer('playerKnockout')
+  rce.triggerServer('playerKnockout')
 })
 
 mp.keys.bind(Keys.VK_F6, true, () => {
-  rpc.callServer('playerReborn')
+  rce.triggerServer('playerReborn')
 })
 
 mp.keys.bind(Keys.VK_F7, true, () => {
@@ -32,25 +33,27 @@ const getRandomChance = (): [number, boolean] => {
 }
 
 mp.events.add('playerDeath', async (player: PlayerMp, reason: number, killer: PlayerMp) => {
+  mp.console.logInfo('Сдох *_*')
   const [chance, luck] = getRandomChance()
-  timeDeath = await rpc.callServer('client:getFormatedDateTime', [true, true, true]);
+  timeDeath = await rce.callServer('getFormatedDateTime', true, true, true);
+  mp.console.logInfo('Сдох *_* 2')
 
-  rpc.callServer('playerKnockout')
-  rpc.call('execute', [`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`])
-  rpc.call('execute', [`window.App.chatReducer.hideChat()`])
-  rpc.callBrowser('client:chanceReborn', [chance, luck])
+  rce.triggerServer('playerKnockout')
+  gui.execute(`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`)
+  gui.execute(`window.App.chatReducer.hideChat()`)
+  rce.triggerCef('client:chanceReborn', chance, luck)
 
   const playerPos = mp.players.local.position
   const getGroundZ = mp.game.gameplay.getGroundZFor3dCoord(playerPos.x, playerPos.y, playerPos.z, true, false)
 
-  rpc.callServer('client:playerDeath', [[player.position.x, player.position.y, getGroundZ]])
+  rce.triggerServer('client:playerDeath', [player.position.x, player.position.y, getGroundZ])
 })
 
 
-rpc.register('server:getFormatedDateTime', (time: string) => {
+rce.registerServer('getFormatedDateTime', (time: string) => {
   timeDeath = time
 })
 
-rpc.register('cef:death:selectedFate', (timeLeft: number) => {
+rce.registerAll('cef:death:selectedFate', (timeLeft: number) => {
   mp.gui.cursor.visible = false
 })

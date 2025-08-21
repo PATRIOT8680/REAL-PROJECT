@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { rpc } from '../utils/rpc'
+import { rce } from '../utils/rce'
 
 let currentDateTime = {
   year: 0,
@@ -76,25 +76,10 @@ const getFormatedDateTime = (date: boolean = true, time: boolean = true, fullTim
   return [datePart, timePart].filter(Boolean).join(' ')
 }
 
-
-rpc.register('cef:getDateTime', (player: PlayerMp, date: boolean, time: boolean) => {
-  const dateTime = getDateTime(date, time)
-  rpc.callBrowser(player, 'server:getDateTime', [dateTime])
+rce.registerClientAndCef('getDateTime', (player: PlayerMp, date: boolean, time: boolean) => {
+  return getDateTime(date, time)
 })
 
-rpc.register('client:getDateTime', (player: PlayerMp, date: boolean, time: boolean) => {
-  const dateTime = getDateTime(date, time)
-  rpc.callClient(player, 'server:getDateTime', [dateTime])
-})
-
-rpc.register('cef:getFormatedDateTime', (player: PlayerMp, date: boolean, time: boolean, fullTime: boolean) => {
-  const dateTime = getFormatedDateTime(date, time, fullTime)
-  rpc.callBrowser(player, 'server:getFormatedDateTime', [dateTime])
-  return getFormatedDateTime(date, time, fullTime)
-})
-
-rpc.register('client:getFormatedDateTime', (player: PlayerMp, date: boolean, time: boolean, fullTime: boolean) => {
-  const dateTime = getFormatedDateTime(date, time, fullTime)
-  rpc.callClient(player, 'server:getFormatedDateTime', [dateTime])
+rce.registerClientAndCef('getFormatedDateTime', (player: PlayerMp, date: boolean, time: boolean, fullTime: boolean) => {
   return getFormatedDateTime(date, time, fullTime)
 })
