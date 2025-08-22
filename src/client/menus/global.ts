@@ -10,18 +10,15 @@ import './interface/chat'
 
 mp.events.add('guiReady', () => {
   mp.gui.chat.show(false)
-  mp.console.logInfo('guiReady')
   gui.browser.active = true
 
   rce.registerAll('execute', (commands) => {
     const commandsArray = Array.isArray(commands) ? commands : [commands]
-    mp.console.logWarning(`Принято команд: ${commandsArray.length}`)
 
     mp.browsers.forEach(browser => {
       if (browser && browser.execute) {
         try {
           commandsArray.forEach(code => {
-            mp.console.logInfo(`Команда в сторону CEF: ${commands}`)
             gui.execute(code);
           });
         } catch (e) {
@@ -60,10 +57,8 @@ rce.registerAll('cursorVisible', (toggle: boolean) => {
 export const gui = {
   browser: mp.browsers.new('package://cef/index.html'),
   execute: (command) => {
-    mp.console.logInfo(`(1) Получили команду execute: ${command}`)
     if (mp.browsers.exists(gui.browser) && gui.browser.active)
     {
-      mp.console.logInfo(`(2) Прошли проверку. Получили команду execute: ${command}`)
       gui.browser.execute(command)
     }
   }

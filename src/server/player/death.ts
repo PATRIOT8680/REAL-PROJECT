@@ -74,14 +74,14 @@ export const playerReborn = (player: PlayerMp) => {
   }, 5000)*/
 }
 
-rce.registerClientAndCef('playerKill', (player: PlayerMp) => {
+rce.registerClientCef('playerKill', (player: PlayerMp) => {
   playerKill(player)
 })
 
-rce.registerClientAndCef('playerKnockout', (player: PlayerMp) => {
+rce.registerClientCef('playerKnockout', (player: PlayerMp) => {
   playerKnockout(player)
 })
 
-rce.registerClientAndCef('playerReborn', (player: PlayerMp) => {
+rce.registerClientCef('playerReborn', (player: PlayerMp) => {
   playerReborn(player)
 })

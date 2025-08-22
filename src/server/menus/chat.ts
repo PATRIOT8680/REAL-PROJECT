@@ -11,16 +11,12 @@ export const send = (player: PlayerMp | null, msg: string, showTime: boolean, ti
     console.error('[CHAT SEND] player не должен быть равен null. Используй chat.broadcast')
     return
   } else {
-    mp.players.forEach(p => {
-      rce.triggerClient(p, CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
-    })
+    rce.triggerClient(player, CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
   }
 }
 
 export const broadcast = (msg: string, showTime: boolean, tile?: string) => {
-  mp.players.forEach(p => {
-    rce.triggerClient(p, CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
-  })
+  rce.triggerClients(CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
 }
 
 export const registerCMD = (cmd: string, callback) => {
@@ -56,7 +52,7 @@ const invokeCMD = (player: PlayerMp, cmd: string, args: string[]) => {
   }
 }
 
-rce.registerClientAndCef(CHAT_MESSAGE_EVENT, (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+rce.registerClientCef(CHAT_MESSAGE_EVENT, (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
   if (msg.startsWith('/')) {
     msg = msg.trim().slice(1)
 
@@ -77,18 +73,18 @@ rce.registerClientAndCef(CHAT_MESSAGE_EVENT, (player: PlayerMp, msg: string, sho
     if (msg.length > 0) {
       const formattedMsg = msg.replace(/</g, "&lt;").replace(/'/g, "&#39;").replace(/"/g, "&#34;");
 
-      //mp.players.forEach(p => {
-        rce.triggerClients(CHAT_MESSAGE_EVENT, player.name, formattedMsg, showTime, tile)
-      //})
+      mp.players.forEachInRange(player.position, 8, (player) => {
+        rce.triggerClient(player, CHAT_MESSAGE_EVENT, player.name, formattedMsg, showTime, tile)
+      })
     }
   }
 })
 
 
-rce.registerClientAndCef('sendMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+rce.registerClientCef('sendMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
   send(player, msg, showTime, tile);
 })
 
-rce.registerClientAndCef('broadcastMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
+rce.registerClientCef('broadcastMsg', (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
   broadcast(msg, showTime, tile);
 })

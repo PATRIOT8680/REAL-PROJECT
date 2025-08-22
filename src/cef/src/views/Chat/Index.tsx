@@ -11,6 +11,7 @@ import {CustomEventHandler} from "../../../../shared/CustomEventBase.ts";
 const Chat = () => {
   let ev: CustomEventHandler
   const chatVisible = useSelector((state: RootState) => state.chatReducer.isVisible)
+  const playerInfo = useSelector((state: RootState) => state.playerInfoReducer)
   const [chatActive, setChatActive] = useState<boolean>(false)
   const [buffer, setBuffer] = useState<string[]>([])
   const [currentBufferIndex, setCurrentBufferIndex] = useState<number>(-1)
@@ -291,7 +292,7 @@ const Chat = () => {
 
   const addMsg = useCallback((name: string, text: string, showTime: boolean, tile: string) => {
 		const coloredText = colorify(text)
-		addString(`<b>Гражданин #19383</b> • ${coloredText}`, true)
+		addString(`<b>Гражданин #${playerInfo.sid}</b> • ${coloredText}`, true)
 	}, [])
 
   const handleActionInput = (action: string) => {

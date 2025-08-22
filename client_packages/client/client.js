@@ -418,13 +418,13 @@ mp.events.add('render', (nametags) => {
                 const liftAmount = 0.04 * distanceFactor;
                 const textScale = Math.max(0.7, 1 - distanceFactor * 0.3);
                 const textY = y - liftAmount;
-                mp.game.graphics.drawText(`Гражданин #${sid + 101522}`, [x, textY + 0.05], {
+                mp.game.graphics.drawText(`Гражданин #${sid}`, [x, textY + 0.05], {
                     font: 0,
                     color: [255, 255, 255, distance > 15 * 15 ? 180 : 255],
                     scale: [textScale * 0.25, textScale * 0.25],
                     outline: true
                 });
-                mp.game.graphics.drawText(`(ID: ${player.remoteId + 567})`, [x, textY + 0.03], {
+                mp.game.graphics.drawText(`(ID: ${player.remoteId})`, [x, textY + 0.03], {
                     font: 0,
                     color: [255, 255, 255, distance > 15 * 15 ? 180 : 255],
                     scale: [textScale * 0.25, textScale * 0.25],
@@ -761,16 +761,14 @@ const disableAuth = () => {
 rce.registerAll('cef:authEnabled', () => {
     enableAuth();
 });
-rce.registerAll('cef:authDisabled', () => {
+rce.registerAll('cef:authDisabled', async () => {
     disableAuth();
-    mp.console.logError('cef:authDisabled сработал!!!!!');
-    const statID = rce.callServer('getDataAccount', 'sid', mp.players.local.remoteId);
+    const statID = await rce.callServer('getDataAccount', 'sid', mp.players.local.remoteId);
     rce.trigger('execute', `window.App.playerInfoReducer.setSid(${statID})`);
     global.loginPlayer = true;
 });
 
 rce.registerAll('sendNotify', (typeNotify, msg, duration, pos) => {
-    mp.console.logWarning(`Мы приняли на клиенте уведомление с сервера: ${msg}`);
     const safeMsg = JSON.stringify(msg);
     const safeTypeNotify = JSON.stringify(typeNotify);
     const safeDuration = duration !== undefined ? duration : 4000;
@@ -781,12 +779,10 @@ rce.registerAll('sendNotify', (typeNotify, msg, duration, pos) => {
     ${safeDuration}, 
     ${safePos}
   )`;
-    rce.trigger('clientCmd', [`[CLIENT][RPC] Формируемый JS код:', ${code}`]);
     gui.execute(code);
 });
 
 mp.events.add('browserDomReady', async (player) => {
-    mp.console.logWarning('browserDomReady');
     gui.execute('window.App.welcomeReducer.showWelcome()');
     mp.gui.cursor.visible = true;
     await setTimeout(() => {
@@ -806,13 +802,10 @@ const toggleChat = (state) => {
     rce.triggerCef('chatActive', state);
 };
 const addMsg = (name, text, showTime, tile) => {
-    mp.console.logError(`const addMsg: ${text}`);
     if (name) {
-        mp.console.logInfo(`Есть имя. Addmsg на сторону CEF: ${text}`);
         rce.triggerCef('addMsg', name, text, showTime, tile);
     }
     else {
-        mp.console.logInfo(`Нет имени. Addstring на сторону CEF: ${text}`);
         rce.triggerCef('addString', text, showTime, tile);
     }
 };
@@ -823,30 +816,32 @@ rce.registerAll('chatloaded', () => {
     loaded = true;
 });
 rce.registerAll('chatmessage', (text) => {
-    mp.console.logError(`register:chatmessage: ${text}`);
-    //rpc.call(CHAT_MESSAGE_EVENT, [text])
     rce.triggerServer(CHAT_MESSAGE_EVENT, text);
     toggleChat(true);
     opened = true;
 });
 const pushMsg = (name, text, showTime, tile) => {
-    rce.triggerServer('cef:serverCMD', `Проверенное сообщение дошло до клиента: ${text}`);
-    mp.console.logInfo(`Проверенное сообщение дошло до клиента: ${text}`);
     if (!loaded) {
-        mp.console.logInfo(`Отправляем в буффер: ${text}`);
-        mp.console.logError(`pushMsg (no loaded): ${text}`);
         buffer.push({ name, text, showTime, tile });
     }
     else {
-        mp.console.logError(`pushMsg (loaded): ${text}`);
-        mp.console.logInfo(`Добавляем в чат: ${text}`);
         addMsg(name, text, showTime, tile);
+        buffer.push({ name, text, showTime, tile });
     }
 };
 const pushLine = (text, showTime, tile) => {
     pushMsg(null, text, showTime, tile);
 };
+const clearChat = () => {
+    if (buffer) {
+        buffer.length = 0;
+        rce.triggerCef('client:clearChat');
+    }
+};
 rce.registerAll(CHAT_MESSAGE_EVENT, pushMsg);
+rce.registerAll('clearChat', () => {
+    clearChat();
+});
 mp.keys.bind(Keys.VK_T, false, () => {
     if (loaded && !opened) {
         opened = true;
@@ -888,16 +883,13 @@ pushLine(`Ваше приключение начинается на 🌟 {FCD53F
 
 mp.events.add('guiReady', () => {
     mp.gui.chat.show(false);
-    mp.console.logInfo('guiReady');
     gui.browser.active = true;
     rce.registerAll('execute', (commands) => {
         const commandsArray = Array.isArray(commands) ? commands : [commands];
-        mp.console.logWarning(`Принято команд: ${commandsArray.length}`);
         mp.browsers.forEach(browser => {
             if (browser && browser.execute) {
                 try {
                     commandsArray.forEach(code => {
-                        mp.console.logInfo(`Команда в сторону CEF: ${commands}`);
                         gui.execute(code);
                     });
                 }
@@ -928,9 +920,7 @@ rce.registerAll('cursorVisible', (toggle) => {
 const gui = {
     browser: mp.browsers.new('package://cef/index.html'),
     execute: (command) => {
-        mp.console.logInfo(`(1) Получили команду execute: ${command}`);
         if (mp.browsers.exists(gui.browser) && gui.browser.active) {
-            mp.console.logInfo(`(2) Прошли проверку. Получили команду execute: ${command}`);
             gui.browser.execute(command);
         }
     }
@@ -941,6 +931,9 @@ mp.keys.bind(Keys.VK_F2, true, () => {
 });
 mp.keys.bind(Keys.VK_F6, true, () => {
     rce.triggerServer('playerReborn');
+    setTimeout(() => {
+        gui.execute('window.App.chatReducer.showChat()');
+    }, 6000);
 });
 mp.keys.bind(Keys.VK_F7, true, () => {
     mp.players.local.setArmour(100);
@@ -960,7 +953,6 @@ const getRandomChance = () => {
 mp.events.add('playerDeath', async (player, reason, killer) => {
     mp.console.logInfo('Сдох *_*');
     const [chance, luck] = getRandomChance();
-    await rce.callServer('getFormatedDateTime', true, true, true);
     mp.console.logInfo('Сдох *_* 2');
     rce.triggerServer('playerKnockout');
     gui.execute(`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`);
@@ -969,8 +961,6 @@ mp.events.add('playerDeath', async (player, reason, killer) => {
     const playerPos = mp.players.local.position;
     const getGroundZ = mp.game.gameplay.getGroundZFor3dCoord(playerPos.x, playerPos.y, playerPos.z, true, false);
     rce.triggerServer('client:playerDeath', [player.position.x, player.position.y, getGroundZ]);
-});
-rce.registerServer('getFormatedDateTime', (time) => {
 });
 rce.registerAll('cef:death:selectedFate', (timeLeft) => {
     mp.gui.cursor.visible = false;
@@ -1264,3 +1254,10 @@ setInterval(() => {
         }
     });
 }, 500);
+
+const getDist = (x1, y1, z1, x2, y2, z2) => {
+    mp.game.system.vdist(x1, y1, z1, x2, y2, z2);
+};
+rce.registerAll('getDist', (x1, y1, z1, x2, y2, z2) => {
+    return getDist(x1, y1, z1, x2, y2, z2);
+});

@@ -1,9 +1,9 @@
 import { rce } from '../utils/rce'
 
-rce.registerClientAndCef('getIdPlayer', (player: PlayerMp) => {
+rce.registerClientCef('getIdPlayer', (player: PlayerMp) => {
   return player.id
 })
 
-rce.registerClientAndCef('player:mute', (player: PlayerMp, state: boolean) => {
+rce.registerClientCef('player:mute', (player: PlayerMp, state: boolean) => {
   player.setVariable('player_mute', state)
 })

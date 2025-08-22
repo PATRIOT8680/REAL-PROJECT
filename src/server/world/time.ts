@@ -76,10 +76,10 @@ const getFormatedDateTime = (date: boolean = true, time: boolean = true, fullTim
   return [datePart, timePart].filter(Boolean).join(' ')
 }
 
-rce.registerClientAndCef('getDateTime', (player: PlayerMp, date: boolean, time: boolean) => {
+rce.registerClientCef('getDateTime', (player: PlayerMp, date: boolean, time: boolean) => {
   return getDateTime(date, time)
 })
 
-rce.registerClientAndCef('getFormatedDateTime', (player: PlayerMp, date: boolean, time: boolean, fullTime: boolean) => {
+rce.registerClientCef('getFormatedDateTime', (player: PlayerMp, date: boolean, time: boolean, fullTime: boolean) => {
   return getFormatedDateTime(date, time, fullTime)
 })

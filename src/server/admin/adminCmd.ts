@@ -124,7 +124,7 @@ registerCMD('unbanvoice', (player: PlayerMp, [target]) => {
 
 
 registerCMD('allclearchat', (player: PlayerMp) => {
-  rce.triggerClients('clearchat')
+  rce.triggerClients('clearChat')
   mp.players.forEach(p => {
     send(p, '<b>Чат был очищен у всех!</b>', false, 'ADMIN')
   })

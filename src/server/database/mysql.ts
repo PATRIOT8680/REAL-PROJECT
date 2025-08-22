@@ -4,8 +4,8 @@ import chalk from 'chalk'
 export const data = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  database: 'redstar',
-  password: 'Patriot86',
+  database: 'realrp',
+  password: 'Real#PR86',
   port: 3306
 })
 

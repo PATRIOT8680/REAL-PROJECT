@@ -25,7 +25,7 @@ export const getDataAccount = async (player: PlayerMp, login: string, dataKey: s
   return dataMap[dataKey]()
 }
 
-rce.registerClientAndCef('getDataAccount', async (player: PlayerMp, dataKey: string, targetID: number) => {
+rce.registerClientCef('getDataAccount', async (player: PlayerMp, dataKey: string, targetID: number) => {
   const login = player.getVariable('login_player')
 
   if (!login) {

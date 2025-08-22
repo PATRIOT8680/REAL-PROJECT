@@ -9,7 +9,9 @@ registerCMD('me', (player: PlayerMp, args) => {
     return
   }
 
-  broadcast(`{FFA96C}<b>Гражданин #${player.socialClub} ${text}</b>`, true, 'me')
+  mp.players.forEachInRange(player.position, 8, (p) => {
+    send(p, `{FFA96C}<b>Гражданин #${player.socialClub} ${text}</b>`, true, 'me')
+  })
 })
 
 
@@ -24,7 +26,10 @@ registerCMD('do', (player: PlayerMp, args) => {
   const formatedText = text.charAt(0).toUpperCase() + text.slice(1)
   const finalText = formatedText.endsWith('.') ? formatedText : formatedText + '.'
 
-  broadcast(`{9FFF97}<b>${finalText} (${player.socialClub})</b>`, true, 'do')
+  
+  mp.players.forEachInRange(player.position, 8, (p) => {
+    send(p, `{9FFF97}<b>${finalText} (${player.socialClub})</b>`, true, 'do')
+  })
 })
 
 
@@ -38,11 +43,13 @@ registerCMD('try', (player: PlayerMp, args) => {
     return
   }
 
-  if (randomOutcome === 'successful') {
-    broadcast(`{00FF51}<b>[${player.socialClub}]: ${text} => (Удачно 😄)</b>`, true, 'try')
-  } else {
-    broadcast(`{FF0037}<b>[${player.socialClub}]: ${text} => (Неудачно 😞)</b>`, true, 'try')
-  }
+  mp.players.forEachInRange(player.position, 8, (p) => {
+    if (randomOutcome === 'successful') {
+      send(p, `{00FF51}<b>[${player.socialClub}]: ${text} => (Удачно 😄)</b>`, true, 'try')
+    } else {
+      send(p, `{FF0037}<b>[${player.socialClub}]: ${text} => (Неудачно 😞)</b>`, true, 'try')
+    }
+  })
 })
 
 
@@ -61,12 +68,14 @@ registerCMD('todo', (player: PlayerMp, args) => {
   } else {
     const formatedAction = action.charAt(0).toUpperCase() + action.slice(1)
     const formatedSayChar = sayChar.charAt(0).toUpperCase() + sayChar.slice(1)
-    broadcast(`<b>${formatedAction}, ${player.socialClub} сказал: "${formatedSayChar}"</b>`, true, 'todo')
+    mp.players.forEachInRange(player.position, 8, (p) => {
+      send(p, `<b>${formatedAction}, ${player.socialClub} сказал: "${formatedSayChar}"</b>`, true, 'todo')
+    })
   }
 })
 
 
 registerCMD('clearchat', (player: PlayerMp) => {
-  rce.triggerClient(player, 'clearchat')
+  rce.triggerClient(player, 'clearChat')
   send(player, '<b>Ваш чат был успешно очищен!</b>', false, 'SERVER')
 })

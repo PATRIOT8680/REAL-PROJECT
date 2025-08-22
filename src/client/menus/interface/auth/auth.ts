@@ -94,10 +94,9 @@ rce.registerAll('cef:authEnabled', () => {
   enableAuth()
 })
 
-rce.registerAll('cef:authDisabled', () => {
+rce.registerAll('cef:authDisabled', async () => {
   disableAuth()
-  mp.console.logError('cef:authDisabled сработал!!!!!')
-  const statID = rce.callServer('getDataAccount', 'sid', mp.players.local.remoteId)
+  const statID = await rce.callServer('getDataAccount', 'sid', mp.players.local.remoteId)
   rce.trigger('execute', `window.App.playerInfoReducer.setSid(${statID})`)
   global.loginPlayer = true
 })

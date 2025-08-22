@@ -27,8 +27,6 @@ mp.keys.bind(Keys.VK_F5, true, () => {
 })
 
 
-let timeDeath: string = ''
-
 const getRandomChance = (): [number, boolean] => {
   const percent = Math.floor(Math.random() * 66)
   const luck = Math.random() * 100 < percent
@@ -38,7 +36,6 @@ const getRandomChance = (): [number, boolean] => {
 mp.events.add('playerDeath', async (player: PlayerMp, reason: number, killer: PlayerMp) => {
   mp.console.logInfo('Сдох *_*')
   const [chance, luck] = getRandomChance()
-  timeDeath = await rce.callServer('getFormatedDateTime', true, true, true);
   mp.console.logInfo('Сдох *_* 2')
 
   rce.triggerServer('playerKnockout')
@@ -50,11 +47,6 @@ mp.events.add('playerDeath', async (player: PlayerMp, reason: number, killer: Pl
   const getGroundZ = mp.game.gameplay.getGroundZFor3dCoord(playerPos.x, playerPos.y, playerPos.z, true, false)
 
   rce.triggerServer('client:playerDeath', [player.position.x, player.position.y, getGroundZ])
-})
-
-
-rce.registerServer('getFormatedDateTime', (time: string) => {
-  timeDeath = time
 })
 
 rce.registerAll('cef:death:selectedFate', (timeLeft: number) => {

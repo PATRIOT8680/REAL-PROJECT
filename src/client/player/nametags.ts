@@ -42,7 +42,7 @@ mp.events.add('render', (nametags) => {
         const textScale = Math.max(0.7, 1 - distanceFactor * 0.3)
         const textY = y - liftAmount
 
-        mp.game.graphics.drawText(`Гражданин #${sid + 101522}`, [x, textY + 0.05],
+        mp.game.graphics.drawText(`Гражданин #${sid}`, [x, textY + 0.05],
           {
             font: 0,
             color: [255, 255, 255, distance > 15*15 ? 180 : 255],
@@ -51,7 +51,7 @@ mp.events.add('render', (nametags) => {
           }
         )
 
-        mp.game.graphics.drawText(`(ID: ${player.remoteId + 567})`, [x, textY + 0.03],
+        mp.game.graphics.drawText(`(ID: ${player.remoteId})`, [x, textY + 0.03],
           {
             font: 0,
             color: [255, 255, 255, distance > 15*15 ? 180 : 255],
