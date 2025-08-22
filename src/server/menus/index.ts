@@ -3,7 +3,7 @@ import { rce } from '../utils/rce'
 import './chat'
 import './auth/main'
 
-rce.registerClientAndCef('cef:serverCmd', (player: PlayerMp, msg: string) => {
+rce.registerClientCef('cef:serverCmd', (player: PlayerMp, msg: string) => {
   console.log(`[CEF]: ${msg}`)
 })
 

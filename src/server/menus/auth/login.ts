@@ -31,7 +31,7 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
           player.dimension = 0
           player.setVariable('login_player', login)
           player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375))
-          rce.triggerClients('sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom')
+          rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom')
           rce.triggerClient(player, 'server:auth:saveLogin', login)
           rce.triggerCef(player, 'server:authSuccess')
           console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`))

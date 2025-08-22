@@ -21,7 +21,6 @@ const toggleChat = (state: boolean) => {
 }
 
 const addMsg = (name: string | null, text: string, showTime: boolean, tile?: string) => {
-  mp.console.logError(`const addMsg: ${text}`)
   if (name) {
     rce.triggerCef('addMsg', name, text, showTime, tile)
   } else {
@@ -47,6 +46,7 @@ export const pushMsg = (name: string | null, text: string, showTime: boolean, ti
     buffer.push({name, text, showTime, tile})
   } else {
     addMsg(name, text, showTime, tile)
+    buffer.push({name, text, showTime, tile})
   }
 }
 

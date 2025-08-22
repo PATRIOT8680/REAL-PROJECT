@@ -32,11 +32,14 @@ const DeathPlayer = () => {
 
   useEffect(() => {
     if (deathState.instant !== 'finish' && deathState.instant !== 'reborn') sound.current.play()
-    rce.triggerServer('getFormatedDateTime', true, true, false)
     
-    ev = rce.register('getFormatedDateTime', (dateTime: string) => {
-      setTimeDead(dateTime)
-    })
+    const fetchData = async () => {
+      let timeDeadPlayer = await rce.callServer('getFormatedDateTime', true, true, true)
+      setTimeDead(timeDeadPlayer)
+      console.log(`Время смерти: ${timeDeadPlayer}`)
+    }
+    
+    fetchData()
 
     ev = rce.register('client:chanceReborn', (chance: number, luck: boolean) => {
       setChanceReporn(chance)
@@ -44,8 +47,7 @@ const DeathPlayer = () => {
     })
 
     return () => {
-      rce.clearRegister('server:getFormatedDateTime')
-      rce.clearRegister('client:chanceReborn')
+      ev.destroy
       sound.current.stop()
       sound.current.unload()
     }

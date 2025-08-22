@@ -62,8 +62,7 @@ const App = () => {
     })
 
     return () => {
-      rce.clearRegister('client:setActiveAmbient')
-      rce.clearRegister('server:player:local:info')
+      ev.destroy()
     }
   }, [])
 

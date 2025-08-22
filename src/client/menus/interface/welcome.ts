@@ -2,7 +2,6 @@ import { rce } from '../../utils/rce'
 import { gui } from '../global'
 
 mp.events.add('browserDomReady', async (player: PlayerMp) => {
-  mp.console.logWarning('browserDomReady')
   gui.execute('window.App.welcomeReducer.showWelcome()')
   mp.gui.cursor.visible = true
 

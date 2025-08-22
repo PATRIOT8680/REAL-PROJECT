@@ -283,7 +283,6 @@ class rce extends CustomEventBase {
     static triggerCef(player, eventName, ...args) {
         if (!mp.players.exists(player))
             return;
-        console.log(`triggerCef сработал. name: ${eventName}, args: ${args}`);
         player.call('cef:trigger:event', [eventName, JSON.stringify(args)]);
     }
     static triggerCefAll(eventName, ...args) {
@@ -412,7 +411,6 @@ mp.events.add('call:client', (player, requestID, name, argss) => {
     }
 });
 mp.events.add('trigger:cef', (player, name, args) => {
-    console.log(`ДОШЛО ДО СЕРВЕРА: ${name}, ${args}`);
     const nowTm = Date.now() / 1000 | 0;
     if (rce.clientPoolLog.has(`${player.id}_CEF____${name}`)) {
         const old = rce.clientPoolLog.get(`${player.id}_CEF____${name}`);
@@ -499,15 +497,11 @@ const send = (player, msg, showTime, tile) => {
         return;
     }
     else {
-        mp.players.forEach(p => {
-            rce.triggerClient(p, CHAT_MESSAGE_EVENT, null, msg, showTime, tile);
-        });
+        rce.triggerClient(player, CHAT_MESSAGE_EVENT, null, msg, showTime, tile);
     }
 };
 const broadcast = (msg, showTime, tile) => {
-    mp.players.forEach(p => {
-        rce.triggerClient(p, CHAT_MESSAGE_EVENT, null, msg, showTime, tile);
-    });
+    rce.triggerClients(CHAT_MESSAGE_EVENT, null, msg, showTime, tile);
 };
 const registerCMD = (cmd, callback) => {
     if (cmdHandlers[cmd] !== undefined) {
@@ -527,8 +521,7 @@ const invokeCMD = (player, cmd, args) => {
         send(player, `{ffcbbb} <b>Команда не найдена! (/${cmd})</b>`, false);
     }
 };
-rce.registerClientAndCef(CHAT_MESSAGE_EVENT, (player, msg, showTime, tile) => {
-    console.log(`Сообщение дошло до сервера. Сообщение: ${msg}`);
+rce.registerClientCef(CHAT_MESSAGE_EVENT, (player, msg, showTime, tile) => {
     if (msg.startsWith('/')) {
         msg = msg.trim().slice(1);
         if (msg.length > 0) {
@@ -545,17 +538,16 @@ rce.registerClientAndCef(CHAT_MESSAGE_EVENT, (player, msg, showTime, tile) => {
         msg = msg.trim();
         if (msg.length > 0) {
             const formattedMsg = msg.replace(/</g, "&lt;").replace(/'/g, "&#39;").replace(/"/g, "&#34;");
-            //mp.players.forEach(p => {
-            console.log(`Сообщение прошло проверки. Сообщение: ${msg}`);
-            rce.triggerClients(CHAT_MESSAGE_EVENT, player.name, formattedMsg, showTime, tile);
-            //})
+            mp.players.forEachInRange(player.position, 8, (player) => {
+                rce.triggerClient(player, CHAT_MESSAGE_EVENT, player.name, formattedMsg, showTime, tile);
+            });
         }
     }
 });
-rce.registerClientAndCef('sendMsg', (player, msg, showTime, tile) => {
+rce.registerClientCef('sendMsg', (player, msg, showTime, tile) => {
     send(player, msg, showTime, tile);
 });
-rce.registerClientAndCef('broadcastMsg', (player, msg, showTime, tile) => {
+rce.registerClientCef('broadcastMsg', (player, msg, showTime, tile) => {
     broadcast(msg, showTime, tile);
 });
 
@@ -565,7 +557,9 @@ registerCMD('me', (player, args) => {
         send(player, 'Используйте <b>/me [текст]</b>', false);
         return;
     }
-    broadcast(`{FFA96C}<b>Гражданин #${player.socialClub} ${text}</b>`, true, 'me');
+    mp.players.forEachInRange(player.position, 8, (p) => {
+        send(p, `{FFA96C}<b>Гражданин #${player.socialClub} ${text}</b>`, true, 'me');
+    });
 });
 registerCMD('do', (player, args) => {
     const text = args.join(' ');
@@ -575,7 +569,9 @@ registerCMD('do', (player, args) => {
     }
     const formatedText = text.charAt(0).toUpperCase() + text.slice(1);
     const finalText = formatedText.endsWith('.') ? formatedText : formatedText + '.';
-    broadcast(`{9FFF97}<b>${finalText} (${player.socialClub})</b>`, true, 'do');
+    mp.players.forEachInRange(player.position, 8, (p) => {
+        send(p, `{9FFF97}<b>${finalText} (${player.socialClub})</b>`, true, 'do');
+    });
 });
 registerCMD('try', (player, args) => {
     const text = args.join(' ');
@@ -585,12 +581,14 @@ registerCMD('try', (player, args) => {
         send(player, 'Используйте <b>/try [текст]</b>', false);
         return;
     }
-    if (randomOutcome === 'successful') {
-        broadcast(`{00FF51}<b>[${player.socialClub}]: ${text} => (Удачно 😄)</b>`, true, 'try');
-    }
-    else {
-        broadcast(`{FF0037}<b>[${player.socialClub}]: ${text} => (Неудачно 😞)</b>`, true, 'try');
-    }
+    mp.players.forEachInRange(player.position, 8, (p) => {
+        if (randomOutcome === 'successful') {
+            send(p, `{00FF51}<b>[${player.socialClub}]: ${text} => (Удачно 😄)</b>`, true, 'try');
+        }
+        else {
+            send(p, `{FF0037}<b>[${player.socialClub}]: ${text} => (Неудачно 😞)</b>`, true, 'try');
+        }
+    });
 });
 registerCMD('todo', (player, args) => {
     const text = args.join(' ');
@@ -609,12 +607,14 @@ registerCMD('todo', (player, args) => {
     else {
         const formatedAction = action.charAt(0).toUpperCase() + action.slice(1);
         const formatedSayChar = sayChar.charAt(0).toUpperCase() + sayChar.slice(1);
-        broadcast(`<b>${formatedAction}, ${player.socialClub} сказал: "${formatedSayChar}"</b>`, true, 'todo');
+        mp.players.forEachInRange(player.position, 8, (p) => {
+            send(p, `<b>${formatedAction}, ${player.socialClub} сказал: "${formatedSayChar}"</b>`, true, 'todo');
+        });
     }
 });
-registerCMD('testadmin', (player, args) => {
-    const text = args.join(' ');
-    send(player, `<b>${text}</b>`, true, 'admin');
+registerCMD('clearchat', (player) => {
+    rce.triggerClient(player, 'clearChat');
+    send(player, '<b>Ваш чат был успешно очищен!</b>', false, 'SERVER');
 });
 
 registerCMD('getpos', (player, [target, ...namePos]) => {
@@ -714,12 +714,18 @@ registerCMD('unbanvoice', (player, [target]) => {
     rce.triggerClient(targetPlayer, 'player:mute', false);
     send(targetPlayer, `<b>С вас снят бан-войс!</b>`, true);
 });
+registerCMD('allclearchat', (player) => {
+    rce.triggerClients('clearChat');
+    mp.players.forEach(p => {
+        send(p, '<b>Чат был очищен у всех!</b>', false, 'ADMIN');
+    });
+});
 
 const data = mysql__namespace.createPool({
     host: 'localhost',
     user: 'root',
-    database: 'redstar',
-    password: 'Patriot86',
+    database: 'realrp',
+    password: 'Real#PR86',
     port: 3306
 });
 const mysql2 = {
@@ -916,7 +922,7 @@ const loginUser = (player, login, password) => {
                     player.dimension = 0;
                     player.setVariable('login_player', login);
                     player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375));
-                    rce.triggerClients('sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom');
+                    rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom');
                     rce.triggerClient(player, 'server:auth:saveLogin', login);
                     rce.triggerCef(player, 'server:authSuccess');
                     console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`));
@@ -1065,7 +1071,7 @@ rce.registerCef('cef:auth:changePassRecovery', (player, email, code, newPass) =>
     changePassRecovery(player, email, code, newPass);
 });
 
-rce.registerClientAndCef('cef:serverCmd', (player, msg) => {
+rce.registerClientCef('cef:serverCmd', (player, msg) => {
     console.log(`[CEF]: ${msg}`);
 });
 // rce.registerClientAndCef('playerReady', (player: PlayerMp) => {
@@ -1127,17 +1133,17 @@ const playerReborn = (player) => {
     rce.triggerClient(player, 'graphics:stopAllScreenEffects');
     rce.triggerClient(player, 'gui:cursorVisible', false);
     rce.triggerClient(player, 'execute', 'window.App.deathReducer.showDeath(``, `reborn`)');
-    setTimeout(() => {
-        rce.triggerClient(player, 'execute', `window.App.chatReducer.showChat()`);
-    }, 5000);
+    /*setTimeout(() => {
+      rce.triggerClient(player, 'execute', `window.App.chatReducer.showChat()`)
+    }, 5000)*/
 };
-rce.registerClientAndCef('playerKill', (player) => {
+rce.registerClientCef('playerKill', (player) => {
     playerKill(player);
 });
-rce.registerClientAndCef('playerKnockout', (player) => {
+rce.registerClientCef('playerKnockout', (player) => {
     playerKnockout(player);
 });
-rce.registerClientAndCef('playerReborn', (player) => {
+rce.registerClientCef('playerReborn', (player) => {
     playerReborn(player);
 });
 
@@ -1198,10 +1204,10 @@ const getFormatedDateTime = (date = true, time = true, fullTime = false) => {
     const timePart = time ? `${pad(hours)}:${pad(minutes)}${fullTime ? `:${pad(seconds)}` : ''}` : '';
     return [datePart, timePart].filter(Boolean).join(' ');
 };
-rce.registerClientAndCef('getDateTime', (player, date, time) => {
+rce.registerClientCef('getDateTime', (player, date, time) => {
     return getDateTime(date, time);
 });
-rce.registerClientAndCef('getFormatedDateTime', (player, date, time, fullTime) => {
+rce.registerClientCef('getFormatedDateTime', (player, date, time, fullTime) => {
     return getFormatedDateTime(date, time, fullTime);
 });
 
@@ -1210,7 +1216,7 @@ mp.events.add('packagesLoaded', () => {
 });
 
 const pedPos = new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375);
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 1; i++) {
     mp.peds.new(mp.joaat('mp_f_stripperlite'), pedPos, {
         dynamic: false,
         frozen: false,
@@ -1248,7 +1254,7 @@ const getDataAccount = async (player, login, dataKey, targetID) => {
         return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
     return dataMap[dataKey]();
 };
-rce.registerClientAndCef('getDataAccount', async (player, dataKey, targetID) => {
+rce.registerClientCef('getDataAccount', async (player, dataKey, targetID) => {
     const login = player.getVariable('login_player');
     if (!login) {
         console.error(chalk.red(`Игрок ${login} не авторизован!`));
@@ -1259,18 +1265,20 @@ rce.registerClientAndCef('getDataAccount', async (player, dataKey, targetID) => 
     return result;
 });
 
-rce.registerClientAndCef('getIdPlayer', (player) => {
+rce.registerClientCef('getIdPlayer', (player) => {
     return player.id;
 });
-rce.registerClientAndCef('player:mute', (player, state) => {
+rce.registerClientCef('player:mute', (player, state) => {
     player.setVariable('player_mute', state);
 });
 
-rce.registerClient('client:voice:new', (player, target) => {
+rce.registerClientCef('client:voice:new', (player, target) => {
+    console.log(`Войс создан! (${target.id})`);
     if (target)
         player.enableVoiceTo(target);
 });
-rce.registerClient('client:voice:deleted', (player, target) => {
+rce.registerClientCef('client:voice:deleted', (player, target) => {
+    console.log(`Войс удален! (${target.id})`);
     if (target)
         player.disableVoiceTo(target);
 });
