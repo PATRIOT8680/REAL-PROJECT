@@ -8,6 +8,9 @@ mp.keys.bind(Keys.VK_F2, true, () => {
 
 mp.keys.bind(Keys.VK_F6, true, () => {
   rce.triggerServer('playerReborn')
+  setTimeout(() => {
+    gui.execute('window.App.chatReducer.showChat()')
+  }, 6000)
 })
 
 mp.keys.bind(Keys.VK_F7, true, () => {
