@@ -1,4 +1,5 @@
 import { broadcast, registerCMD, send } from '../menus/chat'
+import { rce } from '../utils/rce'
 
 registerCMD('me', (player: PlayerMp, args) => {
   const text = args.join(' ')
@@ -65,7 +66,7 @@ registerCMD('todo', (player: PlayerMp, args) => {
 })
 
 
-registerCMD('testadmin', (player: PlayerMp, args) => {
-  const text = args.join(' ')
-  send(player, `<b>${text}</b>`, true, 'admin')
+registerCMD('clearchat', (player: PlayerMp) => {
+  rce.triggerClient(player, 'clearchat')
+  send(player, '<b>Ваш чат был успешно очищен!</b>', false, 'SERVER')
 })

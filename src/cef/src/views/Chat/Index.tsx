@@ -27,8 +27,6 @@ const Chat = () => {
   const blurRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    rce.triggerClient('chatloaded')
-
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault()
 
@@ -273,7 +271,7 @@ const Chat = () => {
 	}
 
   const addString = (text: string, showTime: boolean, tile?: string) => {
-    if (msgRef.current && msgRef.current.children.length > 100) {
+    if (msgRef.current && msgRef.current.children.length >= 10) {
       msgRef.current.removeChild(msgRef.current.children[0])
     }
 
@@ -306,6 +304,7 @@ const Chat = () => {
     }
   }
 
+  rce.triggerClient('chatloaded')
   ev = rce.register('chatActive', (isActive: boolean) => {
     setChatActive(isActive)
   });
@@ -315,6 +314,12 @@ const Chat = () => {
   ev = rce.register('addMsg', addMsg);
   ev = rce.register('openChat', openChat);
   ev = rce.register('closeChat', closeChat);
+  ev = rce.register('client:clearChat', () => {
+    setBuffer([])
+    if (msgRef.current) {
+      msgRef.current.innerHTML = ''
+    }
+  });
 
   return (
 		<>

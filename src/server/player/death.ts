@@ -69,9 +69,9 @@ export const playerReborn = (player: PlayerMp) => {
   rce.triggerClient(player, 'gui:cursorVisible', false)
   rce.triggerClient(player, 'execute', 'window.App.deathReducer.showDeath(``, `reborn`)')
 
-  setTimeout(() => {
+  /*setTimeout(() => {
     rce.triggerClient(player, 'execute', `window.App.chatReducer.showChat()`)
-  }, 5000)
+  }, 5000)*/
 }
 
 rce.registerClientAndCef('playerKill', (player: PlayerMp) => {

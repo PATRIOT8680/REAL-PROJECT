@@ -23,10 +23,8 @@ const toggleChat = (state: boolean) => {
 const addMsg = (name: string | null, text: string, showTime: boolean, tile?: string) => {
   mp.console.logError(`const addMsg: ${text}`)
   if (name) {
-    mp.console.logInfo(`Есть имя. Addmsg на сторону CEF: ${text}`)
     rce.triggerCef('addMsg', name, text, showTime, tile)
   } else {
-    mp.console.logInfo(`Нет имени. Addstring на сторону CEF: ${text}`)
     rce.triggerCef('addString', text, showTime, tile)
   }
 }
@@ -39,23 +37,15 @@ rce.registerAll('chatloaded', () => {
 })
 
 rce.registerAll('chatmessage', (text: string) => {
-  mp.console.logError(`register:chatmessage: ${text}`)
-  //rpc.call(CHAT_MESSAGE_EVENT, [text])
   rce.triggerServer(CHAT_MESSAGE_EVENT, text)
   toggleChat(true)
   opened = true
 })
 
 export const pushMsg = (name: string | null, text: string, showTime: boolean, tile?: string) => {
-  rce.triggerServer('cef:serverCMD', `Проверенное сообщение дошло до клиента: ${text}`)
-  mp.console.logInfo(`Проверенное сообщение дошло до клиента: ${text}`)
   if(!loaded) {
-    mp.console.logInfo(`Отправляем в буффер: ${text}`)
-    mp.console.logError(`pushMsg (no loaded): ${text}`)
     buffer.push({name, text, showTime, tile})
   } else {
-    mp.console.logError(`pushMsg (loaded): ${text}`)
-    mp.console.logInfo(`Добавляем в чат: ${text}`)
     addMsg(name, text, showTime, tile)
   }
 }
@@ -64,7 +54,18 @@ export const pushLine = (text: string, showTime: boolean, tile?: string) => {
   pushMsg(null, text, showTime, tile)
 }
 
+export const clearChat = () => {
+  if (buffer) {
+    buffer.length = 0
+    rce.triggerCef('client:clearChat')
+  }
+}
+
 rce.registerAll(CHAT_MESSAGE_EVENT, pushMsg)
+
+rce.registerAll('clearChat', () => {
+  clearChat()
+})
 
 mp.keys.bind(Keys.VK_T, false, () => {
   if (loaded && !opened) {
