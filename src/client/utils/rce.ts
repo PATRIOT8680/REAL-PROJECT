@@ -42,11 +42,9 @@ export class rce extends CustomEventBase {
 
     static triggerCef(eventName: string, ...args: any[]) {
         mp.browsers.forEach((browser: any) => {
-            mp.console.logWarning(`1.1. Отработал triggerCef, отправляем на сторону CEF: ${eventName}, ${args}`)
             if (browser.active) {
-                mp.console.logWarning(`1.2. Отработал triggerCef, отправляем на сторону CEF: '${eventName}', '${JSON.stringify(args)}')'`)
                 browser.execute(`window.customevent.triggerCef('${eventName}', '${JSON.stringify(args)}');`);
-            }
+        }
         });
     }
 
@@ -91,7 +89,6 @@ export class rce extends CustomEventBase {
 
 // Обработчик для событий из CEF
 mp.events.add('triggerFromCef', (eventName: string, ...args: any[]) => {
-    mp.console.logError(`triggerFromCef сработал. Имя: ${eventName}, args: ${args}`)
     rce.triggerFromCef(eventName, ...args);
 });
 
@@ -168,7 +165,6 @@ mp.events.add("client:call:event", async (eventname: string, requestID: number, 
 
 mp.events.add('cef:trigger:event', (eventName: string, args: string) => {
     rce.triggerCef(eventName, ...JSON.parse(args));
-    mp.console.logInfo(`(1) cef:trigger:event сработал на стороне клиента. ${eventName}, ${args}`)
 });
 
 mp.events.add('call:client:response', (requestID: number, res: any) => {
@@ -193,6 +189,5 @@ mp.events.add('call:clientfromcef', async (requestID: number, eventName: string,
 });
 
 mp.events.add('trigger:server', (name: string, args: string) => {
-    mp.events.callRemote('trigger:cef', rce.encryptEventName(name), args);
-    mp.console.logError(`НАМ ПРИШЛО НА КЛИЕНТ С CEF!!! name: ${name}, encryptname: ${rce.encryptEventName(name)}, args: ${args}`);
+    mp.events.callRemote('trigger:cef', rce.encryptEventName(name), args)
 });

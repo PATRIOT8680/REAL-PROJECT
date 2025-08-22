@@ -49,7 +49,6 @@ const Auth = () => {
     })
 
     ev = rce.register('server:authSuccess', () => {
-      rce.triggerClient('clientCmd', 'server:authSuccess ПРИНЯТ')
       rce.triggerClient('cef:authDisabled')
     })
 

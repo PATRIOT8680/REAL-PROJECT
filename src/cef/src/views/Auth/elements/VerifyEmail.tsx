@@ -28,7 +28,6 @@ const VerifyEmail = ({ login, email, password } : IVerify) => {
       return
     }
 
-    console.log(email)
     rce.triggerServer('cef:auth:sendCodeVerify', email)
     await setTimeout(() => {
       setIsCodeSent(false)

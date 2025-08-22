@@ -2,7 +2,6 @@ import { rce } from '../utils/rce'
 import { gui } from '../menus/global'
 
 mp.events.add('playerReady', (player: PlayerMp) => {
-  rce.trigger('sendNotify', 'success', 'Тестовое сообщение', 6000, 'top')
   rce.triggerCef('client:setActiveAmbient', mp.storage.data.activeAmbient)
   mp.game.gameplay.setFadeOutAfterDeath(false)
   mp.game.ui.displayCash(false)

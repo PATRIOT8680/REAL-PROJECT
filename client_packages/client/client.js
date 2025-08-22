@@ -1,227 +1,5 @@
 'use strict';
 
-class CustomEventBase {
-    static registerLocalIds = 1;
-    static registerHandles = new Map();
-    static clearRegister(eventName) {
-        this.registerHandles.forEach((value, key) => {
-            if (value[0] === eventName)
-                this.registerHandles.delete(key);
-        });
-    }
-    static clearRegisterAll() {
-        this.registerHandles.clear();
-    }
-    static register(eventName, handle) {
-        // Очистка старых обработчиков для этого события
-        this.clearRegister(eventName);
-        const id = `${this.registerLocalIds++}`;
-        this.registerHandles.set(id, [eventName, handle]);
-        return { destroy: () => this.registerHandles.delete(id) };
-    }
-    static trigger(eventName, ...args) {
-        this.registerHandles.forEach(([name, handle]) => {
-            if (name === eventName)
-                handle(...args);
-        });
-    }
-    static async call(eventName, ...args) {
-        for (const [name, handle] of this.registerHandles.values()) {
-            if (name === eventName)
-                return await handle(...args);
-        }
-        return null;
-    }
-}
-
-mp.events.add('setKey', (key) => {
-    rce.key = key;
-});
-class rce extends CustomEventBase {
-    static callServerResponse = 1;
-    static requestServerHandle = new Map();
-    static callServerResponseCEF = 1;
-    static requestServerHandleCEF = new Map();
-    static registerServerEvents = new Map();
-    static registerSocketEvents = new Map();
-    // Добавляем обработчики для событий из CEF
-    static cefHandlers = new Map();
-    static key;
-    static encryptEventName(eventName) {
-        return eventName
-            .split('')
-            .map(s => (s.charCodeAt(0) ^ rce.key).toString(16))
-            .join('g');
-    }
-    static triggerServer(eventName, ...args) {
-        mp.events.callRemote('trigger:client', rce.encryptEventName(eventName), JSON.stringify(args));
-    }
-    static callServer(eventName, ...args) {
-        const requestID = rce.callServerResponse++;
-        return new Promise((resolve, reject) => {
-            rce.requestServerHandle.set(requestID, resolve);
-            mp.events.callRemote('call:client', requestID, rce.encryptEventName(eventName), JSON.stringify(args));
-        });
-    }
-    static triggerCef(eventName, ...args) {
-        mp.browsers.forEach((browser) => {
-            mp.console.logWarning(`1.1. Отработал triggerCef, отправляем на сторону CEF: ${eventName}, ${args}`);
-            if (browser.active) {
-                mp.console.logWarning(`1.2. Отработал triggerCef, отправляем на сторону CEF: '${eventName}', '${JSON.stringify(args)}')'`);
-                browser.execute(`window.customevent.triggerCef('${eventName}', '${JSON.stringify(args)}');`);
-            }
-        });
-    }
-    static forceTriggerCef(eventName, ...args) {
-        mp.browsers.forEach(browser => {
-            browser.execute(`window.customevent.triggerCef('${eventName}', '${JSON.stringify(args)}');`);
-        });
-    }
-    static registerServer(eventName, handle) {
-        if (!this.registerServerEvents.has(eventName)) {
-            this.registerServerEvents.set(eventName, new Set());
-        }
-        this.registerServerEvents.get(eventName).add(handle);
-    }
-    static registerAll(name, handle) {
-        this.registerServer(name, handle);
-        CustomEventBase.register(name, handle);
-        // Также регистрируем для обработки событий из CEF
-        if (!this.cefHandlers.has(name)) {
-            this.cefHandlers.set(name, new Set());
-        }
-        this.cefHandlers.get(name).add(handle);
-    }
-    // Метод для вызова событий из CEF
-    static triggerFromCef(eventName, ...args) {
-        const handlers = this.cefHandlers.get(eventName);
-        if (handlers) {
-            handlers.forEach(handler => {
-                try {
-                    handler(...args);
-                }
-                catch (error) {
-                    mp.console.logError(`Error in CEF event ${eventName}:`, error);
-                }
-            });
-        }
-    }
-}
-// Обработчик для событий из CEF
-mp.events.add('triggerFromCef', (eventName, ...args) => {
-    mp.console.logError(`triggerFromCef сработал. Имя: ${eventName}, args: ${args}`);
-    rce.triggerFromCef(eventName, ...args);
-});
-// Остальной код без изменений
-mp.events.add("client:trigger:event", (eventname, argsstring) => triggerEvent(eventname, argsstring));
-let enableEventsLogging = mp.storage.data.enableEventsLoggin;
-const eventsCountMap = new Map();
-const triggerEvent = async (eventname, argsstring) => {
-    if (!eventsCountMap.has(eventname)) {
-        eventsCountMap.set(eventname, 0);
-    }
-    eventsCountMap.set(eventname, (eventsCountMap.get(eventname) + 1));
-    const handlers = rce.registerServerEvents.get(eventname);
-    if (enableEventsLogging) {
-        mp.console.logInfo(`event triggering started: ${eventname}`);
-    }
-    if (!handlers || handlers.size === 0)
-        return mp.console.logError("[CustomEvent] trigger non exists event " + eventname, true);
-    handlers.forEach(handler => {
-        try {
-            handler(...(JSON.parse(argsstring)));
-        }
-        catch (error) {
-            if (enableEventsLogging) {
-                mp.console.logError(`event (${eventname}) catch an error: ${error}`);
-            }
-        }
-    });
-    if (enableEventsLogging) {
-        mp.console.logInfo(`event triggering ended: ${eventname}`);
-    }
-};
-let splitTrigger = new Map();
-mp.events.add("client:trigger:event:split", async (tid, index, last, eventname, argsstring) => {
-    const handlers = rce.registerServerEvents.get(eventname);
-    if (!handlers || handlers.size === 0)
-        return mp.console.logError("[CustomEvent] trigger split non exists event " + eventname, true);
-    if (!splitTrigger.has(`${tid}_${eventname}`)) {
-        splitTrigger.set(`${tid}_${eventname}`, []);
-    }
-    let d = splitTrigger.get(`${tid}_${eventname}`);
-    d[index] = argsstring;
-    if (last) {
-        triggerEvent(eventname, d.join(''));
-    }
-    else {
-        splitTrigger.set(`${tid}_${eventname}`, d);
-    }
-});
-mp.events.add("client:call:event", async (eventname, requestID, argsstring) => {
-    try {
-        const handlers = rce.registerServerEvents.get(eventname);
-        if (!handlers || handlers.size === 0) {
-            mp.events.callRemote('client:call:event:result', requestID, null);
-            return;
-        }
-        // Вызываем первый обработчик (для обратной совместимости)
-        const handler = Array.from(handlers)[0];
-        let res = await handler(...(JSON.parse(argsstring)));
-        mp.events.callRemote('client:call:event:result', requestID, res);
-    }
-    catch (error) {
-        mp.console.logError(error, true);
-    }
-});
-mp.events.add('cef:trigger:event', (eventName, args) => {
-    rce.triggerCef(eventName, ...JSON.parse(args));
-    mp.console.logInfo(`(1) cef:trigger:event сработал на стороне клиента. ${eventName}, ${args}`);
-});
-mp.events.add('call:client:response', (requestID, res) => {
-    let resolve = rce.requestServerHandle.get(requestID);
-    if (!resolve)
-        return;
-    resolve(res);
-});
-mp.events.add('call:cef:response', (requestID, res) => {
-    mp.browsers.forEach((browser) => {
-        if (browser.eventReady)
-            browser.execute(`window.customevent.callServerResponseHandle(${requestID}, '${JSON.stringify(res)}');`);
-    });
-});
-mp.events.add('call:server', (requestID, eventName, ...args) => mp.events.callRemote('call:cef', requestID, rce.encryptEventName(eventName), ...args));
-mp.events.add('call:clientfromcef', async (requestID, eventName, ...args) => {
-    const fnd = await CustomEventBase.call(eventName, ...args);
-    mp.browsers.forEach((browser) => {
-        if (browser.eventReady)
-            browser.execute(`window.customevent.callClientResponseHandle(${requestID}, '${JSON.stringify(fnd)}');`);
-    });
-});
-mp.events.add('trigger:server', (name, args) => {
-    mp.events.callRemote('trigger:cef', rce.encryptEventName(name), args);
-    mp.console.logError(`НАМ ПРИШЛО НА КЛИЕНТ С CEF!!! name: ${name}, encryptname: ${rce.encryptEventName(name)}, args: ${args}`);
-});
-
-const openInterfaces = new Set();
-const handleInterfaceVisibility = (interfaceName, isVisible) => {
-    mp.console.logInfo(`Interface: ${interfaceName}, Visible: ${isVisible}`);
-    if (isVisible) {
-        openInterfaces.add(interfaceName);
-    }
-    else {
-        openInterfaces.delete(interfaceName);
-    }
-};
-rce.registerAll('toggleInterface', (interfaceName, isVisible, duration) => {
-    setTimeout(() => {
-        mp.gui.cursor.show(true, true);
-    }, 500);
-    mp.gui.cursor.visible = true;
-    rce.triggerCef(`cef:${isVisible ? 'show' : 'hide'}${interfaceName}`, duration);
-    handleInterfaceVisibility(interfaceName, isVisible);
-});
-
 global.Keys = {
     VK_LBUTTON: 0x01,
     VK_RBUTTON: 0x02,
@@ -410,6 +188,204 @@ const drawSprite = (dist, name, pos, scale, heading, color, layer) => {
     else
         mp.game.graphics.requestStreamedTextureDict(dist, true);
 };
+
+class CustomEventBase {
+    static registerLocalIds = 1;
+    static registerHandles = new Map();
+    static clearRegister(eventName) {
+        this.registerHandles.forEach((value, key) => {
+            if (value[0] === eventName)
+                this.registerHandles.delete(key);
+        });
+    }
+    static clearRegisterAll() {
+        this.registerHandles.clear();
+    }
+    static register(eventName, handle) {
+        // Очистка старых обработчиков для этого события
+        this.clearRegister(eventName);
+        const id = `${this.registerLocalIds++}`;
+        this.registerHandles.set(id, [eventName, handle]);
+        return { destroy: () => this.registerHandles.delete(id) };
+    }
+    static trigger(eventName, ...args) {
+        this.registerHandles.forEach(([name, handle]) => {
+            if (name === eventName)
+                handle(...args);
+        });
+    }
+    static async call(eventName, ...args) {
+        for (const [name, handle] of this.registerHandles.values()) {
+            if (name === eventName)
+                return await handle(...args);
+        }
+        return null;
+    }
+}
+
+mp.events.add('setKey', (key) => {
+    rce.key = key;
+});
+class rce extends CustomEventBase {
+    static callServerResponse = 1;
+    static requestServerHandle = new Map();
+    static callServerResponseCEF = 1;
+    static requestServerHandleCEF = new Map();
+    static registerServerEvents = new Map();
+    static registerSocketEvents = new Map();
+    // Добавляем обработчики для событий из CEF
+    static cefHandlers = new Map();
+    static key;
+    static encryptEventName(eventName) {
+        return eventName
+            .split('')
+            .map(s => (s.charCodeAt(0) ^ rce.key).toString(16))
+            .join('g');
+    }
+    static triggerServer(eventName, ...args) {
+        mp.events.callRemote('trigger:client', rce.encryptEventName(eventName), JSON.stringify(args));
+    }
+    static callServer(eventName, ...args) {
+        const requestID = rce.callServerResponse++;
+        return new Promise((resolve, reject) => {
+            rce.requestServerHandle.set(requestID, resolve);
+            mp.events.callRemote('call:client', requestID, rce.encryptEventName(eventName), JSON.stringify(args));
+        });
+    }
+    static triggerCef(eventName, ...args) {
+        mp.browsers.forEach((browser) => {
+            if (browser.active) {
+                browser.execute(`window.customevent.triggerCef('${eventName}', '${JSON.stringify(args)}');`);
+            }
+        });
+    }
+    static forceTriggerCef(eventName, ...args) {
+        mp.browsers.forEach(browser => {
+            browser.execute(`window.customevent.triggerCef('${eventName}', '${JSON.stringify(args)}');`);
+        });
+    }
+    static registerServer(eventName, handle) {
+        if (!this.registerServerEvents.has(eventName)) {
+            this.registerServerEvents.set(eventName, new Set());
+        }
+        this.registerServerEvents.get(eventName).add(handle);
+    }
+    static registerAll(name, handle) {
+        this.registerServer(name, handle);
+        CustomEventBase.register(name, handle);
+        // Также регистрируем для обработки событий из CEF
+        if (!this.cefHandlers.has(name)) {
+            this.cefHandlers.set(name, new Set());
+        }
+        this.cefHandlers.get(name).add(handle);
+    }
+    // Метод для вызова событий из CEF
+    static triggerFromCef(eventName, ...args) {
+        const handlers = this.cefHandlers.get(eventName);
+        if (handlers) {
+            handlers.forEach(handler => {
+                try {
+                    handler(...args);
+                }
+                catch (error) {
+                    mp.console.logError(`Error in CEF event ${eventName}:`, error);
+                }
+            });
+        }
+    }
+}
+// Обработчик для событий из CEF
+mp.events.add('triggerFromCef', (eventName, ...args) => {
+    rce.triggerFromCef(eventName, ...args);
+});
+// Остальной код без изменений
+mp.events.add("client:trigger:event", (eventname, argsstring) => triggerEvent(eventname, argsstring));
+let enableEventsLogging = mp.storage.data.enableEventsLoggin;
+const eventsCountMap = new Map();
+const triggerEvent = async (eventname, argsstring) => {
+    if (!eventsCountMap.has(eventname)) {
+        eventsCountMap.set(eventname, 0);
+    }
+    eventsCountMap.set(eventname, (eventsCountMap.get(eventname) + 1));
+    const handlers = rce.registerServerEvents.get(eventname);
+    if (enableEventsLogging) {
+        mp.console.logInfo(`event triggering started: ${eventname}`);
+    }
+    if (!handlers || handlers.size === 0)
+        return mp.console.logError("[CustomEvent] trigger non exists event " + eventname, true);
+    handlers.forEach(handler => {
+        try {
+            handler(...(JSON.parse(argsstring)));
+        }
+        catch (error) {
+            if (enableEventsLogging) {
+                mp.console.logError(`event (${eventname}) catch an error: ${error}`);
+            }
+        }
+    });
+    if (enableEventsLogging) {
+        mp.console.logInfo(`event triggering ended: ${eventname}`);
+    }
+};
+let splitTrigger = new Map();
+mp.events.add("client:trigger:event:split", async (tid, index, last, eventname, argsstring) => {
+    const handlers = rce.registerServerEvents.get(eventname);
+    if (!handlers || handlers.size === 0)
+        return mp.console.logError("[CustomEvent] trigger split non exists event " + eventname, true);
+    if (!splitTrigger.has(`${tid}_${eventname}`)) {
+        splitTrigger.set(`${tid}_${eventname}`, []);
+    }
+    let d = splitTrigger.get(`${tid}_${eventname}`);
+    d[index] = argsstring;
+    if (last) {
+        triggerEvent(eventname, d.join(''));
+    }
+    else {
+        splitTrigger.set(`${tid}_${eventname}`, d);
+    }
+});
+mp.events.add("client:call:event", async (eventname, requestID, argsstring) => {
+    try {
+        const handlers = rce.registerServerEvents.get(eventname);
+        if (!handlers || handlers.size === 0) {
+            mp.events.callRemote('client:call:event:result', requestID, null);
+            return;
+        }
+        // Вызываем первый обработчик (для обратной совместимости)
+        const handler = Array.from(handlers)[0];
+        let res = await handler(...(JSON.parse(argsstring)));
+        mp.events.callRemote('client:call:event:result', requestID, res);
+    }
+    catch (error) {
+        mp.console.logError(error, true);
+    }
+});
+mp.events.add('cef:trigger:event', (eventName, args) => {
+    rce.triggerCef(eventName, ...JSON.parse(args));
+});
+mp.events.add('call:client:response', (requestID, res) => {
+    let resolve = rce.requestServerHandle.get(requestID);
+    if (!resolve)
+        return;
+    resolve(res);
+});
+mp.events.add('call:cef:response', (requestID, res) => {
+    mp.browsers.forEach((browser) => {
+        if (browser.eventReady)
+            browser.execute(`window.customevent.callServerResponseHandle(${requestID}, '${JSON.stringify(res)}');`);
+    });
+});
+mp.events.add('call:server', (requestID, eventName, ...args) => mp.events.callRemote('call:cef', requestID, rce.encryptEventName(eventName), ...args));
+mp.events.add('call:clientfromcef', async (requestID, eventName, ...args) => {
+    const fnd = await CustomEventBase.call(eventName, ...args);
+    mp.browsers.forEach((browser) => {
+        if (browser.eventReady)
+            browser.execute(`window.customevent.callClientResponseHandle(${requestID}, '${JSON.stringify(fnd)}');`);
+    });
+});
+mp.events.add('trigger:server', (name, args) => {
+    mp.events.callRemote('trigger:cef', rce.encryptEventName(name), args);
+});
 
 const maxDistance = 20 * 20;
 let width = 0.032;
@@ -1033,7 +1009,6 @@ rce.registerServer('getId', () => {
 });
 
 mp.events.add('playerReady', (player) => {
-    rce.trigger('sendNotify', 'success', 'Тестовое сообщение', 6000, 'top');
     rce.triggerCef('client:setActiveAmbient', mp.storage.data.activeAmbient);
     mp.game.gameplay.setFadeOutAfterDeath(false);
     mp.game.ui.displayCash(false);
@@ -1289,10 +1264,3 @@ setInterval(() => {
         }
     });
 }, 500);
-
-if (openInterfaces.has('Auth')) {
-    mp.console.logInfo('Меню авторизации ВКЛЮЧЕНО!');
-}
-else {
-    mp.console.logInfo('Меню авторизации ОТКЛЮЧЕНО!');
-}

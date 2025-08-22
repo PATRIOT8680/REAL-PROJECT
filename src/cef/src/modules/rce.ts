@@ -8,7 +8,6 @@ export class rce extends CustomEventBase {
           handle(...JSON.parse(args));
         }
       });
-      console.log('trigger triggerCef ' + eventName);
     } catch (e) {
       console.log('error in triggerCef event: ' + e);
       console.log('event name ' + eventName);
