@@ -27,6 +27,8 @@ const Chat = () => {
   const blurRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
+    rce.triggerClient('chatloaded')
+
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault()
 
@@ -304,7 +306,6 @@ const Chat = () => {
     }
   }
 
-  rce.triggerClient('chatloaded')
   ev = rce.register('chatActive', (isActive: boolean) => {
     setChatActive(isActive)
   });
