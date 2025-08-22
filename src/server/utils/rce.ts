@@ -83,7 +83,6 @@ export class rce extends CustomEventBase {
 
     static triggerCef(player: PlayerMp, eventName: string, ...args:any[]){
         if(!mp.players.exists(player)) return;
-        console.log(`triggerCef сработал. name: ${eventName}, args: ${args}`)
         player.call('cef:trigger:event', [eventName, JSON.stringify(args)])
     }
 
@@ -214,7 +213,6 @@ mp.events.add('call:client', (player: PlayerMp, requestID: number, name: string,
 })
 
 mp.events.add('trigger:cef', (player: PlayerMp, name: string, args: string) => {
-    console.log(`ДОШЛО ДО СЕРВЕРА: ${name}, ${args}`)
     const nowTm = Date.now() / 1000 | 0;
 
     if(rce.clientPoolLog.has(`${player.id}_CEF____${name}`)){

@@ -57,8 +57,6 @@ const invokeCMD = (player: PlayerMp, cmd: string, args: string[]) => {
 }
 
 rce.registerClientAndCef(CHAT_MESSAGE_EVENT, (player: PlayerMp, msg: string, showTime: boolean, tile?: string) => {
-  console.log(`Сообщение дошло до сервера. Сообщение: ${msg}`)
-
   if (msg.startsWith('/')) {
     msg = msg.trim().slice(1)
 
@@ -80,7 +78,6 @@ rce.registerClientAndCef(CHAT_MESSAGE_EVENT, (player: PlayerMp, msg: string, sho
       const formattedMsg = msg.replace(/</g, "&lt;").replace(/'/g, "&#39;").replace(/"/g, "&#34;");
 
       //mp.players.forEach(p => {
-        console.log(`Сообщение прошло проверки. Сообщение: ${msg}`)
         rce.triggerClients(CHAT_MESSAGE_EVENT, player.name, formattedMsg, showTime, tile)
       //})
     }

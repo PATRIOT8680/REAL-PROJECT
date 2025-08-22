@@ -160,7 +160,6 @@ const Chat = () => {
   }
 
   const openChat = (insertSlash: boolean) => {
-    rce.triggerClient('clientCmd', 'ку ку. чат открыт')
     if (startChatboxActiveRef.current) clearTimeout(startChatboxActiveRef.current)
 
     if (timeoutRef.current) {
@@ -194,8 +193,6 @@ const Chat = () => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    console.log('Подтвердили сообщение! Отправляем на сторону клиента chatmessage')
-    rce.triggerClient('clientCmd', `handleSubmit: ${inputValue}`)
     rce.triggerClient('chatmessage', inputValue)
     saveBuffer()
     closeChat()
@@ -293,8 +290,6 @@ const Chat = () => {
   }
 
   const addMsg = useCallback((name: string, text: string, showTime: boolean, tile: string) => {
-    rce.triggerClient('clientCmd', `ADD MSG SEND: ${name}, ${text}`)
-    console.log(`Окей. Пришло сообщение (server -> client -> cef). В CEF делаем addMsg: ${text}`)
 		const coloredText = colorify(text)
 		addString(`<b>Гражданин #19383</b> • ${coloredText}`, true)
 	}, [])

@@ -7,5 +7,11 @@ export default defineConfig({
   root: './',
 	build: {
 		outDir: '../../client_packages/cef/',
+		rollupOptions: {
+			output: {
+				manualChunks: undefined,
+				inlineDynamicImports: true,
+			}
+		}
 	},
 })

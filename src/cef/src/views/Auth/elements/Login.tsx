@@ -33,8 +33,6 @@ const Login: FC<IAuthLogin> = ({ setCurrentForm, saveLogin, setSaveLogin }) => {
   }, [])
 
   const handleAuth = () => {
-    console.log('handleAuth вызван')
-
     if (!saveLogin || !password) {
       window.App.sendNotifyReducer.sendNotify('err', 'Поля ввода не могут быть пустыми!', 4000, 'right')
       return
