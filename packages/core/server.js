@@ -617,11 +617,44 @@ registerCMD('clearchat', (player) => {
     send(player, '<b>Ваш чат был успешно очищен!</b>', false, 'SERVER');
 });
 
+const data = mysql__namespace.createPool({
+    host: 'localhost',
+    user: 'root',
+    database: 'redstar',
+    password: 'Patriot86',
+    port: 3306
+});
+const mysql2 = {
+    isConnected: false,
+    sql: 'SELECT * FROM accounts'
+};
+const makeConnection = () => {
+    data.getConnection((err, connection) => {
+        if (err) {
+            console.log(chalk.blueBright('• MYSQL • База данных не подключена! Повторная попытка через 2 секунды...'));
+            setTimeout(makeConnection, 2000);
+        }
+        else {
+            connection.query(mysql2.sql, (errQuery) => {
+                if (errQuery) {
+                    mysql2.isConnected = false;
+                    console.log(chalk.bgRed('• MYSQL •') + chalk.red(` Ошибка подключения к БД! (Err: ${errQuery})`));
+                }
+                else {
+                    mysql2.isConnected = true;
+                    console.log(chalk.bgGreen('• MYSQL •') + chalk.green(' База данных подключена!'));
+                }
+            });
+        }
+    });
+};
+makeConnection();
+
 registerCMD('getpos', (player, [target, ...namePos]) => {
     const targetId = parseInt(target, 10);
     const fullNamePos = namePos.join(' ');
     const foundTarget = mp.players.at(targetId);
-    const filePath = 'E:/PROJECTS/REDSTAR-RAGE/A • targetPosition.txt';
+    const filePath = 'E:/PROJECTS/REAL-RP/A • targetPosition.txt';
     if (!target || !namePos.length) {
         send(player, 'Используйте <b>/getpos [targetId] [name pos]</b>', false);
         return;
@@ -630,7 +663,7 @@ registerCMD('getpos', (player, [target, ...namePos]) => {
         send(player, `{ff3030}<b>Игрок #${target} не найден!</b>`, false, 'admin');
         return;
     }
-    const locationTarget = `\n-- [${foundTarget.name} • ${fullNamePos}]: ${foundTarget.position.x}, ${foundTarget.position.y}, ${foundTarget.position.z} || ${foundTarget.rotation.x}, ${foundTarget.rotation.y}, ${foundTarget.rotation.z * (180 / Math.PI)}\n [JSON]: { "x": ${foundTarget.position.x}, "y": ${foundTarget.position.y}, "z": ${foundTarget.position.z}, "rot": ${foundTarget.rotation.z * (180 / Math.PI)} }\n`;
+    const locationTarget = `\n-- [${foundTarget.name} • ${fullNamePos}]: ${foundTarget.position.x}, ${foundTarget.position.y}, ${foundTarget.heading}\n [JSON]: { "x": ${foundTarget.position.x}, "y": ${foundTarget.position.y}, "z": ${foundTarget.position.z}, "rot": ${foundTarget.heading} }\n`;
     const dirPath = path__namespace.dirname(filePath);
     if (!fs__namespace.existsSync(dirPath)) {
         fs__namespace.mkdirSync(dirPath, { recursive: true });
@@ -643,19 +676,6 @@ registerCMD('getpos', (player, [target, ...namePos]) => {
             send(player, `{0eeb15}Позиция <b>Игрока #${target} успешно записана!</b>`, true, 'admin');
         }
     });
-});
-registerCMD('setdim', (player, [target, dimension]) => {
-    const targetId = parseInt(target, 10);
-    const foundTarget = mp.players.at(targetId);
-    if (!target || !dimension) {
-        send(player, 'Используйте <b>/getpos [targetId] [name pos]</b>', false);
-        return;
-    }
-    else if (!foundTarget) {
-        send(player, `{ff3030}<b>Игрок #${target} не найден!</b>`, false, 'admin');
-        return;
-    }
-    foundTarget.dimension = dimension;
 });
 registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
     try {
@@ -720,39 +740,98 @@ registerCMD('allclearchat', (player) => {
         send(p, '<b>Чат был очищен у всех!</b>', false, 'ADMIN');
     });
 });
-
-const data = mysql__namespace.createPool({
-    host: 'localhost',
-    user: 'root',
-    database: 'realrp',
-    password: 'Real#PR86',
-    port: 3306
+registerCMD('vehposrent', async (player, [vehModel, idColumn]) => {
+    if (!player.vehicle) {
+        return rce.triggerClient(player, 'sendNotify', 'err', 'Игрок не находится в транспортном средстве!', 5000, 'bottom');
+    }
+    if (!vehModel || !idColumn) {
+        return send(player, 'Используйте: /vehposrent [модель т/с] [id колонки]', false, 'SERVER');
+    }
+    const vehicle = player.vehicle;
+    const vehPos = vehicle.position;
+    const vehRot = vehicle.heading;
+    const vehName = vehicle.model;
+    try {
+        const connection = await data.promise().getConnection();
+        try {
+            const [checkRows] = await connection.execute('SELECT id FROM rent WHERE id = ?', [Number(idColumn)]);
+            if (checkRows.length === 0) {
+                return rce.triggerClient(player, 'sendNotify', 'err', 'Запись в БД с указанным ID не существует!', 3000, 'bottom');
+            }
+            const [rows] = await connection.execute('SELECT vehiclesdata FROM rent WHERE id = ?', [Number(idColumn)]);
+            let vehiclesData = [];
+            if (rows[0].vehiclesdata) {
+                try {
+                    vehiclesData = JSON.parse(rows[0].vehiclesdata);
+                }
+                catch (e) {
+                    console.error(`${chalk.bgRed('RENT')} Error JSON parsing: ${e}`);
+                }
+            }
+            const vehiclesInfo = {
+                vehName: vehModel,
+                x: vehPos.x.toFixed(3),
+                y: vehPos.y.toFixed(3),
+                z: vehPos.z.toFixed(3),
+                heading: vehRot.toFixed(3)
+            };
+            const existingIndex = vehiclesData.indexOf((idx) => idx.name === vehName);
+            if (existingIndex !== -1) {
+                vehiclesData[existingIndex] = vehiclesInfo;
+            }
+            else {
+                vehiclesData.push(vehiclesInfo);
+            }
+            await connection.execute('UPDATE rent SET vehiclesdata = ? WHERE id = ?', [JSON.stringify(vehiclesData), Number(idColumn)]);
+            rce.triggerClient(player, 'sendNotify', 'success', 'Позиция т/с сохранена в БД!', 5000, 'bottom');
+        }
+        finally {
+            connection.release();
+        }
+    }
+    catch (e) {
+        console.error(`${chalk.bgRed('RENT')} ${e}`);
+    }
 });
-const mysql2 = {
-    isConnected: false,
-    sql: 'SELECT * FROM accounts'
-};
-const makeConnection = () => {
-    data.getConnection((err, connection) => {
-        if (err) {
-            console.log(chalk.blueBright('• MYSQL • База данных не подключена! Повторная попытка через 2 секунды...'));
-            setTimeout(makeConnection, 2000);
+registerCMD('pedposrent', async (player, [idColumn, modelName, ...pedName]) => {
+    const fullPedName = pedName.join(' ');
+    if (!pedName || !idColumn || !modelName) {
+        return send(player, `Используйте: /pedposrent [id колонки] [название модели] [имя Ped'a]`, false, 'SERVER');
+    }
+    const pedPos = player.position;
+    const pedRot = player.heading;
+    try {
+        const connection = await data.promise().getConnection();
+        try {
+            const [checkRows] = await connection.execute('SELECT id FROM rent WHERE id = ?', [Number(idColumn)]);
+            if (checkRows.length === 0) {
+                return rce.triggerClient(player, 'sendNotify', 'err', 'Запись в БД с указанным ID не существует!', 3000, 'bottom');
+            }
+            const pedData = {
+                x: pedPos.x.toFixed(3),
+                y: pedPos.y.toFixed(3),
+                z: pedPos.z.toFixed(3),
+                heading: pedRot.toFixed(3)
+            };
+            await connection.execute('UPDATE rent SET pedname = ?, modelname = ?, pedpos = ? WHERE id = ?', [fullPedName, modelName, JSON.stringify(pedData), Number(idColumn)]);
+            rce.triggerClient(player, 'sendNotify', 'success', `Позиция Ped'a сохранена в БД!`, 5000, 'bottom');
         }
-        else {
-            connection.query(mysql2.sql, (errQuery) => {
-                if (errQuery) {
-                    mysql2.isConnected = false;
-                    console.log(chalk.bgRed('• MYSQL •') + chalk.red(` Ошибка подключения к БД! (Err: ${errQuery})`));
-                }
-                else {
-                    mysql2.isConnected = true;
-                    console.log(chalk.bgGreen('• MYSQL •') + chalk.green(' База данных подключена!'));
-                }
-            });
+        finally {
+            connection.release();
         }
-    });
-};
-makeConnection();
+    }
+    catch (e) {
+        console.error(`${chalk.bgRed('RENT')} ${e}`);
+    }
+});
+registerCMD('setdim', (player, [targetID, dimension]) => {
+    if (!targetID || !dimension)
+        return send(player, '<b>Используйте /setdim [ID игрока] [dimension]</b>', false, 'SERVER');
+    const target = mp.players.at(targetID);
+    target.dimension = Number(dimension);
+    rce.triggerClient(target, 'sendNotify', 'info', `Вам установлен dimension #${dimension}!`, 4000, 'bottom');
+    rce.triggerClient(player, 'sendNotify', 'info', `Игроку (ID: ${targetID}) установлен dimension #${dimension}!`, 3000, 'top');
+});
 
 const transporter$1 = nodemailer.createTransport({
     service: 'yandex',
@@ -1289,3 +1368,56 @@ rce.registerClient('toggleNoclip', (player, toggle) => {
     else
         player.alpha = 255;
 });
+
+let rentsData = [];
+mp.events.add('playerJoin', async (player) => {
+    rentsData.forEach(rent => {
+        rce.triggerClient(player, 'createPed', rent.pedName, 'Местный арендатор', rent.modelName, [Number(rent.pedPos.x), Number(rent.pedPos.y), Number(rent.pedPos.z), Number(rent.pedPos.heading)], { isVisible: true, id: 811, color: 44 });
+    });
+});
+const loadRent = async () => {
+    try {
+        const connection = await data.promise().getConnection();
+        try {
+            const [rows] = await connection.execute('SELECT * FROM rent');
+            if (rows.length === 0) {
+                return console.log(chalk.bgYellow("RENT") + chalk.yellow(" Таблица rents пустая!"));
+            }
+            rentsData = rows.map((row) => {
+                let parsedPedpos = null;
+                if (row.pedpos) {
+                    try {
+                        parsedPedpos = JSON.parse(row.pedpos);
+                    }
+                    catch (e) {
+                        console.log(chalk.bgRed('RENT' + chalk.red(` Ошибка парсинга: ${e}`)));
+                    }
+                }
+                // const ped: any = mp.peds.new(mp.joaat(row.modelname),
+                //   new mp.Vector3(Number(parsedPedpos.x), Number(parsedPedpos.y), Number(parsedPedpos.z)),
+                //   {
+                //     dynamic: true,
+                //     frozen: true,
+                //     invincible: true,
+                //     lockController: false,
+                //     heading: row.heading,
+                //     dimension: 0
+                //   }
+                // )
+                return {
+                    pedName: row.pedname,
+                    modelName: row.modelname,
+                    pedPos: parsedPedpos
+                };
+            });
+            console.log(chalk.bgGreenBright("RENT") + chalk.greenBright(` Загружено ${rows.length} точек аренды`));
+        }
+        finally {
+            await connection.release();
+        }
+    }
+    catch (e) {
+        console.error(chalk.bgRed('RENT' + chalk.red(` ${e}`)));
+    }
+};
+loadRent();

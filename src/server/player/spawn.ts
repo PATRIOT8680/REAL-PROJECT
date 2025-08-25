@@ -1,3 +1,5 @@
+import {rce} from "../utils/rce";
+
 mp.events.add('playerJoin', (player: PlayerMp) => {
   player.dimension = player.id
   console.log(`${player.socialClub} подключился!!! dim: ${player.dimension}`)

@@ -274,7 +274,7 @@ const Chat = () => {
 	}
 
   const addString = (text: string, showTime: boolean, tile?: string) => {
-    if (msgRef.current && msgRef.current.children.length >= 10) {
+    if (msgRef.current && msgRef.current.children.length >= 100) {
       msgRef.current.removeChild(msgRef.current.children[0])
     }
 
