@@ -4,13 +4,15 @@ import * as path from 'path'
 import { registerCMD } from '../menus/chat'
 import { send } from '../menus/chat'
 import { rce } from '../utils/rce'
+import {data} from "../database/mysql";
+import chalk from "chalk";
 
 registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...string[]]) => {
     const targetId = parseInt(target, 10)
     const fullNamePos = namePos.join(' ');
 
     const foundTarget = mp.players.at(targetId)
-    const filePath = 'E:/PROJECTS/REDSTAR-RAGE/A • targetPosition.txt'
+    const filePath = 'E:/PROJECTS/REAL-RP/A • targetPosition.txt'
     
     if (!target || !namePos.length) {
         send(player, 'Используйте <b>/getpos [targetId] [name pos]</b>', false);
@@ -20,7 +22,7 @@ registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...strin
         return;
     }
 
-    const locationTarget = `\n-- [${foundTarget.name} • ${fullNamePos}]: ${foundTarget.position.x}, ${foundTarget.position.y}, ${foundTarget.position.z} || ${foundTarget.rotation.x}, ${foundTarget.rotation.y}, ${foundTarget.rotation.z * (180 / Math.PI)}\n [JSON]: { "x": ${foundTarget.position.x}, "y": ${foundTarget.position.y}, "z": ${foundTarget.position.z}, "rot": ${foundTarget.rotation.z * (180 / Math.PI)} }\n`;
+    const locationTarget = `\n-- [${foundTarget.name} • ${fullNamePos}]: ${foundTarget.position.x}, ${foundTarget.position.y}, ${foundTarget.heading}\n [JSON]: { "x": ${foundTarget.position.x}, "y": ${foundTarget.position.y}, "z": ${foundTarget.position.z}, "rot": ${foundTarget.heading} }\n`;
     
     const dirPath = path.dirname(filePath);
     if (!fs.existsSync(dirPath)) {
@@ -35,21 +37,6 @@ registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...strin
         }
     });
 });
-
-registerCMD('setdim', (player: PlayerMp, [target, dimension]: [string, number]) => {
-  const targetId = parseInt(target, 10)
-  const foundTarget = mp.players.at(targetId)
-
-  if (!target || !dimension) {
-    send(player, 'Используйте <b>/getpos [targetId] [name pos]</b>', false);
-    return;
-  } else if (!foundTarget) {
-    send(player, `{ff3030}<b>Игрок #${target} не найден!</b>`, false, 'admin')
-    return
-  }
-
-  foundTarget.dimension = dimension
-})
 
 registerCMD('veh', (player: PlayerMp, [target, model, r, g, b, numberPlate]) => {
   try {
@@ -128,4 +115,133 @@ registerCMD('allclearchat', (player: PlayerMp) => {
   mp.players.forEach(p => {
     send(p, '<b>Чат был очищен у всех!</b>', false, 'ADMIN')
   })
+})
+
+
+registerCMD('vehposrent', async (player: PlayerMp, [vehModel, idColumn]) => {
+  if (!player.vehicle) {
+    return rce.triggerClient(player, 'sendNotify', 'err', 'Игрок не находится в транспортном средстве!', 5000, 'bottom')
+  }
+
+  if (!vehModel || !idColumn) {
+    return send(player, 'Используйте: /vehposrent [модель т/с] [id колонки]', false, 'SERVER')
+  }
+
+  const vehicle = player.vehicle
+  const vehPos = vehicle.position
+  const vehRot = vehicle.heading
+  const vehName = vehicle.model
+
+  try {
+    const connection = await data.promise().getConnection()
+
+    try {
+      const [checkRows]: any = await connection.execute(
+          'SELECT id FROM rent WHERE id = ?',
+          [Number(idColumn)]
+      )
+
+      if (checkRows.length === 0) {
+        return rce.triggerClient(player, 'sendNotify', 'err', 'Запись в БД с указанным ID не существует!', 3000, 'bottom')
+      }
+
+      const [rows]: any = await connection.execute(
+          'SELECT vehiclesdata FROM rent WHERE id = ?',
+          [Number(idColumn)]
+      )
+
+      let vehiclesData = []
+
+      if (rows[0].vehiclesdata) {
+        try {
+          vehiclesData = JSON.parse(rows[0].vehiclesdata)
+        } catch (e) {
+          console.error(`${chalk.bgRed('RENT')} Error JSON parsing: ${e}`)
+        }
+      }
+
+      const vehiclesInfo = {
+        vehName: vehModel,
+        x: vehPos.x.toFixed(3),
+        y: vehPos.y.toFixed(3),
+        z: vehPos.z.toFixed(3),
+        heading: vehRot.toFixed(3)
+      }
+
+      const existingIndex = vehiclesData.indexOf((idx: any) => idx.name === vehName)
+      if (existingIndex !== -1) {
+        vehiclesData[existingIndex] = vehiclesInfo
+      } else {
+        vehiclesData.push(vehiclesInfo)
+      }
+
+      await connection.execute(
+          'UPDATE rent SET vehiclesdata = ? WHERE id = ?',
+          [JSON.stringify(vehiclesData), Number(idColumn)]
+      )
+
+      rce.triggerClient(player, 'sendNotify', 'success', 'Позиция т/с сохранена в БД!', 5000, 'bottom');
+    } finally {
+      connection.release()
+    }
+  } catch (e) {
+    console.error(`${chalk.bgRed('RENT')} ${e}`)
+  }
+})
+
+
+registerCMD('pedposrent', async (player: PlayerMp, [idColumn, modelName, ...pedName]) => {
+  const fullPedName = pedName.join(' ')
+
+  if (!pedName || !idColumn || !modelName) {
+    return send(player, `Используйте: /pedposrent [id колонки] [название модели] [имя Ped'a]`, false, 'SERVER')
+  }
+
+  const pedPos = player.position
+  const pedRot = player.heading
+
+  try {
+    const connection = await data.promise().getConnection()
+
+    try {
+      const [checkRows]: any = await connection.execute(
+          'SELECT id FROM rent WHERE id = ?',
+        [Number(idColumn)]
+      )
+
+      if (checkRows.length === 0) {
+        return rce.triggerClient(player, 'sendNotify', 'err', 'Запись в БД с указанным ID не существует!', 3000, 'bottom')
+      }
+
+      const pedData = {
+        x: pedPos.x.toFixed(3),
+        y: pedPos.y.toFixed(3),
+        z: pedPos.z.toFixed(3),
+        heading: pedRot.toFixed(3)
+      }
+
+      await connection.execute(
+          'UPDATE rent SET pedname = ?, modelname = ?, pedpos = ? WHERE id = ?',
+        [fullPedName, modelName, JSON.stringify(pedData), Number(idColumn)]
+      )
+
+      rce.triggerClient(player, 'sendNotify', 'success', `Позиция Ped'a сохранена в БД!`, 5000, 'bottom')
+    } finally {
+      connection.release()
+    }
+  } catch (e) {
+    console.error(`${chalk.bgRed('RENT')} ${e}`)
+  }
+})
+
+
+registerCMD('setdim', (player: PlayerMp, [targetID, dimension]) => {
+  if (!targetID || !dimension)
+    return send(player, '<b>Используйте /setdim [ID игрока] [dimension]</b>', false, 'SERVER')
+
+  const target = mp.players.at(targetID)
+  target.dimension = Number(dimension)
+
+  rce.triggerClient(target, 'sendNotify', 'info', `Вам установлен dimension #${dimension}!`, 4000, 'bottom')
+  rce.triggerClient(player, 'sendNotify', 'info', `Игроку (ID: ${targetID}) установлен dimension #${dimension}!`, 3000, 'top')
 })
