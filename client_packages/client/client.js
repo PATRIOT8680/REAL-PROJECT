@@ -1262,21 +1262,39 @@ rce.registerAll('getDist', (x1, y1, z1, x2, y2, z2) => {
     return getDist(x1, y1, z1, x2, y2, z2);
 });
 
+const scenarios = [
+    "WORLD_HUMAN_AA_COFFEE",
+    "WORLD_HUMAN_CAR_PARK_ATTENDANT",
+    "WORLD_HUMAN_CLIPBOARD_FACILITY",
+    "WORLD_HUMAN_COP_IDLES",
+    "WORLD_HUMAN_DRINKING_FACILITY",
+    "WORLD_HUMAN_GUARD_STAND",
+    "WORLD_HUMAN_STAND_MOBILE",
+    "EAR_TO_TEXT_FAT",
+    "WORLD_LOOKAT_POINT",
+    "WORLD_HUMAN_AA_SMOKE",
+];
+let pedsData = new Map();
+mp.events.add('entityStreamIn', (entity) => {
+    if (entity && entity.handle !== 0 && entity.type === 'ped') {
+        const pedData = pedsData.get(entity.id);
+        if (pedData && pedData.scenario) {
+            entity.taskStartScenarioInPlace(pedData.scenario, 0, false);
+        }
+    }
+});
 rce.registerAll('createPed', (pedName, pedRole, modelName, pedPos, blip) => {
     const [x, y, z, heading] = pedPos;
-    let ped = mp.peds.new(mp.game.joaat(modelName), new mp.Vector3(x, y, z), heading, 0);
-    const timer = setInterval(() => {
-        if (mp.game.streaming.hasAnimDictLoaded("amb@code_human_wander_smoking@male@idle_a")) {
-            clearInterval(timer);
-            ped.taskPlayAnim("amb@code_human_wander_smoking@male@idle_a", "idle_b", 8.0, 1.0, -1, 1, 1.0, false, false, false);
-        }
-    }, 200);
-    //mp.players.local.taskStartScenarioInPlace('WORLD_HUMAN_CONST_DRILL', 0, false);
-    //mp.game.task.startScenarioInPlace(mp.game.joaat(modelName), "WORLD_HUMAN_AA_COFFEE", 0, false)
-    //ped.taskStartScenarioInPlace("WORLD_HUMAN_AA_COFFEE", 0, false)
+    const npc = mp.peds.new(mp.game.joaat(modelName), new mp.Vector3(x, y, z), heading, 0);
+    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    pedsData.set(npc.id, {
+        scenario: scenario,
+        name: pedName,
+        role: pedRole
+    });
     mp.labels.new(pedName, new mp.Vector3(x, y, z + 1.2), { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 255], dimension: 0 });
     mp.labels.new(pedRole, new mp.Vector3(x, y, z + 1.05), { los: false, font: 4, drawDistance: 7.5, color: [255, 102, 37, 255], dimension: 0 });
-    mp.labels.new('[E]', new mp.Vector3(x, y, z + 0.2), { los: false, font: 4, drawDistance: 5, color: [21, 255, 146, 190], dimension: 0 });
+    mp.labels.new('[E]', new mp.Vector3(x, y, z + 0.2), { los: false, font: 4, drawDistance: 3, color: [21, 255, 146, 190], dimension: 0 });
     mp.markers.new(23, new mp.Vector3(x, y, z - 0.95), 1, {
         direction: new mp.Vector3(x, y, z),
         rotation: new mp.Vector3(0, 0, 0),
@@ -1287,7 +1305,7 @@ rce.registerAll('createPed', (pedName, pedRole, modelName, pedPos, blip) => {
     if (blip.isVisible) {
         mp.blips.new(blip.id, new mp.Vector3(x, y, z), {
             name: pedRole,
-            scale: 1,
+            scale: 0.8,
             color: blip.color,
             alpha: 255,
             drawDistance: 100,
@@ -1296,4 +1314,34 @@ rce.registerAll('createPed', (pedName, pedRole, modelName, pedPos, blip) => {
             dimension: 0
         });
     }
+});
+
+let keyDownE = 'disabled';
+let rentData = null;
+rce.registerServer('rentColshape', (status, data) => {
+    if (status === 'enabled') {
+        keyDownE = 'enabled';
+        rentData = data;
+    }
+    else {
+        gui.execute(`window.App.rentReducer.hideRent()`);
+        mp.gui.cursor.show(false, false);
+        keyDownE = 'disabled';
+        rentData = null;
+    }
+});
+mp.keys.bind(Keys.VK_E, false, () => {
+    if (keyDownE !== 'disabled') {
+        mp.console.logWarning(`Получили: ${JSON.stringify(rentData)}`);
+        mp.gui.cursor.show(true, true);
+        gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`);
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    mp.game.ui.setPauseMenuActive(false);
+    mp.gui.cursor.show(false, false);
+    gui.execute(`window.App.rentReducer.hideRent()`);
+    setTimeout(() => {
+        mp.game.ui.setPauseMenuActive(true);
+    }, 300);
 });

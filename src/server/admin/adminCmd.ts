@@ -118,13 +118,13 @@ registerCMD('allclearchat', (player: PlayerMp) => {
 })
 
 
-registerCMD('vehposrent', async (player: PlayerMp, [vehModel, idColumn]) => {
+registerCMD('vehposrent', async (player: PlayerMp, [vehModel, price, idColumn]) => {
   if (!player.vehicle) {
     return rce.triggerClient(player, 'sendNotify', 'err', 'Игрок не находится в транспортном средстве!', 5000, 'bottom')
   }
 
-  if (!vehModel || !idColumn) {
-    return send(player, 'Используйте: /vehposrent [модель т/с] [id колонки]', false, 'SERVER')
+  if (!vehModel || !idColumn || !price) {
+    return send(player, 'Используйте: /vehposrent [модель т/с] [цена] [id колонки]', false, 'SERVER')
   }
 
   const vehicle = player.vehicle
@@ -162,6 +162,7 @@ registerCMD('vehposrent', async (player: PlayerMp, [vehModel, idColumn]) => {
 
       const vehiclesInfo = {
         vehName: vehModel,
+        price: Number(price),
         x: vehPos.x.toFixed(3),
         y: vehPos.y.toFixed(3),
         z: vehPos.z.toFixed(3),

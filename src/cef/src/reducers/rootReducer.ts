@@ -9,6 +9,7 @@ import { loadingReducer } from './menus/loading';
 import { welcomeReducer } from './menus/welcome';
 import { deathReducer } from './menus/death';
 import { hudReducer } from "./menus/hud.ts";
+import { rentReducer } from "./menus/rent.ts";
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
@@ -22,6 +23,7 @@ export type RootState = {
   welcomeReducer: ReturnType<typeof welcomeReducer>
   deathReducer: ReturnType<typeof deathReducer>
   hudReducer: ReturnType<typeof hudReducer>
+  rentReducer: ReturnType<typeof rentReducer>
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
@@ -36,6 +38,7 @@ export const rootReducer = combineReducers({
   welcomeReducer,
   deathReducer,
   hudReducer,
+  rentReducer,
 
   // Elements
   sendNotifyReducer,
