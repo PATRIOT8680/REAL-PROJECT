@@ -46,6 +46,7 @@ const App = () => {
   const chatVisible = useSelector((state: RootState) => state.chatReducer.isVisible)
   const welcomeVisible = useSelector((state: RootState) => state.welcomeReducer.isVisible)
   const hudVisible = useSelector((state: RootState) => state.hudReducer.isVisible)
+  const rentVisible = useSelector((state: RootState) => state.rentReducer.isVisible)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -91,7 +92,7 @@ const App = () => {
       { chatVisible && <Chat /> }
       { welcomeVisible && <Welcome /> }
       <Loading />
-      {/*<Rent />*/}
+      { rentVisible && <Rent /> }
       { deathReducer.isVisible && <DeathPlayer />  }
       { hudVisible && <Hud /> }
 
