@@ -1178,7 +1178,7 @@ let voiceManager = {
     list: [],
     new(player) {
         if (this.list.indexOf(player) === -1) {
-            rce.triggerServer('client:voice:new', player);
+            mp.events.callRemote('client:voice:new', player);
             this.list.push(player);
             player.isListening = true;
             {
@@ -1196,7 +1196,7 @@ let voiceManager = {
         }
         player.isListening = false;
         if (removedVoice) {
-            rce.triggerServer('client:voice:deleted', player);
+            mp.events.callRemote('client:voice:deleted', player);
         }
     }
 };

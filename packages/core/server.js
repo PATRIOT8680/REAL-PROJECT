@@ -1351,20 +1351,12 @@ rce.registerClientCef('getIdPlayer', (player) => {
 rce.registerClientCef('player:mute', (player, state) => {
     player.setVariable('player_mute', state);
 });
-mp.events.add('playerJoin', (player) => {
-    player.setVariable('player_online', true);
-});
-mp.events.add('playerQuit', (player) => {
-    player.setVariable('player_online', false);
-});
 
-rce.registerClientCef('client:voice:new', (player, target) => {
-    console.log(`Войс создан! (${target.id})`);
+mp.events.add('client:voice:new', (player, target) => {
     if (target)
         player.enableVoiceTo(target);
 });
-rce.registerClientCef('client:voice:deleted', (player, target) => {
-    console.log(`Войс удален! (${target.id})`);
+mp.events.add('client:voice:deleted', (player, target) => {
     if (target)
         player.disableVoiceTo(target);
 });
@@ -1377,15 +1369,29 @@ rce.registerClient('toggleNoclip', (player, toggle) => {
 });
 
 let rentsData = [];
-let isTakenRent = false;
-let vehicleRent;
-let isWithdrawal = null;
 const MAX_RETRIES = 10;
 const RETRY_DELAY = 2000;
+const playerRentData = new Map();
 mp.events.add('playerJoin', async (player) => {
+    playerRentData.set(player.id, {
+        isTakenRent: false,
+        vehicleRent: null,
+        isWithdrawal: null,
+    });
     rentsData.forEach(rent => {
         rce.triggerClient(player, 'createPed', rent.pedName, 'Местный арендатор', rent.modelName, [Number(rent.pedPos.x), Number(rent.pedPos.y), Number(rent.pedPos.z), Number(rent.pedPos.heading)], { isVisible: true, id: 811, color: 44 });
     });
+});
+mp.events.add('playerQuit', (player) => {
+    const rentData = playerRentData.get(player.id);
+    if (rentData) {
+        if (rentData.isWithdrawal)
+            clearTimeout(rentData.isWithdrawal);
+        if (rentData.vehicleRent && mp.vehicles.exists(rentData.vehicleRent)) {
+            rentData.vehicleRent.destroy();
+        }
+    }
+    playerRentData.delete(player.id);
 });
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const loadRent = async (retryCount = 0) => {
@@ -1445,14 +1451,15 @@ const loadRent = async (retryCount = 0) => {
 mp.events.add('playerEnterColshape', (player, shape) => {
     if (!player.vehicle) {
         const rentData = rentsData.find(rent => rent.colshape === shape);
-        if (rentData) {
+        const playerData = playerRentData.get(player.id);
+        if (rentData && playerData) {
             const filteredVehiclesData = rentData.vehiclesData.map(vehicle => ({
                 nameCar: vehicle.vehName,
                 price: vehicle.price
             }));
             rce.triggerClient(player, 'rentColshape', 'enabled', {
                 id: rentData.id,
-                isTakenRent: isTakenRent,
+                isTakenRent: playerData.isTakenRent,
                 data: filteredVehiclesData
             });
         }
@@ -1460,66 +1467,86 @@ mp.events.add('playerEnterColshape', (player, shape) => {
 });
 rce.registerCef('cef:handleRentCar', (player, id, nameCar, price, hours) => {
     const rentData = rentsData.find(rent => rent.id === id);
-    if (rentData) {
-        const vehInfo = rentData.vehiclesData.find((veh) => veh.vehName === nameCar);
-        if (!vehInfo) {
-            return console.log(chalk.bgRed('• RENT •') + chalk.red('Транспорт не найден!'));
-        }
-        if (isTakenRent) {
-            rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('err', 'У вас уже есть транспорт в аренде. Отмените предыдушую аренду.', 4000, 'bottom')`);
-            return;
-        }
-        const vehPos = new mp.Vector3(Number(vehInfo.x), Number(vehInfo.y), Number(vehInfo.z));
-        try {
-            isTakenRent = true;
-            vehicleRent = mp.vehicles.new(mp.joaat(vehInfo.vehName), vehPos, {
-                color: [[255, 255, 255], [255, 255, 255]],
-                dimension: 0,
-                engine: true,
-                heading: vehInfo.heading,
-                locked: false,
-                numberPlate: 'RENT'
-            });
-            player.putIntoVehicle(vehicleRent, 0);
-            rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('success', 'Вы взяли в аренду ${nameCar} на ${hours} ч. (-$${price})'), 4500, 'bottom'`);
-            const rentTime = hours * 60 * 60 * 1000;
-            setTimeout(async () => {
-                rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('warning', 'Внимание! Через 3 минуты срок аренды закончится и транспорт будет изъят!', 6000, 'bottom')`);
-                setTimeout(() => {
-                    if (player.getVariable('player_online')) {
-                        isWithdrawal = null;
-                        isTakenRent = false;
-                        vehicleRent.destroy();
-                        rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Срок аренды закончился!', 4000, 'bottom')`);
+    const playerData = playerRentData.get(player.id);
+    if (!rentData || !playerData)
+        return;
+    const vehInfo = rentData.vehiclesData.find((veh) => veh.vehName === nameCar);
+    if (!vehInfo) {
+        return console.log(chalk.bgRed('• RENT •') + chalk.red('Транспорт не найден!'));
+    }
+    if (playerData.isTakenRent) {
+        rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('err', 'У вас уже есть транспорт в аренде. Отмените предыдушую аренду.', 4000, 'bottom')`);
+        return;
+    }
+    const vehPos = new mp.Vector3(Number(vehInfo.x), Number(vehInfo.y), Number(vehInfo.z));
+    try {
+        playerData.isTakenRent = true;
+        playerData.vehicleRent = mp.vehicles.new(mp.joaat(vehInfo.vehName), vehPos, {
+            color: [[255, 255, 255], [255, 255, 255]],
+            dimension: 0,
+            engine: true,
+            heading: vehInfo.heading,
+            locked: false,
+            numberPlate: 'RENT'
+        });
+        player.putIntoVehicle(playerData.vehicleRent, 0);
+        rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('success', 'Вы взяли в аренду ${nameCar} на ${hours} ч. (-$${price})'), 4500, 'bottom'`);
+        const rentTime = hours * 60 * 60 * 1000;
+        setTimeout(async () => {
+            rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('warning', 'Внимание! Через 3 минуты срок аренды закончится и транспорт будет изъят!', 6000, 'bottom')`);
+            setTimeout(() => {
+                if (playerData.vehicleRent && playerData.vehicleRent && mp.vehicles.exists(playerData.vehicleRent)) {
+                    if (playerData.isWithdrawal) {
+                        clearTimeout(playerData.isWithdrawal);
+                        playerData.isWithdrawal = null;
                     }
-                }, 3 * 60 * 1000);
-            }, rentTime - (3 * 60 * 1000));
-        }
-        catch (e) {
-            console.log(chalk.bgRed('• RENT •') + chalk.red(JSON.stringify(e)));
-        }
+                    playerData.isTakenRent = false;
+                    playerData.vehicleRent.destroy();
+                    rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Срок аренды закончился!', 4000, 'bottom')`);
+                }
+            }, 3 * 60 * 1000);
+        }, rentTime - (3 * 60 * 1000));
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• RENT •') + chalk.red(JSON.stringify(e)));
     }
 });
 rce.registerCef('cef:cancelRentCar', (player) => {
-    vehicleRent.destroy();
-    isTakenRent = false;
-    isWithdrawal = null;
+    const playerData = playerRentData.get(player.id);
+    if (!playerData || !playerData.vehicleRent)
+        return;
+    if (playerData.isWithdrawal) {
+        clearTimeout(playerData.isWithdrawal);
+        playerData.isWithdrawal = null;
+    }
+    playerData.vehicleRent.destroy();
+    playerData.isTakenRent = false;
     rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Вы отменили аренду транспорта!', 3000, 'bottom')`);
 });
 mp.events.add('playerExitVehicle', (player, vehicle) => {
-    if (vehicle === vehicleRent && isTakenRent) {
-        rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('warning', 'Аренда будет отменена через 3 минуты!', 4500, 'bottom')`);
-        isWithdrawal = setTimeout(() => {
+    const playerData = playerRentData.get(player.id);
+    if (!playerData || !playerData.vehicleRent || vehicle !== playerData.vehicleRent || !playerData.isTakenRent)
+        return;
+    rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('warning', 'Аренда будет отменена через 3 минуты!', 4500, 'bottom')`);
+    if (playerData.isWithdrawal)
+        clearTimeout(playerData.isWithdrawal);
+    playerData.isWithdrawal = setTimeout(() => {
+        if (mp.players.exists(player) && playerData.vehicleRent && mp.vehicles.exists(playerData.vehicleRent)) {
             rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Аренда закончилась, транспорт был изъят!', 4500, 'bottom')`);
-            vehicleRent.destroy();
-        }, 180000);
-    }
+            playerData.vehicleRent.destroy();
+            playerData.vehicleRent = null;
+            playerData.isTakenRent = false;
+            playerData.isWithdrawal = null;
+        }
+    }, 180000);
 });
 mp.events.add('playerEnterVehicle', (player, vehicle) => {
-    if (vehicle === vehicleRent && isWithdrawal !== null) {
-        isWithdrawal = null;
-        rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена!', 2500, 'bottom')`);
-    }
+    const playerData = playerRentData.get(player.id);
+    if (!playerData || !playerData.vehicleRent || vehicle !== playerData.vehicleRent || !playerData.isWithdrawal)
+        return;
+    clearTimeout(playerData.isWithdrawal);
+    playerData.isWithdrawal = null;
+    rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена!', 2500, 'bottom')`);
 });
 mp.events.add('playerExitColshape', (player, shape) => {
     const rentData = rentsData.find(rent => rent.colshape === shape);
