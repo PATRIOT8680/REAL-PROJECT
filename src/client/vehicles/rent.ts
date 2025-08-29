@@ -19,7 +19,6 @@ rce.registerServer('rentColshape', (status, data) => {
 
 mp.keys.bind(Keys.VK_E, false, () => {
   if (keyDownE !== 'disabled') {
-    mp.console.logWarning(`Получили: ${JSON.stringify(rentData)}`)
     mp.gui.cursor.show(true, true)
     gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`)
   }

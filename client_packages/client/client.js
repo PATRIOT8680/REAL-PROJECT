@@ -738,7 +738,7 @@ const disableAuth = () => {
     catch (e) {
         console.error("Disable auth timer error:", e);
     }
-    mp.gui.cursor.visible = false;
+    //mp.gui.cursor.visible = false
     if (cameraState.isTransition) {
         mp.game.cam.doScreenFadeIn(0);
         stopCamMoving();
@@ -748,15 +748,13 @@ const disableAuth = () => {
         cameraState.timeout = null;
     }
     stopCamMoving();
-    showLoading(3000);
+    showLoading(1500);
     gui.execute('window.App.authReducer.hideAuth()');
-    setTimeout(() => {
-        gui.execute('window.App.chatReducer.showChat()');
-        gui.execute('window.App.hudReducer.showHud()');
-        rce.triggerServer('client:authPlayerVisible', true);
-        mp.game.ui.displayRadar(true);
-        mp.players.local.freezePosition(false);
-    }, 3000);
+    rce.triggerServer('client:authPlayerVisible', true);
+    //setTimeout(() => {
+    //  gui.execute('window.App.chatReducer.showChat()')
+    //  gui.execute('window.App.hudReducer.showHud()')
+    //}, 1500)
 };
 rce.registerAll('cef:authEnabled', () => {
     enableAuth();
@@ -1262,7 +1260,7 @@ rce.registerAll('getDist', (x1, y1, z1, x2, y2, z2) => {
     return getDist(x1, y1, z1, x2, y2, z2);
 });
 
-const scenarios = [
+const scenarios$1 = [
     "WORLD_HUMAN_AA_COFFEE",
     "WORLD_HUMAN_CAR_PARK_ATTENDANT",
     "WORLD_HUMAN_CLIPBOARD_FACILITY",
@@ -1286,7 +1284,7 @@ mp.events.add('entityStreamIn', (entity) => {
 rce.registerAll('createPed', (pedName, pedRole, modelName, pedPos, blip) => {
     const [x, y, z, heading] = pedPos;
     const npc = mp.peds.new(mp.game.joaat(modelName), new mp.Vector3(x, y, z), heading, 0);
-    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    const scenario = scenarios$1[Math.floor(Math.random() * scenarios$1.length)];
     pedsData.set(npc.id, {
         scenario: scenario,
         name: pedName,
@@ -1332,7 +1330,6 @@ rce.registerServer('rentColshape', (status, data) => {
 });
 mp.keys.bind(Keys.VK_E, false, () => {
     if (keyDownE !== 'disabled') {
-        mp.console.logWarning(`Получили: ${JSON.stringify(rentData)}`);
         mp.gui.cursor.show(true, true);
         gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`);
     }
@@ -1345,3 +1342,49 @@ mp.keys.bind(Keys.VK_ESCAPE, false, () => {
         mp.game.ui.setPauseMenuActive(true);
     }, 300);
 });
+
+const scenarios = [
+    "WORLD_HUMAN_AA_COFFEE",
+    "WORLD_HUMAN_CAR_PARK_ATTENDANT",
+    "WORLD_HUMAN_CLIPBOARD_FACILITY",
+    "WORLD_HUMAN_COP_IDLES",
+    "WORLD_HUMAN_DRINKING_FACILITY",
+    "WORLD_HUMAN_GUARD_STAND",
+    "WORLD_HUMAN_STAND_MOBILE",
+    "EAR_TO_TEXT_FAT",
+    "WORLD_HUMAN_AA_SMOKE",
+];
+rce.registerServer('server:showSelectChar', () => {
+    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    mp.players.local.taskStartScenarioInPlace(scenario, 0, false);
+});
+
+const Natives = {
+    SWITCH_OUT_PLAYER: '0xAAB3200ED59016BC',
+    SWITCH_IN_PLAYER: '0xD8295AF639FD9CB8',
+    IS_PLAYER_SWITCH_IN_PROGRESS: '0xD9D2CFFF49FAB35F'
+};
+rce.registerAll('moveSkyCamera', (moveTo, switchType) => {
+    const localplayer = mp.players.local;
+    mp.console.logInfo(`Sky camera: ${localplayer.handle}, ${moveTo}, ${switchType}`);
+    switch (moveTo) {
+        case 'up':
+            mp.console.logInfo('Up');
+            mp.game.invoke(Natives.SWITCH_OUT_PLAYER, localplayer.handle, 0, parseInt(switchType));
+            break;
+        case 'down':
+            mp.console.logInfo('Down');
+            if (gui.browser.active = false) {
+                checkCamInAir();
+            }
+            mp.game.invoke(Natives.SWITCH_IN_PLAYER, localplayer.handle);
+            break;
+    }
+});
+const checkCamInAir = () => {
+    if (mp.game.invoke(Natives.IS_PLAYER_SWITCH_IN_PROGRESS)) {
+        setTimeout(() => {
+            checkCamInAir();
+        }, 400);
+    }
+};

@@ -9,6 +9,7 @@ import { welcomeStore } from "./menus/welcome";
 import { deathStore } from "./menus/death";
 import { hudStore } from "./menus/hud.ts";
 import { rentStore } from "./menus/rent.ts";
+import { selectCharStore } from "./menus/select-char.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -31,6 +32,7 @@ window.App = {
   deathReducer: deathStore,
   hudReducer: hudStore,
   rentReducer: rentStore,
+  selectCharStore: selectCharStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,

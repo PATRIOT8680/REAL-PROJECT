@@ -12,7 +12,7 @@ registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...strin
     const fullNamePos = namePos.join(' ');
 
     const foundTarget = mp.players.at(targetId)
-    const filePath = 'E:/PROJECTS/REAL-RP/A • targetPosition.txt'
+    const filePath = 'D:/PROJECTS/REAL-RP/A • targetPosition.txt'
     
     if (!target || !namePos.length) {
         send(player, 'Используйте <b>/getpos [targetId] [name pos]</b>', false);
@@ -22,7 +22,7 @@ registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...strin
         return;
     }
 
-    const locationTarget = `\n-- [${foundTarget.name} • ${fullNamePos}]: ${foundTarget.position.x}, ${foundTarget.position.y}, ${foundTarget.heading}\n [JSON]: { "x": ${foundTarget.position.x}, "y": ${foundTarget.position.y}, "z": ${foundTarget.position.z}, "rot": ${foundTarget.heading} }\n`;
+    const locationTarget = `\n-- [${foundTarget.name} • ${fullNamePos}]: ${foundTarget.position.x.toFixed(4)}, ${foundTarget.position.y.toFixed(4)}, ${foundTarget.position.z.toFixed(4)} [${foundTarget.heading.toFixed(4)}]\n [JSON]: { "x": ${foundTarget.position.x.toFixed(4)}, "y": ${foundTarget.position.y.toFixed(4)}, "z": ${foundTarget.position.z.toFixed(4)}, "rot": ${foundTarget.heading.toFixed(4)} }\n`;
     
     const dirPath = path.dirname(filePath);
     if (!fs.existsSync(dirPath)) {
