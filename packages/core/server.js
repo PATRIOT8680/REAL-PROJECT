@@ -40,7 +40,7 @@ mp.events.add('playerJoin', (player) => {
 });
 
 mp.events.add('playerJoin', (player) => {
-    player.dimension = player.id;
+    player.dimension = player.id + 1;
     console.log(`${player.socialClub} подключился!!! dim: ${player.dimension}`);
     player.model = mp.joaat('mp_m_freemode_01');
     player.spawn(new mp.Vector3(3335.050537109375, 5162.82177734375, 18.2938232421875));
@@ -654,7 +654,7 @@ registerCMD('getpos', (player, [target, ...namePos]) => {
     const targetId = parseInt(target, 10);
     const fullNamePos = namePos.join(' ');
     const foundTarget = mp.players.at(targetId);
-    const filePath = 'E:/PROJECTS/REAL-RP/A • targetPosition.txt';
+    const filePath = 'D:/PROJECTS/REAL-RP/A • targetPosition.txt';
     if (!target || !namePos.length) {
         send(player, 'Используйте <b>/getpos [targetId] [name pos]</b>', false);
         return;
@@ -663,7 +663,7 @@ registerCMD('getpos', (player, [target, ...namePos]) => {
         send(player, `{ff3030}<b>Игрок #${target} не найден!</b>`, false, 'admin');
         return;
     }
-    const locationTarget = `\n-- [${foundTarget.name} • ${fullNamePos}]: ${foundTarget.position.x}, ${foundTarget.position.y}, ${foundTarget.heading}\n [JSON]: { "x": ${foundTarget.position.x}, "y": ${foundTarget.position.y}, "z": ${foundTarget.position.z}, "rot": ${foundTarget.heading} }\n`;
+    const locationTarget = `\n-- [${foundTarget.name} • ${fullNamePos}]: ${foundTarget.position.x.toFixed(4)}, ${foundTarget.position.y.toFixed(4)}, ${foundTarget.position.z.toFixed(4)} [${foundTarget.heading.toFixed(4)}]\n [JSON]: { "x": ${foundTarget.position.x.toFixed(4)}, "y": ${foundTarget.position.y.toFixed(4)}, "z": ${foundTarget.position.z.toFixed(4)}, "rot": ${foundTarget.heading.toFixed(4)} }\n`;
     const dirPath = path__namespace.dirname(filePath);
     if (!fs__namespace.existsSync(dirPath)) {
         fs__namespace.mkdirSync(dirPath, { recursive: true });
@@ -980,6 +980,19 @@ const registerUser = (player, login, email, password) => {
     });
 };
 
+const selectChar = (player) => {
+    rce.triggerClient(player, 'moveSkyCamera', 'up', 2);
+    rce.triggerClient(player, 'player:freeze', true);
+    rce.triggerClient(player, 'server:showSelectChar');
+    //setTimeout(() => {
+    player.position = new mp.Vector3(-142.221, -599.458, 211.775);
+    player.heading = 30.854;
+    //}, 2000)
+    setTimeout(() => {
+        rce.triggerClient(player, 'moveSkyCamera', 'down');
+    }, 5000);
+};
+
 const loginUser = (player, login, password) => {
     const checkSql = 'SELECT * FROM accounts WHERE login = ? OR email = ?';
     data.query(checkSql, [login, login, password], (err, results) => {
@@ -999,9 +1012,9 @@ const loginUser = (player, login, password) => {
                     return;
                 }
                 if (match) {
-                    player.dimension = 0;
+                    selectChar(player);
                     player.setVariable('login_player', login);
-                    player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375));
+                    //player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375))
                     rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom');
                     rce.triggerClient(player, 'server:auth:saveLogin', login);
                     rce.triggerCef(player, 'server:authSuccess');

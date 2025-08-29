@@ -65,7 +65,7 @@ const disableAuth = () => {
     console.error("Disable auth timer error:", e)
   }
 
-  mp.gui.cursor.visible = false
+  //mp.gui.cursor.visible = false
 
   if (cameraState.isTransition) {
     mp.game.cam.doScreenFadeIn(0)
@@ -78,15 +78,13 @@ const disableAuth = () => {
   }
   stopCamMoving()
 
-  showLoading(3000)
+  showLoading(1500)
   gui.execute('window.App.authReducer.hideAuth()')
-  setTimeout(() => {
-    gui.execute('window.App.chatReducer.showChat()')
-    gui.execute('window.App.hudReducer.showHud()')
-    rce.triggerServer('client:authPlayerVisible', true)
-    mp.game.ui.displayRadar(true)
-    mp.players.local.freezePosition(false)
-  }, 3000)
+  rce.triggerServer('client:authPlayerVisible', true)
+  //setTimeout(() => {
+  //  gui.execute('window.App.chatReducer.showChat()')
+  //  gui.execute('window.App.hudReducer.showHud()')
+  //}, 1500)
 }
 
 
