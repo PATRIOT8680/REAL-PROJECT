@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs'
 
 import { User } from './main';
 import { sendCodeVerify } from './verify-email';
+import {selectChar} from "../select-char";
+import {listLoginAccs} from "./login";
 
 export const checkUser = (player: PlayerMp, login: string, email: string, password: string) => {
   const socialClubName = player.socialClub
@@ -54,7 +56,7 @@ export const registerUser = (player: PlayerMp, login: string, email: string, pas
   const registerNewAccount = (sid) => {
     bcrypt.hash(password, 10, (err, hash) => {
       if (err) {
-        console.log(chalk.bgRed('• BCRYPT •' + chalk.red(`Ошибка хеширования пароля (reg): ${err}`)))
+        console.log(chalk.bgRed('• BCRYPT •' + chalk.red(` Ошибка хеширования пароля (reg): ${err}`)))
       }
       const sql = 'INSERT INTO accounts (login, email, password, sid, socialClubName) VALUES (?, ?, ?, ?, ?)'
       data.query(sql, [login, email, hash, sid, socialClubName], (err) => {
@@ -63,7 +65,9 @@ export const registerUser = (player: PlayerMp, login: string, email: string, pas
           return
         } else {
           player.dimension = 0
+          listLoginAccs.set(player.id, { sid, login })
           player.setVariable('login_player', login)
+          selectChar(player)
           rce.triggerClient(player, 'server:auth:saveLogin', login)
           rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom')
           rce.triggerCef(player, 'server:authSuccess')

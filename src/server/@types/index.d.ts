@@ -169,7 +169,7 @@ declare class EntityMp {
 	public alpha: number;
 
 	/**
-	 * Property used to gets/sets the entity's data.
+	 * Property used to gets/sets the entity's getData.
 	 */
 	public data: any;
 
@@ -192,7 +192,7 @@ declare class EntityMp {
   public rotation: Vector3;
 
 	/**
-	 * Retrieves the custom data from the entity.
+	 * Retrieves the custom getData from the entity.
 	 *
 	 * @param name The variabile name
 	 */
@@ -206,7 +206,7 @@ declare class EntityMp {
 	public getOwnVariable<T = any>(name: string): T | null;
 
 	/**
-	 * Set custom data to an entity.
+	 * Set custom getData to an entity.
 	 *
 	 * @param name The variabile name
 	 * @param value The value
@@ -214,19 +214,19 @@ declare class EntityMp {
 	public setVariable(name: string, value: any): void;
 
 	/**
-	 * Set multiple custom data variables to an entity.
+	 * Set multiple custom getData variables to an entity.
 	 *
 	 * @param values The values
 	 */
 	public setVariables(values: KeyValueCollection): void;
 
 	/**
-	 * Sets the data available to the player as opposed to [entity.setVariable(key, value)](https://wiki.rage.mp/index.php?title=Entity::setVariable).
+	 * Sets the getData available to the player as opposed to [entity.setVariable(key, value)](https://wiki.rage.mp/index.php?title=Entity::setVariable).
 	 */
 	public setOwnVariable(key: string, value: any): void;
 
 	/**
-	 * Set multiple custom data variables that will be only available to an entity.
+	 * Set multiple custom getData variables that will be only available to an entity.
 	 */
 	public setOwnVariables(values: KeyValueCollection): void;
 
@@ -874,7 +874,7 @@ declare class PlayerMp extends EntityMp {
 	public spawn(position: Vector3): void;
 
 	/**
-	 * Updates the player head blend data
+	 * Updates the player head blend getData
 	 */
 	public updateHeadBlend(shapeMix: number, skinMix: number, thirdMix: number): void;
 
@@ -886,7 +886,7 @@ declare class PlayerMp extends EntityMp {
 	public playScenario(scenario: string): void;
 
 	/**
-	 * Calls all streamed in players' clientside from the specified player passing data.
+	 * Calls all streamed in players' clientside from the specified player passing getData.
 	 *
 	 * @param includeSelf Calls the specified player's clientside also along with the streamed players to him
 	 * @param eventName Event Name

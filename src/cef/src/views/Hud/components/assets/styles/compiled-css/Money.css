@@ -1,0 +1,26 @@
+.money-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.money-block .line-money {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+.money-block .line-money .money-banner {
+  color: white;
+}
+.money-block .line-money .text-name {
+  color: deepskyblue;
+}
+.money-block .line-money .cash {
+  color: #03e295;
+}
+.money-block .line-money .bank-money {
+  color: coral;
+}

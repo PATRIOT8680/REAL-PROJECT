@@ -22,9 +22,9 @@ const BtnNext: FC<IBtnNext> = ({ status, char }) => {
 
   const handleClickBtn = (status: "active" | "free" | "donat" | "ban", char?: ISelectChar) => {
     if (status === 'active') {
-      rce.triggerServer('handleSpawnPlayer', char?.nickname)
+      rce.triggerServer('handleSpawnPlayer', char?.nickname, char?.numberChar)
     } else if (status === 'free') {
-      rce.triggerServer('handleCreatePlayer', char?.nickname)
+      rce.triggerServer('handleCreateSlotChar', char?.numberChar)
     } else if (status === 'donat') {
       rce.triggerServer('handleDonatCreatePlayer', char?.nickname)
     }

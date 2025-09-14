@@ -2,6 +2,7 @@ import {registerCMD, send} from "../menus/chat";
 import { rce } from "../utils/rce"
 import { data } from "../database/mysql"
 import chalk from "chalk"
+import { decrementCash } from "../player/money";
 
 let rentsData = []
 const MAX_RETRIES = 10
@@ -128,7 +129,7 @@ mp.events.add('playerEnterColshape', (player: PlayerMp, shape: ColshapeMp) => {
   }
 });
 
-rce.registerCef('cef:handleRentCar',  (player: PlayerMp, id: number, nameCar: string, price: number, hours: number) => {
+rce.registerCef('cef:handleRentCar', async (player: PlayerMp, id: number, nameCar: string, price: number, hours: number) => {
   const rentData = rentsData.find(rent => rent.id === id)
   const playerData = playerRentData.get(player.id)
 
@@ -144,6 +145,10 @@ rce.registerCef('cef:handleRentCar',  (player: PlayerMp, id: number, nameCar: st
     rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('err', 'У вас уже есть транспорт в аренде. Отмените предыдушую аренду.', 4000, 'bottom')`)
     return
   }
+
+  const cashResult = await decrementCash(player, price)
+
+  if (cashResult === 'noCash') return
 
   const vehPos = new mp.Vector3(Number(vehInfo.x), Number(vehInfo.y), Number(vehInfo.z))
   try {

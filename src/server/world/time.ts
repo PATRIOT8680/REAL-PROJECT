@@ -14,7 +14,6 @@ let timeUpdateTimer: NodeJS.Timeout
 let MOSCOW_UTC_OFFSET = 3 * 3600000
 const pad = (n: number) => n.toString().padStart(2, '0')
 
-
 const getMoscowTime = (): Date => {
   const now = new Date()
   return new Date(now.getTime() + now.getTimezoneOffset() * 60000 + MOSCOW_UTC_OFFSET)
@@ -32,8 +31,8 @@ const updateTime = (isFirstRun: boolean = false) => {
     seconds: moscowTime.getSeconds()
   }
 
-  //mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds)
-  mp.world.time.set(8, 0, 0)
+  mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds)
+  //mp.world.time.set(8, 0, 0)
 
   if (!isFirstRun) {
     console.log(`Time: ${pad(currentDateTime.hours)}:${pad(currentDateTime.minutes)}`)

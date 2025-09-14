@@ -6,6 +6,7 @@ import { send } from '../menus/chat'
 import { rce } from '../utils/rce'
 import {data} from "../database/mysql";
 import chalk from "chalk";
+import { addCash, decrementCash, addBankMoney, decrementBankMoney } from "../player/money";
 
 registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...string[]]) => {
     const targetId = parseInt(target, 10)
@@ -245,4 +246,51 @@ registerCMD('setdim', (player: PlayerMp, [targetID, dimension]) => {
 
   rce.triggerClient(target, 'sendNotify', 'info', `Вам установлен dimension #${dimension}!`, 4000, 'bottom')
   rce.triggerClient(player, 'sendNotify', 'info', `Игроку (ID: ${targetID}) установлен dimension #${dimension}!`, 3000, 'top')
+})
+
+
+registerCMD('addcash', (player: PlayerMp, [targetID, amount]) => {
+  if (!targetID || !amount)
+    return send(player, '<b>Используйте /addcash [ID игрока] [кол-во]</b>', false, 'SERVER')
+
+  const target = mp.players.at(targetID)
+  addCash(target, Number(amount))
+})
+
+registerCMD('decrementcash', (player: PlayerMp, [targetID, amount]) => {
+  if (!targetID || !amount)
+    return send(player, '<b>Используйте /decrementcash [ID игрока] [кол-во]</b>', false, 'SERVER')
+
+  const target = mp.players.at(targetID)
+  decrementCash(target, Number(amount))
+})
+
+registerCMD('addbankmoney', (player: PlayerMp, [targetID, amount]) => {
+  if (!targetID || !amount)
+    return send(player, '<b>Используйте /addbankmoney [ID игрока] [кол-во]</b>', false, 'SERVER')
+
+  const target = mp.players.at(targetID)
+  addBankMoney(target, Number(amount))
+})
+
+registerCMD('decrementbankmoney', (player: PlayerMp, [targetID, amount]) => {
+  if (!targetID || !amount)
+    return send(player, '<b>Используйте /decrementbankmoney [ID игрока] [кол-во]</b>', false, 'SERVER')
+
+  const target = mp.players.at(targetID)
+  decrementBankMoney(target, Number(amount))
+})
+
+registerCMD('tpto', (player: PlayerMp, [targetID]) => {
+  if (!targetID)
+    return send(player, '<b>Используйте /tpto [ID игрока]</b>', false, 'SERVER')
+
+  const target = mp.players.at(targetID)
+
+  if (mp.players.exists(targetID) || target === undefined)
+    return send(player, '<b>Игрок не в сети!</b>', false, 'SERVER')
+
+
+  const posTarget = target.position
+  player.position = new mp.Vector3(posTarget.x, posTarget.y, posTarget.z + 0.2)
 })

@@ -252,7 +252,7 @@ declare interface GameObject extends GameObjectLegacy {
 	getIsArenaPropPhysicsDisabled(object: number, p1: number): boolean;
 
 	/**
-	 * Returns data of world objects within specified range.
+	 * Returns getData of world objects within specified range.
 	 *
 	 * Each element in the array that is returned will contain:
 	 * [Number model, Vector3 position, Vector3 rotation, Number distanceSquared(if includeDistance is set to true)]

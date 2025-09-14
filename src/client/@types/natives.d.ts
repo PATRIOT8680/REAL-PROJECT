@@ -6642,7 +6642,7 @@ Types:
 		 * @name DATAFILE_LOAD_OFFLINE_UGC
 		 * @alias "_LOAD_UGC_FILE"
 		 * ```
-Loads a User-Generated Content (UGC) file. These files can be found in "[GTA5]\data\ugc" and "[GTA5]\common\patch\ugc". They seem to follow a naming convention, most likely of "[name]_[part].ugc". See example below for usage.
+Loads a User-Generated Content (UGC) file. These files can be found in "[GTA5]\getData\ugc" and "[GTA5]\common\patch\ugc". They seem to follow a naming convention, most likely of "[name]_[part].ugc". See example below for usage.
 Returns whether or not the file was successfully loaded.
 Example:
 DATAFILE::_LOAD_UGC_FILE("RockstarPlaylists") // loads "rockstarplaylists_00.ugc"
@@ -6828,7 +6828,7 @@ bruteforce these:
 		 * @name ON_ENTER_SP
 		 * @alias "0xD7C10C4A637992C9", "_LOAD_SP_DLC_MAPS"
 		 * ```
-Unloads GROUP_MAP (GTAO/MP) DLC data and loads GROUP_MAP_SP DLC. Neither are loaded by default, 0888C3502DBBEEF5 is a cognate to this function and loads MP DLC (and unloads SP DLC by extension).
+Unloads GROUP_MAP (GTAO/MP) DLC getData and loads GROUP_MAP_SP DLC. Neither are loaded by default, 0888C3502DBBEEF5 is a cognate to this function and loads MP DLC (and unloads SP DLC by extension).
 The original (and wrong) definition is below:
 This unload the GTA:O DLC map parts (like high end garages/apartments).
 Works in singleplayer.
@@ -9521,7 +9521,7 @@ struct outComponent
 		 * @param {number} characterType - Character types 0 = Michael, 1 = Franklin, 2 = Trevor, 3 = MPMale, 4 = MPFemale.
 		 * @param {number} decorationIndex - Tattoo index, value between 0 and GetNumDecorations(characterType).
 		 * @param {any} outComponent - The referenced struct.
-		 * @return {boolean} - A bool indicating that the tattoo data could be fetched(?)
+		 * @return {boolean} - A bool indicating that the tattoo getData could be fetched(?)
 		 */
 		GET_TATTOO_SHOP_DLC_ITEM_DATA = '0xFF56381874F82086',
 		/**
@@ -10525,7 +10525,7 @@ if loop is true, the effect won't stop until you call ANIMPOSTFX_STOP on it. (on
 		 * `GRAPHICS`
 		 * @name _ANIMPOSTFX_STOP_AND_DO_UNK
 		 * @alias "0xD2209BE128B5418C"
-		 * Stops the effect and sets a value (bool) in its data (+0x199) to false; See [`ANIMPOSTFX_PLAY`](0x2206BF9A37B7F724).
+		 * Stops the effect and sets a value (bool) in its getData (+0x199) to false; See [`ANIMPOSTFX_PLAY`](0x2206BF9A37B7F724).
 		 * @param {string} effectName
 		 * @return {void}
 		 */
@@ -14336,7 +14336,7 @@ From the b678d decompiled scripts:
 		 * This function anchors script draws to a side of the safe zone. This needs to be called to make the interface
 independent of the player's safe zone configuration.
 
-These values are equivalent to `alignX` and `alignY` in `common:/data/ui/frontend.xml`, which can be used as a baseline
+These values are equivalent to `alignX` and `alignY` in `common:/getData/ui/frontend.xml`, which can be used as a baseline
 for default alignment.
 
 Valid values for `horizontalAlign`, from original documentation:
@@ -14609,7 +14609,7 @@ Probably changes tvs from being a 3d audio to being "global" audio
 		 * @name UI3DSCENE_PUSH_PRESET
 		 * @alias "0xF1CEA8A4198D8E9A"
 		 * ```
-All presets can be found in common\data\ui\uiscenes.meta
+All presets can be found in common\getData\ui\uiscenes.meta
 ```
 		 * @param {string} presetName
 		 * @return {boolean}
@@ -23835,7 +23835,7 @@ NativeDB Introduced: v1868
 		 * `MISC`
 		 * @name SET_INSTANCE_PRIORITY_MODE
 		 * @alias "_ENABLE_MP_DLC_MAPS", "_USE_FREEMODE_MAP_BEHAVIOR", "_LOWER_MAP_PROP_DENSITY"
-		 * Sets the maximum prop density and changes a loading screen flag from 'loading story mode' to 'loading GTA Online'. It causes a loading screen to show as it reloads map data.
+		 * Sets the maximum prop density and changes a loading screen flag from 'loading story mode' to 'loading GTA Online'. It causes a loading screen to show as it reloads map getData.
 
 ```
 NativeDB Parameter 0: int toggle
@@ -38114,7 +38114,7 @@ _GET_PED_HEAD_BLEND_DATA(PLAYER_PED_ID(), &headData);
 SET_PED_HEAD_BLEND_DATA(PLAYER_PED_ID(), headData.shapeFirst, headData.shapeSecond, headData.shapeThird, headData.skinFirst, headData.skinSecond
 	, headData.skinThird, headData.shapeMix, headData.skinMix, headData.skinThird, 0);
 For more info please refer to this topic.
-gtaforums.com/topic/858970-all-gtao-face-ids-pedset-ped-head-blend-data-explained
+gtaforums.com/topic/858970-all-gtao-face-ids-pedset-ped-head-blend-getData-explained
 ```
 		 * @param {PedMp} ped
 		 * @param {number} shapeFirstID
@@ -45869,7 +45869,7 @@ NativeDB Introduced: v2189
 0.0 = no memory used
 1.0 = all memory used
 
-Maximum model memory (as defined in common\data\missioncreatordata.meta) is 100 MiB
+Maximum model memory (as defined in common\getData\missioncreatordata.meta) is 100 MiB
 
 GET_*
 ```
@@ -50087,7 +50087,7 @@ Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD, Ped, Vehicle, Cor X, Cor Y, Cor 
 		 * @name TASK_STEALTH_KILL
 		 * ```
 Stealth kill action name hashes:
-stealth kills can be found here: Grand Theft Auto V\common.rpf\data\action\stealth_kills.meta
+stealth kills can be found here: Grand Theft Auto V\common.rpf\getData\action\stealth_kills.meta
 ...
 {
     "ACT_stealth_kill_a",
@@ -59982,10 +59982,10 @@ struct WeaponHudStatsData
 	alignas(8) uint8_t hudRange; // 0x0020
 };
 Usage:
-WeaponHudStatsData data;
-if (GET_WEAPON_HUD_STATS(weaponHash, (Any*)&data))
+WeaponHudStatsData getData;
+if (GET_WEAPON_HUD_STATS(weaponHash, (Any*)&getData))
 {
-    // uint8_t damagePercentage = data.hudDamage etc...
+    // uint8_t damagePercentage = getData.hudDamage etc...
 }
 ```
 		 * @param {Hash} weaponHash
@@ -61320,7 +61320,7 @@ Could be used for benchmarking since it can return times in ticks.
 		 * @name _GET_ONLINE_VERSION
 		 * @alias "_GET_GAME_VERSION"
 		 * ```
-Online version is defined here: update\update.rpf\common\data\version.txt
+Online version is defined here: update\update.rpf\common\getData\version.txt
 Example:
 [ONLINE_VERSION_NUMBER]
 1.33
@@ -66076,7 +66076,7 @@ NativeDB Return Type: BOOL
 		 * `NETWORK`
 		 * @name NETWORK_OVERRIDE_CLOCK_TIME
 		 * Works in Singleplayer too.
-Passing wrong data (e.g. hours above 23) will cause the game to crash.
+Passing wrong getData (e.g. hours above 23) will cause the game to crash.
 		 * @param {number} hours
 		 * @param {number} minutes
 		 * @param {number} seconds

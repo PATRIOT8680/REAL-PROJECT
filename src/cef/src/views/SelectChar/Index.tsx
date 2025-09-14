@@ -2,12 +2,14 @@ import './assets/styles/compiled-css/Index.css'
 import { memo, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers/rootReducer.ts";
+import { rce } from "../../modules/rce.ts";
 
 import BtnChar from './components/BtnChar'
 import BtnNext from "./components/BtnNext.tsx";
 
 const SelectChar = memo(() => {
-  const [selectSlot, setSelectSlot] = useState<number | undefined>()
+  const [selectSlot, setSelectSlot] = useState<number | undefined>(1)
+  const [clickedSlot, setClickedSlot] = useState<boolean>(false)
   const { char1, char2, char3, char4, char5 } = useSelector((state: RootState) => state.selectCharReducer)
 
   const charsData = [
@@ -54,9 +56,18 @@ const SelectChar = memo(() => {
       }
   }
 
-  const handleSelectSlot = (slot: number) => {
+  const handleSelectSlot = (slot: number, status: 'active' | 'free' | 'donat' | 'ban') => {
+    if (clickedSlot || slot === selectSlot) return
     setSelectSlot(slot)
+    setClickedSlot(true)
+    rce.triggerClient('cef:selectSlotChar', slot, status)
+
+    setTimeout(() => {
+      setClickedSlot(false)
+    }, 600)
   }
+
+  
 
   return(
     <>
@@ -71,7 +82,7 @@ const SelectChar = memo(() => {
                   status={char.data.status}
                   numberChar={char.number}
                   nickname={char.data.nickname}
-                  onClick={() => handleSelectSlot(char.number)}
+                  onClick={() => handleSelectSlot(char.number, char.data.status)}
                   key={idx}
                 />
             )) }

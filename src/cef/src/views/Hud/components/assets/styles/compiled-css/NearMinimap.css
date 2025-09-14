@@ -1,16 +1,19 @@
 .near-minimap {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
   z-index: 100;
 }
 .near-minimap .text.active {
   color: #0AFFA7;
 }
 .near-minimap .text {
-  position: absolute;
-  top: 0;
-  right: 0;
   font-family: "Montserrat", sans-serif;
-  font-size: 18px;
+  font-size: 1rem;
   font-weight: 600;
   color: #ff0d4a;
 }

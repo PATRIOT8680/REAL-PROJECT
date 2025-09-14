@@ -1,0 +1,96 @@
+import { rce } from '../utils/rce'
+import { data } from '../database/mysql'
+import { getDataAccount } from '../getData/getDataAccount'
+import { setNumberChar } from "../getData/char/numberChar";
+import chalk from 'chalk'
+import {Player} from "rage-rpc";
+import {gui} from "../../client/menus/global";
+
+const createSlotChar = (player: PlayerMp, numberSlot: number) => {
+  try {
+    const sqlUid = 'SELECT MAX(uid) as maxUid from chars'
+
+    data.query(sqlUid, [], async (err, results) => {
+      if (err) return console.log(chalk.bgRed('• CREATE SLOT CHAR •' + chalk.red(` Err generate uid: ${err}`)))
+
+      const maxUid = results[0].maxUid || 0
+      const newUid = maxUid + 1
+
+      const sid = await getDataAccount(player, 'sid', player.id)
+      const sql = 'INSERT INTO chars (uid, sid, numberslot, cash, bankmoney) VALUES (?, ?, ?, ?, ?)'
+
+      data.query(sql, [newUid, sid, numberSlot, 1500, 200], (err, results) => {
+        if (err) return console.log(chalk.bgRed('• CREATE SLOT CHAR •' + chalk.red(` Err insert data: ${err}`)))
+      })
+    })
+
+
+  } catch (e) {
+    console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createSlotChar(): ${e}`)));
+  }
+
+}
+
+const closeCreateChar = async (player: PlayerMp) => {
+  rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
+  rce.triggerClient(player, 'execute', 'window.App.createCharReducer.hideCreateChar()')
+
+  const cash = await getDataAccount(player, 'cash', player.id)
+  const bankmoney = await getDataAccount(player, 'bankmoney', player.id)
+
+  player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 37.333740234375))
+  player.dimension = 0
+
+  rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
+  rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
+
+
+  setTimeout(() => {
+    rce.triggerClient(player, 'moveSkyCamera', 'down')
+    rce.triggerClient(player, 'closeCreateChar')
+  }, 4000)
+}
+
+rce.registerCef('handleCreateSlotChar', async (player: PlayerMp, numberSlot: number) => {
+  const sid = await getDataAccount(player, 'sid', player.id)
+  rce.triggerClient(player, 'closedSelectCreateChar', sid, numberSlot)
+  await createSlotChar(player, numberSlot)
+  //player.playAnimation('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, 15)
+})
+
+rce.register('handleCreateSlotChar', async (playerId: number, numberSlot: number) => {
+  const pl = mp.players.at(playerId)
+  console.log(`player id: ${playerId}, numberSlot: ${numberSlot}`)
+  const sid = await getDataAccount(pl, 'sid', playerId)
+  rce.triggerClient(pl, 'closedSelectCreateChar', sid, numberSlot)
+  await createSlotChar(pl, numberSlot)
+  //player.playAnimation('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, 15)
+})
+
+rce.registerCef('cef:handleCreateChar', async (player: PlayerMp, numberSlot, dataChar)=> {
+  try {
+    const { firstName, lastName, age } = dataChar
+    const sid = await getDataAccount(player, 'sid', player.id)
+    const query = 'UPDATE chars SET firstname = ?, lastname = ?, age = ? WHERE sid = ? AND numberslot = ?'
+    const connection = await data.promise().getConnection()
+
+    const checkDuplicateNickname = 'SELECT id FROM chars WHERE firstname = ? AND lastname = ?'
+
+    try {
+      const [duplicateRows] = await connection.execute(checkDuplicateNickname, [firstName, lastName])
+
+      if (Array.isArray(duplicateRows) && duplicateRows.length > 0) {
+        rce.triggerClient(player, 'sendNotify', 'err', 'Персонаж с таким никнеймом уже существует!', 5000, 'bottom');
+        return
+      }
+
+      setNumberChar(player.id, numberSlot)
+      await connection.execute(query, [firstName, lastName, age, sid, numberSlot])
+      closeCreateChar(player)
+    } finally {
+      await connection.release()
+    }
+  } catch (e) {
+    console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createChar(): ${e}`)));
+  }
+})

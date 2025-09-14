@@ -15,6 +15,8 @@
     "howler": "^2.2.4",
     "i18next": "^25.0.2",
     "react": "^18.3.1",
+    "react-animate-numbers": "^1.0.6",
+    "react-animated-number": "^0.4.4",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.5.1",
     "react-redux": "^9.2.0",

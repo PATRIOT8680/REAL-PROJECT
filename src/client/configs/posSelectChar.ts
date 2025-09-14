@@ -1,0 +1,22 @@
+export const listCameras = [
+  { 
+    playerPos: { x: -142.221, y: -599.458, z: 211.775, heading: 30.8 },
+    cameraPos: { x: -143.5, y: -596.5199, z: 211.9750, heading: 203 }
+  },
+  { 
+    playerPos: { x: -149.2261, y: -598.8834, z: 211.9750, heading: -43 },
+    cameraPos: { x: -147.2369, y: -596.2113, z: 211.9750, heading: 142 }
+  },
+  {
+    playerPos: { x: -151.7817, y: -594.1783, z: 211.9750, heading: -77.5 },
+    cameraPos: { x: -148.3582, y: -593.8250, z: 211.9750, heading: 96 }
+  },
+  {
+    playerPos: { x: -148.3194, y: -587.1647, z: 211.9750, heading: -140.0935 },
+    cameraPos: { x: -146.1594, y: -590.0247, z: 211.9750, heading: 36.5 }
+  },
+  {
+    playerPos: { x: -137.6439, y: -592.4662, z: 211.9750, heading: 99.7122 },
+    cameraPos: { x: -140.9910, y: -592.8826, z: 211.9750, heading: -83.2733 }
+  },
+]
