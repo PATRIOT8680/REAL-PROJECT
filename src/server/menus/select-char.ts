@@ -51,9 +51,20 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
         const cash = await getDataAccount(player, 'cash', player.id)
         const bankmoney = await getDataAccount(player, 'bankmoney', player.id)
 
-        if (cash === null || bankmoney === null) {
-          console.log('Не удалось получить данные');
+        const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?'
+        const uid = await getDataAccount(player, 'uid', player.id)
+
+        const coordExit = {
+          x: player.position.x.toFixed(3),
+          y: player.position.y.toFixed(3),
+          z: player.position.z.toFixed(3),
+          heading: player.heading.toFixed(3)
         }
+        const coordString = JSON.stringify(coordExit)
+
+        data.query(sql, [coordString, uid], (err, results) => {
+          if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
+        })
 
         console.log('Сработка после запроса')
         rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
