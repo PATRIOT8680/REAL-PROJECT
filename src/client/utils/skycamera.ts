@@ -18,9 +18,9 @@ rce.registerAll('moveSkyCamera', (moveTo, switchType) => {
       break;
     case 'down':
       mp.console.logInfo('Down')
-      if (gui.browser.active = false) {
+      if (gui.browser.active === false) {
         checkCamInAir();
-      };
+      }
       mp.game.invoke(Natives.SWITCH_IN_PLAYER, localplayer.handle);
       break;
    

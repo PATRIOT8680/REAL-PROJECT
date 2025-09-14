@@ -499,220 +499,19 @@ const showLoading = (duration) => {
 rce.register('client:showLoading', showLoading);
 mp.console.logError('');
 
-let activeCamera = null;
-let currentPath = null;
-let startTime = 0;
-const lerp = (a, b, t) => {
-    return a + (b - a) * t;
-};
-const createCamera = (pos, target) => {
-    activeCamera = mp.cameras.new('default', new mp.Vector3(pos.x, pos.y, pos.z), new mp.Vector3(0, 0, pos.rot), 40);
-    // Камера сразу смотрит на целевую точку (to)
-    activeCamera.pointAtCoord(target.x, target.y, target.z);
-    activeCamera.setActive(true);
-    mp.game.cam.renderScriptCams(true, false, 0, true, false);
-};
-let ev$1 = null;
-const startCamMoving = (path) => {
-    rce.triggerServer('client:startNewCamera', path.persCoord);
-    currentPath = path;
-    startTime = Date.now();
-    if (ev$1) {
-        ev$1.destroy();
-    }
-    createCamera(path.from, path.to);
-    ev$1 = new mp.Event("render", () => {
-        if (!activeCamera || !currentPath)
-            return;
-        const now = Date.now();
-        const progress = Math.min((now - startTime) / currentPath.duration, 1);
-        const x = lerp(currentPath.from.x, currentPath.to.x, progress);
-        const y = lerp(currentPath.from.y, currentPath.to.y, progress);
-        const z = lerp(currentPath.from.z, currentPath.to.z, progress);
-        activeCamera.setCoord(x, y, z);
-        activeCamera.pointAtCoord(currentPath.to.x, currentPath.to.y, currentPath.to.z);
-        if (progress >= 1) {
-            stopCamMoving();
-        }
-    });
-};
-const stopCamMoving = () => {
-    if (ev$1) {
-        ev$1.destroy();
-        ev$1 = null;
-    }
-    destroyCamera();
-};
-const destroyCamera = () => {
-    if (activeCamera) {
-        activeCamera.destroy();
-        activeCamera = null;
-    }
-    mp.game.cam.renderScriptCams(false, false, 0, true, false);
-};
-
-const coordsCamera = [
-    {
-        from: { x: 1731.75830078125, y: 1721.3143310546875, z: 106.5699462890625, rot: -8.50393727140813 },
-        to: { x: 1876.4439697265625, y: 2397.283447265625, z: 65.153076171875, rot: -31.181104466861342 },
-        persCoord: { x: 1752.09228515625, y: 1914.2769775390625, z: 73.0556640625, rot: -11.338582743952959 },
-        duration: 30000
-    },
-    {
-        from: { x: 2529.032958984375, y: 563.6967163085938, z: 115.4498291015625, rot: 175.74803466570498 },
-        to: { x: 2517.006591796875, y: 181.59561157226562, z: 107.867431640625, rot: 170.07874542816262 },
-        persCoord: { x: 2532.03955078125, y: 476.29449462890625, z: 113.748046875, rot: -175.74803466570498 },
-        duration: 30000
-    },
-    {
-        from: { x: 227.5252685546875, y: 2956.02197265625, z: 47.24169921875, rot: 5.669291371976479 },
-        to: { "x": 221.7098846435547, "y": 3261.57373046875, "z": 47.056396484375, "rot": -14.173229070271432 },
-        persCoord: { x: 226.21978759765625, y: 3029.472412109375, z: 42.3385009765625, rot: 0 },
-        duration: 30000
-    },
-    {
-        from: { x: 159.1648406982422, y: 3707.98681640625, z: 41.2938232421875, rot: 22.677165487905917 },
-        to: { x: 34.78681564331055, y: 4056.2900390625, z: 50.15673828125, rot: 19.84252086913473 },
-        persCoord: { x: 117.32307434082031, y: 3786.883544921875, z: 31.942138671875, rot: 22.677165487905917 },
-        duration: 30000
-    },
-    {
-        from: { x: 1948.4307861328125, y: 3916.800048828125, z: 38.833740234375, rot: -155.9055155041175 },
-        to: { x: 2037.82421875, y: 3759.428466796875, z: 40.2490234375, rot: -147.40158847799316 },
-        persCoord: { x: 1989.7318115234375, y: 3849.91650390625, z: 32.3634033203125, rot: -155.90551550411755 },
-        duration: 30000
-    },
-    {
-        from: { x: -1421.7626953125, y: 4306.1669921875, z: 34.4359130859375, rot: -73.70079423899658 },
-        to: { x: -1421.7626953125, y: 4306.1669921875, z: 34.4359130859375, rot: -73.70079423899658 },
-        persCoord: { x: -1235.6966552734375, y: 4361.38037109375, z: 8.015380859375, rot: -79.37008347653894 },
-        duration: 30000
-    },
-    {
-        from: { x: 405.70550537109375, y: 6575.72314453125, z: 32.818359375, rot: -107.7165433246291 },
-        to: { x: 644.1494750976562, y: 6526.89208984375, z: 31.79052734375, rot: -102.04725408708674 },
-        persCoord: { x: 522.0791015625, y: 6552.52734375, z: 27.4095458984375, rot: -102.04725408708674 },
-        duration: 30000
-    },
-    {
-        from: { x: -1391.90771484375, y: 2417.419677734375, z: 58.2109375, rot: 150.2362262665751 },
-        to: { x: -1563.81103515625, y: 2136.38232421875, z: 70.0732421875, rot: 144.56692336865447 },
-        persCoord: { x: -1487.7098388671875, y: 2274.32958984375, z: 32.5487060546875, rot: 153.07087771553552 },
-        duration: 30000
-    },
-    {
-        from: { x: -1313.7626953125, y: -48.369232177734375, z: 62.3560791015625, rot: -121.88976641848501 },
-        to: { x: -1062.4219970703125, y: -182.37362670898438, z: 56.6102294921875, rot: -116.22047718094265 },
-        persCoord: { x: -1221.006591796875, y: -100.9054946899414, z: 42.5238037109375, rot: -110.55118794340028 },
-        duration: 30000
-    },
-    {
-        from: { x: -848.4132080078125, y: 289.22637939453125, z: 91.202880859375, rot: 0 },
-        to: { x: -854.2549438476562, y: 434.72967529296875, z: 93.6461181640625, rot: 2.8346456859882396 },
-        persCoord: { x: -825.1516723632812, y: 350.1098937988281, z: 86.788330078125, rot: -147.40158847799316 },
-        duration: 30000
-    },
-    {
-        from: { x: 1181.82861328125, y: -747.7977905273438, z: 70.0732421875, rot: 42.519686357040655 },
-        to: { x: 1035.3099365234375, y: -623.076904296875, z: 70.03955078125, rot: 51.02362704354337 },
-        persCoord: { x: 1113.5604248046875, y: -649.7933959960938, z: 57.7391357421875, rot: 0 },
-        duration: 30000
-    }
-];
-
-let currentCameraIndex = -1;
-const getRandomCameraIndex = () => {
-    if (coordsCamera.length <= 1)
-        return 0;
-    let newIndex;
-    do {
-        newIndex = Math.floor(Math.random() * coordsCamera.length);
-    } while (newIndex === currentCameraIndex);
-    return newIndex;
-};
-const startNextCameraMovement = async () => {
-    if (!cameraState.isSpanActive)
-        return;
-    cameraState.isTransition = true;
-    try {
-        if (currentCameraIndex !== -1) {
-            mp.game.cam.doScreenFadeOut(1500);
-            await waitWithCancel(1500);
-        }
-        if (!cameraState.isSpanActive)
-            return;
-        currentCameraIndex = getRandomCameraIndex();
-        const path = coordsCamera[currentCameraIndex];
-        startCamMoving(path);
-        mp.game.cam.doScreenFadeIn(1000);
-        await waitWithCancel(1000);
-        if (!cameraState.isSpanActive)
-            return;
-        const visibleDuration = path.duration - 3000;
-        if (visibleDuration > 0) {
-            await waitWithCancel(visibleDuration);
-        }
-        cameraState.isTransition = false;
-        startNextCameraMovement();
-    }
-    catch (e) {
-    }
-};
-const waitWithCancel = (ms) => {
-    return new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-            resolve();
-        }, ms);
-        cameraState.timeout = timer;
-        const checkInterval = setInterval(() => {
-            if (!cameraState.isSpanActive) {
-                clearSafeTimers(timer, checkInterval);
-                reject("Cancelled");
-            }
-        }, 100);
-        cameraState.interval = checkInterval;
-    });
-};
-const clearSafeTimers = (timer, interval) => {
-    try {
-        if (timer && typeof timer === 'object') {
-            clearTimeout(timer);
-        }
-    }
-    catch (e) {
-        mp.console.logError(`Timer clear err: ${e}`);
-    }
-    try {
-        if (interval && typeof interval === 'object') {
-            clearInterval(interval);
-        }
-    }
-    catch (e) {
-        mp.console.logError(`Interval clear err: ${e}`);
-    }
-    if (cameraState.timeout === timer)
-        cameraState.timeout = null;
-    if (cameraState.interval === interval)
-        cameraState.interval = null;
-};
-
-const cameraState = {
-    currentIndex: -1,
-    isSpanActive: false,
-    isTransition: false,
-    timeout: null,
-    interval: null
-};
+let camera$1 = null;
 const enableAuth = () => {
-    cameraState.isSpanActive = true;
-    cameraState.isTransition = false;
+    //mp.game.time.setClockTime(6, 0, 0)
+    mp.game.gameplay.setWeatherTypePersist('CLEAR');
     rce.trigger('execute', `window.App.authReducer.showAuth()`);
     rce.triggerServer('client:authPlayerVisible', false);
     mp.game.ui.displayRadar(false);
     mp.game.graphics.disableScreenblurFade();
-    mp.players.local.freezePosition(true);
+    rce.triggerServer('setPosChar', -1487.7098, 2274.3295, 32.5487, 153.0708);
+    camera$1 = mp.cameras.new('default', new mp.Vector3(-1391.9077, 2417.4196, 58.210), new mp.Vector3(0, 0, 150.2362), 45);
+    mp.game.cam.renderScriptCams(true, false, 0, true, false);
+    //mp.players.local.freezePosition(true)
     mp.gui.cursor.visible = true;
-    startNextCameraMovement();
     if (mp.storage.data.auth !== undefined) {
         rce.triggerCef('client:auth:saveLogin', mp.storage.data.auth.login);
     }
@@ -724,37 +523,12 @@ const enableAuth = () => {
     });
 };
 const disableAuth = () => {
-    cameraState.isSpanActive = false;
-    try {
-        if (cameraState.timeout) {
-            clearTimeout(cameraState.timeout);
-            cameraState.timeout = null;
-        }
-        if (cameraState.interval) {
-            clearInterval(cameraState.interval);
-            cameraState.interval = null;
-        }
-    }
-    catch (e) {
-        console.error("Disable auth timer error:", e);
-    }
-    //mp.gui.cursor.visible = false
-    if (cameraState.isTransition) {
-        mp.game.cam.doScreenFadeIn(0);
-        stopCamMoving();
-    }
-    if (cameraState.timeout) {
-        clearTimeout(cameraState.timeout);
-        cameraState.timeout = null;
-    }
-    stopCamMoving();
     showLoading(1500);
     gui.execute('window.App.authReducer.hideAuth()');
     rce.triggerServer('client:authPlayerVisible', true);
-    //setTimeout(() => {
-    //  gui.execute('window.App.chatReducer.showChat()')
-    //  gui.execute('window.App.hudReducer.showHud()')
-    //}, 1500)
+    if (camera$1 && mp.cameras.exists(camera$1)) {
+        camera$1.destroy();
+    }
 };
 rce.registerAll('cef:authEnabled', () => {
     enableAuth();
@@ -1011,6 +785,9 @@ mp.events.add('playerReady', (player) => {
     }
 });
 
+mp.keys.bind(Keys.VK_TAB, false, () => {
+    rce.triggerServer('changeAnim');
+});
 global.noclip = {
     active: false,
     shiftBoost: false,
@@ -1343,6 +1120,291 @@ mp.keys.bind(Keys.VK_ESCAPE, false, () => {
     }, 300);
 });
 
+const listCameras = [
+    {
+        playerPos: { x: -142.221, y: -599.458, z: 211.775, heading: 30.8 },
+        cameraPos: { x: -143.5, y: -596.5199, z: 211.9750, heading: 203 }
+    },
+    {
+        playerPos: { x: -149.2261, y: -598.8834, z: 211.9750, heading: -43 },
+        cameraPos: { x: -147.2369, y: -596.2113, z: 211.9750, heading: 142 }
+    },
+    {
+        playerPos: { x: -151.7817, y: -594.1783, z: 211.9750, heading: -77.5 },
+        cameraPos: { x: -148.3582, y: -593.825, z: 211.9750, heading: 96 }
+    },
+    {
+        playerPos: { x: -148.3194, y: -587.1647, z: 211.9750, heading: -140.0935 },
+        cameraPos: { x: -146.1594, y: -590.0247, z: 211.9750, heading: 36.5 }
+    },
+    {
+        playerPos: { x: -137.6439, y: -592.4662, z: 211.9750, heading: 99.7122 },
+        cameraPos: { x: -140.991, y: -592.8826, z: 211.9750, heading: -83.2733 }
+    },
+];
+
+const destroyCamera = (camera) => {
+    if (camera && mp.cameras.exists(camera)) {
+        try {
+            camera.destroy();
+        }
+        catch (e) {
+            mp.console.logInfo(`Ошибка при уничтожении камеры: ${e}`);
+        }
+    }
+};
+const createCamera = (position, rotation, fov) => {
+    try {
+        return mp.cameras.new('default', position, rotation, fov);
+    }
+    catch (e) {
+        mp.console.logInfo(`Ошибка при создании камеры: ${e}`);
+        return null;
+    }
+};
+
+const playAnim = (entity, animDict, animName) => {
+    mp.game.streaming.requestAnimDict(animDict);
+    entity.taskPlayAnim(animDict, animName, 8.0, 1.0, -1, 1, 1.0, false, false, false);
+};
+
+const CameraRotator = () => {
+    let camera = null;
+    let basePosition = null;
+    let offsetVector = null;
+    let heading = 0;
+    let baseHeading = 0;
+    let currentPoint = { x: 0, y: 0 };
+    let isPause = false;
+    let zUp = 0;
+    let zUpMultipler = 1;
+    let xBound = [0, 360];
+    let zBound = [-0.08, 1];
+    let offsetMultipler = 0;
+    let offsetBound = [3, 4];
+    let isActive = false;
+    let mouseSensitivity = 1.5;
+    const normilizeHeading = (heading) => {
+        if (heading > 360) {
+            heading = heading - 360;
+        }
+        else if (heading < 0) {
+            heading = 360 + heading;
+        }
+        return heading;
+    };
+    const changePosition = () => {
+        const position = mp.game.object.getObjectOffsetFromCoords(basePosition.x, basePosition.y, basePosition.z + zUp, heading, offsetVector.x, offsetVector.y, offsetVector.z);
+        camera.setCoord(position.x, position.y, position.z);
+    };
+    const start = (cam, bPosition, lAtPosition, oVector, h, fov = undefined) => {
+        camera = cam;
+        basePosition = bPosition;
+        offsetVector = oVector;
+        heading = h;
+        baseHeading = h;
+        offsetMultipler = oVector.y;
+        changePosition();
+        camera.pointAtCoord(lAtPosition.x, lAtPosition.y, lAtPosition.z);
+        if (fov) {
+            camera.setFov(fov);
+        }
+        activate(true);
+    };
+    const pause = (state) => {
+        isPause = state;
+    };
+    const stop = () => {
+        activate(false);
+    };
+    const reset = () => {
+        heading = baseHeading;
+        zUp = 0;
+        changePosition();
+    };
+    const setXBound = (min, max) => {
+        xBound = [min, max];
+    };
+    const setOffsetBound = (min, max) => {
+        offsetBound = [min, max];
+    };
+    const setZBound = (min, max) => {
+        zBound = [min, max];
+    };
+    const setZUpMultipler = (value) => {
+        zUpMultipler = value;
+    };
+    const getRelativeHeading = () => {
+        return normilizeHeading(baseHeading - heading);
+    };
+    const activate = (state) => {
+        isActive = state;
+    };
+    const onMouseScroll = (scrollDelta) => {
+        // scrollDelta: 1 = скролл вверх (отдаление), -1 = скролл вниз (приближение)
+        const sensitivity = 0.1;
+        offsetMultipler -= scrollDelta * sensitivity;
+        // Ограничения
+        offsetMultipler = Math.max(offsetBound[0], Math.min(offsetBound[1], offsetMultipler));
+        // Меняем ТОЛЬКО расстояние (Y компонент), не трогаем X и Z!
+        offsetVector = new mp.Vector3(offsetVector.x, // Боковое смещение (не меняем)
+        offsetMultipler, // Расстояние (меняем)
+        offsetVector.z // Высота (не меняем)
+        );
+        changePosition();
+    };
+    const onMouseMove = (dX, dY) => {
+        heading = normilizeHeading(heading + dX * 100 * mouseSensitivity);
+        let relativeHeading = getRelativeHeading();
+        if (xBound[0] !== -360 && xBound[1] !== 360) {
+            if (relativeHeading > xBound[0] && relativeHeading < xBound[1]) {
+                relativeHeading =
+                    Math.abs(xBound[0] - relativeHeading) >
+                        Math.abs(xBound[1] - relativeHeading)
+                        ? xBound[1]
+                        : xBound[0];
+            }
+        }
+        heading = normilizeHeading(-relativeHeading + baseHeading);
+        zUp += dY * zUpMultipler * -1 * mouseSensitivity;
+        if (zUp > zBound[1]) {
+            zUp = zBound[1];
+        }
+        else if (zUp < zBound[0]) {
+            zUp = zBound[0];
+        }
+        changePosition();
+    };
+    const setMouseSensitivity = (value) => {
+        mouseSensitivity = value;
+    };
+    const isPointEmpty = () => {
+        return currentPoint.x === 0 && currentPoint.y === 0;
+    };
+    const setPoint = (x, y) => {
+        currentPoint = { x, y };
+    };
+    const getPoint = () => {
+        return currentPoint;
+    };
+    const createCam = (a, b, c) => {
+        const entityPos = b;
+        start(a, entityPos, entityPos, new mp.Vector3(-2.7, 3.0, 1), c);
+        setZBound(-0.8, 1.8);
+        setZUpMultipler(5);
+        pause(true);
+    };
+    return {
+        start,
+        pause,
+        stop,
+        reset,
+        setXBound,
+        setOffsetBound,
+        setZBound,
+        setZUpMultipler,
+        onMouseScroll,
+        onMouseMove,
+        isPointEmpty,
+        setPoint,
+        getPoint,
+        setMouseSensitivity,
+        createCam,
+        get isActive() { return isActive; },
+        get isPause() { return isPause; }
+    };
+};
+const cameraRotator = CameraRotator();
+mp.events.add("render", () => {
+    if (!mp.gui.cursor.visible || !cameraRotator.isActive) {
+        return;
+    }
+    const x = mp.game.controls.getDisabledControlNormal(2, 239);
+    const y = mp.game.controls.getDisabledControlNormal(2, 240);
+    if (cameraRotator.isPointEmpty()) {
+        cameraRotator.setPoint(x, y);
+    }
+    const currentPoint = cameraRotator.getPoint();
+    const dX = currentPoint.x - x;
+    const dY = currentPoint.y - y;
+    cameraRotator.setPoint(x, y);
+    if (!cameraRotator.isPause) {
+        if (mp.game.controls.isDisabledControlPressed(2, 237)) {
+            cameraRotator.onMouseMove(dX, dY);
+        }
+        // ПРАВИЛЬНАЯ обработка скролла
+        if (mp.game.controls.isDisabledControlJustPressed(2, 14)) { // Скролл вверх
+            cameraRotator.onMouseScroll(-1); // Было 1, стало -1
+        }
+        else if (mp.game.controls.isDisabledControlJustPressed(2, 15)) { // Скролл вниз
+            cameraRotator.onMouseScroll(1); // Было -1, стало 1
+        }
+    }
+});
+rce.registerAll('pauseCameraRotator', (toggle) => {
+    cameraRotator.pause(toggle);
+});
+
+const Natives$2 = {
+    IS_PLAYER_SWITCH_IN_PROGRESS: '0xD9D2CFFF49FAB35F'
+};
+let currentCamera$1 = null;
+let targetCamera$1 = null;
+const createChar = (sid, numberSlot) => {
+    mp.players.local.position;
+    rce.trigger('moveSkyCamera', 'up', 2);
+    rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604);
+    //mp.players.local.position = new mp.Vector3(-111.3426, 357.2092, 112.6961)
+    setTimeout(() => {
+        currentCamera$1 = createCamera(new mp.Vector3(-112.6367, 355.0139, 113.0961), new mp.Vector3(-2, 0, -28.83), 30);
+        if (currentCamera$1) {
+            currentCamera$1.setActive(true);
+            mp.game.cam.renderScriptCams(true, false, 0, true, false);
+        }
+        let hasExecuted = false;
+        const intervalFly = setInterval(() => {
+            if (!mp.game.invoke(Natives$2.IS_PLAYER_SWITCH_IN_PROGRESS) && !hasExecuted) {
+                hasExecuted = true;
+                mp.gui.cursor.show(true, true);
+                gui.execute(`window.App.createCharReducer.showCreateChar(${sid}, ${numberSlot})`);
+                rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604);
+                mp.console.logInfo(`Pos pl: ${mp.players.local.position}`);
+                setTimeout(() => {
+                    cameraRotator.start(currentCamera$1, mp.players.local.position, new mp.Vector3(mp.players.local.position.x, mp.players.local.position.y, mp.players.local.position.z + 0.4), new mp.Vector3(0, 2.5, 0.8), 155, 30);
+                    cameraRotator.pause(false);
+                    cameraRotator.setZBound(-1, 2);
+                    cameraRotator.setOffsetBound(2, 6);
+                    playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4');
+                }, 1500);
+                clearInterval(intervalFly);
+            }
+        }, 100);
+        //gui.execute(`window.App.createCharReducer.showCreateChar()`)
+        //mp.game.streaming.requestAnimDict("anim@amb@business@meth@meth_smash_weight_check@")
+        //mp.players.local.playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', false, false, false, false, 1.0)
+        //mp.players.local.taskPlayAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 8.0, 1.0, -1, 1, 1.0, false, false, false)
+        mp.players.local.freezePosition(true);
+        rce.trigger('moveSkyCamera', 'down');
+    }, 4000);
+};
+rce.registerServer('closeCreateChar', () => {
+    cameraRotator.stop();
+    if (mp.cameras.exists(currentCamera$1))
+        currentCamera$1.destroy();
+    if (mp.cameras.exists(targetCamera$1))
+        targetCamera$1.destroy();
+    currentCamera$1 = null;
+    targetCamera$1 = null;
+    mp.game.cam.renderScriptCams(false, false, 0, true, false);
+    mp.gui.cursor.show(false, false);
+    setTimeout(() => {
+        gui.execute('window.App.chatReducer.showChat()');
+        gui.execute('window.App.hudReducer.showHud()');
+        mp.players.local.freezePosition(false);
+        mp.game.ui.displayRadar(true);
+    }, 4000);
+});
+
 const scenarios = [
     "WORLD_HUMAN_AA_COFFEE",
     "WORLD_HUMAN_CAR_PARK_ATTENDANT",
@@ -1354,9 +1416,112 @@ const scenarios = [
     "EAR_TO_TEXT_FAT",
     "WORLD_HUMAN_AA_SMOKE",
 ];
+const Natives$1 = {
+    IS_PLAYER_SWITCH_IN_PROGRESS: '0xD9D2CFFF49FAB35F'
+};
+let currentCamera = null;
+let targetCamera = null;
 rce.registerServer('server:showSelectChar', () => {
     const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
     mp.players.local.taskStartScenarioInPlace(scenario, 0, false);
+    mp.game.ui.setPauseMenuActive(false);
+    destroyCamera(currentCamera);
+    destroyCamera(targetCamera);
+    currentCamera = createCamera(new mp.Vector3(-143.5, -596.5199, 211.9750), new mp.Vector3(-2, 0, 204), 45);
+    if (currentCamera) {
+        currentCamera.setActive(true);
+        mp.game.cam.renderScriptCams(true, false, 0, true, false);
+    }
+    let hasExecuted = false;
+    const intervalFly = setInterval(() => {
+        if (!mp.game.invoke(Natives$1.IS_PLAYER_SWITCH_IN_PROGRESS) && !hasExecuted) {
+            hasExecuted = true;
+            mp.gui.cursor.show(true, true);
+            rce.triggerServer('client:flyEndSelectChar');
+            clearInterval(intervalFly);
+        }
+    }, 100);
+});
+rce.registerAll('cef:selectSlotChar', (slot, status) => {
+    mp.console.logInfo('Oppps. Сработка!');
+    mp.players.local;
+    const plPos = listCameras[slot - 1].playerPos;
+    const camPos = listCameras[slot - 1].cameraPos;
+    mp.console.logInfo(`Позиция камеры: ${JSON.stringify(listCameras[slot - 1].cameraPos)}`);
+    if (currentCamera) {
+        mp.console.logInfo(`Позиция камеры 2: ${JSON.stringify(currentCamera.getCoord())}`);
+    }
+    //destroyCamera(targetCamera)
+    targetCamera = createCamera(new mp.Vector3(camPos.x, camPos.y, camPos.z), new mp.Vector3(-2, 0, camPos.heading), 45);
+    mp.console.logInfo(`Позиция камеры 3: ${JSON.stringify(targetCamera.getCoord())}`);
+    //const targetPos = targetCamera.getCoord();
+    //if (targetPos.x === 0 && targetPos.y === 0 && targetPos.z === 0) {
+    //  mp.console.logInfo('Камера создана с нулевыми координатами, исправляем...');
+    //  // Принудительно устанавливаем координаты
+    //  targetCamera.setCoord(camPos.x, camPos.y, camPos.z);
+    //  targetCamera.setRot(-2, 0, camPos.heading, 2);
+    //  mp.console.logInfo(`Исправленные координаты: ${JSON.stringify(targetCamera.getCoord())}`);
+    //}
+    // Устанавливаем камеру активной
+    if (currentCamera) {
+        try {
+            targetCamera.setActiveWithInterp(currentCamera.handle, 500, 150, 150);
+            mp.game.cam.renderScriptCams(true, true, 1000, true, false);
+            mp.game.audio.playSoundFrontend(-1, "Click", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
+            setTimeout(() => {
+                rce.triggerServer('setPosChar', plPos.x, plPos.y, plPos.z, plPos.heading);
+                setTimeout(() => {
+                    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+                    mp.players.local.taskStartScenarioInPlace(scenario, 0, false);
+                }, 100);
+            }, 200);
+        }
+        catch (e) {
+            mp.console.logInfo(`Ошибка при установке плавного перехода: ${e}`);
+            targetCamera.setActive(true);
+            mp.game.cam.renderScriptCams(true, false, 0, true, false);
+        }
+    }
+    else {
+        targetCamera.setActive(true);
+        mp.game.cam.renderScriptCams(true, false, 0, true, false);
+    }
+    setTimeout(() => {
+        destroyCamera(currentCamera);
+        currentCamera = targetCamera;
+    }, 500);
+    mp.console.logInfo(`${JSON.stringify(listCameras[slot - 1].cameraPos)}`);
+});
+rce.registerServer('closedSelectCreateChar', (sid, numberSlot) => {
+    if (mp.cameras.exists(currentCamera))
+        currentCamera.destroy();
+    if (mp.cameras.exists(targetCamera))
+        targetCamera.destroy();
+    currentCamera = null;
+    targetCamera = null;
+    mp.game.cam.renderScriptCams(false, false, 0, true, false);
+    mp.gui.cursor.show(false, false);
+    createChar(sid, numberSlot);
+    //mp.players.local.freezePosition(false)
+    //mp.players.local.clearTasks()
+    //gui.execute(`window.App.chatReducer.showChat()`)
+    gui.execute(`window.App.selectCharReducer.hideSelectChar()`);
+});
+rce.registerServer('closeSelectChar', () => {
+    if (mp.cameras.exists(currentCamera))
+        currentCamera.destroy();
+    if (mp.cameras.exists(targetCamera))
+        targetCamera.destroy();
+    currentCamera = null;
+    targetCamera = null;
+    mp.game.cam.renderScriptCams(false, false, 0, true, false);
+    mp.gui.cursor.show(false, false);
+    setTimeout(() => {
+        gui.execute('window.App.chatReducer.showChat()');
+        gui.execute('window.App.hudReducer.showHud()');
+        mp.players.local.freezePosition(false);
+        mp.game.ui.displayRadar(true);
+    }, 4000);
 });
 
 const Natives = {
@@ -1374,7 +1539,7 @@ rce.registerAll('moveSkyCamera', (moveTo, switchType) => {
             break;
         case 'down':
             mp.console.logInfo('Down');
-            if (gui.browser.active = false) {
+            if (gui.browser.active === false) {
                 checkCamInAir();
             }
             mp.game.invoke(Natives.SWITCH_IN_PLAYER, localplayer.handle);
@@ -1388,3 +1553,8 @@ const checkCamInAir = () => {
         }, 400);
     }
 };
+
+rce.registerAll('getGroundZ', () => {
+    const pos = mp.players.local.position;
+    return mp.game.gameplay.getGroundZFor3DCoord(pos.x, pos.y, pos.z, false, false);
+});

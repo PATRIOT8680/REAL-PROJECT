@@ -1,16 +1,21 @@
 $Montserrat: "Montserrat", sans-serif
 
 .near-minimap
-  position: relative
+  display: flex
+  flex-direction: column
+  align-items: flex-end
+  gap: 0.5rem
+  position: absolute
+  top: 1rem
+  right: 1rem
   z-index: 100
+
   .text.active
     color: #0AFFA7
 
   .text
-    position: absolute
-    top: 0
-    right: 0
     font-family: $Montserrat
-    font-size: 18px
+    font-size: 1rem
     font-weight: 600
     color: #ff0d4a
+

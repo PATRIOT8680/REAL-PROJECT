@@ -27,6 +27,7 @@ import Rent from "./views/Rent/Index"
 import DeathPlayer from "./views/Death/Index"
 import Hud from "./views/Hud/Index"
 import SelectChar from "./views/SelectChar/Index.tsx"
+import CreateChar from "./views/CreateChar/Index.tsx"
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -49,6 +50,7 @@ const App = () => {
   const hudVisible = useSelector((state: RootState) => state.hudReducer.isVisible)
   const rentVisible = useSelector((state: RootState) => state.rentReducer.isVisible)
   const selectCharVisible = useSelector((state: RootState) => state.selectCharReducer.isVisible)
+  const createCharVisible = useSelector((state: RootState) => state.createCharReducer.isVisible)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -98,6 +100,7 @@ const App = () => {
       { deathReducer.isVisible && <DeathPlayer />  }
       { hudVisible && <Hud /> }
       { selectCharVisible && <SelectChar /> }
+      { createCharVisible && <CreateChar /> }
 
       <div className="language_ambients">
         { shouldChangeLanguage && <ChangeLanguage /> }

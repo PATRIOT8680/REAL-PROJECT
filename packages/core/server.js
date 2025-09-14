@@ -650,6 +650,386 @@ const makeConnection = () => {
 };
 makeConnection();
 
+const getSid = (login) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM accounts WHERE login = ?';
+        data.query(sql, [login], (err, result) => {
+            if (err)
+                reject(err);
+            else
+                resolve(result[0].sid);
+        });
+    });
+};
+
+const listNumberChar = new Map();
+const getNumberChar = (playerId) => {
+    return listNumberChar.get(playerId);
+};
+const setNumberChar = (playerId, numberSlot) => {
+    listNumberChar.set(playerId, numberSlot);
+};
+mp.events.add('playerQuit', (player) => {
+    setTimeout(() => {
+        listNumberChar.delete(player.id);
+    }, 200);
+});
+
+const selectChar = (player) => {
+    rce.triggerClient(player, 'moveSkyCamera', 'up', 2);
+    rce.triggerClient(player, 'player:freeze', true);
+    setTimeout(() => {
+        player.position = new mp.Vector3(-142.221, -599.458, 211.775);
+        player.heading = 30.854;
+        rce.triggerClient(player, 'moveSkyCamera', 'down');
+        rce.triggerClient(player, 'server:showSelectChar');
+    }, 4000);
+};
+rce.registerCef('handleSpawnPlayer', (player, nickname, numberSlot) => {
+    const nameParts = nickname.trim().split(/\s+/);
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ');
+    rce.triggerClient(player, 'closeSelectChar');
+    rce.triggerClient(player, 'execute', 'window.App.selectCharReducer.hideSelectChar()');
+    rce.triggerClient(player, 'moveSkyCamera', 'up', 2);
+    setNumberChar(player.id, numberSlot);
+    player.dimension = 0;
+    try {
+        const sql = `SELECT coordquit FROM chars WHERE firstname = ? AND lastname = ?`;
+        data.query(sql, [firstName, lastName], async (err, results) => {
+            if (err) {
+                console.log(chalk.bgRed('• SPAWN •') + chalk.red(` Ошибка запроса к БД: ${err}`));
+                return;
+            }
+            if (Array.isArray(results) && results.length === 0) {
+                console.log(chalk.bgYellow('• SPAWN •') + chalk.yellow(` Игрок с никнеймом ${nickname} не найден в БД.`));
+                return;
+            }
+            try {
+                const coords = JSON.parse(results[0].coordquit);
+                player.spawn(new mp.Vector3(parseFloat(coords.x), parseFloat(coords.y), parseFloat(coords.z)));
+                player.heading = parseFloat(coords.heading);
+                console.log('Сработка до запроса');
+                const cash = await getDataAccount(player, 'cash', player.id);
+                const bankmoney = await getDataAccount(player, 'bankmoney', player.id);
+                if (cash === null || bankmoney === null) {
+                    console.log('Не удалось получить данные');
+                }
+                console.log('Сработка после запроса');
+                rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
+                rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
+                setTimeout(() => {
+                    rce.triggerClient(player, 'moveSkyCamera', 'down');
+                    rce.triggerClient(player, 'closeSelectChar');
+                }, 4000);
+            }
+            catch (e) {
+                console.log(chalk.bgRed('• SPAWN •') + chalk.red(` Ошибка парсинга координат: ${e}`));
+            }
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• SPAWN CHAR •' + chalk.red(` Ошибка: ${e}`)));
+    }
+});
+rce.registerClient('client:flyEndSelectChar', async (player) => {
+    if (listLoginAccs.has(player.id)) {
+        try {
+            const sid = await getDataAccount(player, 'sid', player.id);
+            const sql = 'SELECT * FROM chars WHERE sid = ? ORDER BY numberslot';
+            data.query(sql, [sid], (err, results) => {
+                if (err) {
+                    console.log(chalk.bgRed('• SELECT CHAR •' + chalk.red(` Ошибка загрузки chars: ${err}`)));
+                    return;
+                }
+                const slots = [];
+                for (let i = 1; i <= 5; i++) {
+                    const charData = Array.isArray(results) ?
+                        results.find((char) => char.numberslot === i) :
+                        null;
+                    if (charData) {
+                        let status = 'active';
+                        slots.push({
+                            status: status,
+                            nickname: `${charData.firstname} ${charData.lastname}`,
+                            numberChar: i
+                        });
+                    }
+                    else {
+                        if (i <= 3) {
+                            slots.push({ status: 'free', numberChar: i });
+                        }
+                        else {
+                            slots.push({ status: 'donat', numberChar: i });
+                        }
+                    }
+                }
+                const slotData = slots.map((slot) => {
+                    if (slot.nickname) {
+                        return `{ status: '${slot.status}', nickname: '${slot.nickname}', numberChar: ${slot.numberChar} }`;
+                    }
+                    else {
+                        return `{ status: '${slot.status}', numberChar: ${slot.numberChar} }`;
+                    }
+                }).join(', ');
+                rce.triggerClient(player, 'execute', `window.App.selectCharReducer.showSelectChar(${slotData})`);
+            });
+        }
+        catch (e) {
+            console.log(chalk.bgRed('• SELECT CHAR •' + chalk.red(` Ошибка: ${e}`)));
+        }
+    }
+});
+
+const listLoginAccs = new Map();
+const loginUser = (player, login, password) => {
+    const checkSql = 'SELECT * FROM accounts WHERE login = ? OR email = ?';
+    data.query(checkSql, [login, login, password], (err, results) => {
+        if (err) {
+            console.log(chalk.bgRed('• MYSQL •' + chalk.red(`Ошибка подключения (checkSql > login): ${err}`)));
+            return;
+        }
+        if (Array.isArray(results) && results.length === 0) {
+            rce.triggerClient(player, 'sendNotify', 'err', `Аккаунт "${login}" не найден!`, 4500, 'right');
+            return;
+        }
+        if (Array.isArray(results) && results.length > 0) {
+            const user = results[0];
+            bcrypt.compare(password, user.password, async (err, match) => {
+                if (err) {
+                    console.log(chalk.bgRed('• BCRYPT •' + chalk.red(`Ошибка сравнения пароля (login): ${err}`)));
+                    return;
+                }
+                if (match) {
+                    //selectChar(player)
+                    player.setVariable('login_player', login);
+                    //player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375))
+                    //rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom')
+                    rce.triggerClient(player, 'server:auth:saveLogin', login);
+                    rce.triggerCef(player, 'server:authSuccess');
+                    console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`));
+                    console.log('ага ага');
+                    const checkChar = 'SELECT numberslot, firstname, lastname, age FROM chars WHERE sid = ?';
+                    const sid = await getDataAccount(player, 'sid', player.id);
+                    console.log('ага ага 2');
+                    listLoginAccs.set(player.id, { sid, login });
+                    console.log(`Передали id: ${player.id}`);
+                    data.query(checkChar, [sid], async (err, charResults) => {
+                        if (err) {
+                            console.log(chalk.bgRed('• CHAR •' + chalk.red(`Ошибка получения данных о char: ${err}`)));
+                            return;
+                        }
+                        console.log('Хе хе бой 0');
+                        if (Array.isArray(charResults) && charResults.length > 0) {
+                            console.log('Все результаты:', JSON.stringify(charResults, null, 2));
+                            const emptyChar = charResults.find((char) => !char.firstname && !char.lastname && !char.age);
+                            if (emptyChar) {
+                                console.log('Хе хе бой - пустые поля');
+                                console.log('Пустой слот:', Number(emptyChar.numberslot));
+                                const sid = await getDataAccount(player, 'sid', player.id);
+                                rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot);
+                            }
+                            else {
+                                console.log('переходим к выборке');
+                                // Все строки заполнены, переходим к выбору персонажа
+                                selectChar(player);
+                            }
+                        }
+                        else {
+                            selectChar(player);
+                            console.log('Нет данных о персонаже для SID:', sid);
+                            // Обработка случая, когда у аккаунта нет персонажей
+                            // Возможно, нужно вызвать создание нового персонажа
+                            //rce.call('handleCreateNewChar');
+                        }
+                    });
+                }
+                else {
+                    rce.triggerClient(player, 'sendNotify', 'err', 'Неверный логин или пароль!', 5000, 'right');
+                }
+            });
+        }
+    });
+};
+mp.events.add('playerQuit', async (player) => {
+    listLoginAccs.delete(player.id);
+    console.log(`вышел с игры: ${player.id}`);
+    const numberSlot = getNumberChar(player.id);
+    const coords = {
+        x: player.position.x.toFixed(3),
+        y: player.position.y.toFixed(3),
+        z: player.position.z.toFixed(3),
+        heading: player.heading.toFixed(3)
+    };
+    try {
+        const sid = await getDataAccount(player, 'sid', player.id);
+        console.log(getNumberChar(player.id));
+        const sql = 'UPDATE chars SET coordquit = ? WHERE sid = ? AND numberslot = ?';
+        const coordString = JSON.stringify(coords);
+        data.query(sql, [coordString, sid, numberSlot], (err, results) => {
+            if (err) {
+                console.log(chalk.bgRed('• QUIT •') + chalk.red(` Координаты записаны с ошибкой: ${err}`));
+                return;
+            }
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• QUIT •') + chalk.red(` Ошибка: ${e}`));
+    }
+});
+
+const getPlayerIdBySid = (sid) => [...listLoginAccs.entries()].find(([id, data]) => data.sid === sid)?.[0];
+const getUid = (sid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM chars WHERE sid = ? AND numberslot = ?';
+        const numberSlot = getNumberChar(getPlayerIdBySid(sid));
+        data.query(sql, [sid, numberSlot], (err, result) => {
+            if (err)
+                reject(err);
+            else
+                resolve(result[0].uid);
+        });
+    });
+};
+
+const getCash = (uid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM chars WHERE uid = ?';
+        data.query(sql, [uid], (err, result) => {
+            if (err)
+                reject(err);
+            else
+                resolve(result[0].cash);
+        });
+    });
+};
+
+const getBankMoney = (uid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM chars WHERE uid = ?';
+        data.query(sql, [uid], (err, result) => {
+            if (err)
+                reject(err);
+            else
+                resolve(result[0].bankmoney);
+        });
+    });
+};
+
+const getDataAccount = async (player, dataKey, targetID) => {
+    try {
+        const targetPlayer = mp.players.at(targetID);
+        if (!targetPlayer) {
+            console.error(chalk.red(`[RPC] Игрок с ID ${targetID} не найден!`));
+            return null;
+        }
+        if (!targetPlayer.getVariable('login_player')) {
+            return console.error(chalk.red(`Игрок #${targetPlayer.id} не авторизован!`));
+        }
+        const targetLogin = targetPlayer.getVariable('login_player');
+        const sid = await getSid(targetLogin);
+        if (!targetLogin) {
+            console.error(chalk.red(`[RPC] У игрока ${targetID} нет логина!`));
+            return null;
+        }
+        const dataMap = {
+            sid: () => getSid(targetLogin),
+            uid: () => getUid(sid),
+            cash: async () => getCash(await getUid(sid)),
+            bankmoney: async () => getBankMoney(await getUid(sid)),
+        };
+        if (!dataMap[dataKey])
+            return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
+        return dataMap[dataKey]();
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• GET DATA •' + chalk.red(` Ошибка: ${e}`)));
+    }
+};
+rce.registerClientCef('getDataAccount', async (player, dataKey, targetID) => {
+    const result = await getDataAccount(player, dataKey, targetID);
+    return result;
+});
+
+const addCash = async (player, amount) => {
+    try {
+        const sql = 'UPDATE chars SET cash = cash + ? WHERE uid = ?';
+        const uid = await getDataAccount(player, 'uid', player.id);
+        data.query(sql, [amount, uid], (err, result) => {
+            if (err)
+                return console.log(chalk.bgRed('• ADD CASH •') + chalk.red(` Ошибка add: ${err}`));
+            rce.triggerClient(player, 'execute', `window.App.cashReducer.addCash(${amount})`);
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• ADD CASH •') + chalk.red(` Ошибка: ${e}`));
+    }
+};
+const decrementCash = async (player, amount) => {
+    try {
+        const cashData = await getDataAccount(player, 'cash', player.id);
+        if (cashData - amount < 0) {
+            rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно наличных!', 3700, 'bottom');
+            return 'noCash';
+        }
+        const sql = 'UPDATE chars SET cash = cash - ? WHERE uid = ?';
+        const uid = await getDataAccount(player, 'uid', player.id);
+        data.query(sql, [amount, uid], (err, result) => {
+            if (err)
+                return console.log(chalk.bgRed('• DECREMENT CASH •') + chalk.red(` Ошибка decrement: ${err}`));
+            rce.triggerClient(player, 'execute', `window.App.cashReducer.decrementCash(${amount})`);
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• DECREMENT CASH •') + chalk.red(` Ошибка: ${e}`));
+    }
+};
+const addBankMoney = async (player, amount) => {
+    try {
+        const sql = 'UPDATE chars SET bankmoney = bankmoney + ? WHERE uid = ?';
+        const uid = await getDataAccount(player, 'uid', player.id);
+        data.query(sql, [amount, uid], (err, result) => {
+            if (err)
+                return console.log(chalk.bgRed('• ADD BANKMONEY •') + chalk.red(` Ошибка add: ${err}`));
+            rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.addBankMoney(${amount})`);
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• ADD BANKMONEY •') + chalk.red(` Ошибка: ${e}`));
+    }
+};
+const decrementBankMoney = async (player, amount) => {
+    try {
+        const bankMoneyData = await getDataAccount(player, 'cash', player.id);
+        if (bankMoneyData - amount < 0) {
+            rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно средств на карте!', 3800, 'bottom');
+            return 'noBankMoney';
+        }
+        const sql = 'UPDATE chars SET bankmoney = bankmoney - ? WHERE uid = ?';
+        const uid = await getDataAccount(player, 'uid', player.id);
+        data.query(sql, [amount, uid], (err, result) => {
+            if (err)
+                return console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка decrement: ${err}`));
+            rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.decrementBankMoney(${amount})`);
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка: ${e}`));
+    }
+};
+rce.registerClientCef('addCash', async (player, amount) => {
+    addCash(player, amount);
+});
+rce.registerClientCef('decrementCash', async (player, amount) => {
+    decrementCash(player, amount);
+});
+rce.registerClientCef('addBankMoney', async (player, amount) => {
+    addBankMoney(player, amount);
+});
+rce.registerClientCef('decrementBankMoney', async (player, amount) => {
+    decrementBankMoney(player, amount);
+});
+
 registerCMD('getpos', (player, [target, ...namePos]) => {
     const targetId = parseInt(target, 10);
     const fullNamePos = namePos.join(' ');
@@ -833,6 +1213,39 @@ registerCMD('setdim', (player, [targetID, dimension]) => {
     rce.triggerClient(target, 'sendNotify', 'info', `Вам установлен dimension #${dimension}!`, 4000, 'bottom');
     rce.triggerClient(player, 'sendNotify', 'info', `Игроку (ID: ${targetID}) установлен dimension #${dimension}!`, 3000, 'top');
 });
+registerCMD('addcash', (player, [targetID, amount]) => {
+    if (!targetID || !amount)
+        return send(player, '<b>Используйте /addcash [ID игрока] [кол-во]</b>', false, 'SERVER');
+    const target = mp.players.at(targetID);
+    addCash(target, Number(amount));
+});
+registerCMD('decrementcash', (player, [targetID, amount]) => {
+    if (!targetID || !amount)
+        return send(player, '<b>Используйте /decrementcash [ID игрока] [кол-во]</b>', false, 'SERVER');
+    const target = mp.players.at(targetID);
+    decrementCash(target, Number(amount));
+});
+registerCMD('addbankmoney', (player, [targetID, amount]) => {
+    if (!targetID || !amount)
+        return send(player, '<b>Используйте /addbankmoney [ID игрока] [кол-во]</b>', false, 'SERVER');
+    const target = mp.players.at(targetID);
+    addBankMoney(target, Number(amount));
+});
+registerCMD('decrementbankmoney', (player, [targetID, amount]) => {
+    if (!targetID || !amount)
+        return send(player, '<b>Используйте /decrementbankmoney [ID игрока] [кол-во]</b>', false, 'SERVER');
+    const target = mp.players.at(targetID);
+    decrementBankMoney(target, Number(amount));
+});
+registerCMD('tpto', (player, [targetID]) => {
+    if (!targetID)
+        return send(player, '<b>Используйте /tpto [ID игрока]</b>', false, 'SERVER');
+    const target = mp.players.at(targetID);
+    if (mp.players.exists(targetID) || target === undefined)
+        return send(player, '<b>Игрок не в сети!</b>', false, 'SERVER');
+    const posTarget = target.position;
+    player.position = new mp.Vector3(posTarget.x, posTarget.y, posTarget.z + 0.2);
+});
 
 const transporter$1 = nodemailer.createTransport({
     service: 'yandex',
@@ -953,7 +1366,7 @@ const registerUser = (player, login, email, password) => {
     const registerNewAccount = (sid) => {
         bcrypt.hash(password, 10, (err, hash) => {
             if (err) {
-                console.log(chalk.bgRed('• BCRYPT •' + chalk.red(`Ошибка хеширования пароля (reg): ${err}`)));
+                console.log(chalk.bgRed('• BCRYPT •' + chalk.red(` Ошибка хеширования пароля (reg): ${err}`)));
             }
             const sql = 'INSERT INTO accounts (login, email, password, sid, socialClubName) VALUES (?, ?, ?, ?, ?)';
             data.query(sql, [login, email, hash, sid, socialClubName], (err) => {
@@ -963,7 +1376,9 @@ const registerUser = (player, login, email, password) => {
                 }
                 else {
                     player.dimension = 0;
+                    listLoginAccs.set(player.id, { sid, login });
                     player.setVariable('login_player', login);
+                    selectChar(player);
                     rce.triggerClient(player, 'server:auth:saveLogin', login);
                     rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom');
                     rce.triggerCef(player, 'server:authSuccess');
@@ -977,54 +1392,6 @@ const registerUser = (player, login, email, password) => {
         if (err)
             return;
         registerNewAccount(newSID);
-    });
-};
-
-const selectChar = (player) => {
-    rce.triggerClient(player, 'moveSkyCamera', 'up', 2);
-    rce.triggerClient(player, 'player:freeze', true);
-    rce.triggerClient(player, 'server:showSelectChar');
-    //setTimeout(() => {
-    player.position = new mp.Vector3(-142.221, -599.458, 211.775);
-    player.heading = 30.854;
-    //}, 2000)
-    setTimeout(() => {
-        rce.triggerClient(player, 'moveSkyCamera', 'down');
-    }, 5000);
-};
-
-const loginUser = (player, login, password) => {
-    const checkSql = 'SELECT * FROM accounts WHERE login = ? OR email = ?';
-    data.query(checkSql, [login, login, password], (err, results) => {
-        if (err) {
-            console.log(chalk.bgRed('• MYSQL •' + chalk.red(`Ошибка подключения (checkSql > login): ${err}`)));
-            return;
-        }
-        if (Array.isArray(results) && results.length === 0) {
-            rce.triggerClient(player, 'sendNotify', 'err', `Аккаунт "${login}" не найден!`, 4500, 'right');
-            return;
-        }
-        if (Array.isArray(results) && results.length > 0) {
-            const user = results[0];
-            bcrypt.compare(password, user.password, (err, match) => {
-                if (err) {
-                    console.log(chalk.bgRed('• BCRYPT •' + chalk.red(`Ошибка сравнения пароля (login): ${err}`)));
-                    return;
-                }
-                if (match) {
-                    selectChar(player);
-                    player.setVariable('login_player', login);
-                    //player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375))
-                    rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom');
-                    rce.triggerClient(player, 'server:auth:saveLogin', login);
-                    rce.triggerCef(player, 'server:authSuccess');
-                    console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`));
-                }
-                else {
-                    rce.triggerClient(player, 'sendNotify', 'err', 'Неверный логин или пароль!', 5000, 'right');
-                }
-            });
-        }
     });
 };
 
@@ -1265,8 +1632,8 @@ const updateTime = (isFirstRun = false) => {
         minutes: moscowTime.getMinutes(),
         seconds: moscowTime.getSeconds()
     };
-    //mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds)
-    mp.world.time.set(8, 0, 0);
+    mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds);
+    //mp.world.time.set(8, 0, 0)
     if (!isFirstRun) {
         console.log(`Time: ${pad(currentDateTime.hours)}:${pad(currentDateTime.minutes)}`);
     }
@@ -1317,52 +1684,19 @@ for (let i = 0; i < 1; i++) {
     });
 }
 
-const getSid = (login) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM accounts WHERE login = ?';
-        data.query(sql, [login], (err, result) => {
-            if (err)
-                reject(err);
-            else
-                resolve(result[0].sid);
-        });
-    });
-};
-
-const getDataAccount = async (player, login, dataKey, targetID) => {
-    const targetPlayer = mp.players.at(targetID);
-    if (!targetPlayer) {
-        console.error(chalk.red(`[RPC] Игрок с ID ${targetID} не найден!`));
-        return null;
-    }
-    const targetLogin = targetPlayer.getVariable('login_player');
-    if (!targetLogin) {
-        console.error(chalk.red(`[RPC] У игрока ${targetID} нет логина!`));
-        return null;
-    }
-    const dataMap = {
-        sid: () => getSid(targetLogin)
-    };
-    if (!dataMap[dataKey])
-        return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
-    return dataMap[dataKey]();
-};
-rce.registerClientCef('getDataAccount', async (player, dataKey, targetID) => {
-    const login = player.getVariable('login_player');
-    if (!login) {
-        console.error(chalk.red(`Игрок ${login} не авторизован!`));
-        return;
-    }
-    console.log(`СИД для ${login}: ${await getDataAccount(player, login, dataKey, targetID)}`);
-    const result = await getDataAccount(player, login, dataKey, targetID);
-    return result;
-});
-
 rce.registerClientCef('getIdPlayer', (player) => {
     return player.id;
 });
 rce.registerClientCef('player:mute', (player, state) => {
     player.setVariable('player_mute', state);
+});
+rce.registerClientCef('setPosChar', (player, x, y, z, heading) => {
+    player.position = new mp.Vector3(x, y, z);
+    player.heading = heading;
+});
+rce.registerClientCef('setSpawnChar', (player, x, y, z, heading) => {
+    player.spawn(new mp.Vector3(x, y, z));
+    player.heading = heading;
 });
 
 mp.events.add('client:voice:new', (player, target) => {
@@ -1478,7 +1812,7 @@ mp.events.add('playerEnterColshape', (player, shape) => {
         }
     }
 });
-rce.registerCef('cef:handleRentCar', (player, id, nameCar, price, hours) => {
+rce.registerCef('cef:handleRentCar', async (player, id, nameCar, price, hours) => {
     const rentData = rentsData.find(rent => rent.id === id);
     const playerData = playerRentData.get(player.id);
     if (!rentData || !playerData)
@@ -1491,6 +1825,9 @@ rce.registerCef('cef:handleRentCar', (player, id, nameCar, price, hours) => {
         rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('err', 'У вас уже есть транспорт в аренде. Отмените предыдушую аренду.', 4000, 'bottom')`);
         return;
     }
+    const cashResult = await decrementCash(player, price);
+    if (cashResult === 'noCash')
+        return;
     const vehPos = new mp.Vector3(Number(vehInfo.x), Number(vehInfo.y), Number(vehInfo.z));
     try {
         playerData.isTakenRent = true;
@@ -1569,4 +1906,78 @@ mp.events.add('playerExitColshape', (player, shape) => {
 });
 mp.events.add("packagesLoaded", () => {
     loadRent();
+});
+
+const createSlotChar = (player, numberSlot) => {
+    try {
+        const sqlUid = 'SELECT MAX(uid) as maxUid from chars';
+        data.query(sqlUid, [], async (err, results) => {
+            if (err)
+                return console.log(chalk.bgRed('• CREATE SLOT CHAR •' + chalk.red(` Err generate uid: ${err}`)));
+            const maxUid = results[0].maxUid || 0;
+            const newUid = maxUid + 1;
+            const sid = await getDataAccount(player, 'sid', player.id);
+            const sql = 'INSERT INTO chars (uid, sid, numberslot, cash, bankmoney) VALUES (?, ?, ?, ?, ?)';
+            data.query(sql, [newUid, sid, numberSlot, 1500, 200], (err, results) => {
+                if (err)
+                    return console.log(chalk.bgRed('• CREATE SLOT CHAR •' + chalk.red(` Err insert data: ${err}`)));
+            });
+        });
+    }
+    catch (e) {
+        console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createSlotChar(): ${e}`)));
+    }
+};
+const closeCreateChar = async (player) => {
+    rce.triggerClient(player, 'moveSkyCamera', 'up', 2);
+    rce.triggerClient(player, 'execute', 'window.App.createCharReducer.hideCreateChar()');
+    const cash = await getDataAccount(player, 'cash', player.id);
+    const bankmoney = await getDataAccount(player, 'bankmoney', player.id);
+    player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 37.333740234375));
+    player.dimension = 0;
+    rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
+    rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
+    setTimeout(() => {
+        rce.triggerClient(player, 'moveSkyCamera', 'down');
+        rce.triggerClient(player, 'closeCreateChar');
+    }, 4000);
+};
+rce.registerCef('handleCreateSlotChar', async (player, numberSlot) => {
+    const sid = await getDataAccount(player, 'sid', player.id);
+    rce.triggerClient(player, 'closedSelectCreateChar', sid, numberSlot);
+    await createSlotChar(player, numberSlot);
+    //player.playAnimation('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, 15)
+});
+rce.register('handleCreateSlotChar', async (playerId, numberSlot) => {
+    const pl = mp.players.at(playerId);
+    console.log(`player id: ${playerId}, numberSlot: ${numberSlot}`);
+    const sid = await getDataAccount(pl, 'sid', playerId);
+    rce.triggerClient(pl, 'closedSelectCreateChar', sid, numberSlot);
+    await createSlotChar(pl, numberSlot);
+    //player.playAnimation('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, 15)
+});
+rce.registerCef('cef:handleCreateChar', async (player, numberSlot, dataChar) => {
+    try {
+        const { firstName, lastName, age } = dataChar;
+        const sid = await getDataAccount(player, 'sid', player.id);
+        const query = 'UPDATE chars SET firstname = ?, lastname = ?, age = ? WHERE sid = ? AND numberslot = ?';
+        const connection = await data.promise().getConnection();
+        const checkDuplicateNickname = 'SELECT id FROM chars WHERE firstname = ? AND lastname = ?';
+        try {
+            const [duplicateRows] = await connection.execute(checkDuplicateNickname, [firstName, lastName]);
+            if (Array.isArray(duplicateRows) && duplicateRows.length > 0) {
+                rce.triggerClient(player, 'sendNotify', 'err', 'Персонаж с таким никнеймом уже существует!', 5000, 'bottom');
+                return;
+            }
+            setNumberChar(player.id, numberSlot);
+            await connection.execute(query, [firstName, lastName, age, sid, numberSlot]);
+            closeCreateChar(player);
+        }
+        finally {
+            await connection.release();
+        }
+    }
+    catch (e) {
+        console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createChar(): ${e}`)));
+    }
 });

@@ -11,10 +11,13 @@ import { deathReducer } from './menus/death';
 import { hudReducer } from "./menus/hud.ts";
 import { rentReducer } from "./menus/rent.ts";
 import { selectCharReducer } from './menus/select-char.ts';
+import { createCharReducer } from './menus/create-char.ts';
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
 import { playerInfoReducer } from "./elements/playerInfo"
+import { cashReducer } from "./elements/player/cash.ts"
+import { bankMoneyReducer } from "./elements/player/bankMoney.ts";
 
 export type RootState = {
 	// Menus
@@ -26,10 +29,13 @@ export type RootState = {
   hudReducer: ReturnType<typeof hudReducer>
   rentReducer: ReturnType<typeof rentReducer>
   selectCharReducer: ReturnType<typeof selectCharReducer>
+  createCharReducer: ReturnType<typeof createCharReducer>
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
   playerInfoReducer: ReturnType<typeof playerInfoReducer>
+  cashReducer: ReturnType<typeof cashReducer>
+  bankMoneyReducer: ReturnType<typeof bankMoneyReducer>
 }
 
 export const rootReducer = combineReducers({
@@ -42,8 +48,11 @@ export const rootReducer = combineReducers({
   hudReducer,
   rentReducer,
   selectCharReducer,
+  createCharReducer,
 
   // Elements
   sendNotifyReducer,
   playerInfoReducer,
+  cashReducer,
+  bankMoneyReducer,
 });

@@ -1,6 +1,10 @@
 import Keys from '../utils/keys'
 import { rce } from '../utils/rce'
 
+mp.keys.bind(Keys.VK_TAB, false, () => {
+  rce.triggerServer('changeAnim')
+})
+
 global.noclip = {
   active: false,
   shiftBoost: false,

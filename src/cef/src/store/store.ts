@@ -10,10 +10,13 @@ import { deathStore } from "./menus/death";
 import { hudStore } from "./menus/hud.ts";
 import { rentStore } from "./menus/rent.ts";
 import { selectCharStore } from "./menus/select-char.ts";
+import { createCharStore } from "./menus/create-char.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
 import { playerInfoStore } from "./elements/playerInfo.ts";
+import { cashStore } from "./elements/cash.ts";
+import { bankMoneyStore } from "./elements/bankMoney.ts";
 
 export const store = createStore(rootReducer);
 
@@ -32,9 +35,12 @@ window.App = {
   deathReducer: deathStore,
   hudReducer: hudStore,
   rentReducer: rentStore,
-  selectCharStore: selectCharStore,
+  selectCharReducer: selectCharStore,
+  createCharReducer: createCharStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,
   playerInfoReducer: playerInfoStore,
+  cashReducer: cashStore,
+  bankMoneyReducer: bankMoneyStore,
 };

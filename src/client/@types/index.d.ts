@@ -360,12 +360,12 @@ declare interface KeysMp {
 }
 
 declare interface StorageMp {
-	/** Keeps data saved over resource reloads, and is persistent between reconnections to the same server during a single session.
+	/** Keeps getData saved over resource reloads, and is persistent between reconnections to the same server during a single session.
 	 */
 	sessionData: unknown;
 
 	/**
-	 * Used to set some client-related data.
+	 * Used to set some client-related getData.
 	 *
 	 * Saved on the client, see storage.flush() for more details.
 	 *
@@ -376,7 +376,7 @@ declare interface StorageMp {
 	data: { [key: string]: any };
 
 	/**
-	 * Flushes storage.data.
+	 * Flushes storage.getData.
 	 *
 	 * It isn't necessary to flush it after every change since it will be flushed on disconnect, but recommended.
 	 *
@@ -418,7 +418,7 @@ declare class EntityMp {
 	alpha: number;
 
 	/**
-	 * This property is used to get or set entity data.
+	 * This property is used to get or set entity getData.
 	 */
 	data: any;
 
@@ -1275,9 +1275,9 @@ declare type MultiEventHandlers = Partial<IClientEvents> & Record<string, (...ar
 
 declare interface EventMpPool {
 	/**
-	 * Alerts client-side with entity's data change for a specified variable
+	 * Alerts client-side with entity's getData change for a specified variable
 	 *
-	 * @param keyName Shared data key's name
+	 * @param keyName Shared getData key's name
 	 * @param callback Handler function with parameters
 	 */
 	addDataHandler<T extends EntityMp>(keyName: string, callback: (entity: T, value: any, oldValue: any) => void): void;

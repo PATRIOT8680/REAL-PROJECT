@@ -1,6 +1,8 @@
 import './assets/styles/compiled-css/NearMinimap.css'
 import { memo, useState, useEffect } from 'react'
 
+import Money from "./Money.tsx";
+
 const NearMinimap = memo(() => {
   const [voiceActive, setVoiceActive] = useState<boolean>(false)
 
@@ -23,6 +25,9 @@ const NearMinimap = memo(() => {
         ) : (
             <span className="text">Войс ОТКЛЮЧЕН</span>
         ) }
+
+        <Money />
+
       </div>
     </>
   )

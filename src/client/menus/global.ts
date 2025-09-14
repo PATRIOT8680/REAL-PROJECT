@@ -1,11 +1,10 @@
 import { rce } from "../utils/rce"
 import Keys from '../utils/keys'
 
-import './interface/auth/auth'
+import './interface/auth'
 import './interface/notify'
 import './interface/welcome'
 import './interface/loading'
-import './interface/auth/coordsCamera'
 import './interface/chat'
 
 mp.events.add('guiReady', () => {

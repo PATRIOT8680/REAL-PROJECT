@@ -23,11 +23,11 @@ export const selectCharReducer = (state = initialState, action: any) => {
 		case 'SHOW_SELECT_CHAR':
 			return { 
         isVisible: true, 
-        char1: action.char1 || { status: action.status },
-        char2: action.char2 || { status: action.status },
-        char3: action.char3 || { status: action.status },
-        char4: action.char4 || { status: action.status },
-        char5: action.char5 || { status: action.status }
+        char1: action.char1,
+        char2: action.char2,
+        char3: action.char3,
+        char4: action.char4,
+        char5: action.char5
       }
 		case 'HIDE_SELECT_CHAR':
 			return { 
