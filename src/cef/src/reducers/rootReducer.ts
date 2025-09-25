@@ -12,12 +12,15 @@ import { hudReducer } from "./menus/hud.ts";
 import { rentReducer } from "./menus/rent.ts";
 import { selectCharReducer } from './menus/select-char.ts';
 import { createCharReducer } from './menus/create-char.ts';
+import { adminMenuReducer } from "./menus/adminMenu.ts";
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
 import { playerInfoReducer } from "./elements/playerInfo"
 import { cashReducer } from "./elements/player/cash.ts"
-import { bankMoneyReducer } from "./elements/player/bankMoney.ts";
+import { bankMoneyReducer } from "./elements/player/bankMoney.ts"
+import { donatCoinsReducer } from "./elements/player/donatcoins.ts"
+import { consoleBufferReducer } from "./elements/adminMenu/consoleBuffer.ts";
 
 export type RootState = {
 	// Menus
@@ -30,12 +33,15 @@ export type RootState = {
   rentReducer: ReturnType<typeof rentReducer>
   selectCharReducer: ReturnType<typeof selectCharReducer>
   createCharReducer: ReturnType<typeof createCharReducer>
+  adminMenuReducer: ReturnType<typeof adminMenuReducer>
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
   playerInfoReducer: ReturnType<typeof playerInfoReducer>
   cashReducer: ReturnType<typeof cashReducer>
   bankMoneyReducer: ReturnType<typeof bankMoneyReducer>
+  donatCoinsReducer: ReturnType<typeof donatCoinsReducer>
+  consoleBufferReducer: ReturnType<typeof consoleBufferReducer>
 }
 
 export const rootReducer = combineReducers({
@@ -49,10 +55,13 @@ export const rootReducer = combineReducers({
   rentReducer,
   selectCharReducer,
   createCharReducer,
+  adminMenuReducer,
 
   // Elements
   sendNotifyReducer,
   playerInfoReducer,
   cashReducer,
   bankMoneyReducer,
+  donatCoinsReducer,
+  consoleBufferReducer,
 });

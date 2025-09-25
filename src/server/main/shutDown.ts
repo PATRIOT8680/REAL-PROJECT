@@ -4,6 +4,8 @@ import chalk from "chalk";
 
 const savedCoordQuit = async () => {
   for (const player of mp.players.toArray()) {
+    if(player.getVariable("player_spawned")) return
+
     try {
       console.log(`Начинаем запись: ${player.id}`)
 

@@ -58,8 +58,8 @@ export const registerUser = (player: PlayerMp, login: string, email: string, pas
       if (err) {
         console.log(chalk.bgRed('• BCRYPT •' + chalk.red(` Ошибка хеширования пароля (reg): ${err}`)))
       }
-      const sql = 'INSERT INTO accounts (login, email, password, sid, socialClubName) VALUES (?, ?, ?, ?, ?)'
-      data.query(sql, [login, email, hash, sid, socialClubName], (err) => {
+      const sql = 'INSERT INTO accounts (login, email, password, sid, socialClubName, donatcoins) VALUES (?, ?, ?, ?, ?, ?)'
+      data.query(sql, [login, email, hash, sid, socialClubName, 0], (err) => {
         if (err) {
           console.log(chalk.bgRed('• MYSQL •' + chalk.red(`Ошибка подключения (regSql): ${err}`)))
           return

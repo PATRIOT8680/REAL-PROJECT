@@ -1,5 +1,6 @@
 import { rce } from '../../utils/rce'
 import Keys from '../../utils/keys'
+import {gui} from "../global";
 
 export const openInterfaces = new Set()
 export const isInterfaceVisible = (interfaceName: string) => {

@@ -1,0 +1,66 @@
+import './assets/styles/compiled-css/Index.css'
+import { useState, useCallback, useEffect } from "react";
+import { rce } from "../../modules/rce.ts";
+
+import Header from './components/Header'
+import ConsolePage from "./pages/Console.tsx";
+import ReportsPage from "./pages/Reports.tsx";
+import VehiclesPage from "./pages/Vehicles.tsx";
+import PlayersPage from "./pages/Players.tsx";
+import FractionsPage from "./pages/Fractions.tsx";
+import HomesPage from "./pages/Homes.tsx";
+
+const AdminMenu = () => {
+  const pages = ['console', 'reports', 'vehicles', 'players', 'fractions', 'homes']
+  const [activePage, setActivePage] = useState<string>('console')
+
+  const handleSelectPage = useCallback((menu: string) => {
+    setActivePage(menu)
+  }, [])
+
+  const handleKeyDown = (key: 'left' | 'right') => {
+    if (key === 'left') {
+      const currentIndex = pages.indexOf(activePage)
+      const newIndex = (currentIndex - 1 + pages.length) % pages.length
+      setActivePage(pages[newIndex])
+    }
+    else if (key === 'right') {
+      const currentIndex = pages.indexOf(activePage)
+      const newIndex = (currentIndex + 1) % pages.length
+      setActivePage(pages[newIndex])
+    }
+  }
+
+  rce.register('amenu:ctrlPress', (key: 'left' | 'right') => {
+    rce.triggerClient('clientCmd', `Нажат ${key}`)
+    handleKeyDown(key)
+  })
+
+  const renderActivePage = () => {
+    switch (activePage) {
+      case 'console':
+        return <ConsolePage />
+      case 'reports':
+        return <ReportsPage />
+      case 'vehicles':
+        return <VehiclesPage />
+      case 'players':
+        return <PlayersPage />
+      case 'fractions':
+        return <FractionsPage />
+      case 'homes':
+        return <HomesPage />
+    }
+  }
+
+  return (
+    <>
+      <div className="admin-menu">
+        <Header activeMenu={activePage} onMenuChange={handleSelectPage} />
+        { renderActivePage() }
+      </div>
+    </>
+  )
+}
+
+export default AdminMenu

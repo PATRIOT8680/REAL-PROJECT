@@ -59,7 +59,7 @@ export const createChar = (sid: number, numberSlot: number) => {
           cameraRotator.setZBound(-1, 2)
           cameraRotator.setOffsetBound(2, 6)
           playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4')
-        }, 1500)
+        }, 500)
         clearInterval(intervalFly)
 
       }

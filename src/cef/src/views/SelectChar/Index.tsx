@@ -11,6 +11,7 @@ const SelectChar = memo(() => {
   const [selectSlot, setSelectSlot] = useState<number | undefined>(1)
   const [clickedSlot, setClickedSlot] = useState<boolean>(false)
   const { char1, char2, char3, char4, char5 } = useSelector((state: RootState) => state.selectCharReducer)
+  const donatCoinsState = useSelector((state: RootState) => state.donatCoinsReducer)
 
   const charsData = [
     { number: 1, data: char1 },
@@ -40,7 +41,7 @@ const SelectChar = memo(() => {
         case "donat":
           return (
             <>
-              <span className="title-slot">Платный слот №{selectSlot}</span>
+              <span className="title-slot">Платный слот №{selectSlot} (450 DC)</span>
               <span className="descr-slot">Вы можете за донат-коины приобрести доп. слот для персонажа.</span>
             </>
           )
@@ -73,6 +74,7 @@ const SelectChar = memo(() => {
     <>
       <div className="select-char">
         <div className="right-block">
+          <span className="donat">Donat coins: {donatCoinsState} DC</span>
           { selectSlot && (
             <div className="header-block">{getTitleSlot()}</div>
           ) }

@@ -32,6 +32,7 @@ const createSlotChar = (player: PlayerMp, numberSlot: number) => {
 }
 
 const closeCreateChar = async (player: PlayerMp) => {
+  console.log(`Закрываем создание`)
   rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
   rce.triggerClient(player, 'execute', 'window.App.createCharReducer.hideCreateChar()')
 
@@ -44,6 +45,7 @@ const closeCreateChar = async (player: PlayerMp) => {
   rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
   rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 
+  console.log(`Закрываем создание 2`)
 
   setTimeout(async () => {
     rce.triggerClient(player, 'moveSkyCamera', 'down')
@@ -75,11 +77,33 @@ rce.registerCef('handleCreateSlotChar', async (player: PlayerMp, numberSlot: num
 
 rce.register('handleCreateSlotChar', async (playerId: number, numberSlot: number) => {
   const pl = mp.players.at(playerId)
-  console.log(`player id: ${playerId}, numberSlot: ${numberSlot}`)
   const sid = await getDataAccount(pl, 'sid', playerId)
   rce.triggerClient(pl, 'closedSelectCreateChar', sid, numberSlot)
   await createSlotChar(pl, numberSlot)
   //player.playAnimation('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, 15)
+})
+
+rce.registerCef('handleDonatCreatePlayer', async (player: PlayerMp, numberSlot: number) => {
+  const sid = await getDataAccount(player, 'sid', player.id)
+  const donatcoins = await getDataAccount(player, 'donatcoins', player.id)
+
+  if (donatcoins - 450 < 0)
+    return rce.triggerClient(player, 'sendNotify', 'err', 'Недостаточно Donat coins!', 3700, 'top')
+
+  try {
+    const sql = 'UPDATE accounts SET donatcoins = donatcoins - ? WHERE sid = ?'
+    const priceSlot = 450
+
+    data.query(sql, [priceSlot, sid], (err, results) => {
+      if (err) return console.log(chalk.bgRed('• DECREMENT DONAT •') + chalk.red(` Ошибка decrement: ${err}`))
+      rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.decrementDonatCoins(${priceSlot})`)
+    })
+  } catch (e) {
+    console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createDonatChar(): ${e}`)));
+  }
+
+  rce.triggerClient(player, 'closedSelectCreateChar', sid, numberSlot)
+  await createSlotChar(player, numberSlot)
 })
 
 rce.registerCef('cef:handleCreateChar', async (player: PlayerMp, numberSlot, dataChar)=> {
@@ -88,8 +112,9 @@ rce.registerCef('cef:handleCreateChar', async (player: PlayerMp, numberSlot, dat
     const sid = await getDataAccount(player, 'sid', player.id)
     const query = 'UPDATE chars SET firstname = ?, lastname = ?, age = ? WHERE sid = ? AND numberslot = ?'
     const connection = await data.promise().getConnection()
-
+    console.log(`Создаем персонажа`)
     const checkDuplicateNickname = 'SELECT id FROM chars WHERE firstname = ? AND lastname = ?'
+    console.log(`Данные: ${firstName}, ${lastName}, ${age}, sid: ${sid}, numberslot: ${numberSlot}`)
 
     try {
       const [duplicateRows] = await connection.execute(checkDuplicateNickname, [firstName, lastName])
@@ -99,7 +124,9 @@ rce.registerCef('cef:handleCreateChar', async (player: PlayerMp, numberSlot, dat
         return
       }
 
+      console.log(`Создаем персонажа 2`)
       setNumberChar(player.id, numberSlot)
+      player.setVariable('player_spawned', true)
       await connection.execute(query, [firstName, lastName, age, sid, numberSlot])
       closeCreateChar(player)
     } finally {

@@ -17,6 +17,10 @@ import './assets/fonts/PF-Dindisplay-Pro/stylesheet.css'
 import './assets/fonts/Ponter/stylesheet.css'
 import './assets/fonts/Rothek/stylesheet.css'
 import './assets/fonts/Bellflower/stylesheet.css'
+import './assets/fonts/GhotamPro/stylesheet.css'
+import './assets/fonts/Frutiger/stylesheet.css'
+import './assets/fonts/Ubuntu/stylesheet.css'
+import './assets/fonts/BebasNeue/stylesheet.css'
 
 // Menus
 import Auth from "./views/Auth/Index"
@@ -28,6 +32,7 @@ import DeathPlayer from "./views/Death/Index"
 import Hud from "./views/Hud/Index"
 import SelectChar from "./views/SelectChar/Index.tsx"
 import CreateChar from "./views/CreateChar/Index.tsx"
+import AdminMenu from "./views/AdminMenu/Index.tsx";
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -51,6 +56,7 @@ const App = () => {
   const rentVisible = useSelector((state: RootState) => state.rentReducer.isVisible)
   const selectCharVisible = useSelector((state: RootState) => state.selectCharReducer.isVisible)
   const createCharVisible = useSelector((state: RootState) => state.createCharReducer.isVisible)
+  const adminMenuVisible = useSelector((state: RootState) => state.adminMenuReducer.isVisible)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -88,8 +94,9 @@ const App = () => {
   return(
     <>
       <div className="server-info">
-        <span className="text">REDSTAR GAMEMODE (pre-dev: v0.0.5)</span>
-        <span className="text">{playerInfoReducer.sid ? ` • #${playerInfoReducer.sid}` : ''}</span>
+        <span className="text">real-rp.ru (pre-dev: v0.0.5)</span>
+        <span className="text">{playerInfoReducer.nickname ? ` • ${playerInfoReducer.nickname}` : ''}</span>
+        <span className="text">{playerInfoReducer.sid ? ` #${playerInfoReducer.sid}` : ''}</span>
         <span className="text"> • ID: {playerInfoReducer.id}</span>
       </div>
       { authVisible && <Auth /> }
@@ -101,6 +108,7 @@ const App = () => {
       { hudVisible && <Hud /> }
       { selectCharVisible && <SelectChar /> }
       { createCharVisible && <CreateChar /> }
+      { adminMenuVisible && <AdminMenu /> }
 
       <div className="language_ambients">
         { shouldChangeLanguage && <ChangeLanguage /> }

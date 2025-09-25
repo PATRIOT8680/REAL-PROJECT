@@ -12,9 +12,13 @@ const voice3d = true
 const autovolume = false
 const maxDist = 10.0
 
+rce.registerAll('mutePlayer', (toogle: boolean) => {
+  global.mutePlayer = toogle
+})
+
 mp.keys.bind(Keys.VK_B, true, () => {
   if (global.chatOpened || !global.loginPlayer) return
-  if (global.mutePlayer) return rce.trigger('chat:pushLine', '{FF2701}<b>У вас бан-войс!</b>')
+  if (mp.players.local.getVariable('player_mute')) return rce.trigger('chat:pushLine', '{FF2701}<b>У вас бан-войс!</b>')
 
   mp.voiceChat.muted = false
   global.activeVoice = true

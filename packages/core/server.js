@@ -4,8 +4,8 @@ var jsonfile = require('jsonfile');
 var fs = require('fs');
 var perf_hooks = require('perf_hooks');
 var path = require('path');
-var mysql = require('mysql2');
 var chalk = require('chalk');
+var mysql = require('mysql2');
 var bcrypt = require('bcryptjs');
 var nodemailer = require('nodemailer');
 
@@ -617,6 +617,44 @@ registerCMD('clearchat', (player) => {
     send(player, '<b>Ваш чат был успешно очищен!</b>', false, 'SERVER');
 });
 
+const adminConsoleHandlers = {};
+const registerACommand = (cmd, description, args, handler) => {
+    if (adminConsoleHandlers[cmd]) {
+        console.log(chalk.bgYellow('• AConsole •'), chalk.yellow(`Команда "${cmd}" уже зарегистрирована!`));
+        return;
+    }
+    adminConsoleHandlers[cmd] = {
+        handler,
+        description,
+        args,
+    };
+};
+rce.registerCef('console:executeCommand', (player, cmdName, args) => {
+    const cmd = adminConsoleHandlers[cmdName];
+    console.log(`sethp 1`);
+    if (!cmd) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Команда "${cmdName}" не найдена`);
+        return;
+    }
+    try {
+        cmd.handler(player, args);
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• AConsole •'), chalk.red(`Ошибка выполнения команды "${cmdName}": ${e}`));
+    }
+});
+rce.registerCef('console:getCommands', (player) => {
+    const cmds = [];
+    for (const [name, data] of Object.entries(adminConsoleHandlers)) {
+        cmds.push({
+            name: name,
+            description: data.description,
+            args: data.args
+        });
+    }
+    rce.triggerCef(player, 'console:setCommands', cmds);
+});
+
 const data = mysql__namespace.createPool({
     host: 'localhost',
     user: 'root',
@@ -691,7 +729,10 @@ rce.registerCef('handleSpawnPlayer', (player, nickname, numberSlot) => {
     const lastName = nameParts.slice(1).join(' ');
     rce.triggerClient(player, 'closeSelectChar');
     rce.triggerClient(player, 'execute', 'window.App.selectCharReducer.hideSelectChar()');
+    player.setVariable('player_spawned', true);
     rce.triggerClient(player, 'moveSkyCamera', 'up', 2);
+    rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`);
+    console.log(nickname);
     setNumberChar(player.id, numberSlot);
     player.dimension = 0;
     try {
@@ -712,9 +753,19 @@ rce.registerCef('handleSpawnPlayer', (player, nickname, numberSlot) => {
                 console.log('Сработка до запроса');
                 const cash = await getDataAccount(player, 'cash', player.id);
                 const bankmoney = await getDataAccount(player, 'bankmoney', player.id);
-                if (cash === null || bankmoney === null) {
-                    console.log('Не удалось получить данные');
-                }
+                const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?';
+                const uid = await getDataAccount(player, 'uid', player.id);
+                const coordExit = {
+                    x: player.position.x.toFixed(3),
+                    y: player.position.y.toFixed(3),
+                    z: player.position.z.toFixed(3),
+                    heading: player.heading.toFixed(3)
+                };
+                const coordString = JSON.stringify(coordExit);
+                data.query(sql, [coordString, uid], (err, results) => {
+                    if (err)
+                        return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`));
+                });
                 console.log('Сработка после запроса');
                 rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
                 rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
@@ -737,6 +788,7 @@ rce.registerClient('client:flyEndSelectChar', async (player) => {
         try {
             const sid = await getDataAccount(player, 'sid', player.id);
             const sql = 'SELECT * FROM chars WHERE sid = ? ORDER BY numberslot';
+            const donatcoins = await getDataAccount(player, 'donatcoins', player.id);
             data.query(sql, [sid], (err, results) => {
                 if (err) {
                     console.log(chalk.bgRed('• SELECT CHAR •' + chalk.red(` Ошибка загрузки chars: ${err}`)));
@@ -773,6 +825,7 @@ rce.registerClient('client:flyEndSelectChar', async (player) => {
                     }
                 }).join(', ');
                 rce.triggerClient(player, 'execute', `window.App.selectCharReducer.showSelectChar(${slotData})`);
+                rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`);
             });
         }
         catch (e) {
@@ -821,7 +874,6 @@ const loginUser = (player, login, password) => {
                         }
                         console.log('Хе хе бой 0');
                         if (Array.isArray(charResults) && charResults.length > 0) {
-                            console.log('Все результаты:', JSON.stringify(charResults, null, 2));
                             const emptyChar = charResults.find((char) => !char.firstname && !char.lastname && !char.age);
                             if (emptyChar) {
                                 console.log('Хе хе бой - пустые поля');
@@ -854,27 +906,29 @@ const loginUser = (player, login, password) => {
 mp.events.add('playerQuit', async (player) => {
     listLoginAccs.delete(player.id);
     console.log(`вышел с игры: ${player.id}`);
-    const numberSlot = getNumberChar(player.id);
-    const coords = {
-        x: player.position.x.toFixed(3),
-        y: player.position.y.toFixed(3),
-        z: player.position.z.toFixed(3),
-        heading: player.heading.toFixed(3)
-    };
-    try {
-        const sid = await getDataAccount(player, 'sid', player.id);
-        console.log(getNumberChar(player.id));
-        const sql = 'UPDATE chars SET coordquit = ? WHERE sid = ? AND numberslot = ?';
-        const coordString = JSON.stringify(coords);
-        data.query(sql, [coordString, sid, numberSlot], (err, results) => {
-            if (err) {
-                console.log(chalk.bgRed('• QUIT •') + chalk.red(` Координаты записаны с ошибкой: ${err}`));
-                return;
-            }
-        });
-    }
-    catch (e) {
-        console.log(chalk.bgRed('• QUIT •') + chalk.red(` Ошибка: ${e}`));
+    if (player.getVariable('player_spawned')) {
+        const numberSlot = getNumberChar(player.id);
+        const coords = {
+            x: player.position.x.toFixed(3),
+            y: player.position.y.toFixed(3),
+            z: player.position.z.toFixed(3),
+            heading: player.heading.toFixed(3)
+        };
+        try {
+            const sid = await getDataAccount(player, 'sid', player.id);
+            console.log(getNumberChar(player.id));
+            const sql = 'UPDATE chars SET coordquit = ? WHERE sid = ? AND numberslot = ?';
+            const coordString = JSON.stringify(coords);
+            data.query(sql, [coordString, sid, numberSlot], (err, results) => {
+                if (err) {
+                    console.log(chalk.bgRed('• QUIT •') + chalk.red(` Координаты записаны с ошибкой: ${err}`));
+                    return;
+                }
+            });
+        }
+        catch (e) {
+            console.log(chalk.bgRed('• QUIT •') + chalk.red(` Ошибка: ${e}`));
+        }
     }
 });
 
@@ -916,6 +970,33 @@ const getBankMoney = (uid) => {
     });
 };
 
+const getDonatCoins = (sid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM accounts WHERE sid = ?';
+        data.query(sql, [sid], (err, result) => {
+            if (err)
+                reject(err);
+            else
+                resolve(result[0].donatcoins);
+        });
+    });
+};
+
+const getNickname = (uid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM chars WHERE uid = ?';
+        data.query(sql, [uid], (err, result) => {
+            if (err)
+                reject(err);
+            else {
+                const { firstname, lastname } = result[0];
+                const fullName = `${firstname || ''} ${lastname || ''}`.trim();
+                resolve(fullName);
+            }
+        });
+    });
+};
+
 const getDataAccount = async (player, dataKey, targetID) => {
     try {
         const targetPlayer = mp.players.at(targetID);
@@ -937,6 +1018,8 @@ const getDataAccount = async (player, dataKey, targetID) => {
             uid: () => getUid(sid),
             cash: async () => getCash(await getUid(sid)),
             bankmoney: async () => getBankMoney(await getUid(sid)),
+            donatcoins: () => getDonatCoins(sid),
+            nickname: async () => getNickname(await getUid(sid)),
         };
         if (!dataMap[dataKey])
             return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
@@ -1030,6 +1113,75 @@ rce.registerClientCef('decrementBankMoney', async (player, amount) => {
     decrementBankMoney(player, amount);
 });
 
+rce.registerClient('client:playerDeath', (player, [posX, posY, posZ]) => {
+    if (player.vehicle) {
+        player.spawn(new mp.Vector3(posX, posY, posZ + 1));
+    }
+    else {
+        player.spawn(new mp.Vector3(posX, posY, posZ));
+    }
+    player.playAnimation('amb@lo_res_idles@', 'world_human_bum_slumped_left_lo_res_base', 1, 15);
+});
+const playerKill = async (player) => {
+    player.spawn(new mp.Vector3(-1221.006591796875, -100.9054946899414, 42.5238037109375));
+    player.setVariable('player_knockout', false);
+    rce.triggerClient(player, 'gui:cursorVisible', false);
+    rce.triggerClient(player, 'ui:setPauseMenuActive', true);
+    rce.triggerClient(player, 'ui:displayRadar', true);
+    rce.triggerClient(player, 'player:freeze', false);
+    rce.triggerClient(player, 'player:isCollision', true);
+    rce.triggerClient(player, 'player:godmode', false);
+    await setTimeout(() => {
+        rce.triggerClient(player, 'graphics:stopAllScreenEffects');
+    }, 4000);
+    rce.triggerClient(player, 'execute', ['window.App.deathReducer.showDeath(``, `finish`)']);
+};
+const playerKnockout = (player) => {
+    player.health = 0;
+    player.setVariable('player_knockout', true);
+    if (player.vehicle) {
+        rce.triggerClient(player, 'player:isCollision', true);
+    }
+    else {
+        rce.triggerClient(player, 'player:isCollision', false);
+    }
+    rce.triggerClient(player, 'gui:cursorVisible', true);
+    rce.triggerClient(player, 'player:freeze', true);
+    rce.triggerClient(player, 'ui:setPauseMenuActive', false);
+    rce.triggerClient(player, 'ui:displayRadar', false);
+    rce.triggerClient(player, 'graphics:startScreenEffect', 'DeathFailMPIn', 0, true);
+    setTimeout(() => {
+        rce.triggerClient(player, 'player:godmode', true);
+    }, 200);
+};
+const playerReborn = (player) => {
+    const playerPos = player.position;
+    player.health = 100;
+    player.stopAnimation();
+    player.spawn(playerPos);
+    player.setVariable('player_knockout', false);
+    rce.triggerClient(player, 'ui:displayRadar', true);
+    rce.triggerClient(player, 'player:freeze', false);
+    rce.triggerClient(player, 'player:isCollision', true);
+    rce.triggerClient(player, 'player:godmode', false);
+    rce.triggerClient(player, 'ui:setPauseMenuActive', true);
+    rce.triggerClient(player, 'graphics:stopAllScreenEffects');
+    rce.triggerClient(player, 'gui:cursorVisible', false);
+    rce.triggerClient(player, 'execute', 'window.App.deathReducer.showDeath(``, `reborn`)');
+    /*setTimeout(() => {
+      rce.triggerClient(player, 'execute', `window.App.chatReducer.showChat()`)
+    }, 5000)*/
+};
+rce.registerClientCef('playerKill', (player) => {
+    playerKill(player);
+});
+rce.registerClientCef('playerKnockout', (player) => {
+    playerKnockout(player);
+});
+rce.registerClientCef('playerReborn', (player) => {
+    playerReborn(player);
+});
+
 registerCMD('getpos', (player, [target, ...namePos]) => {
     const targetId = parseInt(target, 10);
     const fullNamePos = namePos.join(' ');
@@ -1056,6 +1208,95 @@ registerCMD('getpos', (player, [target, ...namePos]) => {
             send(player, `{0eeb15}Позиция <b>Игрока #${target} успешно записана!</b>`, true, 'admin');
         }
     });
+});
+registerACommand('sethp', 'Установить здоровье игроку', [
+    { name: 'id игрока', type: 'number' },
+    { name: 'hp', type: 'number' }
+], (player, [targetId, hp]) => {
+    const targetIdNum = parseInt(targetId);
+    const hpNum = parseInt(hp);
+    if (!targetId || !hp) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: sethp [ID игрока] [hp]');
+        return;
+    }
+    const target = mp.players.at(targetIdNum);
+    if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`);
+        return;
+    }
+    if (hpNum < 0 || hpNum > 100) {
+        rce.triggerCef(player, 'console:commandResponse', false, `HP должно быть от 0 до 100!`);
+        return;
+    }
+    target.health = parseInt(hp);
+    rce.triggerClient(target, 'sendNotify', 'info', `Вам установлено HP: ${hp}%`, 3500, 'bottom');
+    rce.triggerCef(player, 'console:commandResponse', false, `Игроку ID:${targetId} выдано HP: ${hp}%`);
+});
+registerACommand('banvoice', 'Выдать мут игроку', [
+    { name: 'id игрока', type: 'number' },
+], (player, [targetId]) => {
+    const targetIdNum = parseInt(targetId);
+    if (!targetId) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: banvoice [ID игрока]');
+        return;
+    }
+    const target = mp.players.at(targetIdNum);
+    if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`);
+        return;
+    }
+    target.setVariable('player_mute', true);
+    rce.triggerClient(target, 'sendNotify', 'err', `Вам выдан бан-войс!`, 3500, 'bottom');
+    rce.triggerCef(player, 'console:commandResponse', false, `Игроку ID:${targetId} установлен бан-войс`);
+});
+registerACommand('unbanvoice', 'Снять мут с игрока', [
+    { name: 'id игрока', type: 'number' },
+], (player, [targetId]) => {
+    const targetIdNum = parseInt(targetId);
+    if (!targetId) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: unbanvoice [ID игрока]');
+        return;
+    }
+    const target = mp.players.at(targetIdNum);
+    if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`);
+        return;
+    }
+    target.setVariable('player_mute', false);
+    rce.triggerClient(target, 'sendNotify', 'success', `С вас снят бан-войс!`, 3500, 'bottom');
+    rce.triggerCef(player, 'console:commandResponse', false, `С игрока ID:${targetId} снят бан-войс`);
+});
+registerACommand('knockout', 'Нокаутировать игрока', [
+    { name: 'id игрока', type: 'number' },
+], (player, [targetId]) => {
+    const targetIdNum = parseInt(targetId);
+    if (!targetId) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: knockout [ID игрока]');
+        return;
+    }
+    const target = mp.players.at(targetIdNum);
+    if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`);
+        return;
+    }
+    playerKnockout(target);
+    rce.triggerClient(player, 'console:commandResponse', false, `Игрок ID:${targetId} нокаутирован`);
+});
+registerACommand('reborn', 'Воскресить игрока', [
+    { name: 'id игрока', type: 'number' },
+], (player, [targetId]) => {
+    const targetIdNum = parseInt(targetId);
+    if (!targetId) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: reborn [ID игрока]');
+        return;
+    }
+    const target = mp.players.at(targetIdNum);
+    if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`);
+        return;
+    }
+    playerReborn(target);
+    rce.triggerClient(player, 'console:commandResponse', false, `Игрок ID:${targetId} воскрешен`);
 });
 registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
     try {
@@ -1368,8 +1609,8 @@ const registerUser = (player, login, email, password) => {
             if (err) {
                 console.log(chalk.bgRed('• BCRYPT •' + chalk.red(` Ошибка хеширования пароля (reg): ${err}`)));
             }
-            const sql = 'INSERT INTO accounts (login, email, password, sid, socialClubName) VALUES (?, ?, ?, ?, ?)';
-            data.query(sql, [login, email, hash, sid, socialClubName], (err) => {
+            const sql = 'INSERT INTO accounts (login, email, password, sid, socialClubName, donatcoins) VALUES (?, ?, ?, ?, ?, ?)';
+            data.query(sql, [login, email, hash, sid, socialClubName, 0], (err) => {
                 if (err) {
                     console.log(chalk.bgRed('• MYSQL •' + chalk.red(`Ошибка подключения (regSql): ${err}`)));
                     return;
@@ -1538,75 +1779,6 @@ rce.registerClientCef('cef:serverCmd', (player, msg) => {
 //   player.call('server:webReady')
 // })
 
-rce.registerClient('client:playerDeath', (player, [posX, posY, posZ]) => {
-    if (player.vehicle) {
-        player.spawn(new mp.Vector3(posX, posY, posZ + 1));
-    }
-    else {
-        player.spawn(new mp.Vector3(posX, posY, posZ));
-    }
-    player.playAnimation('amb@lo_res_idles@', 'world_human_bum_slumped_left_lo_res_base', 1, 15);
-});
-const playerKill = async (player) => {
-    player.spawn(new mp.Vector3(-1221.006591796875, -100.9054946899414, 42.5238037109375));
-    player.setVariable('player_knockout', false);
-    rce.triggerClient(player, 'gui:cursorVisible', false);
-    rce.triggerClient(player, 'ui:setPauseMenuActive', true);
-    rce.triggerClient(player, 'ui:displayRadar', true);
-    rce.triggerClient(player, 'player:freeze', false);
-    rce.triggerClient(player, 'player:isCollision', true);
-    rce.triggerClient(player, 'player:godmode', false);
-    await setTimeout(() => {
-        rce.triggerClient(player, 'graphics:stopAllScreenEffects');
-    }, 4000);
-    rce.triggerClient(player, 'execute', ['window.App.deathReducer.showDeath(``, `finish`)']);
-};
-const playerKnockout = (player) => {
-    player.health = 0;
-    player.setVariable('player_knockout', true);
-    if (player.vehicle) {
-        rce.triggerClient(player, 'player:isCollision', true);
-    }
-    else {
-        rce.triggerClient(player, 'player:isCollision', false);
-    }
-    rce.triggerClient(player, 'gui:cursorVisible', true);
-    rce.triggerClient(player, 'player:freeze', true);
-    rce.triggerClient(player, 'ui:setPauseMenuActive', false);
-    rce.triggerClient(player, 'ui:displayRadar', false);
-    rce.triggerClient(player, 'graphics:startScreenEffect', 'DeathFailMPIn', 0, true);
-    setTimeout(() => {
-        rce.triggerClient(player, 'player:godmode', true);
-    }, 200);
-};
-const playerReborn = (player) => {
-    const playerPos = player.position;
-    player.health = 100;
-    player.stopAnimation();
-    player.spawn(playerPos);
-    player.setVariable('player_knockout', false);
-    rce.triggerClient(player, 'ui:displayRadar', true);
-    rce.triggerClient(player, 'player:freeze', false);
-    rce.triggerClient(player, 'player:isCollision', true);
-    rce.triggerClient(player, 'player:godmode', false);
-    rce.triggerClient(player, 'ui:setPauseMenuActive', true);
-    rce.triggerClient(player, 'graphics:stopAllScreenEffects');
-    rce.triggerClient(player, 'gui:cursorVisible', false);
-    rce.triggerClient(player, 'execute', 'window.App.deathReducer.showDeath(``, `reborn`)');
-    /*setTimeout(() => {
-      rce.triggerClient(player, 'execute', `window.App.chatReducer.showChat()`)
-    }, 5000)*/
-};
-rce.registerClientCef('playerKill', (player) => {
-    playerKill(player);
-});
-rce.registerClientCef('playerKnockout', (player) => {
-    playerKnockout(player);
-});
-rce.registerClientCef('playerReborn', (player) => {
-    playerReborn(player);
-});
-
 let currentDateTime = {
     year: 0,
     month: 0,
@@ -1686,6 +1858,9 @@ for (let i = 0; i < 1; i++) {
 
 rce.registerClientCef('getIdPlayer', (player) => {
     return player.id;
+});
+rce.registerClientCef('player:mute', (player, state) => {
+    player.setVariable('player_mute', state);
 });
 rce.registerClientCef('player:mute', (player, state) => {
     player.setVariable('player_mute', state);
@@ -1929,6 +2104,7 @@ const createSlotChar = (player, numberSlot) => {
     }
 };
 const closeCreateChar = async (player) => {
+    console.log(`Закрываем создание`);
     rce.triggerClient(player, 'moveSkyCamera', 'up', 2);
     rce.triggerClient(player, 'execute', 'window.App.createCharReducer.hideCreateChar()');
     const cash = await getDataAccount(player, 'cash', player.id);
@@ -1937,9 +2113,23 @@ const closeCreateChar = async (player) => {
     player.dimension = 0;
     rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
     rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
-    setTimeout(() => {
+    console.log(`Закрываем создание 2`);
+    setTimeout(async () => {
         rce.triggerClient(player, 'moveSkyCamera', 'down');
         rce.triggerClient(player, 'closeCreateChar');
+        const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?';
+        const uid = await getDataAccount(player, 'uid', player.id);
+        const coordExit = {
+            x: player.position.x.toFixed(3),
+            y: player.position.y.toFixed(3),
+            z: player.position.z.toFixed(3),
+            heading: player.heading.toFixed(3)
+        };
+        const coordString = JSON.stringify(coordExit);
+        data.query(sql, [coordString, uid], (err, results) => {
+            if (err)
+                return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`));
+        });
     }, 4000);
 };
 rce.registerCef('handleCreateSlotChar', async (player, numberSlot) => {
@@ -1950,11 +2140,30 @@ rce.registerCef('handleCreateSlotChar', async (player, numberSlot) => {
 });
 rce.register('handleCreateSlotChar', async (playerId, numberSlot) => {
     const pl = mp.players.at(playerId);
-    console.log(`player id: ${playerId}, numberSlot: ${numberSlot}`);
     const sid = await getDataAccount(pl, 'sid', playerId);
     rce.triggerClient(pl, 'closedSelectCreateChar', sid, numberSlot);
     await createSlotChar(pl, numberSlot);
     //player.playAnimation('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, 15)
+});
+rce.registerCef('handleDonatCreatePlayer', async (player, numberSlot) => {
+    const sid = await getDataAccount(player, 'sid', player.id);
+    const donatcoins = await getDataAccount(player, 'donatcoins', player.id);
+    if (donatcoins - 450 < 0)
+        return rce.triggerClient(player, 'sendNotify', 'err', 'Недостаточно Donat coins!', 3700, 'top');
+    try {
+        const sql = 'UPDATE accounts SET donatcoins = donatcoins - ? WHERE sid = ?';
+        const priceSlot = 450;
+        data.query(sql, [priceSlot, sid], (err, results) => {
+            if (err)
+                return console.log(chalk.bgRed('• DECREMENT DONAT •') + chalk.red(` Ошибка decrement: ${err}`));
+            rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.decrementDonatCoins(${priceSlot})`);
+        });
+    }
+    catch (e) {
+        console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createDonatChar(): ${e}`)));
+    }
+    rce.triggerClient(player, 'closedSelectCreateChar', sid, numberSlot);
+    await createSlotChar(player, numberSlot);
 });
 rce.registerCef('cef:handleCreateChar', async (player, numberSlot, dataChar) => {
     try {
@@ -1962,14 +2171,18 @@ rce.registerCef('cef:handleCreateChar', async (player, numberSlot, dataChar) => 
         const sid = await getDataAccount(player, 'sid', player.id);
         const query = 'UPDATE chars SET firstname = ?, lastname = ?, age = ? WHERE sid = ? AND numberslot = ?';
         const connection = await data.promise().getConnection();
+        console.log(`Создаем персонажа`);
         const checkDuplicateNickname = 'SELECT id FROM chars WHERE firstname = ? AND lastname = ?';
+        console.log(`Данные: ${firstName}, ${lastName}, ${age}, sid: ${sid}, numberslot: ${numberSlot}`);
         try {
             const [duplicateRows] = await connection.execute(checkDuplicateNickname, [firstName, lastName]);
             if (Array.isArray(duplicateRows) && duplicateRows.length > 0) {
                 rce.triggerClient(player, 'sendNotify', 'err', 'Персонаж с таким никнеймом уже существует!', 5000, 'bottom');
                 return;
             }
+            console.log(`Создаем персонажа 2`);
             setNumberChar(player.id, numberSlot);
+            player.setVariable('player_spawned', true);
             await connection.execute(query, [firstName, lastName, age, sid, numberSlot]);
             closeCreateChar(player);
         }
@@ -1980,4 +2193,78 @@ rce.registerCef('cef:handleCreateChar', async (player, numberSlot, dataChar) => 
     catch (e) {
         console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createChar(): ${e}`)));
     }
+});
+
+const savedCoordQuit = async () => {
+    for (const player of mp.players.toArray()) {
+        if (player.getVariable("player_spawned"))
+            return;
+        try {
+            console.log(`Начинаем запись: ${player.id}`);
+            const uid = await getDataAccount(player, 'uid', player.id);
+            console.log(`Получили UID: ${uid}`);
+            if (!uid) {
+                console.log(chalk.bgYellow('• SHUTDOWN •') + chalk.yellow(` UID не найден для игрока ${player.id}`));
+                continue;
+            }
+            const coords = {
+                x: player.position.x.toFixed(3),
+                y: player.position.y.toFixed(3),
+                z: player.position.z.toFixed(3),
+                heading: player.heading.toFixed(3)
+            };
+            const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?';
+            const coordString = JSON.stringify(coords);
+            console.log(`Записываем в БД: ${coordString}`);
+            await new Promise((resolve, reject) => {
+                data.query(sql, [coordString, uid], (err, results) => {
+                    if (err) {
+                        console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`));
+                        reject(err);
+                    }
+                    else {
+                        console.log(chalk.bgGreen('• SHUTDOWN •') + chalk.green(` Координаты игрока ${player.id} сохранены`));
+                        resolve(results);
+                    }
+                });
+            });
+        }
+        catch (e) {
+            console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка: ${e}`));
+        }
+    }
+};
+mp.events.add("serverShutdown", async () => {
+    mp.events.delayShutdown = true;
+    await savedCoordQuit();
+    setTimeout(() => {
+        mp.events.delayShutdown = false;
+    }, 3000);
+});
+
+rce.registerCef('cef:amenu:spawnVeh', (player, targetId, modelName, colorVeh) => {
+    const targetPlayer = mp.players.at(targetId);
+    if (!targetPlayer) {
+        return rce.triggerClient(player, 'sendNotify', 'err', 'Игрок не в сети!', 3000, 'top');
+    }
+    const targetPos = targetPlayer.position;
+    const vehicle = mp.vehicles.new(mp.joaat(modelName), new mp.Vector3(targetPos.x, targetPos.y, targetPos.z), {
+        engine: true,
+        numberPlate: 'REAL_RP',
+        dimension: targetPlayer.dimension,
+        heading: targetPlayer.heading
+    });
+    vehicle.setColorRGB(colorVeh[0], colorVeh[1], colorVeh[2], colorVeh[0], colorVeh[1], colorVeh[2]);
+    targetPlayer.putIntoVehicle(vehicle, 0);
+});
+rce.registerCef('cef:amenu:spawnVehForMe', (player, modelName, colorVeh) => {
+    const plPos = player.position;
+    const vehicle = mp.vehicles.new(mp.joaat(modelName), new mp.Vector3(plPos.x, plPos.y, plPos.z), {
+        engine: true,
+        numberPlate: 'REAL_RP',
+        dimension: player.dimension,
+        heading: player.heading
+    });
+    vehicle.setColorRGB(colorVeh[0], colorVeh[1], colorVeh[2], colorVeh[0], colorVeh[1], colorVeh[2]);
+    player.putIntoVehicle(vehicle, 0);
 });

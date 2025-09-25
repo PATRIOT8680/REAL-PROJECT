@@ -653,6 +653,51 @@ rce.registerAll('chat:pushLine', (text, showTime, tile) => {
 });
 pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello');
 
+let visibleAMenu = false;
+mp.keys.bind(Keys.VK_OEM_3, false, () => {
+    if (!visibleAMenu) {
+        rce.trigger('openAMenu');
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    if (visibleAMenu) {
+        rce.trigger('closeAMenu');
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    if (visibleAMenu) {
+        rce.trigger('closeAMenu');
+    }
+});
+mp.keys.bind(Keys.VK_NUMPAD4, false, () => {
+    if (visibleAMenu) {
+        rce.triggerCef('amenu:ctrlPress', 'left');
+    }
+});
+mp.keys.bind(Keys.VK_NUMPAD6, false, () => {
+    if (visibleAMenu) {
+        rce.triggerCef('amenu:ctrlPress', 'right');
+    }
+});
+rce.registerAll('openAMenu', () => {
+    visibleAMenu = true;
+    gui.execute(`window.App.adminMenuReducer.showAdminMenu()`);
+    gui.execute(`window.App.chatReducer.hideChat()`);
+    gui.execute(`window.App.hudReducer.hideHud()`);
+    mp.game.ui.displayRadar(false);
+    mp.game.ui.setPauseMenuActive(false);
+    mp.gui.cursor.show(true, true);
+});
+rce.registerAll('closeAMenu', () => {
+    visibleAMenu = false;
+    gui.execute(`window.App.adminMenuReducer.hideAdminMenu()`);
+    gui.execute(`window.App.chatReducer.showChat()`);
+    gui.execute(`window.App.hudReducer.showHud()`);
+    mp.game.ui.displayRadar(true);
+    mp.game.ui.setPauseMenuActive(true);
+    mp.gui.cursor.show(false, false);
+});
+
 mp.events.add('guiReady', () => {
     mp.gui.chat.show(false);
     gui.browser.active = true;
@@ -672,7 +717,7 @@ mp.events.add('guiReady', () => {
         });
     });
 });
-mp.keys.bind(Keys.VK_OEM_3, false, () => {
+mp.keys.bind(Keys.VK_F2, false, () => {
     mp.gui.cursor.visible = !mp.gui.cursor.visible;
 });
 rce.registerAll('clientCmd', (text) => {
@@ -698,24 +743,8 @@ const gui = {
     }
 };
 
-mp.keys.bind(Keys.VK_F2, true, () => {
-    rce.triggerServer('playerKnockout');
-});
-mp.keys.bind(Keys.VK_F6, true, () => {
-    rce.triggerServer('playerReborn');
-    setTimeout(() => {
-        gui.execute('window.App.chatReducer.showChat()');
-    }, 6000);
-});
 mp.keys.bind(Keys.VK_F7, true, () => {
     mp.players.local.setArmour(100);
-});
-mp.keys.bind(Keys.VK_F5, true, () => {
-    const playerPos = mp.players.local.position;
-    mp.vehicles.new(mp.game.joaat("22stinger"), new mp.Vector3(playerPos.x + 2, playerPos.y, playerPos.z), {
-        numberPlate: "PATRIOT",
-        color: [[22, 21, 35], [22, 21, 35]]
-    });
 });
 const getRandomChance = () => {
     const percent = Math.floor(Math.random() * 66);
@@ -922,10 +951,13 @@ mp.keys.bind(Keys.VK_F8, false, () => {
 });
 
 const maxDist = 10.0;
+rce.registerAll('mutePlayer', (toogle) => {
+    global.mutePlayer = toogle;
+});
 mp.keys.bind(Keys.VK_B, true, () => {
     if (global.chatOpened || !global.loginPlayer)
         return;
-    if (global.mutePlayer)
+    if (mp.players.local.getVariable('player_mute'))
         return rce.trigger('chat:pushLine', '{FF2701}<b>У вас бан-войс!</b>');
     mp.voiceChat.muted = false;
     global.activeVoice = true;
@@ -1375,7 +1407,7 @@ const createChar = (sid, numberSlot) => {
                     cameraRotator.setZBound(-1, 2);
                     cameraRotator.setOffsetBound(2, 6);
                     playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4');
-                }, 1500);
+                }, 500);
                 clearInterval(intervalFly);
             }
         }, 100);

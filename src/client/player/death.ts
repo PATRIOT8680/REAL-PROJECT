@@ -2,30 +2,9 @@ import { rce } from '../utils/rce'
 import { gui } from '../menus/global'
 import Keys from '../utils/keys'
 
-mp.keys.bind(Keys.VK_F2, true, () => {
-  rce.triggerServer('playerKnockout')
-})
-
-mp.keys.bind(Keys.VK_F6, true, () => {
-  rce.triggerServer('playerReborn')
-  setTimeout(() => {
-    gui.execute('window.App.chatReducer.showChat()')
-  }, 6000)
-})
-
 mp.keys.bind(Keys.VK_F7, true, () => {
   mp.players.local.setArmour(100)
 })
-
-mp.keys.bind(Keys.VK_F5, true, () => {
-  const playerPos = mp.players.local.position
-  mp.vehicles.new(mp.game.joaat("22stinger"), new mp.Vector3(playerPos.x + 2, playerPos.y, playerPos.z), 
-    {
-      numberPlate: "PATRIOT",
-      color: [[22, 21, 35],[22, 21, 35]]
-    });
-})
-
 
 const getRandomChance = (): [number, boolean] => {
   const percent = Math.floor(Math.random() * 66)

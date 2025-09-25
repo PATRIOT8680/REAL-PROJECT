@@ -8,6 +8,7 @@ import AnimatedNumber from "animated-number-react"
 const Money = () => {
   const cashState = useSelector((state: RootState) => state.cashReducer)
   const bankMoneyState = useSelector((state: RootState) => state.bankMoneyReducer)
+  const donatCoinsState = useSelector((state: RootState) => state.donatCoinsReducer)
 
   const [cashChange, setCashChange] = useState<number | null>(null)
   const [bankChange, setBankChange] = useState<number | null>(null)
@@ -16,6 +17,10 @@ const Money = () => {
 
   const prevCashRef = useRef(cashState)
   const prevBankRef = useRef(bankMoneyState)
+
+  const formatNumber = (num: number) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
 
   useEffect(() => {
     if (prevCashRef.current !== cashState) {
@@ -50,16 +55,26 @@ const Money = () => {
     }
   }, [bankMoneyState])
 
-  const formatCash = (cashState: number) => `$${Number(cashState).toFixed(0)}`
-  const formatBankMoney = (bankMoneyState: number) => `$${Number(bankMoneyState).toFixed(0)}`
+  const formatDonat = (donat: number) => `${formatNumber(Number(donat.toFixed(0)))} DC`
+  const formatCash = (cashState: number) => `$${formatNumber(Number(cashState.toFixed(0)))}`
+  const formatBankMoney = (bankMoneyState: number) => `$${formatNumber(Number(bankMoneyState.toFixed(0)))}`
   const formatChange = (value: number) => {
     const sign = value >= 0 ? '+' : '-'
-    return `${sign}$${Math.abs(value).toFixed(0)}`
+    return `${sign}$${formatNumber(Math.abs(value))}`
   }
 
   return (
     <>
       <div className="money-block">
+        <div className="line-money">
+          <span className="text-name">Donat coins: </span>
+          <AnimatedNumber
+            className={'donat'}
+            value={donatCoinsState}
+            formatValue={formatDonat}
+            duration={500}
+          />
+        </div>
         <div className="line-money">
           <span className="text-name">Cash: </span>
           <AnimatedNumber
