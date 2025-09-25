@@ -23,8 +23,11 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
   const lastName = nameParts.slice(1).join(' ')
   rce.triggerClient(player, 'closeSelectChar')
   rce.triggerClient(player, 'execute', 'window.App.selectCharReducer.hideSelectChar()')
+  player.setVariable('player_spawned', true)
 
   rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
+  rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`)
+  console.log(nickname)
   setNumberChar(player.id, numberSlot)
   player.dimension = 0
 
@@ -88,6 +91,7 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
     try {
       const sid = await getDataAccount(player, 'sid', player.id)
       const sql = 'SELECT * FROM chars WHERE sid = ? ORDER BY numberslot'
+      const donatcoins = await getDataAccount(player, 'donatcoins', player.id)
 
       data.query(sql, [sid], (err, results) => {
         if (err) {
@@ -127,6 +131,7 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
         }).join(', ')
 
         rce.triggerClient(player, 'execute', `window.App.selectCharReducer.showSelectChar(${slotData})`)
+        rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`)
       })
     } catch (e) {
       console.log(chalk.bgRed('• SELECT CHAR •' + chalk.red(` Ошибка: ${e}`)))

@@ -7,6 +7,7 @@ export default defineConfig({
   root: './',
 	build: {
 		outDir: '../../client_packages/cef/',
+    target: 'esnext',
 		rollupOptions: {
 			output: {
 				manualChunks: undefined,

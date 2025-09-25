@@ -2,11 +2,13 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 import { registerCMD } from '../menus/chat'
+import { registerACommand } from "./console"
 import { send } from '../menus/chat'
 import { rce } from '../utils/rce'
 import {data} from "../database/mysql";
 import chalk from "chalk";
 import { addCash, decrementCash, addBankMoney, decrementBankMoney } from "../player/money";
+import { playerReborn, playerKnockout } from "../player/death";
 
 registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...string[]]) => {
     const targetId = parseInt(target, 10)
@@ -38,6 +40,141 @@ registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...strin
         }
     });
 });
+
+registerACommand(
+    'sethp',
+    'Установить здоровье игроку',
+    [
+      { name: 'id игрока', type: 'number' },
+      { name: 'hp', type: 'number' }
+    ],
+    (player: PlayerMp, [targetId, hp]) => {
+      const targetIdNum = parseInt(targetId)
+      const hpNum = parseInt(hp)
+
+      if (!targetId || !hp) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: sethp [ID игрока] [hp]')
+        return
+      }
+
+      const target = mp.players.at(targetIdNum)
+      if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`)
+        return
+      }
+
+      if (hpNum < 0 || hpNum > 100) {
+        rce.triggerCef(player, 'console:commandResponse', false, `HP должно быть от 0 до 100!`)
+        return
+      }
+
+      target.health = parseInt(hp)
+      rce.triggerClient(target, 'sendNotify', 'info', `Вам установлено HP: ${hp}%`, 3500, 'bottom')
+      rce.triggerCef(player, 'console:commandResponse', false, `Игроку ID:${targetId} выдано HP: ${hp}%`)
+    }
+)
+
+registerACommand(
+    'banvoice',
+    'Выдать мут игроку',
+    [
+      { name: 'id игрока', type: 'number' },
+    ],
+    (player: PlayerMp, [targetId]) => {
+      const targetIdNum = parseInt(targetId)
+
+      if (!targetId) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: banvoice [ID игрока]')
+        return
+      }
+
+      const target = mp.players.at(targetIdNum)
+      if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`)
+        return
+      }
+
+      target.setVariable('player_mute', true)
+      rce.triggerClient(target, 'sendNotify', 'err', `Вам выдан бан-войс!`, 3500, 'bottom')
+      rce.triggerCef(player, 'console:commandResponse', false, `Игроку ID:${targetId} установлен бан-войс`)
+    }
+)
+
+registerACommand(
+    'unbanvoice',
+    'Снять мут с игрока',
+    [
+      { name: 'id игрока', type: 'number' },
+    ],
+    (player: PlayerMp, [targetId]) => {
+      const targetIdNum = parseInt(targetId)
+
+      if (!targetId) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: unbanvoice [ID игрока]')
+        return
+      }
+
+      const target = mp.players.at(targetIdNum)
+      if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`)
+        return
+      }
+
+      target.setVariable('player_mute', false)
+      rce.triggerClient(target, 'sendNotify', 'success', `С вас снят бан-войс!`, 3500, 'bottom')
+      rce.triggerCef(player, 'console:commandResponse', false, `С игрока ID:${targetId} снят бан-войс`)
+    }
+)
+
+registerACommand(
+    'knockout',
+    'Нокаутировать игрока',
+    [
+      { name: 'id игрока', type: 'number' },
+    ],
+    (player: PlayerMp, [targetId]) => {
+      const targetIdNum = parseInt(targetId)
+
+      if (!targetId) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: knockout [ID игрока]')
+        return
+      }
+
+      const target = mp.players.at(targetIdNum)
+      if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`)
+        return
+      }
+
+      playerKnockout(target)
+      rce.triggerClient(player, 'console:commandResponse', false, `Игрок ID:${targetId} нокаутирован`)
+    }
+)
+
+registerACommand(
+    'reborn',
+    'Воскресить игрока',
+    [
+      { name: 'id игрока', type: 'number' },
+    ],
+    (player: PlayerMp, [targetId]) => {
+      const targetIdNum = parseInt(targetId)
+
+      if (!targetId) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: reborn [ID игрока]')
+        return
+      }
+
+      const target = mp.players.at(targetIdNum)
+      if (!target) {
+        rce.triggerCef(player, 'console:commandResponse', false, `Игрок с ID:${targetId} не найден!`)
+        return
+      }
+
+      playerReborn(target)
+      rce.triggerClient(player, 'console:commandResponse', false, `Игрок ID:${targetId} воскрешен`)
+    }
+)
 
 registerCMD('veh', (player: PlayerMp, [target, model, r, g, b, numberPlate]) => {
   try {

@@ -6,6 +6,7 @@ import './interface/notify'
 import './interface/welcome'
 import './interface/loading'
 import './interface/chat'
+import './interface/amenu'
 
 mp.events.add('guiReady', () => {
   mp.gui.chat.show(false)
@@ -28,7 +29,7 @@ mp.events.add('guiReady', () => {
   })
 })
 
-mp.keys.bind(Keys.VK_OEM_3, false, () => {
+mp.keys.bind(Keys.VK_F2, false, () => {
   mp.gui.cursor.visible = !mp.gui.cursor.visible
 })
 

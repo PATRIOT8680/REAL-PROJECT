@@ -11,12 +11,16 @@ import { hudStore } from "./menus/hud.ts";
 import { rentStore } from "./menus/rent.ts";
 import { selectCharStore } from "./menus/select-char.ts";
 import { createCharStore } from "./menus/create-char.ts";
+import { adminMenuStore } from "./menus/adminMenu.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
 import { playerInfoStore } from "./elements/playerInfo.ts";
 import { cashStore } from "./elements/cash.ts";
 import { bankMoneyStore } from "./elements/bankMoney.ts";
+import { donatCoinsStore } from "./elements/donatcoins.ts";
+import { consoleBufferStore } from "./elements/adminMenu/consoleBuffer.ts";
+import { reportsListStore } from "./elements/adminMenu/reportsList.ts";
 
 export const store = createStore(rootReducer);
 
@@ -37,10 +41,14 @@ window.App = {
   rentReducer: rentStore,
   selectCharReducer: selectCharStore,
   createCharReducer: createCharStore,
+  adminMenuReducer: adminMenuStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,
   playerInfoReducer: playerInfoStore,
   cashReducer: cashStore,
   bankMoneyReducer: bankMoneyStore,
+  donatCoinsReducer: donatCoinsStore,
+  consoleBufferReducer: consoleBufferStore,
+  reportsListReducer: reportsListStore,
 };

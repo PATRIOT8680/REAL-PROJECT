@@ -5,6 +5,8 @@ import { getSid } from "./account/sid";
 import { getUid } from "./char/uid"
 import { getCash } from "./char/cash";
 import { getBankMoney } from "./char/bankMoney";
+import { getDonatCoins } from "./account/donatcoins";
+import { getNickname } from "./char/nickname";
 
 export const getDataAccount = async (player: PlayerMp, dataKey: string, targetID: number): Promise<any> => {
   try {
@@ -31,6 +33,8 @@ export const getDataAccount = async (player: PlayerMp, dataKey: string, targetID
       uid: () => getUid(sid),
       cash: async () => getCash(await getUid(sid)),
       bankmoney: async () => getBankMoney(await getUid(sid)),
+      donatcoins: () => getDonatCoins(sid),
+      nickname: async () => getNickname(await getUid(sid)),
     }
 
     if (!dataMap[dataKey]) return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`))

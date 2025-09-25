@@ -56,7 +56,6 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
             console.log('Хе хе бой 0')
 
             if (Array.isArray(charResults) && charResults.length > 0) {
-              console.log('Все результаты:', JSON.stringify(charResults, null, 2));
               const emptyChar: any = charResults.find((char: any) =>
                 !char.firstname && !char.lastname && !char.age
               )
@@ -91,28 +90,30 @@ mp.events.add('playerQuit', async (player: PlayerMp) => {
   listLoginAccs.delete(player.id)
   console.log(`вышел с игры: ${player.id}`)
 
-  const numberSlot = getNumberChar(player.id)
-  const coords = {
-    x: player.position.x.toFixed(3),
-    y: player.position.y.toFixed(3),
-    z: player.position.z.toFixed(3),
-    heading: player.heading.toFixed(3)
-  }
+  if (player.getVariable('player_spawned')) {
+    const numberSlot = getNumberChar(player.id)
+    const coords = {
+      x: player.position.x.toFixed(3),
+      y: player.position.y.toFixed(3),
+      z: player.position.z.toFixed(3),
+      heading: player.heading.toFixed(3)
+    }
 
-  try {
-    const sid = await getDataAccount(player, 'sid', player.id)
-    console.log(getNumberChar(player.id))
-    const sql = 'UPDATE chars SET coordquit = ? WHERE sid = ? AND numberslot = ?'
-    const coordString = JSON.stringify(coords)
+    try {
+      const sid = await getDataAccount(player, 'sid', player.id)
+      console.log(getNumberChar(player.id))
+      const sql = 'UPDATE chars SET coordquit = ? WHERE sid = ? AND numberslot = ?'
+      const coordString = JSON.stringify(coords)
 
-    data.query(sql, [coordString, sid, numberSlot], (err, results) => {
-      if (err) {
-        console.log(chalk.bgRed('• QUIT •') + chalk.red(` Координаты записаны с ошибкой: ${err}`))
-        return
-      }
+      data.query(sql, [coordString, sid, numberSlot], (err, results) => {
+        if (err) {
+          console.log(chalk.bgRed('• QUIT •') + chalk.red(` Координаты записаны с ошибкой: ${err}`))
+          return
+        }
 
-    })
-  } catch (e) {
-    console.log(chalk.bgRed('• QUIT •') + chalk.red(` Ошибка: ${e}`))
+      })
+    } catch (e) {
+      console.log(chalk.bgRed('• QUIT •') + chalk.red(` Ошибка: ${e}`))
+    }
   }
 })

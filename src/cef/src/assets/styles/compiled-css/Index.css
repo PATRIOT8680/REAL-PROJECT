@@ -1,8 +1,10 @@
+p {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
 .server-info {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
   color: rgba(255, 255, 255, 0.2078431373);
   font-family: "PF DinDisplay Pro", sans-serif;
   font-size: 14px;
@@ -12,16 +14,9 @@
 }
 
 .language_ambients {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
+  flex-direction: row;
+  align-items: flex-end;
   position: absolute;
   bottom: 0;
   left: 0;

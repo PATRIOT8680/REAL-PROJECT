@@ -26,7 +26,7 @@ const BtnNext: FC<IBtnNext> = ({ status, char }) => {
     } else if (status === 'free') {
       rce.triggerServer('handleCreateSlotChar', char?.numberChar)
     } else if (status === 'donat') {
-      rce.triggerServer('handleDonatCreatePlayer', char?.nickname)
+      rce.triggerServer('handleDonatCreatePlayer', char?.numberChar)
     }
   }
 
