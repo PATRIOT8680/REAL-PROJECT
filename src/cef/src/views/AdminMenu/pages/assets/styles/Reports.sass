@@ -3,21 +3,24 @@ $Montserrat: "Montserrat", sans-serif
 .reports-page
   display: flex
   flex-direction: row
-  gap: 3rem
+  gap: 1.5rem
   width: 100%
+  height: 92%
   font-family: $Montserrat
+  animation: fadeInPageAMenu 0.7s ease
 
   .list-reports
     display: flex
     flex-direction: column
     gap: 1rem
-    width: 40%
+    width: 65%
 
     .text-block
       display: flex
       flex-direction: column
       gap: 0.4rem
       user-select: none
+      direction: ltr
 
       .line-text
         display: flex
@@ -45,11 +48,33 @@ $Montserrat: "Montserrat", sans-serif
     .list
       display: flex
       flex-direction: column
+      overflow-x: auto
+      direction: rtl
+      padding-left: 0.75rem
+      margin-left: -1.2rem
+      scroll-behavior: smooth
       gap: 1rem
+
+      &::-webkit-scrollbar
+        width: 0.4rem
+
+      &::-webkit-scrollbar-track
+        opacity: 1
+        background-color: #cdcdcd15
+        border-radius: 100px
+
+      &::-webkit-scrollbar-thumb
+        cursor: grabbing
+        background-color: #cdcdcd1c
+        border-radius: 100px
+
+        &:hover
+          background-color: #cdcdcd3d
 
       .item-report
         display: flex
         flex-direction: column
+        direction: ltr
         width: 100%
         background: rgba(255, 255, 255, 0.05)
         border: 1px solid rgba(255, 255, 255, 0.1)
@@ -63,7 +88,8 @@ $Montserrat: "Montserrat", sans-serif
         &:hover
           transition: all 0.3s
           background: rgba(255, 255, 255, 0.08)
-          transform: translateY(-3px)
+          border: 1px solid rgba(255, 255, 255, 0.18)
+          //transform: translateY(-3px)
 
         .info-report
           display: flex
@@ -72,6 +98,7 @@ $Montserrat: "Montserrat", sans-serif
           justify-content: space-between
           font-size: 0.75rem
           font-weight: 500
+          direction: ltr
 
           .main
             padding: 0.2rem 0.4rem
@@ -91,13 +118,21 @@ $Montserrat: "Montserrat", sans-serif
             background: rgba(76, 255, 154, 0.07)
             border-radius: 0.2rem
 
+          #reviewed
+            color: #167FFF
+            background: rgba(22, 127, 255, 0.07)
+            border-radius: 0.2rem
+
         .text-player
           font-size: 0.85rem
           font-weight: 500
+          text-align: left
+          word-break: break-all
 
         .date-time
           font-size: 0.7rem
           opacity: 0.6
+          text-align: left
 
       .item-report.selected
         background: #ffffff
@@ -108,5 +143,282 @@ $Montserrat: "Montserrat", sans-serif
           background: rgba(0, 0, 7, 0.07)
 
         #waiting
-          color: #ff7c4c
-          background: rgba(255, 124, 76, 0.07)
+          color: #ffffff
+          background: rgba(255, 124, 76)
+
+        #taken
+          color: #ffffff
+          background: rgba(76, 255, 154)
+
+        #reviewed
+          color: #ffffff
+          background: rgba(22, 127, 255)
+
+    .nofound-reports
+      position: relative
+      top: 30%
+      left: 50%
+      transform: translate(-50%, -30%)
+      width: 15rem
+      text-align: center
+      line-height: 180%
+      font-weight: 400
+      font-size: 0.9rem
+      opacity: 0.5
+      background: rgba(255, 255, 255, 0.05)
+      border-radius: 3rem
+      padding: 1rem
+
+  .chat-player.noSelect
+    display: flex
+    width: 100%
+    align-items: center
+    justify-content: center
+
+    .noselect-chat
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      user-select: none
+      pointer-events: none
+      opacity: 0.7
+      gap: 1rem
+
+      .icon-cursor
+        width: 6rem
+
+      .title
+        font-size: 1.1rem
+        font-weight: 500
+
+      .descr
+        opacity: 0.8
+        text-align: center
+        font-size: 0.98rem
+        line-height: 160%
+        width: 18rem
+
+  .chat-player
+    display: flex
+    width: 100%
+    flex-direction: column
+
+    .selected-report
+      display: flex
+      flex-direction: column
+      width: 100%
+      height: 100%
+      gap: 0.8rem
+
+      header
+        display: flex
+        justify-content: space-between
+        align-items: center
+        user-select: none
+        width: 100%
+
+        .info-report
+          display: flex
+          flex-direction: column
+          align-items: flex-start
+          gap: 0.35rem
+
+          .name-report
+            font-size: 1rem
+            font-weight: 500
+
+          .time-sended
+            background: rgba(255, 255, 255, 0.08)
+            border-radius: 3rem
+            font-size: 0.8rem
+            font-weight: 400
+            padding: 0.3rem 0.6rem
+            opacity: 0.6
+
+        .btns-action
+          display: flex
+          gap: 0.6rem
+
+          button
+            cursor: pointer
+            outline: none
+            padding: 0.4rem 1rem
+            font-size: 0.85rem
+            border-radius: 3rem
+            font-family: $Montserrat
+            font-weight: 500
+
+          .put-report
+            color: rgba(255, 255, 255, 0.6)
+            background: rgba(255, 255, 255, 0.1)
+            border: 1px solid rgba(255, 255, 255, 0.2)
+            transition: all 0.3s
+
+            &:hover
+              color: rgba(0, 0, 0)
+              background: rgb(255, 255, 255)
+              border: 1px solid rgba(255, 255, 255)
+              transition: all 0.3s
+
+          .close-report
+            color: rgba(22, 127, 255)
+            background: rgba(22, 127, 255, 0.15)
+            border: 1px solid rgba(22, 127, 255, 0.4)
+            transition: all 0.3s
+
+            &:hover
+              color: rgb(255, 255, 255)
+              background: rgba(22, 127, 255)
+              border: 1px solid rgba(22, 127, 255)
+              transition: all 0.3s
+
+      .list-chat
+        display: flex
+        width: 103%
+        gap: 1.5rem
+        overflow-y: auto
+        padding-right: 0.8rem
+        margin-left: 0rem
+        flex-direction: column
+        overflow-x: hidden
+        height: 100%
+
+        &::-webkit-scrollbar
+          width: 0.4rem
+
+        &::-webkit-scrollbar-track
+          opacity: 1
+          background-color: #cdcdcd15
+          border-radius: 100px
+
+        &::-webkit-scrollbar-thumb
+          cursor: grabbing
+          background-color: #cdcdcd1c
+          border-radius: 100px
+
+          &:hover
+            background-color: #cdcdcd3d
+
+        li
+          display: flex
+          gap: 0.5rem
+
+          .avatar
+            background: rgba(255, 255, 255, 0.08)
+            border-radius: 3rem
+            border: 1px solid rgba(255, 255, 255, 0.1)
+            padding: 0.6rem
+            user-select: none
+            pointer-events: none
+
+          .main-info
+            display: flex
+            flex-direction: column
+            align-items: flex-start
+            gap: 0.6rem
+
+            .header-msg
+              display: flex
+              align-items: center
+              gap: 0.5rem
+              user-select: none
+
+              span
+                font-weight: 500
+                font-size: 0.94rem
+                background: rgba(255, 255, 255, 0.08)
+                border-radius: 3rem
+                padding: 0.3rem 0.7rem
+
+              .date-time
+                opacity: 0.4
+
+            .msg-report
+              font-size: 0.83rem
+              line-height: 147%
+              background: rgba(255, 255, 255, 0.08)
+              border-radius: 0.5rem
+              padding: 0.5rem 0.7rem
+              max-width: 20vw
+              word-break: break-all
+
+        .player-msg
+          display: flex
+          align-items: flex-start
+          animation: fadeInMsgPlayer-Amenu 0.4s ease
+          max-width: 100%
+
+          .avatar
+            width: 2.5rem
+            height: 2.5rem
+
+        .admin-msg
+          display: flex
+          flex-direction: row-reverse
+          animation: fadeInMsgAdmin-Amenu 0.4s ease
+          max-width: 100%
+
+          .avatar
+            width: 2.5rem
+            height: 2.5rem
+
+          .main-info
+            display: flex
+            align-items: flex-end
+
+      .enter-block
+        display: flex
+        align-items: center
+        justify-content: flex-end
+
+        .enter-cmd
+          position: relative
+          outline: none
+          border: none
+          width: 100%
+          height: 2.35rem
+          box-sizing: border-box
+          padding-left: 1.5rem
+          padding-right: 5.8rem
+          border-radius: 3rem
+          font-family: $Montserrat
+          font-size: 0.9rem
+          font-weight: 500
+          background: rgba(255, 255, 255, 0.06)
+          border: rgba(255, 255, 255, 0.14) solid 1px
+          transition: all 0.3s
+          color: #ffffff
+
+          &:focus-visible
+            transition: all 0.3s
+            background: rgba(255, 255, 255, 0.1)
+            border: rgba(255, 255, 255, 0.17) solid 1px
+
+          &::placeholder
+            font-size: 0.9rem
+            font-weight: 500
+
+        .enter-keyup
+          position: absolute
+          margin-right: 0.6rem
+          font-family: $Montserrat
+          font-weight: 600
+          font-size: 0.8rem
+          background: #ffffff
+          padding: 0.3rem 0.8rem
+          border-radius: 1rem
+          animation: fadeInEnter 0.25s ease
+          color: #000000
+
+@keyframes fadeInMsgPlayer-Amenu
+  from
+    margin-left: -5rem
+  to
+    margin-left: 0
+
+@keyframes fadeInMsgAdmin-Amenu
+  from
+    transform: translateX(5rem)
+  to
+    transform: translateX(0)

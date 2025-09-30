@@ -39,16 +39,6 @@ mp.events.add('playerJoin', (player) => {
     }
 });
 
-mp.events.add('playerJoin', (player) => {
-    player.dimension = player.id + 1;
-    console.log(`${player.socialClub} подключился!!! dim: ${player.dimension}`);
-    player.model = mp.joaat('mp_m_freemode_01');
-    player.spawn(new mp.Vector3(3335.050537109375, 5162.82177734375, 18.2938232421875));
-    player.heading = 144;
-    player.health = 100;
-    player.armour = 200;
-});
-
 class CustomEventBase {
     static registerLocalIds = 1;
     static registerHandles = new Map();
@@ -488,6 +478,77 @@ mp.events.add('playerJoin', (player) => {
     player.call('setKey', [rce.key]);
 });
 
+const users = new Map();
+const connectedUsers = {
+    setUser: (playerId, userData) => {
+        const existingUser = users.get(playerId) || {};
+        users.set(playerId, { ...existingUser, ...userData });
+        if (userData.login) {
+            console.log(`Обновлен пользователь: ${userData.login} (ID: ${playerId})`);
+        }
+    },
+    removeUser: (playerId) => {
+        const user = users.get(playerId);
+        if (user) {
+            users.delete(playerId);
+            console.log(`Удален пользователь: ${user.login || 'Unknown'} (ID: ${playerId})`);
+            return true;
+        }
+        return false;
+    },
+    getUser: (playerId) => {
+        return users.get(playerId);
+    },
+    getUserByLogin: (login) => {
+        for (const [playerId, user] of users.entries()) {
+            if (user.login === login) {
+                return { playerId, user };
+            }
+        }
+        return undefined;
+    },
+    getAllUsers: () => {
+        return Array.from(users.entries().map(([playerId, user]) => ({ playerId, user })));
+    },
+    getOnline: () => {
+        return users.size;
+    },
+    getField: (playerId, field) => {
+        const user = users.get(playerId);
+        return user ? user[field] : undefined;
+    },
+    getPlayerIdByNickName: (nickName) => {
+        for (const [playerId, user] of users.entries()) {
+            if (user.nickName === nickName) {
+                return playerId;
+            }
+        }
+        return undefined;
+    }
+};
+rce.registerClientCef('dataOnlineUser:getField', (player, field) => {
+    if (!player) {
+        return `Игрок (ID: ${player.id}) не в сети!`;
+    }
+    console.log(`Отправляем запрошенные данные: ${connectedUsers.getField(player.id, field)}`);
+    return connectedUsers.getField(player.id, field);
+});
+
+mp.events.add('playerJoin', (player) => {
+    player.dimension = player.id + 1;
+    //console.log(`${player.socialClub} подключился!!! dim: ${player.dimension}`)
+    player.model = mp.joaat('mp_m_freemode_01');
+    player.spawn(new mp.Vector3(3335.050537109375, 5162.82177734375, 18.2938232421875));
+    player.heading = 144;
+    player.health = 100;
+    player.armour = 200;
+    connectedUsers.setUser(player.id, {
+        sid: null,
+        login: undefined,
+        nickName: undefined
+    });
+});
+
 const cmdHandlers = {};
 const mutedPlayers = new Map();
 const CHAT_MESSAGE_EVENT = 'chat:message';
@@ -713,6 +774,213 @@ mp.events.add('playerQuit', (player) => {
     }, 200);
 });
 
+const getCash = (uid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM chars WHERE uid = ?';
+        data.query(sql, [uid], (err, result) => {
+            if (err)
+                reject(err);
+            else
+                resolve(result[0].cash);
+        });
+    });
+};
+const addCash = async (player, uid, amount) => {
+    try {
+        const sql = 'UPDATE chars SET cash = cash + ? WHERE uid = ?';
+        return new Promise((resolve, reject) => {
+            data.query(sql, [amount, uid], (err, result) => {
+                if (err) {
+                    console.log(chalk.bgRed('• ADD CASH •') + chalk.red(` Ошибка add: ${err}`));
+                    reject(err);
+                    return;
+                }
+                if (result.affectedRows > 0) {
+                    rce.triggerClient(player, 'execute', `window.App.cashReducer.addCash(${amount})`);
+                    resolve(true);
+                }
+                else {
+                    resolve(false);
+                }
+            });
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• ADD CASH •') + chalk.red(` Ошибка: ${e}`));
+        return false;
+    }
+};
+const decrementCash = async (player, uid, amount) => {
+    try {
+        // Сначала проверяем достаточно ли денег
+        const checkSql = 'SELECT cash FROM chars WHERE uid = ?';
+        return new Promise((resolve, reject) => {
+            data.query(checkSql, [uid], async (err, result) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                if (result.length === 0) {
+                    resolve(false);
+                    return;
+                }
+                const currentCash = result[0].cash;
+                if (currentCash - amount < 0) {
+                    const player = mp.players.toArray().find(p => p.getVariable('uid') === uid);
+                    if (player) {
+                        rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно наличных!', 3700, 'bottom');
+                    }
+                    resolve('noCash');
+                    return;
+                }
+                const updateSql = 'UPDATE chars SET cash = cash - ? WHERE uid = ?';
+                data.query(updateSql, [amount, uid], (err, result) => {
+                    if (err) {
+                        console.log(chalk.bgRed('• DECREMENT CASH •') + chalk.red(` Ошибка decrement: ${err}`));
+                        reject(err);
+                        return;
+                    }
+                    if (result.affectedRows > 0) {
+                        rce.triggerClient(player, 'execute', `window.App.cashReducer.decrementCash(${amount})`);
+                        resolve(true);
+                    }
+                    else {
+                        resolve(false);
+                    }
+                });
+            });
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• DECREMENT CASH •') + chalk.red(` Ошибка: ${e}`));
+        return false;
+    }
+};
+
+const getBankMoney = (uid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM chars WHERE uid = ?';
+        data.query(sql, [uid], (err, result) => {
+            if (err)
+                reject(err);
+            else
+                resolve(result[0].bankmoney);
+        });
+    });
+};
+const addBankMoney = (player, uid, amount) => {
+    try {
+        const sql = 'UPDATE chars SET bankmoney = bankmoney + ? WHERE uid = ?';
+        return new Promise((resolve, reject) => {
+            data.query(sql, [amount, uid], (err, result) => {
+                if (err) {
+                    console.log(chalk.bgRed('• ADD BANKMONEY •') + chalk.red(` Ошибка add: ${err}`));
+                    reject(err);
+                    return;
+                }
+                if (result.affectedRows > 0) {
+                    rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.addBankMoney(${amount})`);
+                    resolve(true);
+                }
+                else {
+                    resolve(false);
+                }
+            });
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• ADD BANKMONEY •') + chalk.red(` Ошибка: ${e}`));
+    }
+};
+const decrementBankMoney = (player, uid, amount) => {
+    try {
+        const sql = 'UPDATE chars SET bankmoney = bankmoney - ? WHERE uid = ?';
+        return new Promise((resolve, reject) => {
+            data.query(sql, [amount, uid], (err, result) => {
+                if (err) {
+                    console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка add: ${err}`));
+                    reject(err);
+                    return;
+                }
+                if (result.affectedRows > 0) {
+                    rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.decrementBankMoney(${amount})`);
+                    resolve(true);
+                }
+                else {
+                    resolve(false);
+                }
+            });
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка: ${e}`));
+    }
+};
+
+const getDonatCoins = (sid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM accounts WHERE sid = ?';
+        data.query(sql, [sid], (err, result) => {
+            if (err)
+                reject(err);
+            else
+                resolve(result[0].donatcoins);
+        });
+    });
+};
+
+const getNickname = (uid) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM chars WHERE uid = ?';
+        data.query(sql, [uid], (err, result) => {
+            if (err)
+                reject(err);
+            else {
+                const { firstname, lastname } = result[0];
+                const fullName = `${firstname || ''} ${lastname || ''}`.trim();
+                resolve(fullName);
+            }
+        });
+    });
+};
+
+const getDataAccount = async (player, dataKey, targetID) => {
+    try {
+        const targetPlayer = mp.players.at(targetID);
+        if (!targetPlayer) {
+            console.error(chalk.red(`[RPC] Игрок с ID ${targetID} не найден!`));
+            return null;
+        }
+        if (!targetPlayer.getVariable('login_player')) {
+            return console.error(chalk.red(`Игрок #${targetPlayer.id} не авторизован!`));
+        }
+        const targetLogin = targetPlayer.getVariable('login_player');
+        const sid = await getSid(targetLogin);
+        if (!targetLogin) {
+            console.error(chalk.red(`[RPC] У игрока ${targetID} нет логина!`));
+            return null;
+        }
+        const dataMap = {
+            sid: () => getSid(targetLogin),
+            uid: () => getUid(sid),
+            cash: async () => getCash(await getUid(sid)),
+            bankmoney: async () => getBankMoney(await getUid(sid)),
+            donatcoins: () => getDonatCoins(sid),
+            nickname: async () => getNickname(await getUid(sid)),
+        };
+        if (!dataMap[dataKey])
+            return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
+        return dataMap[dataKey]();
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• GET DATA •' + chalk.red(` Ошибка: ${e}`)));
+    }
+};
+rce.registerClientCef('getDataAccount', async (player, dataKey, targetID) => {
+    const result = await getDataAccount(player, dataKey, targetID);
+    return result;
+});
+
 const selectChar = (player) => {
     rce.triggerClient(player, 'moveSkyCamera', 'up', 2);
     rce.triggerClient(player, 'player:freeze', true);
@@ -766,7 +1034,7 @@ rce.registerCef('handleSpawnPlayer', (player, nickname, numberSlot) => {
                     if (err)
                         return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`));
                 });
-                console.log('Сработка после запроса');
+                connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}` });
                 rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
                 rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
                 setTimeout(() => {
@@ -861,12 +1129,11 @@ const loginUser = (player, login, password) => {
                     rce.triggerClient(player, 'server:auth:saveLogin', login);
                     rce.triggerCef(player, 'server:authSuccess');
                     console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`));
-                    console.log('ага ага');
                     const checkChar = 'SELECT numberslot, firstname, lastname, age FROM chars WHERE sid = ?';
                     const sid = await getDataAccount(player, 'sid', player.id);
                     console.log('ага ага 2');
                     listLoginAccs.set(player.id, { sid, login });
-                    console.log(`Передали id: ${player.id}`);
+                    connectedUsers.setUser(player.id, { login: login, sid: sid });
                     data.query(checkChar, [sid], async (err, charResults) => {
                         if (err) {
                             console.log(chalk.bgRed('• CHAR •' + chalk.red(`Ошибка получения данных о char: ${err}`)));
@@ -876,8 +1143,6 @@ const loginUser = (player, login, password) => {
                         if (Array.isArray(charResults) && charResults.length > 0) {
                             const emptyChar = charResults.find((char) => !char.firstname && !char.lastname && !char.age);
                             if (emptyChar) {
-                                console.log('Хе хе бой - пустые поля');
-                                console.log('Пустой слот:', Number(emptyChar.numberslot));
                                 const sid = await getDataAccount(player, 'sid', player.id);
                                 rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot);
                             }
@@ -946,171 +1211,44 @@ const getUid = (sid) => {
     });
 };
 
-const getCash = (uid) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM chars WHERE uid = ?';
-        data.query(sql, [uid], (err, result) => {
-            if (err)
-                reject(err);
-            else
-                resolve(result[0].cash);
-        });
-    });
-};
-
-const getBankMoney = (uid) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM chars WHERE uid = ?';
-        data.query(sql, [uid], (err, result) => {
-            if (err)
-                reject(err);
-            else
-                resolve(result[0].bankmoney);
-        });
-    });
-};
-
-const getDonatCoins = (sid) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM accounts WHERE sid = ?';
-        data.query(sql, [sid], (err, result) => {
-            if (err)
-                reject(err);
-            else
-                resolve(result[0].donatcoins);
-        });
-    });
-};
-
-const getNickname = (uid) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM chars WHERE uid = ?';
-        data.query(sql, [uid], (err, result) => {
-            if (err)
-                reject(err);
-            else {
-                const { firstname, lastname } = result[0];
-                const fullName = `${firstname || ''} ${lastname || ''}`.trim();
-                resolve(fullName);
-            }
-        });
-    });
-};
-
-const getDataAccount = async (player, dataKey, targetID) => {
+const setDataAccount = async (player, dataKey, value, targetID) => {
     try {
         const targetPlayer = mp.players.at(targetID);
         if (!targetPlayer) {
             console.error(chalk.red(`[RPC] Игрок с ID ${targetID} не найден!`));
-            return null;
+            return false;
         }
         if (!targetPlayer.getVariable('login_player')) {
-            return console.error(chalk.red(`Игрок #${targetPlayer.id} не авторизован!`));
+            console.error(chalk.red(`Игрок #${targetPlayer.id} не авторизован!`));
+            return false;
         }
         const targetLogin = targetPlayer.getVariable('login_player');
         const sid = await getSid(targetLogin);
         if (!targetLogin) {
             console.error(chalk.red(`[RPC] У игрока ${targetID} нет логина!`));
-            return null;
+            return false;
         }
         const dataMap = {
-            sid: () => getSid(targetLogin),
-            uid: () => getUid(sid),
-            cash: async () => getCash(await getUid(sid)),
-            bankmoney: async () => getBankMoney(await getUid(sid)),
-            donatcoins: () => getDonatCoins(sid),
-            nickname: async () => getNickname(await getUid(sid)),
+            addCash: async () => addCash(targetPlayer, await getUid(sid), value),
+            decrementCash: async () => decrementCash(targetPlayer, await getUid(sid), value),
+            addBankMoney: async () => addBankMoney(targetPlayer, await getUid(sid), value),
+            decrementBankMoney: async () => decrementBankMoney(targetPlayer, await getUid(sid), value),
         };
-        if (!dataMap[dataKey])
-            return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
-        return dataMap[dataKey]();
+        if (!dataMap[dataKey]) {
+            console.error(chalk.bgRed('SET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
+            return false;
+        }
+        await dataMap[dataKey]();
+        return true;
     }
     catch (e) {
-        console.log(chalk.bgRed('• GET DATA •' + chalk.red(` Ошибка: ${e}`)));
+        console.log(chalk.bgRed('• SET DATA •' + chalk.red(` Ошибка: ${e}`)));
+        return false;
     }
 };
-rce.registerClientCef('getDataAccount', async (player, dataKey, targetID) => {
-    const result = await getDataAccount(player, dataKey, targetID);
+rce.registerClientCef('setDataAccount', async (player, dataKey, value, targetID) => {
+    const result = await setDataAccount(player, dataKey, value, targetID);
     return result;
-});
-
-const addCash = async (player, amount) => {
-    try {
-        const sql = 'UPDATE chars SET cash = cash + ? WHERE uid = ?';
-        const uid = await getDataAccount(player, 'uid', player.id);
-        data.query(sql, [amount, uid], (err, result) => {
-            if (err)
-                return console.log(chalk.bgRed('• ADD CASH •') + chalk.red(` Ошибка add: ${err}`));
-            rce.triggerClient(player, 'execute', `window.App.cashReducer.addCash(${amount})`);
-        });
-    }
-    catch (e) {
-        console.log(chalk.bgRed('• ADD CASH •') + chalk.red(` Ошибка: ${e}`));
-    }
-};
-const decrementCash = async (player, amount) => {
-    try {
-        const cashData = await getDataAccount(player, 'cash', player.id);
-        if (cashData - amount < 0) {
-            rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно наличных!', 3700, 'bottom');
-            return 'noCash';
-        }
-        const sql = 'UPDATE chars SET cash = cash - ? WHERE uid = ?';
-        const uid = await getDataAccount(player, 'uid', player.id);
-        data.query(sql, [amount, uid], (err, result) => {
-            if (err)
-                return console.log(chalk.bgRed('• DECREMENT CASH •') + chalk.red(` Ошибка decrement: ${err}`));
-            rce.triggerClient(player, 'execute', `window.App.cashReducer.decrementCash(${amount})`);
-        });
-    }
-    catch (e) {
-        console.log(chalk.bgRed('• DECREMENT CASH •') + chalk.red(` Ошибка: ${e}`));
-    }
-};
-const addBankMoney = async (player, amount) => {
-    try {
-        const sql = 'UPDATE chars SET bankmoney = bankmoney + ? WHERE uid = ?';
-        const uid = await getDataAccount(player, 'uid', player.id);
-        data.query(sql, [amount, uid], (err, result) => {
-            if (err)
-                return console.log(chalk.bgRed('• ADD BANKMONEY •') + chalk.red(` Ошибка add: ${err}`));
-            rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.addBankMoney(${amount})`);
-        });
-    }
-    catch (e) {
-        console.log(chalk.bgRed('• ADD BANKMONEY •') + chalk.red(` Ошибка: ${e}`));
-    }
-};
-const decrementBankMoney = async (player, amount) => {
-    try {
-        const bankMoneyData = await getDataAccount(player, 'cash', player.id);
-        if (bankMoneyData - amount < 0) {
-            rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно средств на карте!', 3800, 'bottom');
-            return 'noBankMoney';
-        }
-        const sql = 'UPDATE chars SET bankmoney = bankmoney - ? WHERE uid = ?';
-        const uid = await getDataAccount(player, 'uid', player.id);
-        data.query(sql, [amount, uid], (err, result) => {
-            if (err)
-                return console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка decrement: ${err}`));
-            rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.decrementBankMoney(${amount})`);
-        });
-    }
-    catch (e) {
-        console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка: ${e}`));
-    }
-};
-rce.registerClientCef('addCash', async (player, amount) => {
-    addCash(player, amount);
-});
-rce.registerClientCef('decrementCash', async (player, amount) => {
-    decrementCash(player, amount);
-});
-rce.registerClientCef('addBankMoney', async (player, amount) => {
-    addBankMoney(player, amount);
-});
-rce.registerClientCef('decrementBankMoney', async (player, amount) => {
-    decrementBankMoney(player, amount);
 });
 
 rce.registerClient('client:playerDeath', (player, [posX, posY, posZ]) => {
@@ -1454,29 +1592,29 @@ registerCMD('setdim', (player, [targetID, dimension]) => {
     rce.triggerClient(target, 'sendNotify', 'info', `Вам установлен dimension #${dimension}!`, 4000, 'bottom');
     rce.triggerClient(player, 'sendNotify', 'info', `Игроку (ID: ${targetID}) установлен dimension #${dimension}!`, 3000, 'top');
 });
-registerCMD('addcash', (player, [targetID, amount]) => {
+registerCMD('addcash', async (player, [targetID, amount]) => {
     if (!targetID || !amount)
         return send(player, '<b>Используйте /addcash [ID игрока] [кол-во]</b>', false, 'SERVER');
     const target = mp.players.at(targetID);
-    addCash(target, Number(amount));
+    await setDataAccount(target, 'addCash', Number(amount), targetID);
 });
 registerCMD('decrementcash', (player, [targetID, amount]) => {
     if (!targetID || !amount)
         return send(player, '<b>Используйте /decrementcash [ID игрока] [кол-во]</b>', false, 'SERVER');
     const target = mp.players.at(targetID);
-    decrementCash(target, Number(amount));
+    setDataAccount(target, 'decrementCash', Number(amount), targetID);
 });
 registerCMD('addbankmoney', (player, [targetID, amount]) => {
     if (!targetID || !amount)
         return send(player, '<b>Используйте /addbankmoney [ID игрока] [кол-во]</b>', false, 'SERVER');
     const target = mp.players.at(targetID);
-    addBankMoney(target, Number(amount));
+    setDataAccount(target, 'addBankMoney', Number(amount), targetID);
 });
 registerCMD('decrementbankmoney', (player, [targetID, amount]) => {
     if (!targetID || !amount)
         return send(player, '<b>Используйте /decrementbankmoney [ID игрока] [кол-во]</b>', false, 'SERVER');
     const target = mp.players.at(targetID);
-    decrementBankMoney(target, Number(amount));
+    setDataAccount(target, 'decrementbankmoney', Number(amount), targetID);
 });
 registerCMD('tpto', (player, [targetID]) => {
     if (!targetID)
@@ -1620,10 +1758,10 @@ const registerUser = (player, login, email, password) => {
                     listLoginAccs.set(player.id, { sid, login });
                     player.setVariable('login_player', login);
                     selectChar(player);
+                    connectedUsers.setUser(player.id, { login: login, sid: sid });
                     rce.triggerClient(player, 'server:auth:saveLogin', login);
                     rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom');
                     rce.triggerCef(player, 'server:authSuccess');
-                    console.log(`User ${login} created. sid: ${sid}`);
                     console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`));
                 }
             });
@@ -2000,9 +2138,7 @@ rce.registerCef('cef:handleRentCar', async (player, id, nameCar, price, hours) =
         rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('err', 'У вас уже есть транспорт в аренде. Отмените предыдушую аренду.', 4000, 'bottom')`);
         return;
     }
-    const cashResult = await decrementCash(player, price);
-    if (cashResult === 'noCash')
-        return;
+    await setDataAccount(player, 'decrementCash', price, player.id);
     const vehPos = new mp.Vector3(Number(vehInfo.x), Number(vehInfo.y), Number(vehInfo.z));
     try {
         playerData.isTakenRent = true;
@@ -2092,8 +2228,8 @@ const createSlotChar = (player, numberSlot) => {
             const maxUid = results[0].maxUid || 0;
             const newUid = maxUid + 1;
             const sid = await getDataAccount(player, 'sid', player.id);
-            const sql = 'INSERT INTO chars (uid, sid, numberslot, cash, bankmoney) VALUES (?, ?, ?, ?, ?)';
-            data.query(sql, [newUid, sid, numberSlot, 1500, 200], (err, results) => {
+            const sql = 'INSERT INTO chars (uid, sid, numberslot, adminlvl, cash, bankmoney) VALUES (?, ?, ?, ?, ?, ?)';
+            data.query(sql, [newUid, sid, numberSlot, 0, 1500, 200], (err, results) => {
                 if (err)
                     return console.log(chalk.bgRed('• CREATE SLOT CHAR •' + chalk.red(` Err insert data: ${err}`)));
             });
@@ -2180,10 +2316,10 @@ rce.registerCef('cef:handleCreateChar', async (player, numberSlot, dataChar) => 
                 rce.triggerClient(player, 'sendNotify', 'err', 'Персонаж с таким никнеймом уже существует!', 5000, 'bottom');
                 return;
             }
-            console.log(`Создаем персонажа 2`);
             setNumberChar(player.id, numberSlot);
             player.setVariable('player_spawned', true);
             await connection.execute(query, [firstName, lastName, age, sid, numberSlot]);
+            connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}` });
             closeCreateChar(player);
         }
         finally {
@@ -2197,7 +2333,7 @@ rce.registerCef('cef:handleCreateChar', async (player, numberSlot, dataChar) => 
 
 const savedCoordQuit = async () => {
     for (const player of mp.players.toArray()) {
-        if (player.getVariable("player_spawned"))
+        if (!player.getVariable("player_spawned"))
             return;
         try {
             console.log(`Начинаем запись: ${player.id}`);
@@ -2267,4 +2403,47 @@ rce.registerCef('cef:amenu:spawnVehForMe', (player, modelName, colorVeh) => {
     });
     vehicle.setColorRGB(colorVeh[0], colorVeh[1], colorVeh[2], colorVeh[0], colorVeh[1], colorVeh[2]);
     player.putIntoVehicle(vehicle, 0);
+});
+
+rce.registerCef('cef:report:createReport', (player, data) => {
+    rce.triggerClients('execute', `window.App.reportsListReducer.setReport([{
+    nickName: "${data.nickName}",
+    text: "${data.text}",
+    dateTime: "${data.dateTime}",
+    role: "${data.role}"
+  }], 'waiting')`);
+});
+rce.registerCef('cef:report:addMsg', (player, id, data) => {
+    rce.triggerClients('execute', `window.App.reportsListReducer.addMessageToReport(${id}, {
+    nickName: "${data.nickName}",
+    text: "${data.text}",
+    dateTime: "${data.dateTime}",
+    role: "${data.role}"
+  })`);
+});
+rce.registerCef('cef:report:deleteReport', (player, id, nickname) => {
+    rce.triggerClients('execute', `window.App.reportsListReducer.closeReport(${id})`);
+});
+rce.registerCef('cef:amenu:selectReport', (player, id, nickname, adminNickname) => {
+    rce.triggerClients('execute', `window.App.reportsListReducer.updateReportStatus(${id}, "taken", "${adminNickname}")`);
+});
+rce.registerCef('cef:amenu:delayReport', (player, id, nickname) => {
+    rce.triggerClients('execute', `window.App.reportsListReducer.updateReportStatus(${id}, "waiting")`);
+});
+rce.registerCef('cef:amenu:closeReport', (player, id, nickname) => {
+    const targetId = connectedUsers.getPlayerIdByNickName(nickname);
+    const target = mp.players.at(targetId);
+    rce.triggerClient(target, 'sendNotify', 'info', `Администратор закрыл ваш репорт`, 3300, 'top');
+    rce.triggerClients('execute', `window.App.reportsListReducer.updateReportStatus(${id}, "reviewed")`);
+});
+rce.registerCef('cef:amenu:sendAMsg', (player, id, data) => {
+    const targetId = connectedUsers.getPlayerIdByNickName(data.nickName);
+    const target = mp.players.at(targetId);
+    rce.triggerClient(target, 'sendNotify', 'info', `На ваш репорт пришёл ответ!`, 3300, 'top');
+    rce.triggerClients('execute', `window.App.reportsListReducer.addMessageToReport(${id}, {
+    nickName: "${data.nickName}",
+    text: "${data.text}",
+    dateTime: "${data.dateTime}",
+    role: "${data.role}"
+  })`);
 });

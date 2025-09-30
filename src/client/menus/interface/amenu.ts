@@ -16,12 +16,6 @@ mp.keys.bind(Keys.VK_ESCAPE, false, () => {
   }
 })
 
-mp.keys.bind(Keys.VK_ESCAPE, false, () => {
-  if (visibleAMenu) {
-    rce.trigger('closeAMenu')
-  }
-})
-
 mp.keys.bind(Keys.VK_NUMPAD4, false, () => {
   if (visibleAMenu) {
     rce.triggerCef('amenu:ctrlPress', 'left')

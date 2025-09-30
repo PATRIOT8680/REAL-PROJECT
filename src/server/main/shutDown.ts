@@ -1,10 +1,10 @@
 import { data } from "../database/mysql";
-import { getDataAccount } from "../getData/getDataAccount";
+import { getDataAccount } from "../data/getDataAccount";
 import chalk from "chalk";
 
 const savedCoordQuit = async () => {
   for (const player of mp.players.toArray()) {
-    if(player.getVariable("player_spawned")) return
+    if(!player.getVariable("player_spawned")) return
 
     try {
       console.log(`Начинаем запись: ${player.id}`)

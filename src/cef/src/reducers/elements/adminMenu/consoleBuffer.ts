@@ -3,14 +3,7 @@ import {getDateTime} from "../../../modules/dateTime.ts";
 
 const currentDateTime = await getDateTime()
 
-const initialState = [
-  {
-    id: 0,
-    sender: 'Server',
-    time: currentDateTime,
-    args: ['Вы открыли админскую консоль. Начните вводить команду...'],
-    isError: false,
-  }
+const initialState: any[] = [
 ]
 
 export const consoleBufferReducer = (state = initialState, action: any) => {

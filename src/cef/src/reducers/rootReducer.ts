@@ -13,6 +13,7 @@ import { rentReducer } from "./menus/rent.ts";
 import { selectCharReducer } from './menus/select-char.ts';
 import { createCharReducer } from './menus/create-char.ts';
 import { adminMenuReducer } from "./menus/adminMenu.ts";
+import { playerReportsReducer } from "./menus/playerReports.ts";
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
@@ -21,6 +22,7 @@ import { cashReducer } from "./elements/player/cash.ts"
 import { bankMoneyReducer } from "./elements/player/bankMoney.ts"
 import { donatCoinsReducer } from "./elements/player/donatcoins.ts"
 import { consoleBufferReducer } from "./elements/adminMenu/consoleBuffer.ts";
+import { reportReducer } from "./elements/adminMenu/reportsList.ts";
 
 export type RootState = {
 	// Menus
@@ -34,6 +36,7 @@ export type RootState = {
   selectCharReducer: ReturnType<typeof selectCharReducer>
   createCharReducer: ReturnType<typeof createCharReducer>
   adminMenuReducer: ReturnType<typeof adminMenuReducer>
+  playerReportsReducer: ReturnType<typeof playerReportsReducer>
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
@@ -42,6 +45,7 @@ export type RootState = {
   bankMoneyReducer: ReturnType<typeof bankMoneyReducer>
   donatCoinsReducer: ReturnType<typeof donatCoinsReducer>
   consoleBufferReducer: ReturnType<typeof consoleBufferReducer>
+  reportReducer: ReturnType<typeof reportReducer>
 }
 
 export const rootReducer = combineReducers({
@@ -56,6 +60,8 @@ export const rootReducer = combineReducers({
   selectCharReducer,
   createCharReducer,
   adminMenuReducer,
+  reportReducer,
+  playerReportsReducer,
 
   // Elements
   sendNotifyReducer,

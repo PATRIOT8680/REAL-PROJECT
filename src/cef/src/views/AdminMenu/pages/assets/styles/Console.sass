@@ -60,6 +60,69 @@ $Montserrat: "Montserrat", sans-serif
         font-weight: 500
         color: rgba(255, 255, 255, 0.6)
 
+      #help-text
+        display: flex
+        flex-direction: column
+
+        .arg
+          color: rgba(255, 255, 255, 0.7)
+          padding: 0.5rem 0.7rem
+          background: rgba(255, 255, 255, 0.05)
+          border-radius: 0.4rem
+
+        .list-cmds.closed
+          cursor: pointer
+          transition: all 0.3s
+
+          .info-opened
+            text-decoration: none
+
+          &:hover
+            color: #000000
+            background: #ffffff
+            transition: all 0.3s
+            border: 1px solid rgba(255, 255, 255)
+
+        .list-cmds
+          width: 100%
+          display: flex
+          gap: 0.8rem
+          flex-direction: column
+          padding: 0.5rem 0.7rem
+          background: rgba(255, 255, 255, 0.05)
+          border-radius: 0.4rem
+          border: 1px solid rgba(255, 255, 255, 0.1)
+
+          .info-opened
+            display: flex
+            justify-content: center
+            text-decoration: underline
+            cursor: pointer
+
+          .cmds
+            display: flex
+            flex-direction: row
+            justify-content: space-between
+            gap: 0.65rem 0.5rem
+            flex-wrap: wrap
+
+            .cmd-btn
+              cursor: pointer
+              font-size: 0.85rem
+              color: rgba(255, 255, 255, 0.9)
+              background: rgba(255, 255, 255, 0.07)
+              border-radius: 0.4rem
+              padding: 0.4rem 0.5rem
+              text-align: center
+              flex-grow: 1
+              transition: all 0.3s
+
+              &:hover
+                color: #000000
+                background: #ffffff
+                transition: all 0.3s
+
+
       .text-block
         display: flex
         flex-direction: row
@@ -130,6 +193,24 @@ $Montserrat: "Montserrat", sans-serif
     padding: 0.6rem
     border-radius: 0.6rem
     animation: fadeInHelps 0.3s ease
+    overflow-y: auto
+    max-height: 13rem
+
+    &::-webkit-scrollbar
+      width: 0.35rem
+
+    &::-webkit-scrollbar-track
+      opacity: 1
+      background-color: rgba(205, 205, 205, 0.06)
+      border-radius: 100px
+
+    &::-webkit-scrollbar-thumb
+      cursor: grabbing
+      background-color: rgba(205, 205, 205, 0.08)
+      border-radius: 100px
+
+      &:hover
+        background-color: #cdcdcd3d
 
     .suggestion-item
       display: flex

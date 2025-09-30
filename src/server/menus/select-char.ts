@@ -2,8 +2,9 @@ import { rce } from "../utils/rce"
 import chalk from "chalk";
 import { data } from "../database/mysql";
 import { listLoginAccs } from "./auth/login";
-import { getDataAccount } from "../getData/getDataAccount";
-import { setNumberChar } from "../getData/char/numberChar";
+import { getDataAccount } from "../data/getDataAccount";
+import { setNumberChar } from "../data/char/numberChar";
+import {connectedUsers} from "../data/dataConnectedUser";
 
 export const selectChar = (player: PlayerMp) => {
   rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
@@ -69,7 +70,7 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
           if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
         })
 
-        console.log('Сработка после запроса')
+        connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}` })
         rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
         rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 

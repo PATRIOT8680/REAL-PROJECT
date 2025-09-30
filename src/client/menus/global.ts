@@ -7,6 +7,7 @@ import './interface/welcome'
 import './interface/loading'
 import './interface/chat'
 import './interface/amenu'
+import './interface/reportMenu'
 
 mp.events.add('guiReady', () => {
   mp.gui.chat.show(false)
@@ -14,6 +15,7 @@ mp.events.add('guiReady', () => {
 
   rce.registerAll('execute', (commands) => {
     const commandsArray = Array.isArray(commands) ? commands : [commands]
+    mp.console.logWarning(JSON.stringify(commandsArray))
 
     mp.browsers.forEach(browser => {
       if (browser && browser.execute) {
