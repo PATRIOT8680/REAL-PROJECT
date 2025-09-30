@@ -7,6 +7,7 @@ import { User } from './main';
 import { sendCodeVerify } from './verify-email';
 import {selectChar} from "../select-char";
 import {listLoginAccs} from "./login";
+import {connectedUsers} from "../../data/dataConnectedUser";
 
 export const checkUser = (player: PlayerMp, login: string, email: string, password: string) => {
   const socialClubName = player.socialClub
@@ -68,10 +69,10 @@ export const registerUser = (player: PlayerMp, login: string, email: string, pas
           listLoginAccs.set(player.id, { sid, login })
           player.setVariable('login_player', login)
           selectChar(player)
+          connectedUsers.setUser(player.id, { login: login, sid: sid })
           rce.triggerClient(player, 'server:auth:saveLogin', login)
           rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom')
           rce.triggerCef(player, 'server:authSuccess')
-          console.log(`User ${login} created. sid: ${sid}`)
           console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`))
         }
       })

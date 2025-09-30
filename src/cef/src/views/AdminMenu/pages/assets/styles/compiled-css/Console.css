@@ -58,6 +58,68 @@
   font-weight: 500;
   color: rgba(255, 255, 255, 0.6);
 }
+.console-page .msg-container .msg #help-text {
+  display: flex;
+  flex-direction: column;
+}
+.console-page .msg-container .msg #help-text .arg {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 0.7rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.4rem;
+}
+.console-page .msg-container .msg #help-text .list-cmds.closed {
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.console-page .msg-container .msg #help-text .list-cmds.closed .info-opened {
+  text-decoration: none;
+}
+.console-page .msg-container .msg #help-text .list-cmds.closed:hover {
+  color: #000000;
+  background: #ffffff;
+  transition: all 0.3s;
+  border: 1px solid rgb(255, 255, 255);
+}
+.console-page .msg-container .msg #help-text .list-cmds {
+  width: 100%;
+  display: flex;
+  gap: 0.8rem;
+  flex-direction: column;
+  padding: 0.5rem 0.7rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.console-page .msg-container .msg #help-text .list-cmds .info-opened {
+  display: flex;
+  justify-content: center;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.console-page .msg-container .msg #help-text .list-cmds .cmds {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 0.65rem 0.5rem;
+  flex-wrap: wrap;
+}
+.console-page .msg-container .msg #help-text .list-cmds .cmds .cmd-btn {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.5rem;
+  text-align: center;
+  flex-grow: 1;
+  transition: all 0.3s;
+}
+.console-page .msg-container .msg #help-text .list-cmds .cmds .cmd-btn:hover {
+  color: #000000;
+  background: #ffffff;
+  transition: all 0.3s;
+}
 .console-page .msg-container .msg .text-block {
   display: flex;
   flex-direction: row;
@@ -127,6 +189,24 @@
   padding: 0.6rem;
   border-radius: 0.6rem;
   animation: fadeInHelps 0.3s ease;
+  overflow-y: auto;
+  max-height: 13rem;
+}
+.console-page .suggestions-container::-webkit-scrollbar {
+  width: 0.35rem;
+}
+.console-page .suggestions-container::-webkit-scrollbar-track {
+  opacity: 1;
+  background-color: rgba(205, 205, 205, 0.06);
+  border-radius: 100px;
+}
+.console-page .suggestions-container::-webkit-scrollbar-thumb {
+  cursor: grabbing;
+  background-color: rgba(205, 205, 205, 0.08);
+  border-radius: 100px;
+}
+.console-page .suggestions-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(205, 205, 205, 0.2392156863);
 }
 .console-page .suggestions-container .suggestion-item {
   display: flex;

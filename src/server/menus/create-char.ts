@@ -1,10 +1,11 @@
 import { rce } from '../utils/rce'
 import { data } from '../database/mysql'
-import { getDataAccount } from '../getData/getDataAccount'
-import { setNumberChar } from "../getData/char/numberChar";
+import { getDataAccount } from '../data/getDataAccount'
+import { setNumberChar } from "../data/char/numberChar";
 import chalk from 'chalk'
 import {Player} from "rage-rpc";
 import {gui} from "../../client/menus/global";
+import {connectedUsers} from "../data/dataConnectedUser";
 
 const createSlotChar = (player: PlayerMp, numberSlot: number) => {
   try {
@@ -17,9 +18,9 @@ const createSlotChar = (player: PlayerMp, numberSlot: number) => {
       const newUid = maxUid + 1
 
       const sid = await getDataAccount(player, 'sid', player.id)
-      const sql = 'INSERT INTO chars (uid, sid, numberslot, cash, bankmoney) VALUES (?, ?, ?, ?, ?)'
+      const sql = 'INSERT INTO chars (uid, sid, numberslot, adminlvl, cash, bankmoney) VALUES (?, ?, ?, ?, ?, ?)'
 
-      data.query(sql, [newUid, sid, numberSlot, 1500, 200], (err, results) => {
+      data.query(sql, [newUid, sid, numberSlot, 0, 1500, 200], (err, results) => {
         if (err) return console.log(chalk.bgRed('• CREATE SLOT CHAR •' + chalk.red(` Err insert data: ${err}`)))
       })
     })
@@ -124,10 +125,10 @@ rce.registerCef('cef:handleCreateChar', async (player: PlayerMp, numberSlot, dat
         return
       }
 
-      console.log(`Создаем персонажа 2`)
       setNumberChar(player.id, numberSlot)
       player.setVariable('player_spawned', true)
       await connection.execute(query, [firstName, lastName, age, sid, numberSlot])
+      connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}` })
       closeCreateChar(player)
     } finally {
       await connection.release()

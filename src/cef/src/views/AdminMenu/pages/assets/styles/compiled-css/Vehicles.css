@@ -8,6 +8,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   font-family: "Montserrat", sans-serif;
+  animation: fadeInPageAMenu 0.7s ease;
 }
 .vehicles-page::-webkit-scrollbar {
   width: 0.5rem;

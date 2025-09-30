@@ -1,20 +1,15 @@
 import { IMsg } from "../../../views/AdminMenu/pages/Reports.tsx";
 
-export const setReport = (id: number, listMsg: IMsg[], status: 'waiting' | 'taken', responder: string | null) => {
+export const setReport = (listMsg: IMsg[], status: 'waiting' | 'taken') => {
   return {
     type: 'SET_REPORT',
-    payload: { id, listMsg, status, responder }
+    payload: { listMsg, status }
   };
 };
 
-export const updateReportStatus = (id: number, status: 'waiting' | 'taken', responder: string | null) => ({
+export const updateReportStatus = (id: number, status: 'waiting' | 'taken', responder: string) => ({
   type: 'UPDATE_REPORT_STATUS',
   payload: { id, status, responder },
-});
-
-export const updaterReportResponder = (id: number, responder: string | null) => ({
-  type: 'UPDATE_REPORT_RESPONDER',
-  payload: { id, responder },
 });
 
 export const addMessageToReport = (id: number, listMsg: IMsg) => ({

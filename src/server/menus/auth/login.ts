@@ -3,10 +3,11 @@ import chalk from 'chalk'
 import bcrypt from 'bcryptjs'
 import { rce } from '../../utils/rce'
 import { selectChar } from "../select-char";
-import { getNumberChar } from "../../getData/char/numberChar";
+import { getNumberChar } from "../../data/char/numberChar";
 
 import { User } from './main';
-import { getDataAccount } from "../../getData/getDataAccount";
+import { getDataAccount } from "../../data/getDataAccount";
+import { connectedUsers } from "../../data/dataConnectedUser";
 
 export const listLoginAccs = new Map<number, { sid: number, login: string }>()
 
@@ -37,16 +38,16 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
           player.setVariable('login_player', login)
           //player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375))
           //rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom')
+
           rce.triggerClient(player, 'server:auth:saveLogin', login)
           rce.triggerCef(player, 'server:authSuccess')
           console.log(chalk.bgGreen('• LOGIN •') + chalk.green(` Пользователь ${login} успешно авторизован!`))
 
-          console.log('ага ага')
           const checkChar = 'SELECT numberslot, firstname, lastname, age FROM chars WHERE sid = ?'
           const sid = await getDataAccount(player, 'sid', player.id)
           console.log('ага ага 2')
           listLoginAccs.set(player.id, { sid, login })
-          console.log(`Передали id: ${player.id}`)
+          connectedUsers.setUser(player.id, { login: login, sid: sid })
 
           data.query(checkChar, [sid], async (err, charResults) => {
             if (err) {
@@ -61,8 +62,6 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
               )
 
               if (emptyChar) {
-                console.log('Хе хе бой - пустые поля')
-                console.log('Пустой слот:', Number(emptyChar.numberslot))
                 const sid = await getDataAccount(player, 'sid', player.id)
                 rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot)
               } else {

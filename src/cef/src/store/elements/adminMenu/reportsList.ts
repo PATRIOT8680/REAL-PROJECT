@@ -7,18 +7,15 @@ import {
   closeReport,
   addMessageToReport,
   updateReportStatus,
-  updaterReportResponder
 } from "../../../actions/elements/adminMenu/reportsList.ts";
 
 
 export const reportsListStore = {
   setReport: (
-      id: number,
-      listMsg: IMsg[],
-      status: 'waiting' | 'taken',
-      responder: string
+    listMsg: IMsg[],
+    status: 'waiting' | 'taken',
   ) => {
-    store.dispatch(setReport(id, listMsg, status, responder))
+    store.dispatch(setReport(listMsg, status))
   },
 
   getReport: () => {
@@ -41,15 +38,8 @@ export const reportsListStore = {
   updateReportStatus: (
     id: number,
     status: 'waiting' | 'taken',
-    responder: string
+    responder: string,
   ) => {
     store.dispatch(updateReportStatus(id, status, responder))
-  },
-
-  updateReportResponder: (
-    id: number,
-    responder: string
-  ) => {
-    store.dispatch(updaterReportResponder(id, responder))
   },
 }

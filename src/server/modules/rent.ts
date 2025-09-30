@@ -2,7 +2,7 @@ import {registerCMD, send} from "../menus/chat";
 import { rce } from "../utils/rce"
 import { data } from "../database/mysql"
 import chalk from "chalk"
-import { decrementCash } from "../player/money";
+import { setDataAccount } from "../data/setDataAccount";
 
 let rentsData = []
 const MAX_RETRIES = 10
@@ -146,9 +146,7 @@ rce.registerCef('cef:handleRentCar', async (player: PlayerMp, id: number, nameCa
     return
   }
 
-  const cashResult = await decrementCash(player, price)
-
-  if (cashResult === 'noCash') return
+  await setDataAccount(player, 'decrementCash', price, player.id)
 
   const vehPos = new mp.Vector3(Number(vehInfo.x), Number(vehInfo.y), Number(vehInfo.z))
   try {

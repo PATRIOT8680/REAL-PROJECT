@@ -31,17 +31,98 @@ interface Suggestion {
   description: string
 }
 
+const defaultCommands: CommandDefinition[] = [
+  {
+    name: 'kick1',
+    description: 'Выгнать игрока с сервера',
+    args: [
+      { name: 'player', type: 'player' },
+      { name: 'reason', type: 'text', optional: true }
+    ]
+  },
+  {
+    name: 'kick1',
+    description: 'Забанить игрока',
+    args: [
+      { name: 'player', type: 'player' },
+      { name: 'reason', type: 'text', optional: true },
+      { name: 'duration', type: 'duration', optional: true }
+    ]
+  },
+  {
+    name: 'kick1',
+    description: 'Заглушить игрока в чате',
+    args: [
+      { name: 'player', type: 'player' },
+      { name: 'duration', type: 'duration' }
+    ]
+  },
+  {
+    name: 'kick2',
+    description: 'Телепортироваться к игроку или координатам',
+    args: [
+      { name: 'target', type: 'player' }
+    ]
+  },
+  {
+    name: 'kick3',
+    description: 'Телепортировать игрока к себе',
+    args: [
+      { name: 'player', type: 'player' }
+    ]
+  },
+  {
+    name: 'kick4',
+    description: 'Выдать деньги игроку',
+    args: [
+      { name: 'player', type: 'player' },
+      { name: 'amount', type: 'number' }
+    ]
+  },
+  {
+    name: 'kick5',
+    description: 'Установить группу игроку',
+    args: [
+      { name: 'player', type: 'player' },
+      { name: 'group', type: 'string' }
+    ]
+  },
+  {
+    name: 'kick6',
+    description: 'Создать транспортное средство',
+    args: [
+      { name: 'model', type: 'string' }
+    ]
+  },
+  {
+    name: 'kick7',
+    description: 'Вылечить игрока',
+    args: [
+      { name: 'player', type: 'player', optional: true }
+    ]
+  },
+  {
+    name: 'kick8',
+    description: 'Установить погоду',
+    args: [
+      { name: 'weatherId', type: 'number' }
+    ]
+  }
+]
+
 const ConsolePage = () => {
   const consoleBufferState = useSelector((state: RootState) => state.consoleBufferReducer)
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const suggestionsRef = useRef<HTMLDivElement>(null)
+  const selectedSuggestionRef = useRef<HTMLDivElement>(null);
   const [cmdValue, setCmdValue] = useState<string>('')
-  const [commands, setCommands] = useState<CommandDefinition[]>([])
+  const [commands, setCommands] = useState<CommandDefinition[]>(defaultCommands)
   const [messages, setMessages] = useState<ConsoleMessage[]>([])
   const [messageId, setMessageId] = useState(0)
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [selectedSuggestion, setSelectedSuggestion] = useState<number>(-1)
+  const [openedHelps, setOpenedHelps] = useState<boolean>(false)
   const [playerInfo, setPlayerInfo] = useState({ name: 'Admin', id: '00000' })
   const [formattedTime, setFormattedTime] = useState<string>('')
 
@@ -112,6 +193,15 @@ const ConsolePage = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  useEffect(() => {
+    if (selectedSuggestion >= 0 && selectedSuggestionRef.current) {
+      selectedSuggestionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      })
+    }
+  }, [selectedSuggestion])
 
   const updateSuggestions = (input: string) => {
     if (!input.trim()) {
@@ -245,10 +335,46 @@ const ConsolePage = () => {
     }
   }
 
+  const getTime = async () => {
+    return await getDateTime()
+  }
+
+  const handleSelectHelpCmd = (cmdName: string) => {
+    setCmdValue(`${cmdName} `)
+
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }
+
   return (
     <>
       <div className="console-page">
         <div className="msg-container">
+          <div className="msg" id="server">
+            <div className="header-msg">
+              <span className="name">Административные команды</span>
+              <span className="time"></span>
+            </div>
+            <div className="text-block" id='help-text'>
+              <ul className={`list-cmds ${openedHelps ? '' : 'closed'}`}>
+                <span className="info-opened" onClick={() => setOpenedHelps(!openedHelps)}>{ !openedHelps ? 'Открыть список команд ▼' : 'Закрыть список команд ▲' }</span>
+
+                { openedHelps && (
+                    <div className="cmds">
+                      { commands.map((cmd, key) => (
+                        <li className="cmd-btn" onClick={() => handleSelectHelpCmd(cmd.name)}>{cmd.description}</li>
+                      ))}
+                    </div>
+
+                  )
+                }
+
+              </ul>
+            </div>
+
+          </div>
+
           { messages.map(msg => (
             <div className="msg" id={msg.sender === 'Server' ? 'server' : 'you'} key={msg.id}>
               <div className="header-msg">
@@ -290,6 +416,7 @@ const ConsolePage = () => {
               {suggestions.map((suggestion, index) => (
                   <div
                       key={suggestion.command}
+                      ref={index === selectedSuggestion ? selectedSuggestionRef : null}
                       className={`suggestion-item ${index === selectedSuggestion ? 'selected' : ''}`}
                       onClick={() => handleSuggestionSelect(suggestion)}
                   >

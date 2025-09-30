@@ -653,34 +653,29 @@ rce.registerAll('chat:pushLine', (text, showTime, tile) => {
 });
 pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello');
 
-let visibleAMenu = false;
+let visibleAMenu$1 = false;
 mp.keys.bind(Keys.VK_OEM_3, false, () => {
-    if (!visibleAMenu) {
+    if (!visibleAMenu$1) {
         rce.trigger('openAMenu');
     }
 });
 mp.keys.bind(Keys.VK_ESCAPE, false, () => {
-    if (visibleAMenu) {
-        rce.trigger('closeAMenu');
-    }
-});
-mp.keys.bind(Keys.VK_ESCAPE, false, () => {
-    if (visibleAMenu) {
+    if (visibleAMenu$1) {
         rce.trigger('closeAMenu');
     }
 });
 mp.keys.bind(Keys.VK_NUMPAD4, false, () => {
-    if (visibleAMenu) {
+    if (visibleAMenu$1) {
         rce.triggerCef('amenu:ctrlPress', 'left');
     }
 });
 mp.keys.bind(Keys.VK_NUMPAD6, false, () => {
-    if (visibleAMenu) {
+    if (visibleAMenu$1) {
         rce.triggerCef('amenu:ctrlPress', 'right');
     }
 });
 rce.registerAll('openAMenu', () => {
-    visibleAMenu = true;
+    visibleAMenu$1 = true;
     gui.execute(`window.App.adminMenuReducer.showAdminMenu()`);
     gui.execute(`window.App.chatReducer.hideChat()`);
     gui.execute(`window.App.hudReducer.hideHud()`);
@@ -689,8 +684,38 @@ rce.registerAll('openAMenu', () => {
     mp.gui.cursor.show(true, true);
 });
 rce.registerAll('closeAMenu', () => {
-    visibleAMenu = false;
+    visibleAMenu$1 = false;
     gui.execute(`window.App.adminMenuReducer.hideAdminMenu()`);
+    gui.execute(`window.App.chatReducer.showChat()`);
+    gui.execute(`window.App.hudReducer.showHud()`);
+    mp.game.ui.displayRadar(true);
+    mp.game.ui.setPauseMenuActive(true);
+    mp.gui.cursor.show(false, false);
+});
+
+let visibleAMenu = false;
+mp.keys.bind(Keys.VK_F6, false, () => {
+    if (!visibleAMenu) {
+        rce.trigger('cef:openReportMenu');
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    if (visibleAMenu) {
+        rce.trigger('cef:closeReportMenu');
+    }
+});
+rce.registerAll('cef:openReportMenu', () => {
+    visibleAMenu = true;
+    gui.execute(`window.App.playerReportsReducer.showPlayerReports()`);
+    gui.execute(`window.App.chatReducer.hideChat()`);
+    gui.execute(`window.App.hudReducer.hideHud()`);
+    mp.game.ui.displayRadar(false);
+    mp.game.ui.setPauseMenuActive(false);
+    mp.gui.cursor.show(true, true);
+});
+rce.registerAll('cef:closeReportMenu', () => {
+    visibleAMenu = false;
+    gui.execute(`window.App.playerReportsReducer.hidePlayerReports()`);
     gui.execute(`window.App.chatReducer.showChat()`);
     gui.execute(`window.App.hudReducer.showHud()`);
     mp.game.ui.displayRadar(true);
@@ -703,6 +728,7 @@ mp.events.add('guiReady', () => {
     gui.browser.active = true;
     rce.registerAll('execute', (commands) => {
         const commandsArray = Array.isArray(commands) ? commands : [commands];
+        mp.console.logWarning(JSON.stringify(commandsArray));
         mp.browsers.forEach(browser => {
             if (browser && browser.execute) {
                 try {

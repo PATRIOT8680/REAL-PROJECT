@@ -7,7 +7,7 @@ import { send } from '../menus/chat'
 import { rce } from '../utils/rce'
 import {data} from "../database/mysql";
 import chalk from "chalk";
-import { addCash, decrementCash, addBankMoney, decrementBankMoney } from "../player/money";
+import { setDataAccount } from "../data/setDataAccount";
 import { playerReborn, playerKnockout } from "../player/death";
 
 registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...string[]]) => {
@@ -386,12 +386,12 @@ registerCMD('setdim', (player: PlayerMp, [targetID, dimension]) => {
 })
 
 
-registerCMD('addcash', (player: PlayerMp, [targetID, amount]) => {
+registerCMD('addcash', async (player: PlayerMp, [targetID, amount]) => {
   if (!targetID || !amount)
     return send(player, '<b>Используйте /addcash [ID игрока] [кол-во]</b>', false, 'SERVER')
 
   const target = mp.players.at(targetID)
-  addCash(target, Number(amount))
+  await setDataAccount(target, 'addCash', Number(amount), targetID)
 })
 
 registerCMD('decrementcash', (player: PlayerMp, [targetID, amount]) => {
@@ -399,7 +399,7 @@ registerCMD('decrementcash', (player: PlayerMp, [targetID, amount]) => {
     return send(player, '<b>Используйте /decrementcash [ID игрока] [кол-во]</b>', false, 'SERVER')
 
   const target = mp.players.at(targetID)
-  decrementCash(target, Number(amount))
+  setDataAccount(target, 'decrementCash', Number(amount), targetID)
 })
 
 registerCMD('addbankmoney', (player: PlayerMp, [targetID, amount]) => {
@@ -407,7 +407,7 @@ registerCMD('addbankmoney', (player: PlayerMp, [targetID, amount]) => {
     return send(player, '<b>Используйте /addbankmoney [ID игрока] [кол-во]</b>', false, 'SERVER')
 
   const target = mp.players.at(targetID)
-  addBankMoney(target, Number(amount))
+  setDataAccount(target, 'addBankMoney', Number(amount), targetID)
 })
 
 registerCMD('decrementbankmoney', (player: PlayerMp, [targetID, amount]) => {
@@ -415,7 +415,7 @@ registerCMD('decrementbankmoney', (player: PlayerMp, [targetID, amount]) => {
     return send(player, '<b>Используйте /decrementbankmoney [ID игрока] [кол-во]</b>', false, 'SERVER')
 
   const target = mp.players.at(targetID)
-  decrementBankMoney(target, Number(amount))
+  setDataAccount(target, 'decrementbankmoney', Number(amount), targetID)
 })
 
 registerCMD('tpto', (player: PlayerMp, [targetID]) => {

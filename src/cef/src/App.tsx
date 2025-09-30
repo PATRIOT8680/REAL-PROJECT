@@ -33,6 +33,7 @@ import Hud from "./views/Hud/Index"
 import SelectChar from "./views/SelectChar/Index.tsx"
 import CreateChar from "./views/CreateChar/Index.tsx"
 import AdminMenu from "./views/AdminMenu/Index.tsx";
+import PlayerReports from "./views/PlayerReports/Index.tsx";
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -57,6 +58,7 @@ const App = () => {
   const selectCharVisible = useSelector((state: RootState) => state.selectCharReducer.isVisible)
   const createCharVisible = useSelector((state: RootState) => state.createCharReducer.isVisible)
   const adminMenuVisible = useSelector((state: RootState) => state.adminMenuReducer.isVisible)
+  const playerReportsVisible = useSelector((state: RootState) => state.playerReportsReducer.isVisible)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -109,6 +111,7 @@ const App = () => {
       { selectCharVisible && <SelectChar /> }
       { createCharVisible && <CreateChar /> }
       { adminMenuVisible && <AdminMenu /> }
+      { playerReportsVisible && <PlayerReports /> }
 
       <div className="language_ambients">
         { shouldChangeLanguage && <ChangeLanguage /> }

@@ -1,0 +1,289 @@
+$Montserrat: "Montserrat", sans-serif
+$Ghotam: "Ghotam Pro", sans-serif
+
+.player-reports
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  width: 53rem
+  height: 40rem
+  background: #23201a
+  border-radius: 0.6rem
+  box-sizing: border-box
+  padding: 2rem
+  font-family: $Montserrat
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  gap: 1.5em
+
+  header
+    display: flex
+    flex-direction: row
+    align-items: flex-start
+    justify-content: space-between
+    user-select: none
+
+    .titles
+      display: flex
+      flex-direction: column
+      gap: .5rem
+
+      .title
+        font-size: 1.1rem
+        font-weight: 600
+        text-transform: uppercase
+        color: #ffcc4c
+        text-shadow: 0 0 20px rgba(255, 204, 76, 0.64)
+
+      .descr
+        color: rgba(255, 255, 255, 0.6)
+        font-size: .85rem
+        font-weight: 400
+        width: 26rem
+
+    .right-btns
+      display: flex
+      align-items: center
+      gap: 1rem
+      height: 2.5rem
+
+      .delete-report
+        display: flex
+        cursor: pointer
+        font-family: $Montserrat
+        font-weight: 500
+        background: rgba(255, 255, 255, 0.1)
+        border: 1.3px solid rgba(239, 239, 239, 0.3)
+        border-radius: 0.4rem
+        padding: 0 1rem
+        color: #ffffff
+        transition: all 0.3s
+        align-items: center
+        font-size: .9rem
+        height: 100%
+
+        &:hover
+          transition: all 0.3s
+          background: #ffffff
+          color: #000000
+
+      .close
+        display: flex
+        cursor: pointer
+        font-family: $Ghotam
+        font-weight: 600
+        background: rgba(255, 45, 45, 0.18)
+        border: 1.3px solid rgba(255, 0, 72, 0.5)
+        border-radius: 0.4rem
+        padding: 0 1rem
+        color: #FF0048
+        transition: all 0.3s
+        align-items: center
+        height: 100%
+
+        &:hover
+          transition: all 0.3s
+          background: #FF0048
+          color: white
+
+  .chat-container
+    width: 103%
+    overflow-y: auto
+    padding-right: 0.8rem
+    scroll-behavior: smooth
+    overflow-x: hidden
+    height: 100%
+
+    &::-webkit-scrollbar
+      width: 0.4rem
+
+    &::-webkit-scrollbar-track
+      opacity: 1
+      background-color: #cdcdcd15
+      border-radius: 100px
+
+    &::-webkit-scrollbar-thumb
+      cursor: grabbing
+      background-color: #cdcdcd1c
+      border-radius: 100px
+
+      &:hover
+        background-color: #cdcdcd3d
+
+    .msg-list
+      display: flex
+      flex-direction: column
+      gap: 1.5rem
+      color: #ffffff
+
+      li
+        display: flex
+        gap: 0.5rem
+
+        .avatar
+          background: rgba(255, 255, 255, 0.08)
+          border-radius: 3rem
+          border: 1px solid rgba(255, 255, 255, 0.1)
+          padding: 0.6rem
+          user-select: none
+          pointer-events: none
+
+        .main-info
+          display: flex
+          flex-direction: column
+          align-items: flex-start
+          gap: 0.6rem
+
+          .header-msg
+            display: flex
+            align-items: center
+            gap: 0.5rem
+            user-select: none
+
+            span
+              font-weight: 500
+              font-size: 0.94rem
+              background: rgba(255, 255, 255, 0.08)
+              border-radius: 3rem
+              padding: 0.3rem 0.7rem
+
+            .date-time
+              opacity: 0.4
+
+          .msg-report
+            font-size: 0.83rem
+            line-height: 147%
+            background: rgba(255, 255, 255, 0.08)
+            border-radius: 0.5rem
+            padding: 0.5rem 0.7rem
+            max-width: 20vw
+            word-break: break-all
+
+      .admin-msg
+        display: flex
+        align-items: flex-start
+        animation: fadeInMsgAdmin-ReportMenu 0.4s ease
+        max-width: 100%
+
+        .avatar
+          width: 2.5rem
+          height: 2.5rem
+
+      .player-msg
+        display: flex
+        flex-direction: row-reverse
+        align-items: flex-start
+        animation: fadeInMsgPlayer-ReportMenu 0.4s ease
+        max-width: 100%
+
+        .avatar
+          width: 2.5rem
+          height: 2.5rem
+
+        .main-info
+          display: flex
+          align-items: flex-end
+
+    .nofound-report
+      display: flex
+      flex-direction: column
+      align-items: center
+      gap: 1rem
+      color: #ffffff
+      user-select: none
+      position: relative
+      top: 50%
+      transform: translate(0, -50%)
+
+      img
+        width: 5rem
+        opacity: .5
+        pointer-events: none
+        animation: pulseMsgSvg 4s infinite ease
+
+      span
+        font-size: 1.1rem
+        font-weight: 500
+        opacity: .85
+
+      p
+        opacity: .7
+        text-align: center
+        font-size: .9rem
+        width: 20rem
+
+  .enter-block
+    display: flex
+    align-items: center
+    justify-content: flex-end
+
+    .enter-cmd
+      position: relative
+      outline: none
+      border: none
+      padding: 0.8rem 2rem
+      box-sizing: border-box
+      padding-right: 4rem
+      border-radius: 3rem
+      font-family: $Montserrat
+      font-size: 1rem
+      font-weight: 600
+      background: rgba(255, 255, 255, 0.06)
+      border: rgba(255, 255, 255, 0.14) solid 1px
+      transition: all 0.3s
+      color: #ffffff
+      width: 100%
+
+      &:focus-visible
+        transition: all 0.3s
+        background: rgba(255, 255, 255, 0.1)
+        border: rgba(255, 255, 255, 0.17) solid 1px
+
+      &::placeholder
+        font-size: 0.9rem
+        font-weight: 500
+
+    .enter-keyup
+      position: absolute
+      margin-right: 1rem
+      font-family: $Montserrat
+      font-weight: 600
+      font-size: 0.8rem
+      background: #ffffff
+      padding: 0.3rem 0.8rem
+      border-radius: 1rem
+      animation: fadeInEnter 0.25s ease
+      color: #000000
+
+  .reviewed-warning
+    text-align: center
+    font-size: 0.8rem
+    font-weight: 500
+    padding: 1rem 0
+    border-radius: 0.5rem
+    word-break: break-word
+    color: rgba(255, 255, 255, 0.5)
+    background: rgba(255, 255, 255, 0.07)
+
+
+@keyframes pulseMsgSvg
+  0%
+    opacity: .5
+  50%
+    opacity: .07
+  100%
+    opacity: .5
+
+@keyframes fadeInMsgAdmin-ReportMenu
+  from
+    margin-left: -5rem
+  to
+    margin-left: 0
+
+@keyframes fadeInMsgPlayer-ReportMenu
+  from
+    transform: translateX(5rem)
+  to
+    transform: translateX(0)
