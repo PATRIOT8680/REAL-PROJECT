@@ -50,12 +50,12 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
 
   const handleSendCode = () => {
     if (!email) {
-      window.App.sendNotifyReducer.sendNotify('err', 'Укажите Email от существующего аккаунта!', 5000, 'right')
+      window.App.sendNotifyReducer.sendNotify('err', 'Укажите Email от существующего аккаунта!', 5000, 'bottom')
       return
     }
 
     if (isCodeSent) {
-      window.App.sendNotifyReducer.sendNotify('warning', 'Вы уже запросили код! Подождите 1 мин 30 сек. после отправки кода!', 7000, 'right')
+      window.App.sendNotifyReducer.sendNotify('warning', 'Вы уже запросили код! Подождите 1 мин 30 сек. после отправки кода!', 7000, 'bottom')
       return
     }
 
@@ -68,7 +68,7 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
 
   const handleChangePass = () => {
     if (!email || !code || !newPassword) {
-      window.App.sendNotifyReducer.sendNotify('err', 'Заполните все поля!', 4000, 'right')
+      window.App.sendNotifyReducer.sendNotify('err', 'Заполните все поля!', 4000, 'bottom')
       return
     }
 

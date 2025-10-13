@@ -1,0 +1,97 @@
+.modal-component {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  border-radius: 0.6rem;
+  background: #332E37;
+  box-sizing: border-box;
+  padding: 1.35rem;
+  width: 30rem;
+  height: 35rem;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInModalComponent 0.7s ease;
+  gap: 1rem;
+}
+.modal-component header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+.modal-component header .title-modal {
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #ffca58;
+  text-shadow: 0 0 43px rgba(255, 202, 88, 0.8);
+}
+.modal-component header .close-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.2rem;
+  width: 2rem;
+  height: 2rem;
+  transition: all 0.3s ease;
+}
+.modal-component header .close-btn:hover {
+  transition: all 0.3s ease;
+  background: #ff2a2a;
+}
+.modal-component header .close-btn:hover svg {
+  transition: all 0.3s ease;
+  fill-opacity: 1;
+}
+.modal-component header .close-btn svg {
+  fill-opacity: 0.8;
+  width: 0.9rem;
+  height: 0.9rem;
+  transition: all 0.3s ease;
+}
+.modal-component .content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  overflow: auto;
+  width: 102%;
+  padding-right: 0.8rem;
+  user-select: none;
+  scroll-behavior: smooth;
+}
+.modal-component .content::-webkit-scrollbar {
+  width: 0.3rem;
+}
+.modal-component .content::-webkit-scrollbar-track {
+  opacity: 1;
+  background-color: rgba(205, 205, 205, 0.0823529412);
+  border-radius: 100px;
+}
+.modal-component .content::-webkit-scrollbar-thumb {
+  cursor: grabbing;
+  background-color: rgba(205, 205, 205, 0.1098039216);
+  border-radius: 100px;
+}
+.modal-component .content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(205, 205, 205, 0.2392156863);
+}
+.modal-component .content p {
+  color: #ffffff;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.8rem;
+  line-height: 190%;
+}
+
+@keyframes fadeInModalComponent {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
