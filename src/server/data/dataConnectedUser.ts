@@ -4,6 +4,7 @@ export interface IConnectedUser {
   sid?: number | null,
   login?: string | undefined,
   nickName?: string | undefined,
+  adminLvl?: number | null,
 }
 
 const users = new Map<number, IConnectedUser>()
@@ -60,9 +61,12 @@ export const connectedUsers = {
 
   getPlayerIdByNickName: (nickName: string): number | undefined => {
     for (const [playerId, user] of users.entries()) {
-      if (user.nickName === nickName) {
-        return playerId;
-      }
+      const target = mp.players.at(playerId)
+      if (target) {
+        if (user.nickName === nickName) {
+          return playerId;
+        }
+      } else return
     }
     return undefined
   }

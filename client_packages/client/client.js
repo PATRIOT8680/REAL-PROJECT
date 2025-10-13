@@ -255,6 +255,7 @@ class rce extends CustomEventBase {
     static triggerCef(eventName, ...args) {
         mp.browsers.forEach((browser) => {
             if (browser.active) {
+                mp.console.logWarning(`Мы отправляем на CEF: ${eventName}`);
                 browser.execute(`window.customevent.triggerCef('${eventName}', '${JSON.stringify(args)}');`);
             }
         });
@@ -371,8 +372,7 @@ mp.events.add('call:client:response', (requestID, res) => {
 });
 mp.events.add('call:cef:response', (requestID, res) => {
     mp.browsers.forEach((browser) => {
-        if (browser.eventReady)
-            browser.execute(`window.customevent.callServerResponseHandle(${requestID}, '${JSON.stringify(res)}');`);
+        browser.execute(`window.customevent.callServerResponseHandle(${requestID}, '${JSON.stringify(res)}');`);
     });
 });
 mp.events.add('call:server', (requestID, eventName, ...args) => mp.events.callRemote('call:cef', requestID, rce.encryptEventName(eventName), ...args));
@@ -654,8 +654,9 @@ rce.registerAll('chat:pushLine', (text, showTime, tile) => {
 pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello');
 
 let visibleAMenu$1 = false;
+const plLocal = mp.players.local;
 mp.keys.bind(Keys.VK_OEM_3, false, () => {
-    if (!visibleAMenu$1) {
+    if (!visibleAMenu$1 && plLocal.getVariable('player_spawned') === true && plLocal.getVariable('ADMIN_LVL') > 0) {
         rce.trigger('openAMenu');
     }
 });
@@ -728,11 +729,11 @@ mp.events.add('guiReady', () => {
     gui.browser.active = true;
     rce.registerAll('execute', (commands) => {
         const commandsArray = Array.isArray(commands) ? commands : [commands];
-        mp.console.logWarning(JSON.stringify(commandsArray));
         mp.browsers.forEach(browser => {
             if (browser && browser.execute) {
                 try {
                     commandsArray.forEach(code => {
+                        mp.console.logInfo(code);
                         gui.execute(code);
                     });
                 }

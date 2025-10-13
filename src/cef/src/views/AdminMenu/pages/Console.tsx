@@ -14,7 +14,8 @@ interface CommandArg {
 interface CommandDefinition {
   name: string
   description: string
-  args: CommandArg[]
+  args: CommandArg[],
+  adminLvl: number
 }
 
 export interface ConsoleMessage {
@@ -31,85 +32,6 @@ interface Suggestion {
   description: string
 }
 
-const defaultCommands: CommandDefinition[] = [
-  {
-    name: 'kick1',
-    description: 'Выгнать игрока с сервера',
-    args: [
-      { name: 'player', type: 'player' },
-      { name: 'reason', type: 'text', optional: true }
-    ]
-  },
-  {
-    name: 'kick1',
-    description: 'Забанить игрока',
-    args: [
-      { name: 'player', type: 'player' },
-      { name: 'reason', type: 'text', optional: true },
-      { name: 'duration', type: 'duration', optional: true }
-    ]
-  },
-  {
-    name: 'kick1',
-    description: 'Заглушить игрока в чате',
-    args: [
-      { name: 'player', type: 'player' },
-      { name: 'duration', type: 'duration' }
-    ]
-  },
-  {
-    name: 'kick2',
-    description: 'Телепортироваться к игроку или координатам',
-    args: [
-      { name: 'target', type: 'player' }
-    ]
-  },
-  {
-    name: 'kick3',
-    description: 'Телепортировать игрока к себе',
-    args: [
-      { name: 'player', type: 'player' }
-    ]
-  },
-  {
-    name: 'kick4',
-    description: 'Выдать деньги игроку',
-    args: [
-      { name: 'player', type: 'player' },
-      { name: 'amount', type: 'number' }
-    ]
-  },
-  {
-    name: 'kick5',
-    description: 'Установить группу игроку',
-    args: [
-      { name: 'player', type: 'player' },
-      { name: 'group', type: 'string' }
-    ]
-  },
-  {
-    name: 'kick6',
-    description: 'Создать транспортное средство',
-    args: [
-      { name: 'model', type: 'string' }
-    ]
-  },
-  {
-    name: 'kick7',
-    description: 'Вылечить игрока',
-    args: [
-      { name: 'player', type: 'player', optional: true }
-    ]
-  },
-  {
-    name: 'kick8',
-    description: 'Установить погоду',
-    args: [
-      { name: 'weatherId', type: 'number' }
-    ]
-  }
-]
-
 const ConsolePage = () => {
   const consoleBufferState = useSelector((state: RootState) => state.consoleBufferReducer)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -117,7 +39,7 @@ const ConsolePage = () => {
   const suggestionsRef = useRef<HTMLDivElement>(null)
   const selectedSuggestionRef = useRef<HTMLDivElement>(null);
   const [cmdValue, setCmdValue] = useState<string>('')
-  const [commands, setCommands] = useState<CommandDefinition[]>(defaultCommands)
+  const [commands, setCommands] = useState<CommandDefinition[]>([])
   const [messages, setMessages] = useState<ConsoleMessage[]>([])
   const [messageId, setMessageId] = useState(0)
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
@@ -131,8 +53,8 @@ const ConsolePage = () => {
     setCommands(serverCommands);
   })
 
-  rce.register('console:commandResponse', async (success: boolean, message: string) => {
-    const currentTime = await getDateTime()
+  rce.register('console:commandResponse', (success: boolean, message: string) => {
+    const currentTime = getDateTime()
 
     const serverMessage: ConsoleMessage = {
       id: messageId,
@@ -363,7 +285,7 @@ const ConsolePage = () => {
                 { openedHelps && (
                     <div className="cmds">
                       { commands.map((cmd, key) => (
-                        <li className="cmd-btn" onClick={() => handleSelectHelpCmd(cmd.name)}>{cmd.description}</li>
+                        <li className="cmd-btn" onClick={() => handleSelectHelpCmd(cmd.name)}>{cmd.description} ({cmd.adminLvl} lvl)</li>
                       ))}
                     </div>
 

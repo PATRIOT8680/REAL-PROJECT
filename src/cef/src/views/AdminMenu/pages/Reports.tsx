@@ -19,7 +19,7 @@ export interface IMsg {
 export interface Reports {
   id: number,
   listMsg: IMsg[],
-  status: 'waiting' | 'taken' | 'reviewed',
+  status: 'waiting' | 'taken' | 'reviewed' | undefined,
   responder: string | undefined,
 }
 
@@ -68,7 +68,11 @@ const ReportsPage = () => {
     }
   }, [selectedReportData])
 
-  const getStatusText = (status: 'waiting' | 'taken' | 'reviewed') => {
+  const getReportById = (reportId: number) => {
+    return reports.find(report => report.id === reportId) || null
+  }
+
+  const getStatusText = (status: 'waiting' | 'taken' | 'reviewed' | undefined) => {
     switch (status) {
       case 'waiting':
         return 'Ожидание'
@@ -76,20 +80,26 @@ const ReportsPage = () => {
         return 'В работе'
       case 'reviewed':
         return 'Рассмотрен'
+      default:
+        return ''
     }
   }
 
   const handleSelectReport = (idx: number) => {
-    if (reports[idx - 1]?.status === 'taken' && reports[idx - 1].responder !== playerInfoReducer.nickname) {
+    const targetReport = getReportById(idx)
+
+    if (!targetReport) return
+
+    if (targetReport.status === 'taken' && targetReport.responder !== playerInfoReducer.nickname) {
       return window.App.sendNotifyReducer.sendNotify('err', 'Этот репорт рассматривает другой администратор!', 3500, 'top')
     }
 
-    if (reports[idx - 1]?.status === 'reviewed') {
+    if (targetReport.status === 'reviewed') {
       setSelectReport(idx)
       return
     }
 
-    const nickName = reports[idx - 1]?.listMsg?.[0]?.nickName
+    const nickName = targetReport.listMsg[0].nickName
     if (nickName) {
       rce.triggerServer('cef:amenu:selectReport', idx, nickName, playerInfoReducer.nickname)
       setSelectReport(idx)
@@ -97,10 +107,10 @@ const ReportsPage = () => {
   }
 
   const handleDelayReport = () => {
-    if (selectReport !== null) {
-      const nickName = reports[selectReport - 1]?.listMsg?.[0]?.nickName
+    if (selectedReportData) {
+      const nickName = selectedReportData.listMsg[0].nickName
       if (nickName) {
-        rce.triggerServer('cef:amenu:delayReport', selectReport, nickName)
+        rce.triggerServer('cef:amenu:delayReport', selectedReportData.id, nickName)
       }
 
       setSelectReport(null)
@@ -108,25 +118,25 @@ const ReportsPage = () => {
   }
 
   const handleCloseReport = () => {
-    if (selectReport !== null) {
-      const nickName = reports[selectReport - 1]?.listMsg?.[0]?.nickName
+    if (selectedReportData) {
+      const nickName = selectedReportData.listMsg[0].nickName
       if (nickName) {
-        rce.triggerServer('cef:amenu:closeReport', selectReport, nickName)
+        rce.triggerServer('cef:amenu:closeReport', selectedReportData.id, nickName)
       }
       setSelectReport(null)
     }
   }
 
-  const handleSendMsg = async () => {
-    if (selectReport !== null) {
-      const nickName = reports[selectReport - 1]?.listMsg?.[0]?.nickName
+  const handleSendMsg = () => {
+    if (selectedReportData && sendMsg) {
+      const nickName = selectedReportData.listMsg[0].nickName
       if (nickName) {
         rce.triggerServer('cef:amenu:sendAMsg', selectReport, {
           nickName: playerInfoReducer.nickname,
           text: sendMsg,
-          dateTime: await getDateTime(),
+          dateTime: getDateTime(),
           role: 'admin',
-        } )
+        }, nickName )
       }
       setSendMsg('')
     }
@@ -168,7 +178,10 @@ const ReportsPage = () => {
                       <span className="text-player">
                   {item.listMsg[0].text.length > 100 ? `${item.listMsg[0].text.slice(0, 100)}...` : `${item.listMsg[0].text}`}
                 </span>
-                      <span className="date-time">{item.listMsg[0].dateTime}</span>
+                      <div className="bottom-info">
+                        <span className="date-time">{item.listMsg[0].dateTime}</span>
+                        <span className="id-report">#{item.id}</span>
+                      </div>
                     </li>
                 )) }
               </ul>
@@ -183,10 +196,10 @@ const ReportsPage = () => {
               <div className="selected-report">
                 <header>
                   <div className="info-report">
-                    <span className="name-report">Обращение от {reports[selectReport - 1].listMsg[0].nickName}</span>
-                    <span className="time-sended">{reports[selectReport - 1].listMsg[0].dateTime}</span>
+                    <span className="name-report">Обращение от { selectedReportData && selectedReportData.listMsg[0].nickName}</span>
+                    <span className="time-sended">{selectedReportData && selectedReportData.listMsg[0].dateTime}</span>
                   </div>
-                  { reports[selectReport - 1].status !== 'reviewed' && (
+                  { selectedReportData && selectedReportData.status !== 'reviewed' && (
                       <div className="btns-action">
                         <button className="close-report" onClick={handleCloseReport}>Завершить</button>
                         <button className="put-report" onClick={handleDelayReport}>Отложить</button>
@@ -221,7 +234,7 @@ const ReportsPage = () => {
                       }) }
                 </ul>
 
-                { reports[selectReport - 1].status !== 'reviewed' && (
+                { selectedReportData && selectedReportData.status !== 'reviewed' && (
                     <div className="enter-block">
                       <input
                           type='text'

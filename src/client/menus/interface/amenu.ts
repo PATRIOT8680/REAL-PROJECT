@@ -3,9 +3,10 @@ import {gui} from "../global";
 import {rce} from "../../utils/rce";
 
 let visibleAMenu = false
+const plLocal = mp.players.local
 
 mp.keys.bind(Keys.VK_OEM_3, false, () => {
-  if (!visibleAMenu) {
+  if (!visibleAMenu && plLocal.getVariable('player_spawned') === true && plLocal.getVariable('ADMIN_LVL') > 0) {
     rce.trigger('openAMenu')
   }
 })

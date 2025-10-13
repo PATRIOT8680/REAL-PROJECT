@@ -34,23 +34,27 @@ const Header: FC<IHeader> = ({ activeMenu, onMenuChange }) => {
     {
       key: 'homes',
       name: 'Дома'
+    },
+    {
+      key: 'logs',
+      name: 'Логи'
     }
   ]
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'ControlLeft') {
+      if (event.code === 'Numpad4') {
         event.preventDefault();
         setFocusHelpKey('left')
       }
-      else if (event.code === 'ControlRight') {
+      else if (event.code === 'Numpad6') {
         event.preventDefault();
         setFocusHelpKey('right')
       }
     }
 
     const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.code === 'ControlLeft' || event.code === 'ControlRight') {
+      if (event.code === 'Numpad4' || event.code === 'Numpad6') {
         setFocusHelpKey(null)
       }
     }

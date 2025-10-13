@@ -21,6 +21,8 @@ import './assets/fonts/GhotamPro/stylesheet.css'
 import './assets/fonts/Frutiger/stylesheet.css'
 import './assets/fonts/Ubuntu/stylesheet.css'
 import './assets/fonts/BebasNeue/stylesheet.css'
+import './assets/fonts/Manrope/stylesheet.css'
+import './assets/fonts/DrukWideCyr/stylesheet.css'
 
 // Menus
 import Auth from "./views/Auth/Index"
@@ -43,8 +45,7 @@ import ChangeLanguage from "./components/ChangeLanguage/Index"
 const App = () => {
   const dispatch = useDispatch()
   let ev: CustomEventHandler
-  const { shouldPlayAudio, shouldChangeLanguage } = useVisibleMenus()
-  rce.clearRegisterAll()
+  const { shouldPlayAudio } = useVisibleMenus()
 
   const { playRandomAmbient, stopAmbient } = useMenuAmbients()
   const [ambientActive, setAmbientActive] = useState(false);
@@ -113,10 +114,10 @@ const App = () => {
       { adminMenuVisible && <AdminMenu /> }
       { playerReportsVisible && <PlayerReports /> }
 
-      <div className="language_ambients">
-        { shouldChangeLanguage && <ChangeLanguage /> }
-        { shouldPlayAudio && <BtnAmbient playRandomAmbient={playRandomAmbient} stopAmbient={stopAmbient} ambientActive={ambientActive} setActiveAmbient={setAmbientActive} /> }
-      </div>
+      {/*<div className="language_ambients">*/}
+      {/*  /!*{ shouldChangeLanguage && <ChangeLanguage /> }*!/*/}
+      {/*  { shouldPlayAudio && <BtnAmbient playRandomAmbient={playRandomAmbient} stopAmbient={stopAmbient} ambientActive={ambientActive} setActiveAmbient={setAmbientActive} /> }*/}
+      {/*</div>*/}
     </>
   )
 }

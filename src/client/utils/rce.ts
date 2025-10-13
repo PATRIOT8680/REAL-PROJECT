@@ -43,6 +43,7 @@ export class rce extends CustomEventBase {
     static triggerCef(eventName: string, ...args: any[]) {
         mp.browsers.forEach((browser: any) => {
             if (browser.active) {
+                mp.console.logWarning(`Мы отправляем на CEF: ${eventName}`)
                 browser.execute(`window.customevent.triggerCef('${eventName}', '${JSON.stringify(args)}');`);
         }
         });
@@ -175,7 +176,7 @@ mp.events.add('call:client:response', (requestID: number, res: any) => {
 
 mp.events.add('call:cef:response', (requestID: number, res: any) => {
     mp.browsers.forEach((browser: any) => {
-        if (browser.eventReady) browser.execute(`window.customevent.callServerResponseHandle(${requestID}, '${JSON.stringify(res)}');`);
+        browser.execute(`window.customevent.callServerResponseHandle(${requestID}, '${JSON.stringify(res)}');`);
     });
 });
 

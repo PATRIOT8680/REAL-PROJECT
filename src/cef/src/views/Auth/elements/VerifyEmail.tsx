@@ -5,14 +5,17 @@ import '../assets/styles/compiled-css/VerifyEmail.css'
 import { CustomEventHandler } from "../../../../../shared/CustomEventBase.ts";
 
 import svg_password from '../assets/img/password.svg'
+import Input from "../components/Input.tsx";
+import MainBtn from "../components/MainBtn.tsx";
 
 interface IVerify {
   login: string,
   email: string,
   password: string
+  setCurrentForm: (val: 'login' | 'register' | 'recovery' | 'verify-email') => void
 }
 
-const VerifyEmail = ({ login, email, password } : IVerify) => {
+const VerifyEmail = ({ login, email, password, setCurrentForm } : IVerify) => {
   let ev: CustomEventHandler
   const { t } = useTranslation('auth')
   const [code, setCode] = useState('')
@@ -21,6 +24,18 @@ const VerifyEmail = ({ login, email, password } : IVerify) => {
   ev = rce.register('server:verify:successSendCode', () => {
     setIsCodeSent(true)
   })
+
+  const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value
+
+    const validCharacters = /^[A-Za-z0-9]*$/
+    const filteredValue = inputValue.split('').filter(char => validCharacters.test(char)).join('')
+
+    if (filteredValue.length <= 8) {
+      setCode(filteredValue)
+    }
+  }
+
 
   const handleSendCode = async () => {
     if (isCodeSent) {
@@ -56,29 +71,32 @@ const VerifyEmail = ({ login, email, password } : IVerify) => {
 
   return(
     <>
-      <div className="verify-email">
-        <form className="main-block">
-          <div className="header">
-            <span className="title">{t('verify-email.title-text')}</span>
-            <span className="descr">{t('verify-email.descr-text')}</span>
-          </div>
-          <div className="input-code">
-            <div className="icon"><img src={svg_password} /></div>
-            <input 
-              type="password"
-              maxLength={8}
-              placeholder={t('verify-email.input-placeholder')}
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              autoFocus
+      <div className="form-block">
+        <div className="verify-email" id='content'>
+          <header>
+            <span className="title">Подтверждение почты</span>
+            <span className="descr">Пожалуйста, подтвердите электронную почту, на которую регистрируете аккаунт.</span>
+          </header>
+          <div className="inputs-block">
+            <Input
+                type='text' value={code}
+                onChange={handleChangeCode}
+                placeholder='Код подтверждения'
+                maxLength={40}
             />
           </div>
-          <div className="btns-verify">
-            <button type="button" className="btn-verify" onClick={handleVerify}>{t('verify-email.btns.verify')}</button>
-            <span className="send-code" onClick={handleSendCode}>{t('verify-email.btns.send-code')}</span>
+          <div className="btns-block">
+            <MainBtn
+                text='Подтвердить'
+                onClick={handleVerify}
+                nextIcon={true}
+                textSize={1.3}
+            />
+
+            <span className="recovery-btn" onClick={handleSendCode}>Отправить код ещё раз</span>
+            <span className="recovery-btn" onClick={() => setCurrentForm('register')}>Вернуться</span>
           </div>
-        </form>
-        <span className="warning-spam">{t('verify-email.warning-spam')}</span>
+        </div>
       </div>
     </>
   )

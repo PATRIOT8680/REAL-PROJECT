@@ -43,6 +43,7 @@ const closeCreateChar = async (player: PlayerMp) => {
   player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 37.333740234375))
   player.dimension = 0
 
+
   rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
   rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 
@@ -126,9 +127,10 @@ rce.registerCef('cef:handleCreateChar', async (player: PlayerMp, numberSlot, dat
       }
 
       setNumberChar(player.id, numberSlot)
+      player.setVariable('ADMIN_LVL', 0)
       player.setVariable('player_spawned', true)
       await connection.execute(query, [firstName, lastName, age, sid, numberSlot])
-      connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}` })
+      connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}`, adminLvl: 0 })
       closeCreateChar(player)
     } finally {
       await connection.release()

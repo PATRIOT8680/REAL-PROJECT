@@ -1,11 +1,7 @@
 .welcome-page.exit {
   opacity: 0;
-  -webkit-transition: all 1s;
   transition: all 1s;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
   pointer-events: none;
 }
 
@@ -15,306 +11,165 @@
   width: 100%;
   height: 100%;
   background: #161523;
-  -webkit-transition: all 1s;
   transition: all 1s;
+  overflow: hidden;
+}
+.welcome-page .logo-bg {
+  position: absolute;
+  width: 50rem;
+  top: 50%;
+  right: 1%;
+  transform: translate(-1%, -50%);
+  pointer-events: none;
+  user-select: none;
+  animation: pulseLogoWelcome 3s infinite ease;
+  z-index: 0;
+}
+.welcome-page .logo-text {
+  width: 13.5rem;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  animation: fadeInText 1s ease forwards;
+  top: 5%;
+  left: 5%;
 }
 .welcome-page .svg {
   z-index: 1;
   position: absolute;
-  -webkit-filter: blur(280px);
-          filter: blur(280px);
+  filter: blur(280px);
   will-change: transform;
-  -webkit-transform: translateZ(0);
-          transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 .welcome-page #one-ellipse {
   top: -20rem;
   left: -23rem;
-  -webkit-animation: oneEllipse 3s ease forwards;
-          animation: oneEllipse 3s ease forwards;
+  animation: oneEllipse 3s ease forwards;
 }
 .welcome-page #two-ellipse {
   bottom: -23rem;
   right: -20rem;
-  -webkit-animation: twoEllipse 3s ease forwards;
-          animation: twoEllipse 3s ease forwards;
+  animation: twoEllipse 3s ease forwards;
 }
 .welcome-page .content {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  width: 36.875rem;
-  gap: 1.7rem;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 52rem;
+  gap: 5rem;
   position: absolute;
   top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  left: 10%;
+  transform: translate(-10%, -50%);
+  user-select: none;
   z-index: 2;
 }
 .welcome-page .content .header-welcome {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  gap: 0.5rem;
-  font-family: "Ponter", sans-serif;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.5rem;
 }
 .welcome-page .content .header-welcome .title {
-  -webkit-animation: fadeInText 1s ease forwards;
-          animation: fadeInText 1s ease forwards;
+  animation: fadeInText 1s ease forwards;
   font-weight: 400;
-  font-size: 3.75rem;
-  color: #fff;
+  font-size: 4.7rem;
+  color: #ffca58;
+  font-family: "Druk Wide Cyr", sans-serif;
+  text-transform: uppercase;
+  text-shadow: 0 0 130px rgba(255, 202, 88, 0.5);
+}
+.welcome-page .content .header-welcome .progress-line {
+  width: 100%;
+  height: 0.4rem;
+  background: #ffca58;
+  animation: fadeInLineWelcome 6s ease forwards;
+  transform-origin: left;
 }
 .welcome-page .content .header-welcome .subtitle {
   font-weight: 400;
-  font-size: 50px;
-  color: #ff0c46;
-  -webkit-animation: fadeInText 1s ease forwards;
-          animation: fadeInText 1s ease forwards;
+  line-height: 200%;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: "Manrope", sans-serif;
+  animation: fadeInText 1s ease forwards;
 }
 .welcome-page .content .line {
   border-radius: 3px;
   width: 60%;
   height: 6px;
   background: rgba(255, 255, 255, 0.07);
-  -webkit-animation: fadeInLine 1.4s ease forwards;
-          animation: fadeInLine 1.4s ease forwards;
+  animation: fadeInLine 1.4s ease forwards;
 }
 .welcome-page .content .warning-text {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Manrope", sans-serif;
   font-weight: 500;
   font-size: 1rem;
   line-height: 165%;
   text-align: center;
   color: rgba(255, 255, 255, 0.8);
-  -webkit-animation: fadeInText 1s ease forwards;
-          animation: fadeInText 1s ease forwards;
-}
-.welcome-page .content .loader-welcome {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  margin-top: 1rem;
-  gap: 1rem;
-  -webkit-animation: fadeInText 1s ease forwards;
-          animation: fadeInText 1s ease forwards;
-}
-.welcome-page .content .loader-welcome .section {
-  position: relative;
-  width: 3.1875rem;
-  height: 4rem;
-}
-.welcome-page .content .loader-welcome .section .svgA {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 3;
-}
-.welcome-page .content .loader-welcome .section .svgB {
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  z-index: 4;
-}
-.welcome-page .content .loader-welcome .section .svgB.active {
-  -webkit-animation: fadeInLoader 2s ease forwards;
-          animation: fadeInLoader 2s ease forwards;
-  -webkit-filter: drop-shadow(0 0 14px rgba(255, 12, 70, 0.4));
-          filter: drop-shadow(0 0 14px rgba(255, 12, 70, 0.4));
-}
-.welcome-page .user-agreement {
-  cursor: pointer;
-  position: absolute;
-  bottom: 1.2rem;
-  left: 50%;
-  -webkit-transform: translate(-50%, 0);
-      -ms-transform: translate(-50%, 0);
-          transform: translate(-50%, 0);
-  z-index: 2;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  text-decoration: underline;
-  -webkit-text-decoration-skip-ink: none;
-          text-decoration-skip-ink: none;
-  color: rgba(255, 255, 255, 0.25);
-  -webkit-animation: fadeInAgreement 1s ease forwards;
-          animation: fadeInAgreement 1s ease forwards;
-  -webkit-transition: all 0.4s;
-  transition: all 0.4s;
-}
-.welcome-page .user-agreement:hover {
-  color: white;
-  -webkit-transition: all 0.4s;
-  transition: all 0.4s;
-}
-
-@-webkit-keyframes oneEllipse {
-  from {
-    -webkit-filter: blur(100px);
-            filter: blur(100px);
-    -webkit-transform: translate(-40%, -40%);
-            transform: translate(-40%, -40%);
-  }
-  to {
-    -webkit-filter: blur(280px);
-            filter: blur(280px);
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
-  }
+  animation: fadeInText 1s ease forwards;
 }
 
 @keyframes oneEllipse {
   from {
-    -webkit-filter: blur(100px);
-            filter: blur(100px);
-    -webkit-transform: translate(-40%, -40%);
-            transform: translate(-40%, -40%);
+    filter: blur(100px);
+    transform: translate(-40%, -40%);
   }
   to {
-    -webkit-filter: blur(280px);
-            filter: blur(280px);
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
-  }
-}
-@-webkit-keyframes twoEllipse {
-  from {
-    -webkit-filter: blur(100px);
-            filter: blur(100px);
-    -webkit-transform: translate(40%, 40%);
-            transform: translate(40%, 40%);
-  }
-  to {
-    -webkit-filter: blur(280px);
-            filter: blur(280px);
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
+    filter: blur(280px);
+    transform: translate(0, 0);
   }
 }
 @keyframes twoEllipse {
   from {
-    -webkit-filter: blur(100px);
-            filter: blur(100px);
-    -webkit-transform: translate(40%, 40%);
-            transform: translate(40%, 40%);
+    filter: blur(100px);
+    transform: translate(40%, 40%);
   }
   to {
-    -webkit-filter: blur(280px);
-            filter: blur(280px);
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
-  }
-}
-@-webkit-keyframes fadeInText {
-  from {
-    opacity: 0;
-    -webkit-transform: translate(0, 60%);
-            transform: translate(0, 60%);
-  }
-  to {
-    opacity: 1;
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
+    filter: blur(280px);
+    transform: translate(0, 0);
   }
 }
 @keyframes fadeInText {
   from {
     opacity: 0;
-    -webkit-transform: translate(0, 60%);
-            transform: translate(0, 60%);
+    transform: translate(-30%, 0);
   }
   to {
     opacity: 1;
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
-  }
-}
-@-webkit-keyframes fadeInAgreement {
-  from {
-    opacity: 0;
-    bottom: -1.5rem;
-  }
-  to {
-    opacity: 1;
-    bottom: 1.2rem;
-  }
-}
-@keyframes fadeInAgreement {
-  from {
-    opacity: 0;
-    bottom: -1.5rem;
-  }
-  to {
-    opacity: 1;
-    bottom: 1.2rem;
-  }
-}
-@-webkit-keyframes fadeInLine {
-  from {
-    width: 0%;
-    opacity: 0;
-    -webkit-transform: translate(0, 60%);
-            transform: translate(0, 60%);
-  }
-  to {
-    width: 60%;
-    opacity: 1;
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
+    transform: translate(0, 0);
   }
 }
 @keyframes fadeInLine {
   from {
     width: 0%;
     opacity: 0;
-    -webkit-transform: translate(0, 60%);
-            transform: translate(0, 60%);
+    transform: translate(0, 60%);
   }
   to {
     width: 60%;
     opacity: 1;
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
+    transform: translate(0, 0);
   }
 }
-@-webkit-keyframes fadeInLoader {
-  from {
-    opacity: 0;
+@keyframes pulseLogoWelcome {
+  0% {
+    opacity: 1;
   }
-  to {
+  50% {
+    opacity: 0.2;
+  }
+  100% {
     opacity: 1;
   }
 }
-@keyframes fadeInLoader {
+@keyframes fadeInLineWelcome {
   from {
-    opacity: 0;
+    transform: scaleX(0);
   }
   to {
-    opacity: 1;
+    transform: scaleX(1);
   }
 }

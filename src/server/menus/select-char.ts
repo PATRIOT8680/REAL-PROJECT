@@ -4,7 +4,7 @@ import { data } from "../database/mysql";
 import { listLoginAccs } from "./auth/login";
 import { getDataAccount } from "../data/getDataAccount";
 import { setNumberChar } from "../data/char/numberChar";
-import {connectedUsers} from "../data/dataConnectedUser";
+import { connectedUsers } from "../data/dataConnectedUser";
 
 export const selectChar = (player: PlayerMp) => {
   rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
@@ -33,7 +33,7 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
   player.dimension = 0
 
   try {
-    const sql = `SELECT coordquit FROM chars WHERE firstname = ? AND lastname = ?`
+    const sql = `SELECT coordquit, adminlvl FROM chars WHERE firstname = ? AND lastname = ?`
 
     data.query(sql, [firstName, lastName], async (err, results) => {
       if (err) {
@@ -70,7 +70,8 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
           if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
         })
 
-        connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}` })
+        player.setVariable('ADMIN_LVL', results[0].adminlvl)
+        connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}`, adminLvl: results[0].adminlvl })
         rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
         rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 

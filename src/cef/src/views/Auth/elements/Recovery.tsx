@@ -9,6 +9,8 @@ import recovery_pers from '../assets/img/recovery-pers.png'
 import bg_title from '../assets/img/recovery-title.svg'
 import password_icon from '../assets/img/password.svg'
 import email_icon from '../assets/img/email.svg'
+import Input from "../components/Input.tsx";
+import MainBtn from "../components/MainBtn.tsx";
 
 const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
 	let ev: CustomEventHandler
@@ -76,50 +78,39 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
 	return (
 		<>
 			<div className='recovery-form' id='content'>
-				<img src={recovery_pers} className='pers-img' id='pers-img-rec' />
-				<div className='header-section'>
-					<div className='title'>
-						<img src={bg_title} className='bg' />
-						<div className='lines'>
-							<div className='line-1'></div>
-							<div className='line-2'></div>
-						</div>
-						<span className='text'>{t('recovery.title-text')}</span>
-					</div>
-					<span className="description">{t('recovery.description')}</span>
-				</div>
-				
-				<div className="inputs-section">
-					<div className="section">
-						<span className="title">{t('recovery.inputs.email')}</span>
-						<div className="input">
-							<div className="icon"><img src={email_icon} /></div>
-							<input type="email" value={email} onChange={(e) => setEmail(e.target.value)}  maxLength={40} placeholder={t('recovery.inputs.enter-data')} />
-						</div>
-					</div>
-					<div className="section">
-						<span className="title">{t('recovery.inputs.code')}</span>
-						<div className="input" id='code-input'>
-							<input id='code' value={code} onChange={handleChangeCode} type="text" placeholder={t('recovery.inputs.enter-data')} />
-							<span className="send-code" onClick={handleSendCode}>{t('recovery.inputs.sendCode')}</span>
-						</div>
-					</div>
-					<div className="section">
-						<span className="title">{t('recovery.inputs.newPass')}</span>
-						<div className="input">
-							<div className="icon"><img src={password_icon} /></div>
-							<input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} maxLength={30} placeholder={t('recovery.inputs.enter-data')} />
-						</div>
-					</div>
-				</div>
+        <div className="inputs-block">
+          <Input
+              type='text' value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder='Ваш Email'
+              maxLength={40}
+              isSendCode={true}
+              btnClick={handleSendCode}
+          />
 
-				<div className="btns-section">
-					<button type="button" className="main-btn" onClick={handleChangePass}>{t('recovery.btns.main-btn')}</button>
-					<div className="bottom-btns">
-						<button onClick={() => setCurrentForm('login')} type="button" className="scnd-btn">{t('recovery.btns.login-btn')}</button>
-						<button onClick={() => setCurrentForm('register')} type="button" className="scnd-btn">{t('recovery.btns.reg-btn')}</button>
-					</div>
-				</div>
+          <Input
+              type='text' value={code}
+              onChange={handleChangeCode}
+              placeholder='Код подтверждения'
+              maxLength={40}
+          />
+
+          <Input
+              type='password' value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder='Новый пароль'
+              maxLength={40}
+          />
+        </div>
+        <div className="btns-block">
+          <MainBtn
+              text='Восстановить'
+              onClick={handleChangePass}
+              nextIcon={true}
+              textSize={1.3}
+          />
+          <span className="recovery-btn" onClick={() => setCurrentForm('login')}>Вернуться</span>
+        </div>
 			</div>
 		</>
 	)

@@ -1,5 +1,5 @@
-$Montserrat: "Montserrat", sans-serif
-$Ponter: "Ponter", sans-serif
+$Druk: "Druk Wide Cyr", sans-serif
+$Manrope: "Manrope", sans-serif
 
 .welcome-page.exit
   opacity: 0
@@ -14,6 +14,27 @@ $Ponter: "Ponter", sans-serif
   height: 100%
   background: #161523
   transition: all 1s
+  overflow: hidden
+
+  .logo-bg
+    position: absolute
+    width: 50rem
+    top: 50%
+    right: 1%
+    transform: translate(-1%, -50%)
+    pointer-events: none
+    user-select: none
+    animation: pulseLogoWelcome 3s infinite ease
+    z-index: 0
+
+  .logo-text
+    width: 13.5rem
+    user-select: none
+    pointer-events: none
+    position: absolute
+    animation: fadeInText 1s ease forwards
+    top: 5%
+    left: 5%
 
   .svg
     z-index: 1
@@ -33,36 +54,48 @@ $Ponter: "Ponter", sans-serif
     right: -20rem
     animation: twoEllipse 3s ease forwards
 
-  
+
   .content
     display: flex
     flex-direction: column
-    align-items: center
-    width: 36.875rem
-    gap: 1.7rem
+    align-items: flex-start
+    width: 52rem
+    gap: 5rem
     position: absolute
     top: 50%
-    left: 50%
-    transform: translate(-50%, -50%)
+    left: 10%
+    transform: translate(-10%, -50%)
+    user-select: none
     z-index: 2
 
     .header-welcome
       display: flex
       flex-direction: column
-      align-items: center
-      gap: 0.5rem
-      font-family: $Ponter
+      align-items: flex-start
+      gap: 2.5rem
 
       .title
         animation: fadeInText 1s ease forwards
         font-weight: 400
-        font-size: 3.75rem
-        color: #fff
+        font-size: 4.7rem
+        color: #ffca58
+        font-family: $Druk
+        text-transform: uppercase
+        text-shadow: 0 0 130px rgba(255, 202, 88, 0.5)
+
+      .progress-line
+        width: 100%
+        height: 0.4rem
+        background: #ffca58
+        animation: fadeInLineWelcome 6s ease forwards
+        transform-origin: left
 
       .subtitle
         font-weight: 400
-        font-size: 50px
-        color: #ff0c46
+        line-height: 200%
+        font-size: 1rem
+        color: rgba(255, 255, 255, 0.85)
+        font-family: $Manrope
         animation: fadeInText 1s ease forwards
 
     .line
@@ -73,63 +106,13 @@ $Ponter: "Ponter", sans-serif
       animation: fadeInLine 1.4s ease forwards
 
     .warning-text
-      font-family: $Montserrat
+      font-family: $Manrope
       font-weight: 500
       font-size: 1rem
       line-height: 165%
       text-align: center
       color: rgba(255, 255, 255, 0.8)
       animation: fadeInText 1s ease forwards
-
-    .loader-welcome
-      display: flex
-      flex-direction: row
-      margin-top: 1rem
-      gap: 1rem
-      animation: fadeInText 1s ease forwards
-
-      .section
-        position: relative
-        width: 3.1875rem
-        height: 4rem
-        
-        .svgA
-          position: absolute
-          left: 0
-          top: 0
-          z-index: 3
-
-        .svgB
-          position: absolute
-          left: 0
-          top: 0
-          opacity: 0
-          z-index: 4
-        
-        .svgB.active
-          animation: fadeInLoader 2s ease forwards
-          filter: drop-shadow(0 0 14px rgba(255, 12, 70, 0.4))
-
-  .user-agreement
-    cursor: pointer
-    position: absolute
-    bottom: 1.2rem
-    left: 50%
-    transform: translate(-50%, 0) 
-    z-index: 2
-    font-family: $Montserrat
-    font-weight: 600
-    font-size: 0.75rem
-    text-transform: uppercase
-    text-decoration: underline
-    text-decoration-skip-ink: none
-    color: rgba(255, 255, 255, 0.25)
-    animation: fadeInAgreement 1s ease forwards
-    transition: all 0.4s
-
-    &:hover
-      color: #ffff
-      transition: all 0.4s
     
 
 @keyframes oneEllipse
@@ -151,18 +134,10 @@ $Ponter: "Ponter", sans-serif
 @keyframes fadeInText
   from
     opacity: 0
-    transform: translate(0, 60%)
+    transform: translate(-30%, 0)
   to
     opacity: 1
     transform: translate(0, 0)
-
-@keyframes fadeInAgreement
-  from
-    opacity: 0
-    bottom: -1.5rem
-  to
-    opacity: 1
-    bottom: 1.2rem
 
 @keyframes fadeInLine
   from
@@ -174,8 +149,16 @@ $Ponter: "Ponter", sans-serif
     opacity: 1
     transform: translate(0, 0)
 
-@keyframes fadeInLoader
-  from
-    opacity: 0
-  to
+@keyframes pulseLogoWelcome
+  0%
     opacity: 1
+  50%
+    opacity: 0.2
+  100%
+    opacity: 1
+
+@keyframes fadeInLineWelcome
+  from
+    transform: scaleX(0)
+  to
+    transform: scaleX(1)

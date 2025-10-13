@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import './assets/styles/compiled-css/Index.css'
 
+import svg_logo from './assets/img/logotype.svg'
+import logo_text from './assets/img/logo-text.svg'
+
 const svgA = (active: boolean) => (
   <svg className={`svgA ${active ? 'active' : ''}`} width="51" height="64" viewBox="0 0 51 64" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M11.1865 4.0047C11.6599 1.67452 13.7087 0 16.0865 0H45.8823C49.0436 0 51.4115 2.89721 50.7822 5.9953L39.8135 59.9953C39.3401 62.3255 37.2913 64 34.9135 64H5.11773C1.95637 64 -0.411505 61.1028 0.217795 58.0047L11.1865 4.0047Z" fill="white" fillOpacity="0.02" />
@@ -21,16 +24,10 @@ const Welcome = () => {
   const { t } = useTranslation('welcome')
 
   useEffect(() => {
-    const timer1 = setTimeout(() => setActiveGroups([true, false, false]), 1000)
-    const timer2 = setTimeout(() => setActiveGroups([true, true, false]), 3000)
-    const timer3 = setTimeout(() => setActiveGroups([true, true, true]), 5000)
-    const timer4 = setTimeout(() => setActiveExit(true), 7000)
+    const timer = setTimeout(() => setActiveExit(true),  7000)
 
     return () => {
-      clearTimeout(timer1)
-      clearTimeout(timer2)
-      clearTimeout(timer3)
-      clearTimeout(timer4)
+      clearTimeout(timer)
     }
   }, [])
 
@@ -38,35 +35,26 @@ const Welcome = () => {
     <>
       <div className={`welcome-page ${activeExit ? 'exit' : ''}`}>
         <svg className='svg' id='one-ellipse' width="846" height="822" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="423" cy="411" rx="423" ry="411" fill="#E11D40" fillOpacity="0.23" />
+          <ellipse cx="423" cy="411" rx="423" ry="411" fill="#ffca58" fillOpacity="0.1" />
         </svg>
         <svg className='svg' id='two-ellipse' width="917" height="891" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="458.5" cy="445.5" rx="458.5" ry="445.5" fill="#E11D40" fillOpacity="0.23" />
+          <ellipse cx="458.5" cy="445.5" rx="458.5" ry="445.5" fill="#ffca58" fillOpacity="0.1" />
         </svg>
+
+        <img className='logo-bg' src={svg_logo} />
+        <img className='logo-text' src={logo_text} />
 
         <div className="content">
           <div className="header-welcome">
-            <span className="title">{t('title')}</span>
-            <span className="subtitle">{t('subtitle')}</span>
-          </div>
-          <div className="line"></div>
-          <span className="warning-text">{t('warning-text')}</span>
-          <div className="loader-welcome">
-            <div className="section">
-              { svgA(activeGroups[0]) }
-              { svgB(activeGroups[0]) }
-            </div>
-            <div className="section">
-              { svgA(activeGroups[1]) }
-              { svgB(activeGroups[1]) }
-            </div>
-            <div className="section">
-              { svgA(activeGroups[2]) }
-              { svgB(activeGroups[2]) }
-            </div>
+            <span className="title">Добро пожаловать</span>
+            <div className="progress-line" style={{ animationDuration: '6s' }}></div>
+            <span className="subtitle">
+              Ты входишь в мир, где главное — уважение к ролям и живая история.
+              На нашем сервере ценится реализм, сюжет и честная игра без хаоса.
+              Каждое твое действие влияет на развитие событий — будь то простой разговор или масштабный сценарий.
+            </span>
           </div>
         </div>
-        <span className="user-agreement">{t('user-agreement')}</span>
       </div>
     </>
   )

@@ -9,6 +9,7 @@ import VehiclesPage from "./pages/Vehicles.tsx";
 import PlayersPage from "./pages/Players.tsx";
 import FractionsPage from "./pages/Fractions.tsx";
 import HomesPage from "./pages/Homes.tsx";
+import LogsPage from "./pages/Logs.tsx";
 
 const AdminMenu = () => {
   const pages = ['console', 'reports', 'vehicles', 'players', 'fractions', 'homes']
@@ -50,6 +51,8 @@ const AdminMenu = () => {
         return <FractionsPage />
       case 'homes':
         return <HomesPage />
+      case 'logs':
+        return <LogsPage />
     }
   }
 
