@@ -41,6 +41,7 @@ import PlayerReports from "./views/PlayerReports/Index.tsx";
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
 import BtnAmbient from "./components/BtnAmbient/Index"
 import ChangeLanguage from "./components/ChangeLanguage/Index"
+import ModalComponent from './components/Modal/Index'
 
 const App = () => {
   const dispatch = useDispatch()

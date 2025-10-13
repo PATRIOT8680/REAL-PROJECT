@@ -34,33 +34,33 @@ const Login: FC<IAuthLogin> = ({ setCurrentForm, saveLogin, setSaveLogin }) => {
 
   const handleAuth = () => {
     if (!saveLogin || !password) {
-      window.App.sendNotifyReducer.sendNotify('err', 'Поля ввода не могут быть пустыми!', 4000, 'right')
+      window.App.sendNotifyReducer.sendNotify('err', 'Поля ввода не могут быть пустыми!', 4000, 'bottom')
       return
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (saveLogin.includes('@') && !emailRegex.test(saveLogin)) {
-      window.App.sendNotifyReducer.sendNotify('err', 'Некорректный email', 4000, 'right')
+      window.App.sendNotifyReducer.sendNotify('err', 'Некорректный email', 4000, 'bottom')
       return
     }
 
     if (saveLogin.length < 4) {
-      window.App.sendNotifyReducer.sendNotify('err', 'Логин должен содержать не менее 4 символов!', 5500, 'right')
+      window.App.sendNotifyReducer.sendNotify('err', 'Логин должен содержать не менее 4 символов!', 5500, 'bottom')
 			return
 		}
 
 		if (saveLogin.length > 25) {
-      window.App.sendNotifyReducer.sendNotify('err', 'Логин должен содержать не более 25 символов!', 5500, 'right')
+      window.App.sendNotifyReducer.sendNotify('err', 'Логин должен содержать не более 25 символов!', 5500, 'bottom')
 			return
 		}
 
     if (password.length < 6) {
-      window.App.sendNotifyReducer.sendNotify('err', 'Пароль должен сожержать не менее 6 символов!', 5000, 'right')
+      window.App.sendNotifyReducer.sendNotify('err', 'Пароль должен сожержать не менее 6 символов!', 5000, 'bottom')
 			return
 		}
 
 		if (password.length > 30) {
-      window.App.sendNotifyReducer.sendNotify('err', 'Пароль должен сожержать более 30 символов!', 5500, 'right')
+      window.App.sendNotifyReducer.sendNotify('err', 'Пароль должен сожержать более 30 символов!', 5500, 'bottom')
 			return
 		}
 

@@ -4,8 +4,11 @@ import { I18nextProvider } from 'react-i18next'
 
 import App from './App'
 import { store } from './store/store'
-import NotifyProvider from './components/Notify/NotifyProvider'
 import { initI18n, i18n } from './locales/index'
+
+import NotifyProvider from './components/Notify/NotifyProvider'
+import { ModalProvider } from "./context/ModalContext.tsx";
+import ModalComponent from "./components/Modal/Index.tsx";
 
 declare global {
   interface Window {
@@ -27,9 +30,12 @@ initI18n().then(() => {
   createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <I18nextProvider i18n={i18n}>
-        <NotifyProvider>
-          <App />
-        </NotifyProvider>
+        <ModalProvider>
+          <NotifyProvider>
+            <App />
+            <ModalComponent />
+          </NotifyProvider>
+        </ModalProvider>
       </I18nextProvider>
     </Provider>
   );
