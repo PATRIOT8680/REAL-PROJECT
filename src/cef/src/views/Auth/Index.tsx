@@ -43,7 +43,6 @@ const Auth = () => {
     rce.triggerClient('cef:authDisabled')
   })
 
-
 	return (
 		<>
 			<div className='auth'>
