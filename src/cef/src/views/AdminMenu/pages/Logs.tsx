@@ -1,9 +1,9 @@
 import './assets/styles/compiled-css/Logs.css'
 import { useState } from "react";
 
-import HeaderLogs from './components/Logs/Header.tsx'
-import EconomicsContainer from './pages/Logs/Economics.tsx'
-import ReportsContainer from './pages/Logs/Reports.tsx'
+import HeaderLogs from '../components/Logs/Header.tsx'
+import EconomicsContainer from './Logs/Economics.tsx'
+import ReportsContainer from './Logs/Reports.tsx'
 
 const LogsPage = () => {
   const [activeContainer, setActiveContainer] = useState<string>('economics');
