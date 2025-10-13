@@ -23,11 +23,20 @@ const PlayerReports = () => {
     return reports.find(report => report.id === currentReportId) || null
   }, [currentReportId, reports])
 
+  const reportForStatusCheck = useMemo(() => {
+    if (!currentReportId) return null
+    return reports.find(report => report.id === currentReportId) || null
+  }, [currentReportId, reports])
+
   useEffect(() => {
     if (listChatRef.current && currentReport) {
       listChatRef.current.scrollTop = listChatRef.current.scrollHeight
     }
   }, [currentReport?.listMsg?.length])
+
+  useEffect(() => {
+    rce.triggerClient(JSON.stringify(reports))
+  }, [reports])
 
   useEffect(() => {
     if (playerInfoReducer.nickname && Array.isArray(reports)) {
@@ -39,39 +48,33 @@ const PlayerReports = () => {
     }
   }, [playerInfoReducer.nickname, reports])
 
-  useEffect(() => {
-    if (currentReportId) {
-      console.log(reports[currentReportId - 1].status)
-    }
-  }, []);
-
   const handleCloseReportMenu = () => {
     rce.triggerClient('cef:closeReportMenu')
   }
 
   const handleDeleteReport = () => {
-    if (currentReportId) {
-      const nickName = reports[currentReportId - 1].listMsg[0].nickName
-      rce.triggerServer('cef:report:deleteReport', currentReportId, nickName)
+    if (currentReport) {
+      const nickName = currentReport.listMsg[0].nickName
+      rce.triggerServer('cef:report:deleteReport', currentReport.id, nickName)
     }
 
     setCurrentReportId(null)
   }
 
-  const handleSendMsg = async () => {
+  const handleSendMsg = () => {
     if (msgValue) {
       if (currentReport) {
         rce.triggerServer('cef:report:addMsg', currentReport.id, {
           nickName: playerInfoReducer.nickname,
           text: msgValue,
-          dateTime: await getDateTime(),
+          dateTime: getDateTime(),
           role: 'player',
         } )
       } else {
         rce.triggerServer('cef:report:createReport', {
           nickName: playerInfoReducer.nickname,
           text: msgValue,
-          dateTime: await getDateTime(),
+          dateTime: getDateTime(),
           role: 'player',
         })
       }
@@ -140,11 +143,12 @@ const PlayerReports = () => {
               </div>
           ) }
         </div>
-        { (currentReportId && reports[currentReportId - 1].status !== 'reviewed') || !currentReportId ? (
+        { (currentReportId && reportForStatusCheck && reportForStatusCheck.status !== 'reviewed') || !currentReportId ? (
             <div className="enter-block">
               <input
                   type='text'
                   value={msgValue}
+                  autoFocus={true}
                   onKeyDown={handleKeyPress}
                   onChange={(e) => setMsgValue(e.target.value)}
                   className='enter-cmd'

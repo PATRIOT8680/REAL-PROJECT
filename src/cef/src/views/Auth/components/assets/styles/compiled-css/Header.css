@@ -1,0 +1,53 @@
+.header-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  user-select: none;
+}
+.header-form .svg_logo {
+  width: 13rem;
+  pointer-events: none;
+}
+.header-form .text-line {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
+  font-family: "Manrope", sans-serif;
+}
+.header-form .text-line .name-form.active {
+  color: #ffca58;
+}
+.header-form .text-line .name-form.active:hover {
+  color: #ffca58;
+}
+.header-form .text-line .name-form {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.header-form .text-line .name-form:hover {
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+.header-form .text-line .name-form .line {
+  width: 100%;
+  height: 0.17rem;
+  background: #ffca58;
+  border-radius: 1rem;
+  margin-top: 0.3rem;
+  transform-origin: center;
+  animation: fadeInLineHeader 0.5s ease;
+}
+
+@keyframes fadeInLineHeader {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}

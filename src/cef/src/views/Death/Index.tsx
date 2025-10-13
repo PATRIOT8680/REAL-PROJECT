@@ -47,7 +47,7 @@ const DeathPlayer = () => {
     })
 
     return () => {
-      ev.destroy
+      ev.destroy()
       sound.current.stop()
       sound.current.unload()
     }

@@ -1,9 +1,9 @@
 import { IMsg } from "../../../views/AdminMenu/pages/Reports.tsx";
 
-export const setReport = (listMsg: IMsg[], status: 'waiting' | 'taken') => {
+export const setReport = (id: number, listMsg: IMsg[], status: 'waiting' | 'taken') => {
   return {
     type: 'SET_REPORT',
-    payload: { listMsg, status }
+    payload: { id, listMsg, status }
   };
 };
 

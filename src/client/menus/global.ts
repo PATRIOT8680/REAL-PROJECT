@@ -15,12 +15,12 @@ mp.events.add('guiReady', () => {
 
   rce.registerAll('execute', (commands) => {
     const commandsArray = Array.isArray(commands) ? commands : [commands]
-    mp.console.logWarning(JSON.stringify(commandsArray))
 
     mp.browsers.forEach(browser => {
       if (browser && browser.execute) {
         try {
           commandsArray.forEach(code => {
+            mp.console.logInfo(code)
             gui.execute(code);
           });
         } catch (e) {
@@ -28,7 +28,7 @@ mp.events.add('guiReady', () => {
         }
       }
     });
-  })
+  });
 })
 
 mp.keys.bind(Keys.VK_F2, false, () => {

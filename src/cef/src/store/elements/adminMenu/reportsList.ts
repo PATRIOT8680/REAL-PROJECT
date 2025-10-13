@@ -12,10 +12,11 @@ import {
 
 export const reportsListStore = {
   setReport: (
+    id: number,
     listMsg: IMsg[],
     status: 'waiting' | 'taken',
   ) => {
-    store.dispatch(setReport(listMsg, status))
+    store.dispatch(setReport(id, listMsg, status))
   },
 
   getReport: () => {

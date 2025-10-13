@@ -1,14 +1,11 @@
+import '../assets/styles/compiled-css/Register.css'
 import { FC, useState, useEffect } from 'react'
 import { IPropsAuth } from '../Index'
 import { useTranslation } from 'react-i18next'
-import '../assets/styles/compiled-css/Register.css'
 import { rce } from "../../../modules/rce.ts";
 
-import reg_pers from '../assets/img/reg-pers.png'
-import bg_title from '../assets/img/reg-title.svg'
-import login_icon from '../assets/img/login.svg'
-import password_icon from '../assets/img/password.svg'
-import email_icon from '../assets/img/email.svg'
+import Input from "../components/Input.tsx";
+import MainBtn from "../components/MainBtn.tsx";
 
 const Register: FC<IPropsAuth> = ({ setCurrentForm, setRegisterData }) => {
 	const [login, setLogin] = useState('')
@@ -16,6 +13,25 @@ const Register: FC<IPropsAuth> = ({ setCurrentForm, setRegisterData }) => {
 	const [password, setPassword] = useState('')
 	const [passwordConfirm, setPasswordConfirm] = useState('')
   const { t } = useTranslation('auth')
+
+  const validateLogin = (login: string): boolean => {
+    if (!login || login.length < 4) {
+      return false;
+    }
+
+    return login.length >= 4 && login.length <= 25;
+  }
+
+  const validateEmail = (email: string): boolean => {
+    if (!email || email.length < 4) {
+      return false
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+
+    return email.length >= 4 && email.length <= 25
+  }
 
 	const handleRegister = () => {
 		if (login.length < 4) {
@@ -72,82 +88,43 @@ const Register: FC<IPropsAuth> = ({ setCurrentForm, setRegisterData }) => {
 	return (
 		<>
 			<div className='register-form' id='content'>
-				<img src={reg_pers} className='pers-img' id='pers-img-reg' />
-
-				<div className='header-section'>
-					<div className='title'>
-						<img src={bg_title} className='bg' />
-						<div className='lines'>
-							<div className='line-1'></div>
-							<div className='line-2'></div>
-						</div>
-						<span className='text'>{t('register.title-text')}</span>
-					</div>
-					<span className="description">{t('register.description')}</span>
-				</div>
-
-				<div className="inputs-section">
-					<div className="section">
-						<span className="title">{t('register.inputs.login')}</span>
-						<div className="input">
-							<div className="icon"><img src={login_icon} /></div>
-							<input 
-								type="text"
-								maxLength={25}
-								placeholder={t('register.inputs.enter-data')}
-								value={login}
-								onChange={(e) => setLogin(e.target.value)}
-							/>
-						</div>
-					</div>
-					<div className="section">
-						<span className="title">{t('register.inputs.email')}</span>
-						<div className="input">
-							<div className="icon"><img src={email_icon} /></div>
-							<input
-								type="email"
-								maxLength={40}
-								placeholder={t('register.inputs.enter-data')}
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-							/>
-						</div>
-					</div>
-					<div className="section">
-						<span className="title">{t('register.inputs.password')}</span>
-						<div className="input">
-							<div className="icon"><img src={password_icon} /></div>
-							<input
-								type="password"
-								maxLength={30}
-								placeholder={t('register.inputs.enter-data')}
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-							/>
-						</div>
-					</div>
-					<div className="section">
-						<span className="title">{t('register.inputs.rep-pass')}</span>
-						<div className="input">
-							<div className="icon"><img src={password_icon} /></div>
-							<input
-								type="password"
-								maxLength={30}
-								placeholder={t('register.inputs.enter-data')}
-								value={passwordConfirm}
-								onChange={(e) => setPasswordConfirm(e.target.value)}
-							/>
-						</div>
-					</div>
-				</div>
-
-				<div className="btns-section">
-					<button type="button" className="main-btn" onClick={handleRegister}>{t('register.btns.main-btn')}</button>
-					<div className="bottom-btns">
-						<button onClick={() => setCurrentForm('login')} type="button" className="scnd-btn">{t('register.btns.login-btn')}</button>
-						<button onClick={() => setCurrentForm('recovery')} type="button" className="scnd-btn">{t('register.btns.recovery-btn')}</button>
-					</div>
-				</div>
+				<div className="inputs-block">
+          <Input
+            type='text' value={login}
+            onChange={(e) => setLogin(e.target.value)}
+            placeholder='Логин'
+            maxLength={40}
+            isValid={validateLogin(login)}
+          />
+          <Input
+            type='text' value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder='Email'
+            maxLength={40}
+            isValid={validateEmail(email)}
+          />
+          <Input
+            type='password' value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder='Пароль'
+            maxLength={40}
+          />
+          <Input
+            type='password' value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
+            placeholder='Повторите пароль'
+            maxLength={40}
+          />
+        </div>
+        <div className="btns-block">
+          <MainBtn
+              text='Играть'
+              onClick={handleRegister}
+              nextIcon={true}
+              textSize={1.3}
+          />
+          <span className="recovery-btn" onClick={() => setCurrentForm('recovery')}>Восстановить доступ</span>
+        </div>
 			</div>
 		</>
 	)

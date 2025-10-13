@@ -47,7 +47,7 @@ registerACommand(
     [
       { name: 'id игрока', type: 'number' },
       { name: 'hp', type: 'number' }
-    ],
+    ], 1,
     (player: PlayerMp, [targetId, hp]) => {
       const targetIdNum = parseInt(targetId)
       const hpNum = parseInt(hp)
@@ -79,7 +79,7 @@ registerACommand(
     'Выдать мут игроку',
     [
       { name: 'id игрока', type: 'number' },
-    ],
+    ], 2,
     (player: PlayerMp, [targetId]) => {
       const targetIdNum = parseInt(targetId)
 
@@ -105,7 +105,7 @@ registerACommand(
     'Снять мут с игрока',
     [
       { name: 'id игрока', type: 'number' },
-    ],
+    ], 2,
     (player: PlayerMp, [targetId]) => {
       const targetIdNum = parseInt(targetId)
 
@@ -131,7 +131,7 @@ registerACommand(
     'Нокаутировать игрока',
     [
       { name: 'id игрока', type: 'number' },
-    ],
+    ], 1,
     (player: PlayerMp, [targetId]) => {
       const targetIdNum = parseInt(targetId)
 
@@ -156,7 +156,7 @@ registerACommand(
     'Воскресить игрока',
     [
       { name: 'id игрока', type: 'number' },
-    ],
+    ], 1,
     (player: PlayerMp, [targetId]) => {
       const targetIdNum = parseInt(targetId)
 

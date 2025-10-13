@@ -519,9 +519,14 @@ const connectedUsers = {
     },
     getPlayerIdByNickName: (nickName) => {
         for (const [playerId, user] of users.entries()) {
-            if (user.nickName === nickName) {
-                return playerId;
+            const target = mp.players.at(playerId);
+            if (target) {
+                if (user.nickName === nickName) {
+                    return playerId;
+                }
             }
+            else
+                return;
         }
         return undefined;
     }
@@ -679,7 +684,7 @@ registerCMD('clearchat', (player) => {
 });
 
 const adminConsoleHandlers = {};
-const registerACommand = (cmd, description, args, handler) => {
+const registerACommand = (cmd, description, args, adminLvl, handler) => {
     if (adminConsoleHandlers[cmd]) {
         console.log(chalk.bgYellow('• AConsole •'), chalk.yellow(`Команда "${cmd}" уже зарегистрирована!`));
         return;
@@ -688,13 +693,20 @@ const registerACommand = (cmd, description, args, handler) => {
         handler,
         description,
         args,
+        adminLvl,
     };
 };
 rce.registerCef('console:executeCommand', (player, cmdName, args) => {
     const cmd = adminConsoleHandlers[cmdName];
-    console.log(`sethp 1`);
     if (!cmd) {
         rce.triggerCef(player, 'console:commandResponse', false, `Команда "${cmdName}" не найдена`);
+        return;
+    }
+    const playerAdminLevel = connectedUsers.getField(player.id, 'adminLvl') || 0;
+    console.log(`Уровень админки: ${playerAdminLevel}`);
+    if (playerAdminLevel < cmd.adminLvl) {
+        const message = `Для "${cmdName}" требуется ${cmd.adminLvl} уровень администрирования.`.replace(/"/g, '\\"');
+        rce.triggerCef(player, 'console:commandResponse', false, message);
         return;
     }
     try {
@@ -710,7 +722,8 @@ rce.registerCef('console:getCommands', (player) => {
         cmds.push({
             name: name,
             description: data.description,
-            args: data.args
+            args: data.args,
+            adminLvl: data.adminLvl,
         });
     }
     rce.triggerCef(player, 'console:setCommands', cmds);
@@ -1004,7 +1017,7 @@ rce.registerCef('handleSpawnPlayer', (player, nickname, numberSlot) => {
     setNumberChar(player.id, numberSlot);
     player.dimension = 0;
     try {
-        const sql = `SELECT coordquit FROM chars WHERE firstname = ? AND lastname = ?`;
+        const sql = `SELECT coordquit, adminlvl FROM chars WHERE firstname = ? AND lastname = ?`;
         data.query(sql, [firstName, lastName], async (err, results) => {
             if (err) {
                 console.log(chalk.bgRed('• SPAWN •') + chalk.red(` Ошибка запроса к БД: ${err}`));
@@ -1034,7 +1047,8 @@ rce.registerCef('handleSpawnPlayer', (player, nickname, numberSlot) => {
                     if (err)
                         return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`));
                 });
-                connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}` });
+                player.setVariable('ADMIN_LVL', results[0].adminlvl);
+                connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}`, adminLvl: results[0].adminlvl });
                 rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
                 rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
                 setTimeout(() => {
@@ -1350,7 +1364,7 @@ registerCMD('getpos', (player, [target, ...namePos]) => {
 registerACommand('sethp', 'Установить здоровье игроку', [
     { name: 'id игрока', type: 'number' },
     { name: 'hp', type: 'number' }
-], (player, [targetId, hp]) => {
+], 1, (player, [targetId, hp]) => {
     const targetIdNum = parseInt(targetId);
     const hpNum = parseInt(hp);
     if (!targetId || !hp) {
@@ -1372,7 +1386,7 @@ registerACommand('sethp', 'Установить здоровье игроку', 
 });
 registerACommand('banvoice', 'Выдать мут игроку', [
     { name: 'id игрока', type: 'number' },
-], (player, [targetId]) => {
+], 2, (player, [targetId]) => {
     const targetIdNum = parseInt(targetId);
     if (!targetId) {
         rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: banvoice [ID игрока]');
@@ -1389,7 +1403,7 @@ registerACommand('banvoice', 'Выдать мут игроку', [
 });
 registerACommand('unbanvoice', 'Снять мут с игрока', [
     { name: 'id игрока', type: 'number' },
-], (player, [targetId]) => {
+], 2, (player, [targetId]) => {
     const targetIdNum = parseInt(targetId);
     if (!targetId) {
         rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: unbanvoice [ID игрока]');
@@ -1406,7 +1420,7 @@ registerACommand('unbanvoice', 'Снять мут с игрока', [
 });
 registerACommand('knockout', 'Нокаутировать игрока', [
     { name: 'id игрока', type: 'number' },
-], (player, [targetId]) => {
+], 1, (player, [targetId]) => {
     const targetIdNum = parseInt(targetId);
     if (!targetId) {
         rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: knockout [ID игрока]');
@@ -1422,7 +1436,7 @@ registerACommand('knockout', 'Нокаутировать игрока', [
 });
 registerACommand('reborn', 'Воскресить игрока', [
     { name: 'id игрока', type: 'number' },
-], (player, [targetId]) => {
+], 1, (player, [targetId]) => {
     const targetIdNum = parseInt(targetId);
     if (!targetId) {
         rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: reborn [ID игрока]');
@@ -1942,8 +1956,8 @@ const updateTime = (isFirstRun = false) => {
         minutes: moscowTime.getMinutes(),
         seconds: moscowTime.getSeconds()
     };
-    mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds);
-    //mp.world.time.set(8, 0, 0)
+    //mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds)
+    mp.world.time.set(8, 0, 0);
     if (!isFirstRun) {
         console.log(`Time: ${pad(currentDateTime.hours)}:${pad(currentDateTime.minutes)}`);
     }
@@ -2317,9 +2331,10 @@ rce.registerCef('cef:handleCreateChar', async (player, numberSlot, dataChar) => 
                 return;
             }
             setNumberChar(player.id, numberSlot);
+            player.setVariable('ADMIN_LVL', 0);
             player.setVariable('player_spawned', true);
             await connection.execute(query, [firstName, lastName, age, sid, numberSlot]);
-            connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}` });
+            connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}`, adminLvl: 0 });
             closeCreateChar(player);
         }
         finally {
@@ -2405,21 +2420,136 @@ rce.registerCef('cef:amenu:spawnVehForMe', (player, modelName, colorVeh) => {
     player.putIntoVehicle(vehicle, 0);
 });
 
-rce.registerCef('cef:report:createReport', (player, data) => {
-    rce.triggerClients('execute', `window.App.reportsListReducer.setReport([{
-    nickName: "${data.nickName}",
-    text: "${data.text}",
-    dateTime: "${data.dateTime}",
-    role: "${data.role}"
-  }], 'waiting')`);
+const getAllReports = async (lastReportId) => {
+    try {
+        let sql = '';
+        let params = [];
+        if (lastReportId === 0) {
+            sql = `
+        SELECT id, reportData
+        FROM logs_reports
+        ORDER BY id DESC
+        LIMIT 100
+      `;
+        }
+        else {
+            sql = `
+        SELECT id, reportData
+        FROM logs_reports
+        WHERE id < ?
+        ORDER BY id DESC
+        LIMIT 100
+      `;
+            params.push(lastReportId);
+        }
+        const reportsData = await new Promise((resolve, reject) => {
+            data.query(sql, params, (error, results) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    const formattedData = results.map((item) => {
+                        try {
+                            return {
+                                id: item.id,
+                                listMsg: JSON.parse(item.reportData),
+                                status: undefined,
+                                responder: undefined
+                            };
+                        }
+                        catch (parseError) {
+                            console.log(chalk.bgRed('• Logs - reports •'), chalk.red('Ошибка парсинга reportData для id', item.id, parseError));
+                            return {
+                                id: item.id,
+                                listMsg: [],
+                                status: undefined,
+                                responder: undefined
+                            };
+                        }
+                    });
+                    resolve(formattedData);
+                }
+            });
+        });
+        console.log('Отправляем:', reportsData);
+        return reportsData;
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• Logs - reports •'), chalk.red(e));
+        return [];
+    }
+};
+rce.registerClientCef('logs:getAllReports', async (player, lastReportId) => {
+    return getAllReports(lastReportId);
 });
-rce.registerCef('cef:report:addMsg', (player, id, data) => {
+
+rce.registerCef('cef:report:createReport', (player, reportData) => {
+    const sql = 'SELECT MAX(id) as maxId FROM logs_reports';
+    data.query(sql, (err, results) => {
+        if (err) {
+            return console.log(chalk.bgRed('• logs_reports (create 1) •', err));
+        }
+        try {
+            const maxIdRow = results[0];
+            const nextId = (maxIdRow?.maxId || 0) + 1;
+            rce.triggerClients('execute', `window.App.reportsListReducer.setReport(${nextId}, [{
+          nickName: "${reportData.nickName}",
+          text: "${reportData.text}", 
+          dateTime: "${reportData.dateTime}",
+          role: "${reportData.role}"}],
+        'waiting')`);
+            const repData = JSON.stringify([reportData]);
+            const sql2 = 'INSERT INTO logs_reports (id, reportData) VALUES (?, ?)';
+            data.query(sql2, [nextId, repData], (err) => {
+                if (err) {
+                    return console.log(chalk.bgRed('• logs_reports (create 3) •', err));
+                }
+            });
+        }
+        catch (e) {
+            console.log(chalk.bgRed('• logs_reports (create 2) •', err));
+        }
+    });
+});
+rce.registerCef('cef:report:addMsg', (player, id, reportData) => {
     rce.triggerClients('execute', `window.App.reportsListReducer.addMessageToReport(${id}, {
-    nickName: "${data.nickName}",
-    text: "${data.text}",
-    dateTime: "${data.dateTime}",
-    role: "${data.role}"
+    nickName: "${reportData.nickName}",
+    text: "${reportData.text}",
+    dateTime: "${reportData.dateTime}",
+    role: "${reportData.role}"
   })`);
+    const sql = 'SELECT reportData FROM logs_reports WHERE id = ?';
+    try {
+        data.query(sql, [id], (err, results) => {
+            if (err) {
+                return console.log(chalk.bgRed('• logs_reports (addMsg 1) •', err));
+            }
+            try {
+                if (results.length === 0) {
+                    return console.log(chalk.bgYellow('• logs_reports •'), chalk.yellow(`Репорт с ID ${id} не найден в базе данных`));
+                }
+                const currentReportData = JSON.parse(results[0].reportData);
+                currentReportData.push({
+                    nickName: reportData.nickName,
+                    text: reportData.text,
+                    dateTime: reportData.dateTime,
+                    role: reportData.role
+                });
+                const sql2 = 'UPDATE logs_reports SET reportData = ? WHERE id = ?';
+                data.query(sql2, [JSON.stringify(currentReportData), id], (err, results) => {
+                    if (err) {
+                        return console.log(chalk.bgRed('• logs_reports (addMsg 2) •', err));
+                    }
+                });
+            }
+            catch (e) {
+                console.log(chalk.bgRed('• logs_reports (addMsg 3) •', e));
+            }
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• logs_reports (addMsg 4) •', e));
+    }
 });
 rce.registerCef('cef:report:deleteReport', (player, id, nickname) => {
     rce.triggerClients('execute', `window.App.reportsListReducer.closeReport(${id})`);
@@ -2436,14 +2566,46 @@ rce.registerCef('cef:amenu:closeReport', (player, id, nickname) => {
     rce.triggerClient(target, 'sendNotify', 'info', `Администратор закрыл ваш репорт`, 3300, 'top');
     rce.triggerClients('execute', `window.App.reportsListReducer.updateReportStatus(${id}, "reviewed")`);
 });
-rce.registerCef('cef:amenu:sendAMsg', (player, id, data) => {
-    const targetId = connectedUsers.getPlayerIdByNickName(data.nickName);
+rce.registerCef('cef:amenu:sendAMsg', (player, id, reportData, playerNickname) => {
+    const targetId = connectedUsers.getPlayerIdByNickName(playerNickname);
     const target = mp.players.at(targetId);
     rce.triggerClient(target, 'sendNotify', 'info', `На ваш репорт пришёл ответ!`, 3300, 'top');
     rce.triggerClients('execute', `window.App.reportsListReducer.addMessageToReport(${id}, {
-    nickName: "${data.nickName}",
-    text: "${data.text}",
-    dateTime: "${data.dateTime}",
-    role: "${data.role}"
+    nickName: "${reportData.nickName}",
+    text: "${reportData.text}",
+    dateTime: "${reportData.dateTime}",
+    role: "${reportData.role}"
   })`);
+    const sql = 'SELECT reportData FROM logs_reports WHERE id = ?';
+    try {
+        data.query(sql, [id], (err, results) => {
+            if (err) {
+                return console.log(chalk.bgRed('• logs_reports (sendMsg 1) •', err));
+            }
+            try {
+                if (results.length === 0) {
+                    return console.log(chalk.bgYellow('• logs_reports •'), chalk.yellow(`Репорт с ID ${id} не найден в базе данных`));
+                }
+                const currentReportData = JSON.parse(results[0].reportData);
+                currentReportData.push({
+                    nickName: reportData.nickName,
+                    text: reportData.text,
+                    dateTime: reportData.dateTime,
+                    role: reportData.role
+                });
+                const sql2 = 'UPDATE logs_reports SET reportData = ? WHERE id = ?';
+                data.query(sql2, [JSON.stringify(currentReportData), id], (err, results) => {
+                    if (err) {
+                        return console.log(chalk.bgRed('• logs_reports (sendMsg 2) •', err));
+                    }
+                });
+            }
+            catch (e) {
+                console.log(chalk.bgRed('• logs_reports (sendMsg 3) •', e));
+            }
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• logs_reports (sendMsg 4) •', e));
+    }
 });
