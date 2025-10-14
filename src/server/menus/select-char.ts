@@ -6,6 +6,14 @@ import { getDataAccount } from "../data/getDataAccount";
 import { setNumberChar } from "../data/char/numberChar";
 import { connectedUsers } from "../data/dataConnectedUser";
 
+interface IDataChar {
+  firstname: string,
+  lastname: string,
+  numberslot: number,
+  cash: number,
+  bankmoney: number,
+}
+
 export const selectChar = (player: PlayerMp) => {
   rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
   rce.triggerClient(player, 'player:freeze', true)
@@ -139,4 +147,38 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
       console.log(chalk.bgRed('• SELECT CHAR •' + chalk.red(` Ошибка: ${e}`)))
     }
   }
+})
+
+rce.registerClient('selectChar:getDataAllChars', async (player: PlayerMp) => {
+  return new Promise((resolve: any, reject) => {
+    getDataAccount(player, 'sid', player.id).then(sid => {
+      if (!sid) {
+        console.error(chalk.red(`[SELECT CHAR] No SID for player ${player.id}`))
+        resolve([])
+        return
+      }
+
+      const sql = 'SELECT firstname, lastname, numberslot, cash, bankmoney FROM chars WHERE sid = ?'
+
+      data.query(sql, [sid], (err, results: any) => {
+        if (err) {
+          console.log(chalk.bgRed('• SELECT CHAR •') + chalk.red(` DB error: ${err}`))
+          reject(err)
+          return
+        }
+
+        const charsData = results.map((char: any) => ({
+          nickname: `${char.firstname} ${char.lastname}`,
+          numberslot: char.numberslot,
+          cash: char.cash,
+          bankmoney: char.bankmoney,
+        }))
+
+        resolve(charsData)
+      })
+    }).catch(error => {
+      console.log(chalk.bgRed('• SELECT CHAR •') + chalk.red(` Error getting SID: ${error}`))
+      reject(error)
+    });
+  })
 })

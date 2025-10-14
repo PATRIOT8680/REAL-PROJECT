@@ -957,40 +957,172 @@ const getNickname = (uid) => {
     });
 };
 
+// Старая функция для получения одной данные
 const getDataAccount = async (player, dataKey, targetID) => {
+    console.log(chalk.blue(`[GET DATA] Начало получения данных. Ключ: ${dataKey}, Целевой ID: ${targetID}`));
     try {
         const targetPlayer = mp.players.at(targetID);
         if (!targetPlayer) {
-            console.error(chalk.red(`[RPC] Игрок с ID ${targetID} не найден!`));
+            console.error(chalk.red(`[GET DATA] Игрок с ID ${targetID} не найден!`));
             return null;
         }
+        console.log(chalk.blue(`[GET DATA] Игрок с ID ${targetID} найден`));
         if (!targetPlayer.getVariable('login_player')) {
-            return console.error(chalk.red(`Игрок #${targetPlayer.id} не авторизован!`));
+            console.error(chalk.red(`[GET DATA] Игрок #${targetPlayer.id} не авторизован!`));
+            return null;
         }
+        console.log(chalk.blue(`[GET DATA] Игрок #${targetPlayer.id} авторизован`));
         const targetLogin = targetPlayer.getVariable('login_player');
+        console.log(chalk.blue(`[GET DATA] Логин игрока: ${targetLogin}`));
         const sid = await getSid(targetLogin);
+        console.log(chalk.blue(`[GET DATA] Получен SID: ${sid}`));
         if (!targetLogin) {
-            console.error(chalk.red(`[RPC] У игрока ${targetID} нет логина!`));
+            console.error(chalk.red(`[GET DATA] У игрока ${targetID} нет логина!`));
             return null;
         }
         const dataMap = {
-            sid: () => getSid(targetLogin),
-            uid: () => getUid(sid),
-            cash: async () => getCash(await getUid(sid)),
-            bankmoney: async () => getBankMoney(await getUid(sid)),
-            donatcoins: () => getDonatCoins(sid),
-            nickname: async () => getNickname(await getUid(sid)),
+            sid: () => {
+                console.log(chalk.blue(`[GET DATA] Получение SID`));
+                return getSid(targetLogin);
+            },
+            uid: () => {
+                console.log(chalk.blue(`[GET DATA] Получение UID для SID: ${sid}`));
+                return getUid(sid);
+            },
+            cash: async () => {
+                console.log(chalk.blue(`[GET DATA] Получение cash для SID: ${sid}`));
+                const uid = await getUid(sid);
+                console.log(chalk.blue(`[GET DATA] Получен UID для cash: ${uid}`));
+                return getCash(uid);
+            },
+            bankmoney: async () => {
+                console.log(chalk.blue(`[GET DATA] Получение bankmoney для SID: ${sid}`));
+                const uid = await getUid(sid);
+                console.log(chalk.blue(`[GET DATA] Получен UID для bankmoney: ${uid}`));
+                return getBankMoney(uid);
+            },
+            donatcoins: () => {
+                console.log(chalk.blue(`[GET DATA] Получение donatcoins для SID: ${sid}`));
+                return getDonatCoins(sid);
+            },
+            nickname: async () => {
+                console.log(chalk.blue(`[GET DATA] Получение nickname для SID: ${sid}`));
+                const uid = await getUid(sid);
+                console.log(chalk.blue(`[GET DATA] Получен UID для nickname: ${uid}`));
+                return getNickname(uid);
+            },
         };
-        if (!dataMap[dataKey])
-            return console.error(chalk.bgRed('GET DATA •') + chalk.red(` Unknown data key: ${dataKey}`));
-        return dataMap[dataKey]();
+        if (!dataMap[dataKey]) {
+            console.error(chalk.bgRed('[GET DATA]') + chalk.red(` Неизвестный ключ данных: ${dataKey}`));
+            return null;
+        }
+        console.log(chalk.blue(`[GET DATA] Вызов функции для ключа: ${dataKey}`));
+        const result = await dataMap[dataKey]();
+        console.log(chalk.green(`[GET DATA] Получены данные для ключа ${dataKey}: ${result}`));
+        return result;
     }
     catch (e) {
-        console.log(chalk.bgRed('• GET DATA •' + chalk.red(` Ошибка: ${e}`)));
+        console.log(chalk.bgRed('[GET DATA]') + chalk.red(` Ошибка: ${e}`));
+        return null;
     }
 };
+// Новая функция для получения нескольких данных
+const getMultipleDataAccount = async (player, keysArray, targetId) => {
+    console.log(chalk.yellow(`[GET MULTIPLE DATA] Начало получения нескольких данных. Ключи: ${keysArray.join(', ')}, Целевой ID: ${targetId}`));
+    try {
+        const targetPlayer = mp.players.at(targetId);
+        if (!targetPlayer) {
+            console.error(chalk.red(`[GET MULTIPLE DATA] Игрок с ID ${targetId} не найден!`));
+            return {};
+        }
+        console.log(chalk.yellow(`[GET MULTIPLE DATA] Игрок с ID ${targetId} найден`));
+        if (!targetPlayer.getVariable('login_player')) {
+            console.error(chalk.red(`[GET MULTIPLE DATA] Игрок #${targetPlayer.id} не авторизован!`));
+            return {};
+        }
+        console.log(chalk.yellow(`[GET MULTIPLE DATA] Игрок #${targetPlayer.id} авторизован`));
+        const targetLogin = targetPlayer.getVariable('login_player');
+        console.log(chalk.yellow(`[GET MULTIPLE DATA] Логин игрока: ${targetLogin}`));
+        const sid = await getSid(targetLogin);
+        console.log(chalk.yellow(`[GET MULTIPLE DATA] Получен SID: ${sid}`));
+        if (!targetLogin) {
+            console.error(chalk.red(`[GET MULTIPLE DATA] У игрока ${targetId} нет логина!`));
+            return {};
+        }
+        // Создаем dataMap с ленивой загрузкой UID только когда нужен
+        const dataMap = {
+            sid: () => {
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Возврат SID: ${sid}`));
+                return Promise.resolve(sid);
+            },
+            uid: async () => {
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Получение UID для SID: ${sid}`));
+                const uid = await getUid(sid);
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Получен UID: ${uid}`));
+                return uid;
+            },
+            cash: async () => {
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Получение cash для SID: ${sid}`));
+                const uid = await getUid(sid);
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Получен UID для cash: ${uid}`));
+                return getCash(uid);
+            },
+            bankmoney: async () => {
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Получение bankmoney для SID: ${sid}`));
+                const uid = await getUid(sid);
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Получен UID для bankmoney: ${uid}`));
+                return getBankMoney(uid);
+            },
+            donatcoins: () => {
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Получение donatcoins для SID: ${sid}`));
+                return getDonatCoins(sid);
+            },
+            nickname: async () => {
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Получение nickname для SID: ${sid}`));
+                const uid = await getUid(sid);
+                console.log(chalk.yellow(`[GET MULTIPLE DATA] Получен UID для nickname: ${uid}`));
+                return getNickname(uid);
+            },
+        };
+        const results = {};
+        console.log(chalk.yellow(`[GET MULTIPLE DATA] Начало обработки ${keysArray.length} ключей`));
+        for (const key of keysArray) {
+            console.log(chalk.cyan(`[GET MULTIPLE DATA] Обработка ключа: ${key}`));
+            if (dataMap[key]) {
+                try {
+                    console.log(chalk.cyan(`[GET MULTIPLE DATA] Вызов функции для ключа: ${key}`));
+                    results[key] = await dataMap[key]();
+                    console.log(chalk.green(`[GET MULTIPLE DATA] Получены данные для ключа ${key}: ${results[key]}`));
+                }
+                catch (e) {
+                    console.log(chalk.bgRed('[GET MULTIPLE DATA]') + chalk.red(` Ошибка при получении данных для ключа ${key}: ${e}`));
+                    results[key] = null;
+                }
+            }
+            else {
+                console.log(chalk.bgRed('[GET MULTIPLE DATA]') + chalk.red(` Неизвестный ключ данных: ${key}`));
+                results[key] = null;
+            }
+        }
+        console.log(chalk.green(`[GET MULTIPLE DATA] Завершено получение всех данных. Результат:`, results));
+        return results;
+    }
+    catch (e) {
+        console.log(chalk.bgRed('[GET MULTIPLE DATA]') + chalk.red(` Общая ошибка: ${e}`));
+        return {};
+    }
+};
+// Регистрируем обе RPC функции
 rce.registerClientCef('getDataAccount', async (player, dataKey, targetID) => {
+    console.log(chalk.magenta(`[RPC] Вызов getDataAccount от клиента. Игрок: ${player.id}, Ключ: ${dataKey}, Целевой ID: ${targetID}`));
     const result = await getDataAccount(player, dataKey, targetID);
+    console.log(chalk.magenta(`[RPC] Результат getDataAccount для ключа ${dataKey}:`, result));
+    return result;
+});
+rce.registerClientCef('getMultipleDataAccount', async (player, keysArray, targetID) => {
+    console.log(chalk.magenta(`[RPC] Вызов getMultipleDataAccount от клиента. Игрок: ${player.id}, Ключи: ${keysArray.join(', ')}, Целевой ID: ${targetID}`));
+    const result = await getMultipleDataAccount(player, keysArray, targetID);
+    console.log(chalk.magenta(`[RPC] Результат getMultipleDataAccount для ключей ${keysArray.join(', ')}:`, result));
     return result;
 });
 
@@ -1114,6 +1246,35 @@ rce.registerClient('client:flyEndSelectChar', async (player) => {
             console.log(chalk.bgRed('• SELECT CHAR •' + chalk.red(` Ошибка: ${e}`)));
         }
     }
+});
+rce.registerClient('selectChar:getDataAllChars', async (player) => {
+    return new Promise((resolve, reject) => {
+        getDataAccount(player, 'sid', player.id).then(sid => {
+            if (!sid) {
+                console.error(chalk.red(`[SELECT CHAR] No SID for player ${player.id}`));
+                resolve([]);
+                return;
+            }
+            const sql = 'SELECT firstname, lastname, numberslot, cash, bankmoney FROM chars WHERE sid = ?';
+            data.query(sql, [sid], (err, results) => {
+                if (err) {
+                    console.log(chalk.bgRed('• SELECT CHAR •') + chalk.red(` DB error: ${err}`));
+                    reject(err);
+                    return;
+                }
+                const charsData = results.map((char) => ({
+                    nickname: `${char.firstname} ${char.lastname}`,
+                    numberslot: char.numberslot,
+                    cash: char.cash,
+                    bankmoney: char.bankmoney,
+                }));
+                resolve(charsData);
+            });
+        }).catch(error => {
+            console.log(chalk.bgRed('• SELECT CHAR •') + chalk.red(` Error getting SID: ${error}`));
+            reject(error);
+        });
+    });
 });
 
 const listLoginAccs = new Map();

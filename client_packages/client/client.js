@@ -395,7 +395,7 @@ let playerAimAt = null;
 const playerSids = new Map();
 mp.nametags.enabled = false;
 const requestPlayerSid = async (player) => {
-    const statID = await rce.callServer('getDataAccount', 'sid', player.remoteId);
+    const statID = await rce.callServer('getDataAccount', ['sid'], player.remoteId);
     playerSids.set(player.remoteId, statID);
 };
 mp.keys.bind(Keys.VK_F9, false, () => {
@@ -1480,10 +1480,19 @@ const Natives$1 = {
 };
 let currentCamera = null;
 let targetCamera = null;
-rce.registerServer('server:showSelectChar', () => {
+rce.registerServer('server:showSelectChar', async () => {
+    const dataChars = await rce.callServer('selectChar:getDataAllChars');
     const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    const plDimension = mp.players.local.dimension;
     mp.players.local.taskStartScenarioInPlace(scenario, 0, false);
     mp.game.ui.setPauseMenuActive(false);
+    setTimeout(() => {
+        dataChars.forEach((char) => {
+            const plPos = listCameras[char.numberslot - 1].playerPos;
+            mp.labels.new(`${char.nickname} [0 LVL]`, new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.965), { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 255], dimension: plDimension });
+            mp.labels.new(`Наличные: $${char.cash} • На карте: $${char.bankmoney}`, new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9), { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 180], dimension: plDimension });
+        });
+    }, 4000);
     destroyCamera(currentCamera);
     destroyCamera(targetCamera);
     currentCamera = createCamera(new mp.Vector3(-143.5, -596.5199, 211.9750), new mp.Vector3(-2, 0, 204), 45);
@@ -1501,11 +1510,12 @@ rce.registerServer('server:showSelectChar', () => {
         }
     }, 100);
 });
-rce.registerAll('cef:selectSlotChar', (slot, status) => {
+rce.registerAll('cef:selectSlotChar', async (slot, status) => {
     mp.console.logInfo('Oppps. Сработка!');
     mp.players.local;
     const plPos = listCameras[slot - 1].playerPos;
     const camPos = listCameras[slot - 1].cameraPos;
+    mp.players.local.dimension;
     mp.console.logInfo(`Позиция камеры: ${JSON.stringify(listCameras[slot - 1].cameraPos)}`);
     if (currentCamera) {
         mp.console.logInfo(`Позиция камеры 2: ${JSON.stringify(currentCamera.getCoord())}`);

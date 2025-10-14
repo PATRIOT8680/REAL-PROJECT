@@ -13,7 +13,7 @@ const playerSids = new Map<number, number>();
 mp.nametags.enabled = false
 
 const requestPlayerSid = async (player: PlayerMp) => {
-  const statID = await rce.callServer('getDataAccount', 'sid', player.remoteId)
+  const statID = await rce.callServer('getDataAccount', ['sid'], player.remoteId)
   playerSids.set(player.remoteId, statID)
 }
 
