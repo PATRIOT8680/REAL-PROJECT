@@ -26,14 +26,34 @@ let currentCamera: CameraMp = null
 let targetCamera: CameraMp = null
 
 
-rce.registerServer('server:showSelectChar', () => {
+rce.registerServer('server:showSelectChar', async () => {
+  const dataChars = await rce.callServer('selectChar:getDataAllChars')
   const scenario = scenarios[Math.floor(Math.random() * scenarios.length)]
+  const plDimension = mp.players.local.dimension
   mp.players.local.taskStartScenarioInPlace(scenario, 0, false)
   mp.game.ui.setPauseMenuActive(false)
 
+  setTimeout(() => {
+    dataChars.forEach((char: any) => {
+      const plPos = listCameras[char.numberslot - 1].playerPos
+
+      mp.labels.new(
+          `${char.nickname} [0 LVL]`,
+          new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.965),
+          { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 255], dimension: plDimension }
+      )
+
+      mp.labels.new(
+          `Наличные: $${char.cash} • На карте: $${char.bankmoney}`,
+          new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9),
+          { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 180], dimension: plDimension }
+      )
+    })
+  }, 4000)
+
   destroyCamera(currentCamera)
   destroyCamera(targetCamera)
-  
+
   currentCamera = createCamera(
     new mp.Vector3(-143.5, -596.5199, 211.9750),
     new mp.Vector3(-2, 0, 204),
@@ -44,31 +64,32 @@ rce.registerServer('server:showSelectChar', () => {
     currentCamera.setActive(true)
     mp.game.cam.renderScriptCams(true, false, 0, true, false)
   }
-  
+
   let hasExecuted = false;
-  
+
   const intervalFly = setInterval(() => {
     if (!mp.game.invoke(Natives.IS_PLAYER_SWITCH_IN_PROGRESS) && !hasExecuted) {
       hasExecuted = true
       mp.gui.cursor.show(true, true)
-      
+
       rce.triggerServer('client:flyEndSelectChar')
-      
+
       clearInterval(intervalFly)
     }
   }, 100)
-  
+
 })
 
-rce.registerAll('cef:selectSlotChar', (slot: number, status: 'active' | 'free' | 'donat' | 'ban') => {
+rce.registerAll('cef:selectSlotChar', async (slot: number, status: 'active' | 'free' | 'donat' | 'ban') => {
   mp.console.logInfo('Oppps. Сработка!')
   const localplayer = mp.players.local
-  
+
   const plPos = listCameras[slot - 1].playerPos
   const camPos = listCameras[slot - 1].cameraPos
-  
+  const plDimension = mp.players.local.dimension
+
   mp.console.logInfo(`Позиция камеры: ${JSON.stringify(listCameras[slot - 1].cameraPos)}`)
-  
+
   if (currentCamera) {
     mp.console.logInfo(`Позиция камеры 2: ${JSON.stringify(currentCamera.getCoord())}`)
   }
@@ -80,18 +101,18 @@ rce.registerAll('cef:selectSlotChar', (slot: number, status: 'active' | 'free' |
     new mp.Vector3(-2, 0, camPos.heading),
     45
   )
-  
+
   mp.console.logInfo(`Позиция камеры 3: ${JSON.stringify(targetCamera.getCoord())}`)
-  
+
 
   //const targetPos = targetCamera.getCoord();
   //if (targetPos.x === 0 && targetPos.y === 0 && targetPos.z === 0) {
   //  mp.console.logInfo('Камера создана с нулевыми координатами, исправляем...');
-    
+
   //  // Принудительно устанавливаем координаты
   //  targetCamera.setCoord(camPos.x, camPos.y, camPos.z);
   //  targetCamera.setRot(-2, 0, camPos.heading, 2);
-    
+
   //  mp.console.logInfo(`Исправленные координаты: ${JSON.stringify(targetCamera.getCoord())}`);
   //}
 

@@ -1,4 +1,4 @@
-export const authReducer = (state = { isVisible: true }, action: any) => {
+export const authReducer = (state = { isVisible: false }, action: any) => {
 	switch (action.type) {
 		case 'SHOW_AUTH':
 			return { isVisible: true }
