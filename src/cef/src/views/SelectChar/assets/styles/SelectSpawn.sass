@@ -1,0 +1,75 @@
+$Manrope: "Manrope", sans-serif
+$Druk: "Druk Wide Cyr", sans-serif
+
+.select-spawn-component
+  display: flex
+  flex-direction: row
+  align-items: center
+  gap: .5rem
+  user-select: none
+  animation: fadeInSelectSpawn .7s ease
+
+  .btn-spawn[id="active"]
+    border: 1px solid #ffca58
+    background: rgba(61, 56, 53, 0.96)
+    transition: all .3s ease
+
+    svg
+      opacity: 1
+      transition: all .3s ease
+
+      path
+        fill: #ffca58
+        transition: all .3s ease
+
+    .descr
+      color: #ffca58
+      transition: all .3s ease
+
+  .btn-spawn
+    display: flex
+    cursor: pointer
+    flex-direction: row
+    align-items: center
+    justify-content: space-evenly
+    box-sizing: border-box
+    padding: .2rem 1rem
+    gap: 1rem
+    border-radius: 4px
+    background: rgba(44, 42, 51, 0.96)
+    border: 1.5px solid rgba(255, 255, 255, 0.2)
+
+    &:hover
+      svg
+        opacity: 1
+        transition: all .3s ease
+
+        path
+          fill: #ffca58
+          transition: all .3s ease
+
+      .descr
+        color: #ffca58
+        transition: all .3s ease
+
+    svg
+      width: .9rem
+      opacity: .8
+      transition: all .3s ease
+
+      path
+        transition: all .3s ease
+
+    .descr
+      text-transform: uppercase
+      font-size: .7rem
+      font-weight: 500
+      color: rgba(255, 255, 255, 0.8)
+      font-family: $Manrope
+      transition: all .3s ease
+
+@keyframes fadeInSelectSpawn
+  from
+    opacity: 0
+  to
+    opacity: 1

@@ -4,9 +4,8 @@ import { rce } from "../../../modules/rce.ts";
 import '../assets/styles/compiled-css/VerifyEmail.css'
 import { CustomEventHandler } from "../../../../../shared/CustomEventBase.ts";
 
-import svg_password from '../assets/img/password.svg'
-import Input from "../components/Input.tsx";
-import MainBtn from "../components/MainBtn.tsx";
+import Input from "../../../components/Input/Input.tsx";
+import MainBtn from "../../../components/MainBtn/MainBtn.tsx";
 
 interface IVerify {
   login: string,

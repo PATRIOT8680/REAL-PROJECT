@@ -81,7 +81,7 @@ export class rce extends CustomEventBase {
                 try {
                     handler(...args);
                 } catch (error) {
-                    mp.console.logError(`Error in CEF event ${eventName}:`, error);
+                    mp.console.logError(`Error in CEF event ${eventName}: ${error}; ${args}`);
                 }
             });
         }

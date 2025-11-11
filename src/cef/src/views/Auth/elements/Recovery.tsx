@@ -5,12 +5,8 @@ import '../assets/styles/compiled-css/Recovery.css'
 import { rce } from "../../../modules/rce.ts";
 import { CustomEventHandler } from "../../../../../shared/CustomEventBase.ts";
 
-import recovery_pers from '../assets/img/recovery-pers.png'
-import bg_title from '../assets/img/recovery-title.svg'
-import password_icon from '../assets/img/password.svg'
-import email_icon from '../assets/img/email.svg'
-import Input from "../components/Input.tsx";
-import MainBtn from "../components/MainBtn.tsx";
+import Input from "../../../components/Input/Input.tsx";
+import MainBtn from "../../../components/MainBtn/MainBtn.tsx";
 
 const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
 	let ev: CustomEventHandler
@@ -106,7 +102,7 @@ const Recovery: FC<IPropsAuth> = ({ setCurrentForm }) => {
           <MainBtn
               text='Восстановить'
               onClick={handleChangePass}
-              nextIcon={true}
+              nextIcon={false}
               textSize={1.3}
           />
           <span className="recovery-btn" onClick={() => setCurrentForm('login')}>Вернуться</span>

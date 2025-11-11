@@ -5,6 +5,8 @@ import { listLoginAccs } from "./auth/login";
 import { getDataAccount } from "../data/getDataAccount";
 import { setNumberChar } from "../data/char/numberChar";
 import { connectedUsers } from "../data/dataConnectedUser";
+import { getMaxExpForLevel } from "../player/experience";
+import { setCustomizationChar } from "../index";
 
 interface IDataChar {
   firstname: string,
@@ -26,6 +28,58 @@ export const selectChar = (player: PlayerMp) => {
   }, 4000)
 }
 
+rce.registerClient('client:setSelectedChar', async (player: PlayerMp, numberSlot: number, statusSlot: string, plPos) => {
+  player.position = new mp.Vector3(plPos.x, plPos.y, plPos.z)
+  player.heading = plPos.heading
+
+  const sid = await getDataAccount(player, 'sid', player.id)
+  const selectCharQuery = 'SELECT * FROM chars WHERE sid = ? AND numberslot = ?'
+
+  if (statusSlot === 'active' || statusSlot === 'ban') {
+    data.query(selectCharQuery, [sid, numberSlot], (err, results: any) => {
+      if (err) {
+        return console.log(chalk.bgRed('• SELECT CHAR •') + chalk.red(` ${err}`))
+      }
+
+      if (!results || results.length === 0) {
+        return console.log(chalk.bgRed('• SELECT CHAR •') + chalk.red(` Персонаж не найден: SID #${sid}, NSLOT: ${numberSlot}`))
+      }
+
+      const charData = results[0]
+      player.setClothes(8, 15, 0, 2);
+      setCustomizationChar(player, JSON.parse(charData.chardata))
+    })
+  } else {
+    player.setCustomization(
+        true,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.0,
+        0.0,
+        0,
+        0,
+        0,
+        0,
+        []
+    )
+
+    for (let i = 0; i < 13; i++) {
+      player.setHeadOverlay(i, [0, 0.0, 0, 0])
+    }
+
+    player.setClothes(2, 0, 0, 2)
+    player.setClothes(11, 0, 0, 2)
+    player.setClothes(4, 0, 0, 2)
+    player.setClothes(6, 0, 0, 2)
+  }
+
+
+})
+
 rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, numberSlot: number) => {
   const nameParts = nickname.trim().split(/\s+/);
   const firstName = nameParts[0];
@@ -41,7 +95,7 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
   player.dimension = 0
 
   try {
-    const sql = `SELECT coordquit, adminlvl FROM chars WHERE firstname = ? AND lastname = ?`
+    const sql = `SELECT coordquit, adminlvl, age, cash, bankmoney, lvl, exp, chardata FROM chars WHERE firstname = ? AND lastname = ?`
 
     data.query(sql, [firstName, lastName], async (err, results) => {
       if (err) {
@@ -79,11 +133,22 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
         })
 
         player.setVariable('ADMIN_LVL', results[0].adminlvl)
-        connectedUsers.setUser(player.id, { nickName: `${firstName} ${lastName}`, adminLvl: results[0].adminlvl })
+        connectedUsers.setUser(player.id, {
+          nickName: `${firstName} ${lastName}`,
+          adminLvl: results[0].adminlvl,
+          age: results[0].age,
+          cash: results[0].cash,
+          bankmoney: results[0].bankmoney,
+          lvl: results[0].lvl,
+          exp: results[0].exp,
+        })
+
+        rce.trigger('charSpawned', player.id)
         rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
         rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 
         setTimeout(() => {
+          setCustomizationChar(player, JSON.parse(results[0].chardata))
           rce.triggerClient(player, 'moveSkyCamera', 'down')
           rce.triggerClient(player, 'closeSelectChar')
         }, 4000)
@@ -109,7 +174,8 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
           return
         }
 
-        const slots = [];
+        const slots = []
+        let defaultCharApplied = false
         for (let i = 1; i <= 5; i++) {
           const charData: any = Array.isArray(results) ?
             results.find((char: any) => char.numberslot === i) :
@@ -121,8 +187,18 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
             slots.push({
               status: status,
               nickname: `${charData.firstname} ${charData.lastname}`,
-              numberChar: i
+              numberChar: i,
+              lvl: charData.lvl,
+              exp: charData.exp,
+              cash: charData.cash,
+              bankmoney: charData.bankmoney,
             })
+
+            if (!defaultCharApplied) {
+              player.setClothes(8, 15, 0, 2);
+              setCustomizationChar(player, JSON.parse(charData.chardata))
+              defaultCharApplied = true
+            }
           } else {
             if (i <= 3) {
               slots.push({ status: 'free', numberChar: i })
@@ -134,7 +210,7 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
 
         const slotData = slots.map((slot: any) => {
           if (slot.nickname) {
-            return `{ status: '${slot.status}', nickname: '${slot.nickname}', numberChar: ${slot.numberChar} }`
+            return `{ status: '${slot.status}', nickname: '${slot.nickname}', numberChar: ${slot.numberChar}, lvl: ${slot.lvl}, exp: ${slot.exp}, expMax: ${getMaxExpForLevel(slot.lvl)}, cash: ${slot.cash}, bankmoney: ${slot.bankmoney}, fraction: 'LSPD', family: 'Бездари'}`
           } else {
             return `{ status: '${slot.status}', numberChar: ${slot.numberChar} }`
           }

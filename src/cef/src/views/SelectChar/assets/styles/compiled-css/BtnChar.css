@@ -1,22 +1,125 @@
 .btn-char {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   cursor: pointer;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  justify-content: space-between;
   gap: 0.4rem;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
   padding-left: 1rem;
-  padding: 1rem;
+  padding: 1.5rem 1.3rem;
+  outline: none;
+  background: #27232a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+.btn-char.selected {
+  border: 1px solid #ffca58;
+  background: #ffca58;
+  transition: all 0.3s ease;
+}
+.btn-char.selected .header-slot .title {
+  color: #2a262d;
+  font-weight: 500;
+}
+.btn-char.selected .header-slot .subtitle {
+  color: #2a262d;
+}
+.btn-char.selected .icon-create {
+  background: #2A262D;
+  transition: all 0.3s ease;
+}
+.btn-char.selected .icon-create img {
+  opacity: 0.69;
+  transition: all 0.3s ease;
+}
+.btn-char:not(.selected):hover {
+  transition: all 0.3s ease;
+  background: #2a262d;
+}
+.btn-char:not(.selected):hover .icon-create {
+  background: #332f36;
+}
+.btn-char:not(.selected):hover .svg_flash path {
+  transition: all 0.3s ease;
+  fill: #3e3942;
+}
+.btn-char.selected[id=slot-ban] {
+  border: 1px solid #de341f;
+  background: #de341f;
+  transition: all 0.3s ease;
+}
+.btn-char.selected[id=slot-ban] .header-slot .title {
+  color: #ffffff;
+}
+.btn-char.selected[id=slot-ban] .header-slot .subtitle {
+  color: #ffffff;
+}
+.btn-char:not(.selected):hover[id=slot-ban] {
+  background: rgba(199, 66, 42, 0.16);
+}
+.btn-char .header-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: "Manrope", sans-serif;
+  gap: 0.08rem;
+}
+.btn-char .header-slot .title {
+  font-size: 0.95rem;
+  color: #ffffff;
+  font-weight: 500;
+}
+.btn-char .header-slot .subtitle {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+.btn-char .lvl-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #2a262d;
+  border-radius: 5px;
+}
+.btn-char .lvl-content .lvl-text {
+  position: absolute;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ffca58;
+}
+.btn-char .lvl-content svg {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 6px;
+  transform: rotate(-90deg);
+}
+.btn-char .lvl-content svg .progress-lvl {
+  stroke-dasharray: 280;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease;
+}
+.btn-char .icon-create {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  background: #2A262D;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+.btn-char .icon-create img {
+  opacity: 0.3;
+  width: 0.8rem;
+  transition: all 0.3s ease;
+}
+.btn-char .svg_flash {
+  width: 2.5rem;
+  margin-right: 0.3rem;
+}
+.btn-char .svg_flash path {
+  transition: all 0.3s ease;
 }

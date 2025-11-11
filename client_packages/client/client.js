@@ -289,7 +289,7 @@ class rce extends CustomEventBase {
                     handler(...args);
                 }
                 catch (error) {
-                    mp.console.logError(`Error in CEF event ${eventName}:`, error);
+                    mp.console.logError(`Error in CEF event ${eventName}: ${error}; ${args}`);
                 }
             });
         }
@@ -1409,11 +1409,142 @@ const Natives$2 = {
 };
 let currentCamera$1 = null;
 let targetCamera$1 = null;
+let localPlayer = mp.players.local;
+let characterData = {
+    firstName: '',
+    lastName: '',
+    age: '',
+    gender: 'male',
+    father: 0,
+    mother: 21,
+    shapeMix: 0.5,
+    skinMix: 0.5,
+    eyeColor: 0,
+    eyebrow: 1,
+    eyebrowColor: 62,
+    hair: 0,
+    hairColor: 0,
+    beard: 0,
+    beardColor: 62,
+    faceFeatures: [
+        0, 0, 0, 0, 0, 0,
+        0, 0,
+        0, 0,
+        0, 0, 0,
+        0, 0,
+        0, 0, 0, 0,
+        0
+    ],
+    clothes: {
+        tops: 14,
+        legs: 1,
+        shoes: 1
+    }
+};
+rce.registerAll('pauseCameraRotator', (pause) => {
+    if (cameraRotator) {
+        cameraRotator.pause(pause);
+    }
+});
+rce.registerAll('cef:createChar:handleChange', (fieldName, value) => {
+    // Для faceFeatures мы используем отдельную логику через updateFaceFeature
+    if (fieldName === 'faceFeatures') {
+        mp.console.logInfo(`[CHAR] Received faceFeatures array update, but using updateFaceFeature instead`);
+        return;
+    }
+    // ЗАЩИТА: Не позволяем clothes стать числом
+    if (fieldName === 'clothes') {
+        mp.console.logWarning(`[CHAR] Attempt to set clothes as non-object value: ${typeof value}, value: ${value}`);
+        return; // Игнорируем прямую установку clothes
+    }
+    characterData[fieldName] = value;
+    handleCharacterChange(fieldName, value);
+});
+rce.registerAll('cef:createChar:updateFaceFeature', (index, value) => {
+    try {
+        const featureIndex = parseInt(index);
+        const featureValue = parseFloat(value);
+        if (isNaN(featureIndex) || featureIndex < 0 || featureIndex > 19) {
+            mp.console.logError(`[CHAR] Invalid face feature index: ${index}`);
+            return;
+        }
+        if (isNaN(featureValue) || featureValue < -1 || featureValue > 1) {
+            mp.console.logError(`[CHAR] Invalid face feature value: ${value}`);
+            return;
+        }
+        if (!Array.isArray(characterData.faceFeatures)) {
+            mp.console.logError(`[CHAR] faceFeatures is not an array, resetting. Current type: ${typeof characterData.faceFeatures}, value: ${characterData.faceFeatures}`);
+            characterData.faceFeatures = [
+                0, 0, 0, 0, 0, 0,
+                0, 0,
+                0, 0,
+                0, 0, 0,
+                0, 0,
+                0, 0, 0, 0,
+                0
+            ];
+        }
+        // Обновляем данные
+        characterData.faceFeatures[featureIndex] = featureValue;
+        // Применяем изменения к персонажу
+        mp.players.local.setFaceFeature(featureIndex, featureValue);
+    }
+    catch (error) {
+        mp.console.logError(`[CHAR] Error in updateFaceFeature: ${error}`);
+    }
+});
+function handleCharacterChange(fieldName, value) {
+    switch (fieldName) {
+        case 'father':
+        case 'mother':
+        case 'shapeMix':
+        case 'skinMix':
+            mp.players.local.setHeadBlendData(characterData.mother, characterData.father, 0, characterData.mother, characterData.father, 0, characterData.shapeMix, characterData.skinMix, 0, false);
+            break;
+        case 'eyeColor':
+            mp.players.local.setEyeColor(parseInt(value));
+            break;
+        case 'hair':
+            mp.players.local.setComponentVariation(2, parseInt(value), 0, 0);
+            break;
+        case 'hairColor':
+            mp.players.local.setHairColor(parseInt(value), 0);
+            break;
+        case 'eyebrow':
+            mp.players.local.setHeadOverlay(2, parseInt(value) - 1, 1, characterData.eyebrowColor, 0);
+            break;
+        case 'eyebrowColor':
+            mp.players.local.setHeadOverlay(2, characterData.eyebrow - 1, 1, parseInt(value), 0);
+            break;
+        case 'beard':
+            mp.players.local.setHeadOverlay(1, parseInt(value) - 1, 1, characterData.beardColor, 0);
+            break;
+        case 'beardColor':
+            if (characterData.gender === 'male') {
+                mp.players.local.setHeadOverlay(1, characterData.beard - 1, 1, parseInt(value), 0);
+            }
+            break;
+        case 'gender':
+            if (value === 'male') {
+                localPlayer.model = mp.game.joaat('mp_m_freemode_01');
+                setTimeout(() => {
+                    playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4');
+                }, 500);
+            }
+            else {
+                localPlayer.model = mp.game.joaat('mp_f_freemode_01');
+                setTimeout(() => {
+                    playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4');
+                }, 500);
+            }
+            break;
+    }
+}
 const createChar = (sid, numberSlot) => {
     mp.players.local.position;
     rce.trigger('moveSkyCamera', 'up', 2);
     rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604);
-    //mp.players.local.position = new mp.Vector3(-111.3426, 357.2092, 112.6961)
+    rce.triggerServer('setNumberChar', numberSlot);
     setTimeout(() => {
         currentCamera$1 = createCamera(new mp.Vector3(-112.6367, 355.0139, 113.0961), new mp.Vector3(-2, 0, -28.83), 30);
         if (currentCamera$1) {
@@ -1433,15 +1564,13 @@ const createChar = (sid, numberSlot) => {
                     cameraRotator.pause(false);
                     cameraRotator.setZBound(-1, 2);
                     cameraRotator.setOffsetBound(2, 6);
-                    playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4');
+                    setTimeout(() => {
+                        playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4');
+                    }, 500);
                 }, 500);
                 clearInterval(intervalFly);
             }
         }, 100);
-        //gui.execute(`window.App.createCharReducer.showCreateChar()`)
-        //mp.game.streaming.requestAnimDict("anim@amb@business@meth@meth_smash_weight_check@")
-        //mp.players.local.playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', false, false, false, false, 1.0)
-        //mp.players.local.taskPlayAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 8.0, 1.0, -1, 1, 1.0, false, false, false)
         mp.players.local.freezePosition(true);
         rce.trigger('moveSkyCamera', 'down');
     }, 4000);
@@ -1481,18 +1610,28 @@ const Natives$1 = {
 let currentCamera = null;
 let targetCamera = null;
 rce.registerServer('server:showSelectChar', async () => {
-    const dataChars = await rce.callServer('selectChar:getDataAllChars');
+    await rce.callServer('selectChar:getDataAllChars');
     const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
-    const plDimension = mp.players.local.dimension;
+    mp.players.local.dimension;
     mp.players.local.taskStartScenarioInPlace(scenario, 0, false);
     mp.game.ui.setPauseMenuActive(false);
-    setTimeout(() => {
-        dataChars.forEach((char) => {
-            const plPos = listCameras[char.numberslot - 1].playerPos;
-            mp.labels.new(`${char.nickname} [0 LVL]`, new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.965), { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 255], dimension: plDimension });
-            mp.labels.new(`Наличные: $${char.cash} • На карте: $${char.bankmoney}`, new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9), { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 180], dimension: plDimension });
-        });
-    }, 4000);
+    // setTimeout(() => {
+    //   dataChars.forEach((char: any) => {
+    //     const plPos = listCameras[char.numberslot - 1].playerPos
+    //
+    //     mp.labels.new(
+    //         `${char.nickname} [0 LVL]`,
+    //         new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.965),
+    //         { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 255], dimension: plDimension }
+    //     )
+    //
+    //     mp.labels.new(
+    //         `Наличные: $${char.cash} • На карте: $${char.bankmoney}`,
+    //         new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9),
+    //         { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 180], dimension: plDimension }
+    //     )
+    //   })
+    // }, 4000)
     destroyCamera(currentCamera);
     destroyCamera(targetCamera);
     currentCamera = createCamera(new mp.Vector3(-143.5, -596.5199, 211.9750), new mp.Vector3(-2, 0, 204), 45);
@@ -1538,7 +1677,8 @@ rce.registerAll('cef:selectSlotChar', async (slot, status) => {
             mp.game.cam.renderScriptCams(true, true, 1000, true, false);
             mp.game.audio.playSoundFrontend(-1, "Click", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
             setTimeout(() => {
-                rce.triggerServer('setPosChar', plPos.x, plPos.y, plPos.z, plPos.heading);
+                rce.triggerServer('client:setSelectedChar', slot, status, plPos);
+                //rce.triggerServer('setPosChar', plPos.x, plPos.y, plPos.z, plPos.heading)
                 setTimeout(() => {
                     const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
                     mp.players.local.taskStartScenarioInPlace(scenario, 0, false);

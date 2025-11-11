@@ -1,0 +1,55 @@
+$Manrope: "Manrope", sans-serif
+$Druk: "Druk Wide Cyr", sans-serif
+
+.info-char-cmpnt
+  display: flex
+  flex-direction: column
+  background: rgba(44, 42, 51, 0.96)
+  border: 1.5px solid rgba(255, 255, 255, 0.2)
+  box-sizing: border-box
+  padding: 1.3rem 1.5rem
+  border-radius: 4px
+  gap: .7rem
+  animation: fadeInSelectSpawnInfo .7s ease
+  user-select: none
+
+  .title-info
+    color: #ffffff
+    font-family: $Druk
+    font-size: .9rem
+    text-transform: uppercase
+
+  .list-info
+    display: flex
+    flex-direction: column
+    gap: .4rem
+
+    .info-item
+      display: flex
+      flex-direction: row
+      align-items: center
+      gap: .8rem
+
+      img
+        opacity: .7
+        width: 1.5rem
+
+      .text-block
+        display: flex
+        flex-direction: column
+        font-family: $Manrope
+
+        .info-label
+          font-size: .75rem
+          color: rgba(255, 255, 255, 0.7)
+
+        .info-value
+          font-size: .9rem
+          font-weight: 500
+          color: #ffffff
+
+@keyframes fadeInSelectSpawnInfo
+  from
+    opacity: 0
+  to
+    opacity: 1

@@ -5,6 +5,11 @@ export interface IConnectedUser {
   login?: string | undefined,
   nickName?: string | undefined,
   adminLvl?: number | null,
+  age?: number | null,
+  cash?: number | null,
+  bankmoney?: number | null,
+  lvl?: number | null,
+  exp?: number | null,
 }
 
 const users = new Map<number, IConnectedUser>()

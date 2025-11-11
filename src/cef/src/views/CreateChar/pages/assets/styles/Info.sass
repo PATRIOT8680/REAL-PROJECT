@@ -1,0 +1,69 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Manrope: "Manrope", sans-serif
+
+.info-player
+  display: flex
+  flex-direction: column
+  gap: 1.5rem
+  animation: fadeInSectionCreateChar .7s ease
+
+  .error
+    color: #ffffff
+
+  .gender-block
+    display: flex
+    gap: .75rem
+    width: 100%
+    height: 4.2rem
+
+    .gender.selected
+      background: #ffca58
+      transition: all .3s ease
+
+      &:hover
+        background: #ffca58
+
+      svg
+        path
+          fill: #221e25
+          fill-opacity: 1
+          transition: all .3s ease
+
+      .text
+        color: #1e1920
+        transition: all .3s ease
+
+    .gender
+      width: 100%
+      border-radius: 1px
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: 1.5rem
+      font-family: $Manrope
+      background: rgba(46, 41, 49, 0.5)
+      border: none
+      transition: all .3s ease
+      user-select: none
+      cursor: pointer
+
+      &:hover
+        transition: all .3s ease
+        background: #363138
+
+      svg
+        width: 1.5rem
+
+        path
+          transition: all .3s ease
+
+      .text
+        font-size: .85rem
+        font-weight: 500
+        color: rgba(255, 255, 255, 0.53)
+
+@keyframes fadeInSectionCreateChar
+  from
+    opacity: 0
+  to
+    opacity: 1

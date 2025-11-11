@@ -1,0 +1,44 @@
+.main-btn {
+  cursor: pointer;
+  font-family: "Druk Wide Cyr", sans-serif;
+  height: 3.8rem;
+  text-transform: uppercase;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  background: #ffc74a;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3rem;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+.main-btn:hover {
+  transition: all 0.3s ease;
+  box-shadow: 0 0 50px 0 rgba(255, 199, 74, 0.25);
+}
+.main-btn:hover .next-icons img {
+  transition: all 0.3s ease;
+  margin-right: -5px;
+}
+.main-btn .next-icons {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.main-btn .next-icons img {
+  width: 1.2rem;
+  margin-right: -15px;
+  transition: all 0.3s ease;
+}
+.main-btn .next-icons #one {
+  opacity: 0.3;
+}
+.main-btn .next-icons #two {
+  opacity: 0.7;
+}

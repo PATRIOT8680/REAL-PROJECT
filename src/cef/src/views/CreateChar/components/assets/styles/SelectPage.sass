@@ -1,0 +1,134 @@
+$Manrope: "Manrope", sans-serif
+
+.left-selected-btns
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  height: 100%
+
+  .select-page-cmpnt
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: .4rem
+
+    .btn-page.active
+      background: #FFCA58
+      transition: all .3s ease
+
+      &:hover
+        background: #FFCA58
+
+      svg
+        opacity: 1
+        transition: all .3s ease
+
+        path
+          fill: #000000
+          transition: all .3s ease
+
+    .btn-page
+      cursor: pointer
+      width: 3.7rem
+      height: 3.7rem
+      border-radius: 1px
+      outline: none
+      background: rgba(46, 41, 49, 0.5)
+      border: none
+      transition: all .3s ease
+
+      &:hover
+        transition: all .3s ease
+        background: #363138
+        border: 1.04px solid rgba(255, 255, 255, 0.09)
+
+        svg
+          opacity: 1
+          transition: all .3s ease
+
+      svg
+        width: 1.4rem
+        opacity: .9
+        transition: all .3s ease
+
+        path
+          transition: all .3s ease
+
+  .btn-actions
+    display: flex
+    flex-direction: column
+    gap: .5rem
+
+    .btn-random
+      display: flex
+      align-items: center
+      justify-content: center
+      cursor: pointer
+      width: 3.7rem
+      height: 3.7rem
+      border-radius: 1px
+      outline: none
+      background: rgba(46, 41, 49, 0.5)
+      border: none
+      transition: all .3s ease
+      user-select: none
+
+      &:hover
+        transition: all .3s ease
+        background: #363138
+        border: 1.04px solid rgba(255, 255, 255, 0.09)
+
+        svg
+          opacity: 1
+          transition: all .3s ease
+
+          path
+            fill: #FFCA58
+            fill-opacity: 1
+
+      svg
+        width: 2.3rem
+        opacity: .9
+        transition: all .3s ease
+
+        path
+          transition: all .3s ease
+
+      .text-random
+        position: absolute
+        left: 6.5rem
+        font-family: $Manrope
+        font-size: .84rem
+        font-weight: 500
+        color: rgba(255, 255, 255, 0.69)
+        background: #363138
+        padding: .3rem .5rem
+        z-index: 10
+
+    .cancel-action
+      display: flex
+      flex-direction: column
+      align-items: center
+      background: rgba(46, 41, 49, 0.5)
+      padding: .45rem 0
+      width: 3.7rem
+      user-select: none
+      transition: all .3s ease
+      outline: none
+      border: none
+      gap: .3rem
+
+      &:hover
+        transition: all .3s ease
+        background: #363138
+        border: 1.04px solid rgba(255, 255, 255, 0.09)
+
+      .text-cancel
+        font-family: $Manrope
+        font-size: .57rem
+        font-weight: 600
+        color: rgba(255, 255, 255, 0.5)
+        text-transform: uppercase
+
+      svg
+        width: 14rem
