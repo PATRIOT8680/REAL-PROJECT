@@ -1,0 +1,75 @@
+.select-spawn-component {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+  animation: fadeInSelectSpawn 0.7s ease;
+}
+.select-spawn-component .btn-spawn[id=active] {
+  border: 1px solid #ffca58;
+  background: rgba(61, 56, 53, 0.96);
+  transition: all 0.3s ease;
+}
+.select-spawn-component .btn-spawn[id=active] svg {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+.select-spawn-component .btn-spawn[id=active] svg path {
+  fill: #ffca58;
+  transition: all 0.3s ease;
+}
+.select-spawn-component .btn-spawn[id=active] .descr {
+  color: #ffca58;
+  transition: all 0.3s ease;
+}
+.select-spawn-component .btn-spawn {
+  display: flex;
+  cursor: pointer;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  box-sizing: border-box;
+  padding: 0.2rem 1rem;
+  gap: 1rem;
+  border-radius: 4px;
+  background: rgba(44, 42, 51, 0.96);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+}
+.select-spawn-component .btn-spawn:hover svg {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+.select-spawn-component .btn-spawn:hover svg path {
+  fill: #ffca58;
+  transition: all 0.3s ease;
+}
+.select-spawn-component .btn-spawn:hover .descr {
+  color: #ffca58;
+  transition: all 0.3s ease;
+}
+.select-spawn-component .btn-spawn svg {
+  width: 0.9rem;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+.select-spawn-component .btn-spawn svg path {
+  transition: all 0.3s ease;
+}
+.select-spawn-component .btn-spawn .descr {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: "Manrope", sans-serif;
+  transition: all 0.3s ease;
+}
+
+@keyframes fadeInSelectSpawn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

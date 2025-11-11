@@ -1,0 +1,99 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Manrope: "Manrope", sans-serif
+
+.unique-scenarios-cmpnt
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  gap: .7rem
+  width: 19.5rem
+  padding: 1.3rem
+  background: #262229
+  border-radius: 0 0 0 .75rem
+  user-select: none
+  overflow: hidden
+  transition: height 0.5s ease
+  height: 13.6rem
+
+  &.expanded
+    height: 47rem
+
+  .subtitle-shop
+    font-family: $Manrope
+    text-transform: lowercase
+    font-weight: 600
+    font-size: .94rem
+    color: rgba(255, 255, 255, 0.78)
+    pointer-events: none
+
+  .title-uniq-scens
+    font-family: $Druk
+    font-size: 1.25rem
+    text-transform: uppercase
+    line-height: 101%
+    color: #ffca58
+    pointer-events: none
+
+  .decr-uniq-scens
+    font-family: $Manrope
+    font-weight: 400
+    font-size: .85rem
+    line-height: 140%
+    color: rgba(255, 255, 255, 0.69)
+    width: 18rem
+    pointer-events: none
+
+  .blocks-scenarios
+    display: flex
+    flex-direction: column
+    overflow-y: auto
+    gap: 1rem
+
+    .scenarios
+      position: relative
+      width: 13.5rem
+      height: 16rem
+      overflow: hidden
+      border-radius: 4px
+
+      #bg-unique
+        width: 120%
+        height: 120%
+        object-fit: cover
+        user-select: none
+        pointer-events: none
+
+      .flash-icon
+        position: absolute
+        top: .8rem
+        left: .8rem
+        animation: fadeInTextUnique .4s ease
+
+      .block-text
+        position: absolute
+        bottom: .8rem
+        left: .8rem
+        display: flex
+        flex-direction: column
+        gap: .5rem
+        animation: fadeInTextUnique .6s ease
+
+        .subtitle
+          font-family: $Manrope
+          font-size: .8rem
+          font-weight: 500
+          color: rgba(255, 255, 255, 0.78)
+
+        .title
+          font-family: $Druk
+          word-break: break-all
+          color: #ffca58
+          text-transform: uppercase
+          font-size: 1.3rem
+          width: 9rem
+
+@keyframes fadeInTextUnique
+  from
+    opacity: 0
+  to
+    opacity: 1

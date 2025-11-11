@@ -33,23 +33,23 @@ rce.registerServer('server:showSelectChar', async () => {
   mp.players.local.taskStartScenarioInPlace(scenario, 0, false)
   mp.game.ui.setPauseMenuActive(false)
 
-  setTimeout(() => {
-    dataChars.forEach((char: any) => {
-      const plPos = listCameras[char.numberslot - 1].playerPos
-
-      mp.labels.new(
-          `${char.nickname} [0 LVL]`,
-          new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.965),
-          { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 255], dimension: plDimension }
-      )
-
-      mp.labels.new(
-          `Наличные: $${char.cash} • На карте: $${char.bankmoney}`,
-          new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9),
-          { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 180], dimension: plDimension }
-      )
-    })
-  }, 4000)
+  // setTimeout(() => {
+  //   dataChars.forEach((char: any) => {
+  //     const plPos = listCameras[char.numberslot - 1].playerPos
+  //
+  //     mp.labels.new(
+  //         `${char.nickname} [0 LVL]`,
+  //         new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.965),
+  //         { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 255], dimension: plDimension }
+  //     )
+  //
+  //     mp.labels.new(
+  //         `Наличные: $${char.cash} • На карте: $${char.bankmoney}`,
+  //         new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9),
+  //         { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 180], dimension: plDimension }
+  //     )
+  //   })
+  // }, 4000)
 
   destroyCamera(currentCamera)
   destroyCamera(targetCamera)
@@ -124,7 +124,8 @@ rce.registerAll('cef:selectSlotChar', async (slot: number, status: 'active' | 'f
       mp.game.audio.playSoundFrontend(-1, "Click", "DLC_HEIST_HACKING_SNAKE_SOUNDS", true);
 
       setTimeout(() => {
-        rce.triggerServer('setPosChar', plPos.x, plPos.y, plPos.z, plPos.heading)
+        rce.triggerServer('client:setSelectedChar', slot, status, plPos)
+        //rce.triggerServer('setPosChar', plPos.x, plPos.y, plPos.z, plPos.heading)
         setTimeout(() => {
           const scenario = scenarios[Math.floor(Math.random() * scenarios.length)]
           mp.players.local.taskStartScenarioInPlace(scenario, 0, false)

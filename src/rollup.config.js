@@ -2,6 +2,7 @@ import typescript from 'rollup-plugin-typescript2';
 import path from 'path';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import json from "@rollup/plugin-json";
 
 const clientConfig = {
   input: './client/index.ts',
@@ -27,6 +28,9 @@ const serverConfig = {
     format: 'cjs',
   },
   plugins: [
+    resolve(),
+    commonjs(),
+    json(),
     typescript({
       tsconfig: 'server/tsconfig.json',
       include: ['server/**/*.ts', 'shared/**/*.ts'],

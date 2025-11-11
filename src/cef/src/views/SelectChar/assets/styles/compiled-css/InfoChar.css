@@ -1,0 +1,56 @@
+.info-char-cmpnt {
+  display: flex;
+  flex-direction: column;
+  background: rgba(44, 42, 51, 0.96);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  box-sizing: border-box;
+  padding: 1.3rem 1.5rem;
+  border-radius: 4px;
+  gap: 0.7rem;
+  animation: fadeInSelectSpawnInfo 0.7s ease;
+  user-select: none;
+}
+.info-char-cmpnt .title-info {
+  color: #ffffff;
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+.info-char-cmpnt .list-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.info-char-cmpnt .list-info .info-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.8rem;
+}
+.info-char-cmpnt .list-info .info-item img {
+  opacity: 0.7;
+  width: 1.5rem;
+}
+.info-char-cmpnt .list-info .info-item .text-block {
+  display: flex;
+  flex-direction: column;
+  font-family: "Manrope", sans-serif;
+}
+.info-char-cmpnt .list-info .info-item .text-block .info-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+.info-char-cmpnt .list-info .info-item .text-block .info-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+@keyframes fadeInSelectSpawnInfo {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

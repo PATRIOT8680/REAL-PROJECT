@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next"
 import { rce } from "../../../modules/rce.ts";
 import { CustomEventHandler } from "../../../../../shared/CustomEventBase.ts";
 
-import Input from "../components/Input.tsx";
-import MainBtn from "../components/MainBtn.tsx";
+import Input from "../../../components/Input/Input.tsx";
+import MainBtn from "../../../components/MainBtn/MainBtn.tsx";
 
 interface IAuthLogin {
   setCurrentForm: (newForm: 'login' | 'register' | 'recovery' | 'verify-email') => void,

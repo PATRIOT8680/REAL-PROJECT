@@ -1,0 +1,195 @@
+$Manrope: "Manrope", sans-serif
+
+.gens-page
+  display: flex
+  flex-direction: row
+  width: 100%
+  height: 100%
+  gap: 1rem
+  align-items: flex-start
+  animation: fadeInImgParents .5s ease
+
+  .selector-gender-parents
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    gap: .1rem
+
+    .parent.selected
+      .number-parent
+        background: #f4e6c7
+        color: #1e1920
+
+      .icon-gen
+        path
+          fill: #1E1920
+
+      .bg-parent
+        path
+          fill: #FFCA58
+
+    .parent
+      position: relative
+      display: flex
+      align-items: center
+      cursor: pointer
+
+      &:not(.selected):hover
+        .number-parent
+          color: #c4c4c4
+          transition: all .3s ease
+
+        .icon-gen
+          path
+            transition: all .3s ease
+            fill: #c4c4c4
+
+        .bg-parent
+          path
+            transition: all .3s ease
+            fill: #2f2931
+
+
+      .number-parent
+        text-align: center
+        font-family: $Manrope
+        color: #888
+        font-weight: 400
+        background: #1e1920
+        border-radius: 3rem
+        width: 1.5rem
+        height: 1.5rem
+        font-size: .85rem
+        position: absolute
+        top: -.1rem
+        right: -.3rem
+        z-index: 5
+        user-select: none
+        transition: all .3s ease
+
+      .icon-gen
+        position: absolute
+        width: 1.7rem
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+        pointer-events: none
+
+        path
+          transition: all .3s ease
+          fill: #888888
+
+      .bg-parent
+        path
+          transition: all .3s ease
+
+  .customize-gens
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    width: 100%
+    height: 100%
+    overflow: auto
+    scrollbar-width: none
+    flex: 1
+
+    .parents-block
+      width: 100%
+      display: flex
+      flex-direction: column
+      align-items: center
+      gap: .7rem
+
+      .list-parents
+        display: flex
+        flex-direction: row
+        flex-wrap: wrap
+        justify-content: space-between
+        margin-block-start: 0
+        margin-block-end: 0
+        padding: 0
+        margin: 0
+        gap: 1.3rem 0
+        height: 16.4rem
+        overflow-y: auto
+        padding-right: .5rem
+
+        &::-webkit-scrollbar
+          width: 0.2rem
+
+        &::-webkit-scrollbar-track
+          opacity: 1
+          background-color: #cdcdcd15
+          border-radius: 1px
+
+        &::-webkit-scrollbar-thumb
+          cursor: grabbing
+          background-color: #cdcdcd1c
+          border-radius: 1px
+
+          &:hover
+            background-color: #cdcdcd3d
+
+        .parent.selected
+          background: rgba(255, 202, 88, 0.17)
+          border: 1px solid #ffca58
+          transition: all .3s ease
+
+        .parent
+          display: flex
+          align-items: center
+          justify-content: flex-end
+          width: 7.5rem
+          height: 7.5rem
+          border-radius: 1px
+          transition: all .3s ease
+          cursor: pointer
+
+          &:not(.selected):hover
+            background: #221e25
+            border: 1px solid #808081
+            transition: all .3s ease
+
+          .img-parent
+            width: 7.3rem
+            user-select: none
+            pointer-events: none
+
+      .selected-parents
+        width: 100%
+        height: 9rem
+        overflow: hidden
+        position: relative
+        background: #221e25
+        user-select: none
+        pointer-events: none
+
+        .blur-bg
+          position: absolute
+          bottom: -7rem
+          opacity: .3
+          filter: blur(60px)
+
+        .imgs-parents
+          display: flex
+          flex-direction: row
+
+          img
+            position: absolute
+            width: 11rem
+            bottom: -2rem
+
+          #father
+            right: 1rem
+
+    .sliders-block
+      display: flex
+      flex-direction: column
+      gap: 3rem
+
+
+@keyframes fadeInImgParents
+  from
+    opacity: 0
+  to
+    opacity: 1

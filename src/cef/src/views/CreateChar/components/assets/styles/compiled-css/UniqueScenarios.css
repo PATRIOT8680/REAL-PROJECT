@@ -1,0 +1,100 @@
+.unique-scenarios-cmpnt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  width: 19.5rem;
+  padding: 1.3rem;
+  background: #262229;
+  border-radius: 0 0 0 0.75rem;
+  user-select: none;
+  overflow: hidden;
+  transition: height 0.5s ease;
+  height: 13.6rem;
+}
+.unique-scenarios-cmpnt.expanded {
+  height: 47rem;
+}
+.unique-scenarios-cmpnt .subtitle-shop {
+  font-family: "Manrope", sans-serif;
+  text-transform: lowercase;
+  font-weight: 600;
+  font-size: 0.94rem;
+  color: rgba(255, 255, 255, 0.78);
+  pointer-events: none;
+}
+.unique-scenarios-cmpnt .title-uniq-scens {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  line-height: 101%;
+  color: #ffca58;
+  pointer-events: none;
+}
+.unique-scenarios-cmpnt .decr-uniq-scens {
+  font-family: "Manrope", sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  line-height: 140%;
+  color: rgba(255, 255, 255, 0.69);
+  width: 18rem;
+  pointer-events: none;
+}
+.unique-scenarios-cmpnt .blocks-scenarios {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 1rem;
+}
+.unique-scenarios-cmpnt .blocks-scenarios .scenarios {
+  position: relative;
+  width: 13.5rem;
+  height: 16rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.unique-scenarios-cmpnt .blocks-scenarios .scenarios #bg-unique {
+  width: 120%;
+  height: 120%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}
+.unique-scenarios-cmpnt .blocks-scenarios .scenarios .flash-icon {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  animation: fadeInTextUnique 0.4s ease;
+}
+.unique-scenarios-cmpnt .blocks-scenarios .scenarios .block-text {
+  position: absolute;
+  bottom: 0.8rem;
+  left: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  animation: fadeInTextUnique 0.6s ease;
+}
+.unique-scenarios-cmpnt .blocks-scenarios .scenarios .block-text .subtitle {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
+}
+.unique-scenarios-cmpnt .blocks-scenarios .scenarios .block-text .title {
+  font-family: "Druk Wide Cyr", sans-serif;
+  word-break: break-all;
+  color: #ffca58;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  width: 9rem;
+}
+
+@keyframes fadeInTextUnique {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

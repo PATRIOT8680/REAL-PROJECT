@@ -1,0 +1,133 @@
+.left-selected-btns {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.left-selected-btns .select-page-cmpnt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+.left-selected-btns .select-page-cmpnt .btn-page.active {
+  background: #FFCA58;
+  transition: all 0.3s ease;
+}
+.left-selected-btns .select-page-cmpnt .btn-page.active:hover {
+  background: #FFCA58;
+}
+.left-selected-btns .select-page-cmpnt .btn-page.active svg {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+.left-selected-btns .select-page-cmpnt .btn-page.active svg path {
+  fill: #000000;
+  transition: all 0.3s ease;
+}
+.left-selected-btns .select-page-cmpnt .btn-page {
+  cursor: pointer;
+  width: 3.7rem;
+  height: 3.7rem;
+  border-radius: 1px;
+  outline: none;
+  background: rgba(46, 41, 49, 0.5);
+  border: none;
+  transition: all 0.3s ease;
+}
+.left-selected-btns .select-page-cmpnt .btn-page:hover {
+  transition: all 0.3s ease;
+  background: #363138;
+  border: 1.04px solid rgba(255, 255, 255, 0.09);
+}
+.left-selected-btns .select-page-cmpnt .btn-page:hover svg {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+.left-selected-btns .select-page-cmpnt .btn-page svg {
+  width: 1.4rem;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+.left-selected-btns .select-page-cmpnt .btn-page svg path {
+  transition: all 0.3s ease;
+}
+.left-selected-btns .btn-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.left-selected-btns .btn-actions .btn-random {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 3.7rem;
+  height: 3.7rem;
+  border-radius: 1px;
+  outline: none;
+  background: rgba(46, 41, 49, 0.5);
+  border: none;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+.left-selected-btns .btn-actions .btn-random:hover {
+  transition: all 0.3s ease;
+  background: #363138;
+  border: 1.04px solid rgba(255, 255, 255, 0.09);
+}
+.left-selected-btns .btn-actions .btn-random:hover svg {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+.left-selected-btns .btn-actions .btn-random:hover svg path {
+  fill: #FFCA58;
+  fill-opacity: 1;
+}
+.left-selected-btns .btn-actions .btn-random svg {
+  width: 2.3rem;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+.left-selected-btns .btn-actions .btn-random svg path {
+  transition: all 0.3s ease;
+}
+.left-selected-btns .btn-actions .btn-random .text-random {
+  position: absolute;
+  left: 6.5rem;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.69);
+  background: #363138;
+  padding: 0.3rem 0.5rem;
+  z-index: 10;
+}
+.left-selected-btns .btn-actions .cancel-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(46, 41, 49, 0.5);
+  padding: 0.45rem 0;
+  width: 3.7rem;
+  user-select: none;
+  transition: all 0.3s ease;
+  outline: none;
+  border: none;
+  gap: 0.3rem;
+}
+.left-selected-btns .btn-actions .cancel-action:hover {
+  transition: all 0.3s ease;
+  background: #363138;
+  border: 1.04px solid rgba(255, 255, 255, 0.09);
+}
+.left-selected-btns .btn-actions .cancel-action .text-cancel {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.57rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+.left-selected-btns .btn-actions .cancel-action svg {
+  width: 14rem;
+}

@@ -1,0 +1,186 @@
+.create-char * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+.create-char input,
+.create-char textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.create-char .slider,
+.create-char .slider * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.create-char {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.create-char {
+  width: 100%;
+  height: 100%;
+}
+.create-char .left-container {
+  position: relative;
+  left: 0;
+  height: 100%;
+  width: 40rem;
+  background: rgba(29, 25, 32, 0.96);
+  box-sizing: border-box;
+  padding: 1.35rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.create-char .left-container .header-create-char {
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  gap: 0.7rem;
+}
+.create-char .left-container .header-create-char .title {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 1.7rem;
+  text-transform: uppercase;
+  color: #ffca58;
+}
+.create-char .left-container .header-create-char .subtitle {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.85rem;
+  line-height: 140%;
+  width: 25rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+.create-char .block-content {
+  display: flex;
+  flex-direction: row;
+  gap: 1.3rem;
+  flex: 1;
+  min-height: 0;
+}
+.create-char .block-content .line-split {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin: 0;
+  opacity: 0.5;
+  width: 2.3px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.2) 49.04%, rgba(255, 255, 255, 0.02) 100%);
+}
+.create-char .block-content .select-img-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.create-char .block-content .select-img-block .title-img {
+  font-family: "Manrope", sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.73);
+  user-select: none;
+}
+.create-char .block-content .select-img-block .list-imgs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  height: 16.4rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  gap: 1.3rem 0;
+}
+.create-char .block-content .select-img-block .list-imgs::-webkit-scrollbar {
+  width: 0.2rem;
+}
+.create-char .block-content .select-img-block .list-imgs::-webkit-scrollbar-track {
+  opacity: 1;
+  background-color: rgba(205, 205, 205, 0.0823529412);
+  border-radius: 1px;
+}
+.create-char .block-content .select-img-block .list-imgs::-webkit-scrollbar-thumb {
+  cursor: grabbing;
+  background-color: rgba(205, 205, 205, 0.1098039216);
+  border-radius: 1px;
+}
+.create-char .block-content .select-img-block .list-imgs::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(205, 205, 205, 0.2392156863);
+}
+.create-char .block-content .select-img-block .list-imgs .item-img.selected {
+  border: 2px solid rgb(255, 202, 88);
+}
+.create-char .block-content .select-img-block .list-imgs .item-img {
+  width: 6.8rem;
+  height: 7.5rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.create-char .block-content .select-img-block .list-imgs .item-img:not(.selected):hover {
+  border: 2px solid rgb(255, 202, 88);
+}
+.create-char .block-content .select-img-block .list-imgs .item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}
+.create-char .right-content {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.create-char .right-content .saved-char {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  padding: 1.2rem 1.8rem;
+  color: #ffca58;
+  background: none;
+  border: none;
+  outline: 4px solid #ffca58;
+  outline-offset: -4px;
+  border-radius: 0.12rem;
+  transition: all 0.8s ease;
+  cursor: pointer;
+}
+.create-char .right-content .saved-char:hover {
+  animation: hoverBtnSave 0.4s ease forwards;
+  color: #ffffff;
+}
+
+@keyframes hoverBtnSave {
+  0% {
+    outline: 4px solid #ffca58;
+    outline-offset: -4px;
+  }
+  50% {
+    outline: 12px solid #ffca58;
+    outline-offset: -12px;
+  }
+  100% {
+    background: #ffca58;
+  }
+}

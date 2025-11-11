@@ -10,7 +10,6 @@ rce.registerClient('client:playerDeath', (player: PlayerMp, [posX, posY, posZ] :
   player.playAnimation('amb@lo_res_idles@', 'world_human_bum_slumped_left_lo_res_base', 1, 15)
 })
 
-
 export const playerKill = async (player: PlayerMp) => {
   player.spawn(new mp.Vector3(-1221.006591796875, -100.9054946899414, 42.5238037109375))
   player.setVariable('player_knockout', false)

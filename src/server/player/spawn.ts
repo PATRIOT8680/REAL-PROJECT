@@ -14,6 +14,12 @@ mp.events.add('playerJoin', (player: PlayerMp) => {
   connectedUsers.setUser(player.id, {
     sid: null,
     login: undefined,
-    nickName: undefined
+    nickName: undefined,
+    adminLvl: null,
+    age: null,
+    cash: null,
+    bankmoney: null,
+    lvl: null,
+    exp: null,
   })
 })

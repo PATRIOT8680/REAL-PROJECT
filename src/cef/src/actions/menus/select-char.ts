@@ -1,7 +1,14 @@
 export interface ISelectChar {
   status: "active" | "free" | "donat" | "ban",
   numberChar?: number,
-  nickname?: string
+  nickname?: string,
+  lvl?: number,
+  exp?: number,
+  expMax?: number,
+  cash?: number,
+  bankmoney?: number,
+  fraction?: string,
+  family?: string
 }
 
 export const showSelectChar = (

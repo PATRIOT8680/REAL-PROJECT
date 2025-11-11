@@ -1,10 +1,130 @@
+$Manrope: "Manrope", sans-serif
+$Druk: "Druk Wide Cyr", sans-serif
+
 .btn-char
   display: flex
   cursor: pointer
-  flex-direction: column
-  align-items: flex-start
+  flex-direction: row
+  align-items: center
   box-sizing: border-box
+  justify-content: space-between
   gap: 0.4rem
   user-select: none
   padding-left: 1rem
-  padding: 1rem
+  padding: 1.5rem 1.3rem
+  outline: none
+  background: #27232a
+  border: 1px solid rgba(255, 255, 255, 0.1)
+  transition: all .3s ease
+
+  &.selected
+    border: 1px solid #ffca58
+    background: #ffca58
+    transition: all .3s ease
+
+    .header-slot
+      .title
+        color: #2a262d
+        font-weight: 500
+
+      .subtitle
+        color: #2a262d
+
+    .icon-create
+      background: #2A262D
+      transition: all .3s ease
+
+      img
+        opacity: .69
+        transition: all .3s ease
+
+  &:not(.selected):hover
+    transition: all .3s ease
+    background: #2a262d
+
+    .icon-create
+      background: #332f36
+
+    .svg_flash
+      path
+        transition: all .3s ease
+        fill: #3e3942
+
+  &.selected[id="slot-ban"]
+    border: 1px solid #de341f
+    background: #de341f
+    transition: all .3s ease
+
+    .header-slot
+      .title
+        color: #ffffff
+
+      .subtitle
+        color: #ffffff
+
+  &:not(.selected):hover[id="slot-ban"]
+    background: rgba(199, 66, 42, 0.16)
+
+  .header-slot
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    font-family: $Manrope
+    gap: .08rem
+
+    .title
+      font-size: .95rem
+      color: #ffffff
+      font-weight: 500
+
+    .subtitle
+      font-size: .85rem
+      color: rgba(255, 255, 255, 0.5)
+
+  .lvl-content
+    display: flex
+    align-items: center
+    justify-content: center
+    position: relative
+    background: #2a262d
+    border-radius: 5px
+
+    .lvl-text
+      position: absolute
+      font-family: $Manrope
+      font-size: .9rem
+      font-weight: 500
+      color: #ffca58
+
+    svg
+      width: 3rem
+      height: 3rem
+      border-radius: 6px
+      transform: rotate(-90deg)
+
+      .progress-lvl
+        stroke-dasharray: 280
+        stroke-linecap: round
+        transition: stroke-dashoffset 0.3s ease
+
+  .icon-create
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 2.8rem
+    height: 2.8rem
+    background: #2A262D
+    border-radius: 4px
+    transition: all .3s ease
+
+    img
+      opacity: .3
+      width: .8rem
+      transition: all .3s ease
+
+  .svg_flash
+    width: 2.5rem
+    margin-right: .3rem
+
+    path
+      transition: all .3s ease

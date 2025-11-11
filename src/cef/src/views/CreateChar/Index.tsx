@@ -1,13 +1,38 @@
-import { useState, memo, useCallback } from 'react'
+import './assets/styles/compiled-css/Index.css'
+import {useState, memo, Dispatch, SetStateAction, useCallback, useEffect} from 'react'
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers/rootReducer.ts";
 import { rce } from "../../modules/rce.ts";
-import Info from './components/Info.tsx'
+import { fatherList, motherList } from "./pages/assets/conf/parents.ts";
+import { clothesChar } from "./pages/assets/conf/clothes.ts";
+
+import Info from './pages/Info.tsx'
+import SelectPage from "./components/SelectPage.tsx";
+import CurrentSection from "./CurrentSection.tsx";
+import UniqueScenarios from "./components/UniqueScenarios.tsx";
 
 export interface IDataChar {
   firstName: string,
   lastName: string,
-  age: number | string
+  age: string,
+  gender: 'male' | 'female',
+  father: number,
+  mother: number,
+  shapeMix: number,
+  skinMix: number,
+  eyeColor: number,
+  eyebrow: number,
+  eyebrowColor: number,
+  hair: number,
+  hairColor: number,
+  beard: number,
+  beardColor: number,
+  faceFeatures: number[],
+  clothes: {
+    tops: number
+    legs: number
+    shoes: number
+  }
 }
 
 export interface IInputChange {
@@ -17,69 +42,185 @@ export interface IInputChange {
 
 const CreateChar = memo(() => {
   const createCharState = useSelector((state: RootState) => state.createCharReducer)
+  const [currentPage, setCurrentPage] = useState<string>('info')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [dataChar, setDataChar] = useState<IDataChar>({
-    firstName: '',
-    lastName: '',
-    age: ''
-  })
+  const [selectedScenarios, setSelectedScnearios] = useState<string | undefined>(undefined)
+  const [previousDataChar, setPreviousDataChar] = useState<IDataChar | null>(null);
+  const [charHistory, setCharHistory] = useState<IDataChar[]>(() => {
+    const initialData: IDataChar = {
+      firstName: '',
+      lastName: '',
+      age: '',
+      gender: 'male',
+      father: 0,
+      mother: 21,
+      shapeMix: 0.5,
+      skinMix: 0.5,
+      eyeColor: 0,
+      eyebrow: 1,
+      eyebrowColor: 62,
+      hair: 0,
+      hairColor: 0,
+      beard: 0,
+      beardColor: 62,
+      faceFeatures: [
+        0, 0, 0, 0, 0, 0, // Nose
+        0, 0, // Brow
+        0, 0, // Cheekbone
+        0, 0, 0, // Cheeks, Eyes, Lips
+        0, 0, // Jaw
+        0, 0, 0, 0, // Chin
+        0 // Neck
+      ],
+      clothes: {
+        tops: 14,
+        legs: 1,
+        shoes: 1
+      }
+    };
 
-  const handleInputChange = useCallback((fieldName: string, value: any) => {
-    setDataChar(prev => ({
-      ...prev,
-      [fieldName]: value
-    }))
+    return [initialData, initialData, initialData];
+  });
 
-    if (errors[fieldName]) {
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[fieldName]
-        return newErrors
-      })
-    }
+  const dataChar = charHistory[charHistory.length - 1];
+
+  const updateCharHistory = useCallback((newDataChar: IDataChar) => {
+    setCharHistory(prev => {
+      const newHistory = [...prev];
+
+      // Если уже есть 3 состояния, удаляем самое старое
+      if (newHistory.length >= 3) {
+        newHistory.shift();
+      }
+
+      // Добавляем новое состояние
+      newHistory.push(newDataChar);
+      return newHistory;
+    });
+  }, []);
+
+  const syncDataToClient = useCallback((charData: IDataChar) => {
+    Object.keys(charData).forEach(key => {
+      if (key !== 'clothes' && key !== 'faceFeatures') {
+        rce.triggerClient('cef:createChar:handleChange', key, (charData as any)[key])
+      }
+    })
+
+    charData.faceFeatures.forEach((value, index) => {
+      rce.triggerClient('cef:createChar:updateFaceFeature', index, value)
+    })
   }, [])
 
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {}
+  useEffect(() => {
+    console.log('[EFFECT] dataChar changed, syncing to client');
+    syncDataToClient(dataChar);
+  }, [dataChar, syncDataToClient]);
 
-    // Валидация имени
-    if (!dataChar.firstName) {
-      newErrors.firstName = "Имя обязательно"
-    } else if (!/^[A-Za-z]+$/.test(dataChar.firstName)) {
-      newErrors.firstName = "Имя должно содержать только английские буквы"
-    } else if (dataChar.firstName.length < 3) {
-      newErrors.firstName = "Имя должно быть не менее 3 символов"
-    } else if (dataChar.firstName[0] !== dataChar.firstName[0].toUpperCase()) {
-      newErrors.firstName = "Первая буква должна быть заглавной"
+  const randomizeCharacterData = useCallback((currentGender: 'male' | 'female') => {
+    console.log('[RANDOM] Starting character randomization (without clothes)');
+
+    const fatherIds = Object.keys(fatherList).map(Number);
+    const motherIds = Object.keys(motherList).map(Number);
+
+    const randomFatherId = fatherIds[Math.floor(Math.random() * fatherIds.length)]
+    const randomMotherId = motherIds[Math.floor(Math.random() * motherIds.length)]
+
+    const faceFeatures = Array(20)
+        .fill(0)
+        .map(() => Number(Math.random().toFixed(2)));
+
+    const updatedData = {
+      ...dataChar,
+      father: randomFatherId,
+      mother: randomMotherId,
+      shapeMix: Number(Math.random().toFixed(2)),
+      skinMix: Number(Math.random().toFixed(2)),
+      eyeColor: Math.floor(Math.random() * 32),
+      eyebrow: Math.floor(Math.random() * 34),
+      eyebrowColor: Math.floor(Math.random() * 64),
+      hair: Math.floor(Math.random() * 74),
+      hairColor: Math.floor(Math.random() * 64),
+      faceFeatures,
+      clothes: dataChar.clothes
+    };
+
+    // Для мужчин генерируем бороду, для женщин - нет
+    if (currentGender === 'male') {
+      updatedData.beard = Math.floor(Math.random() * 29);
+      updatedData.beardColor = Math.floor(Math.random() * 64);
+    } else {
+      updatedData.beard = 0;
+      updatedData.beardColor = 0;
     }
 
-    // Валидация фамилии
+    // Обновляем историю
+    updateCharHistory(updatedData);
+  }, [dataChar, updateCharHistory]);
+
+  const handleCancel = useCallback(() => {
+    setCharHistory(prev => {
+      // Если есть предыдущие состояния для отката
+      if (prev.length > 1) {
+        const newHistory = [...prev];
+        // Удаляем текущее состояние (последний элемент)
+        newHistory.pop();
+        return newHistory;
+      }
+      // Если только одно состояние, возвращаем как есть
+      return prev;
+    });
+  }, []);
+
+  const validateForm = () => {
+    let isValid = true;
+
+    if (!dataChar.firstName) {
+      window.App.sendNotifyReducer.sendNotify('err', 'Укажите имя персонажа!', 3000, 'bottom');
+      isValid = false;
+    } else if (!/^[A-Za-z]+$/.test(dataChar.firstName)) {
+      window.App.sendNotifyReducer.sendNotify('err', 'Имя должно содержать только английские буквы!', 3000, 'bottom');
+      isValid = false;
+    } else if (dataChar.firstName.length < 3) {
+      window.App.sendNotifyReducer.sendNotify('err', 'Имя должно быть не менее 3 символов', 3000, 'bottom');
+      isValid = false;
+    } else if (dataChar.firstName[0] !== dataChar.firstName[0].toUpperCase()) {
+      window.App.sendNotifyReducer.sendNotify('err', 'Первая буква имени должна быть заглавной', 3000, 'bottom');
+      isValid = false;
+    }
+
     if (!dataChar.lastName) {
-      newErrors.lastName = "Фамилия обязательна"
+      window.App.sendNotifyReducer.sendNotify('err', 'Укажите фамилию персонажа!', 3000, 'bottom');
+      isValid = false;
     } else if (!/^[A-Za-z]+$/.test(dataChar.lastName)) {
-      newErrors.lastName = "Фамилия должна содержать только английские буквы"
+      window.App.sendNotifyReducer.sendNotify('err', 'Фамилия должна содержать только английские буквы', 3000, 'bottom');
+      isValid = false;
     } else if (dataChar.lastName.length < 3) {
-      newErrors.lastName = "Фамилия должна быть не менее 3 символов"
+      window.App.sendNotifyReducer.sendNotify('err', 'Фамилия должна состоять не менее, чем из 3х букв', 3000, 'bottom');
+      isValid = false;
     } else if (dataChar.lastName[0] !== dataChar.lastName[0].toUpperCase()) {
-      newErrors.lastName = "Первая буква должна быть заглавной"
+      window.App.sendNotifyReducer.sendNotify('err', 'Первая буква фамилии должна быть заглавной', 3000, 'bottom');
+      isValid = false;
     }
 
     // Валидация возраста
     if (!dataChar.age) {
-      newErrors.age = "Возраст обязателен"
+      window.App.sendNotifyReducer.sendNotify('err', 'Укажите возраст персонажа!', 3000, 'bottom');
+      isValid = false;
     } else {
       const ageNum = Number(dataChar.age)
       if (isNaN(ageNum)) {
-        newErrors.age = "Возраст должен быть числом"
+        window.App.sendNotifyReducer.sendNotify('err', 'Возраст должен быть в виде числа!', 3000, 'bottom');
+        isValid = false;
       } else if (ageNum < 18) {
-        newErrors.age = "Возраст должен быть не менее 18 лет"
+        window.App.sendNotifyReducer.sendNotify('err', 'Возраст должен быть не менее 18 лет!', 3000, 'bottom');
+        isValid = false;
       } else if (ageNum > 90) {
-        newErrors.age = "Возраст должен быть не более 90 лет"
+        window.App.sendNotifyReducer.sendNotify('err', 'Возраст должен быть не более 90 лет!', 3000, 'bottom');
+        isValid = false;
       }
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    return isValid;
   }
 
   const handleCreateChar = () => {
@@ -96,11 +237,99 @@ const CreateChar = memo(() => {
     rce.triggerClient('pauseCameraRotator', false)
   }
 
+  const handleChange = useCallback((fieldName: string, value: any) => {
+    console.log(`[CHANGE] Field: ${fieldName}, Value:`, value);
+
+    const newData = {
+      ...dataChar,
+      [fieldName]: value
+    };
+
+    if (fieldName === 'gender') {
+      const gender = value as keyof typeof clothesChar;
+      const defaultClothes = {
+        tops: clothesChar[gender].tops[0],
+        legs: clothesChar[gender].legs[0],
+        shoes: clothesChar[gender].shoes[0]
+      };
+      newData.clothes = defaultClothes;
+    }
+
+    // Обновляем историю
+    updateCharHistory(newData);
+
+    // Отправляем изменения на клиент (кроме clothes, которые обрабатываются в syncDataToClient)
+    if (fieldName !== 'clothes') {
+      rce.triggerClient('cef:createChar:handleChange', fieldName, value);
+    }
+  }, [dataChar, updateCharHistory]);
+
+
+  const initializeCharacter = useCallback(() => {
+    Object.keys(dataChar).forEach(key => {
+      if (key === 'faceFeatures') {
+        dataChar.faceFeatures.forEach((value, index) => {
+          rce.triggerClient('cef:createChar:updateFaceFeature', index, value);
+        });
+      } else {
+        rce.triggerClient('cef:createChar:handleChange', key, (dataChar as any)[key])
+      }
+    });
+  }, [dataChar])
+
+  useState(() => {
+    setTimeout(() => {
+      initializeCharacter()
+    }, 1000)
+  })
+
+  const setDefaultClothes = useCallback((gender: 'male' | 'female') => {
+    const defaultTops = clothesChar[gender].tops[0];
+    const defaultLegs = clothesChar[gender].legs[0];
+    const defaultShoes = clothesChar[gender].shoes[0];
+
+    console.log(`[DEFAULT CLOTHES] Setting default clothes for ${gender}: tops=${defaultTops}, legs=${defaultLegs}, shoes=${defaultShoes}`);
+
+    rce.triggerServer('setClothes', 11, defaultTops, 0);
+    rce.triggerServer('setClothes', 4, defaultLegs, 0);
+    rce.triggerServer('setClothes', 6, defaultShoes, 0);
+
+    return {
+      tops: defaultTops,
+      legs: defaultLegs,
+      shoes: defaultShoes
+    };
+  }, []);
+
+  useEffect(() => {
+    setDefaultClothes(dataChar.gender)
+  }, [])
+
   return (
     <>
-      <div className="create-char" onMouseEnter={onMouseEnterInterface} onMouseLeave={onMouseLeaveInterface}>
-        <Info onInputChange={handleInputChange} dataChar={dataChar} errors={errors} />
-        <button type='button' onClick={handleCreateChar}>Создать</button>
+      <div className="create-char">
+        <div className="left-container" onMouseEnter={onMouseEnterInterface} onMouseLeave={onMouseLeaveInterface}>
+          <header className="header-create-char">
+            <span className="title">Создание персонажа</span>
+            <span className="subtitle">Подойдите к созданию персонажа со всей ответственностью, изменить его можно будет в дальнейшем только в магазине</span>
+          </header>
+          <div className="block-content">
+            <SelectPage
+                handleRandom={() => randomizeCharacterData(dataChar.gender)}
+                currentPage={currentPage}
+                setCurrentPage={(page: string) => setCurrentPage(page)}
+                handleCancel={handleCancel}
+                canCancel={charHistory.length > 1}
+            />
+            <div className="line-split"></div>
+            <CurrentSection currentPage={currentPage} dataChar={dataChar} handleChange={handleChange} errors={errors} />
+            <div className="line-split"></div>
+          </div>
+        </div>
+        <div className="right-content">
+          <UniqueScenarios selectedScenarios={selectedScenarios} setSelectedScenario={(selected: string | undefined) => setSelectedScnearios(selected)} />
+          <button className="saved-char" onClick={handleCreateChar}>Сохранить</button>
+        </div>
       </div>
     </>
   )

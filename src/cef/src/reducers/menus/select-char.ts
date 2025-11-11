@@ -11,7 +11,17 @@ export interface SelectCharState {
 
 const initialState: SelectCharState = { 
   isVisible: false,
-  char1: { status: "active", nickname: 'William Blade' },
+  char1: {
+    status: "active",
+    nickname: 'William Blade',
+    lvl: 10,
+    exp: 1,
+    expMax: 120,
+    cash: 143560,
+    bankmoney: 1560235,
+    fraction: 'Goverment',
+    family: 'The Crisp Band'
+  },
   char2: { status: "free" },
   char3: { status: "ban", nickname: 'Max Wilson' },
   char4: { status: "donat" },

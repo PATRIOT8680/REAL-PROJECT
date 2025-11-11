@@ -12,12 +12,15 @@
   "dependencies": {
     "@entityseven/rage-fw-rpc": "^0.2.5",
     "events": "^3.3.0",
+    "freezeframe": "^5.0.2",
     "howler": "^2.2.4",
     "i18next": "^25.0.2",
     "react": "^18.3.1",
     "react-animate-numbers": "^1.0.6",
     "react-animated-number": "^0.4.4",
     "react-dom": "^18.3.1",
+    "react-freezeframe": "^5.0.2",
+    "react-gif-player": "^0.4.2",
     "react-i18next": "^15.5.1",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1"
@@ -38,6 +41,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.13",
     "globals": "^15.11.0",
+    "sass-embedded": "^1.93.2",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.10.0",
     "vite": "^5.4.9"

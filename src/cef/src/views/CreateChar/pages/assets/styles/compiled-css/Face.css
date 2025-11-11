@@ -1,0 +1,159 @@
+.face-page {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  gap: 2rem;
+  align-items: flex-start;
+  animation: fadeInImgParents 0.5s ease;
+}
+.face-page .selector-part-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+}
+.face-page .selector-part-head .part.selected .number-part {
+  background: #f4e6c7;
+  color: #1e1920;
+}
+.face-page .selector-part-head .part.selected .icon-part path {
+  fill: #1E1920;
+}
+.face-page .selector-part-head .part.selected .bg-part path {
+  fill: #FFCA58;
+}
+.face-page .selector-part-head .part {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.face-page .selector-part-head .part:not(.selected):hover .number-part {
+  color: #c4c4c4;
+  transition: all 0.3s ease;
+}
+.face-page .selector-part-head .part:not(.selected):hover .icon-part path {
+  transition: all 0.3s ease;
+  fill: #c4c4c4;
+}
+.face-page .selector-part-head .part:not(.selected):hover .bg-part path {
+  transition: all 0.3s ease;
+  fill: #2f2931;
+}
+.face-page .selector-part-head .part .number-part {
+  text-align: center;
+  font-family: "Manrope", sans-serif;
+  color: #888;
+  font-weight: 400;
+  background: #1e1920;
+  border-radius: 3rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.85rem;
+  position: absolute;
+  top: -0.1rem;
+  right: -0.3rem;
+  z-index: 5;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+.face-page .selector-part-head .part .icon-part {
+  position: absolute;
+  width: 1.7rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.face-page .selector-part-head .part .icon-part path {
+  transition: all 0.3s ease;
+  fill: #888888;
+}
+.face-page .selector-part-head .part .bg-part path {
+  transition: all 0.3s ease;
+}
+.face-page .section-part {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  overflow: auto;
+  scrollbar-width: none;
+  flex: 1;
+}
+.face-page .section-part::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.face-page .section-part .line-separation {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.15) 49.52%, rgba(255, 255, 255, 0.02) 100%);
+  flex-shrink: 0;
+}
+.face-page .section-part .block-color {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.face-page .section-part .block-color .header-color {
+  font-family: "Manrope", sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.73);
+  user-select: none;
+}
+.face-page .section-part .block-color .list-colors {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 0.7rem;
+  background: #221e25;
+  padding: 0.7rem;
+  border-radius: 4px;
+  max-height: 10rem;
+  overflow-y: scroll;
+  list-style: none;
+}
+.face-page .section-part .block-color .list-colors::-webkit-scrollbar {
+  width: 0.2rem;
+}
+.face-page .section-part .block-color .list-colors::-webkit-scrollbar-track {
+  opacity: 1;
+  background-color: rgba(205, 205, 205, 0.0823529412);
+  border-radius: 1px;
+}
+.face-page .section-part .block-color .list-colors::-webkit-scrollbar-thumb {
+  cursor: grabbing;
+  background-color: rgba(205, 205, 205, 0.1098039216);
+  border-radius: 1px;
+}
+.face-page .section-part .block-color .list-colors::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(205, 205, 205, 0.2392156863);
+}
+.face-page .section-part .block-color .list-colors .item-color {
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-grow: 1;
+  opacity: 0.7;
+  border-radius: 1px;
+  border: 1.5px solid transparent;
+  border-image: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 49.52%, rgba(255, 255, 255, 0.8) 100%);
+  border-image-slice: 1;
+}
+.face-page .section-part .block-color .list-colors .item-color:not(.selected):hover {
+  opacity: 1;
+  border: 1px solid rgb(255, 202, 88);
+}
+.face-page .section-part .block-color .list-colors .item-color.selected {
+  border: 2px solid rgb(255, 202, 88);
+  box-shadow: 0 0 15px 0 rgba(255, 202, 88, 0.3);
+  opacity: 1;
+}

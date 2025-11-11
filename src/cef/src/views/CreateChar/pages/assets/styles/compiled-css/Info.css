@@ -1,0 +1,69 @@
+.info-player {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeInSectionCreateChar 0.7s ease;
+}
+.info-player .error {
+  color: #ffffff;
+}
+.info-player .gender-block {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  height: 4.2rem;
+}
+.info-player .gender-block .gender.selected {
+  background: #ffca58;
+  transition: all 0.3s ease;
+}
+.info-player .gender-block .gender.selected:hover {
+  background: #ffca58;
+}
+.info-player .gender-block .gender.selected svg path {
+  fill: #221e25;
+  fill-opacity: 1;
+  transition: all 0.3s ease;
+}
+.info-player .gender-block .gender.selected .text {
+  color: #1e1920;
+  transition: all 0.3s ease;
+}
+.info-player .gender-block .gender {
+  width: 100%;
+  border-radius: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  font-family: "Manrope", sans-serif;
+  background: rgba(46, 41, 49, 0.5);
+  border: none;
+  transition: all 0.3s ease;
+  user-select: none;
+  cursor: pointer;
+}
+.info-player .gender-block .gender:hover {
+  transition: all 0.3s ease;
+  background: #363138;
+}
+.info-player .gender-block .gender svg {
+  width: 1.5rem;
+}
+.info-player .gender-block .gender svg path {
+  transition: all 0.3s ease;
+}
+.info-player .gender-block .gender .text {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.53);
+}
+
+@keyframes fadeInSectionCreateChar {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
