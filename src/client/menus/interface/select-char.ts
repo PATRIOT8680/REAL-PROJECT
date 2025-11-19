@@ -129,7 +129,7 @@ rce.registerAll('cef:selectSlotChar', async (slot: number, status: 'active' | 'f
         setTimeout(() => {
           const scenario = scenarios[Math.floor(Math.random() * scenarios.length)]
           mp.players.local.taskStartScenarioInPlace(scenario, 0, false)
-        }, 100)
+        }, 400)
       }, 200)
     } catch (e) {
       mp.console.logInfo(`Ошибка при установке плавного перехода: ${e}`);
@@ -149,7 +149,7 @@ rce.registerAll('cef:selectSlotChar', async (slot: number, status: 'active' | 'f
   mp.console.logInfo(`${JSON.stringify(listCameras[slot - 1].cameraPos)}`);
 })
 
-rce.registerServer('closedSelectCreateChar', (sid: number, numberSlot: number) => {
+rce.registerServer('closedSelectCreateChar', (sid: number, numberSlot: number, uniqueScenario: string) => {
   if (mp.cameras.exists(currentCamera)) currentCamera.destroy()
   if (mp.cameras.exists(targetCamera)) targetCamera.destroy()
 
@@ -158,7 +158,7 @@ rce.registerServer('closedSelectCreateChar', (sid: number, numberSlot: number) =
 
   mp.game.cam.renderScriptCams(false, false, 0, true, false)
   mp.gui.cursor.show(false, false)
-  createChar(sid, numberSlot)
+  createChar(sid, numberSlot, uniqueScenario)
   //mp.players.local.freezePosition(false)
   //mp.players.local.clearTasks()
 

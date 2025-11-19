@@ -18,13 +18,30 @@ $Manrope: "Manrope", sans-serif
   &.expanded
     height: 47rem
 
-  .subtitle-shop
-    font-family: $Manrope
-    text-transform: lowercase
-    font-weight: 600
-    font-size: .94rem
-    color: rgba(255, 255, 255, 0.78)
-    pointer-events: none
+  .donat-coins-info
+    display: flex
+    align-items: center
+    gap: .6rem
+
+    .descr-dc
+      font-family: $Manrope
+      font-weight: 500
+      font-size: .9rem
+      color: rgba(255, 255, 255, 0.78)
+
+    .coins
+      display: flex
+      align-items: center
+      gap: .5rem
+
+      .icon-donat
+        width: 1.2rem
+
+      .text-donat
+        font-size: 1rem
+        font-weight: 600
+        font-family: $Manrope
+        color: #ffca58
 
   .title-uniq-scens
     font-family: $Druk
@@ -69,6 +86,23 @@ $Manrope: "Manrope", sans-serif
         left: .8rem
         animation: fadeInTextUnique .4s ease
 
+      .price-scenarios
+        position: absolute
+        top: .8rem
+        left: .8rem
+        display: flex
+        align-items: center
+        gap: .5rem
+
+        .icon-donat
+          width: 1.7rem
+
+        .price-text
+          font-family: $Manrope
+          font-weight: 600
+          font-size: 1rem
+          color: #FFCA58
+
       .block-text
         position: absolute
         bottom: .8rem
@@ -77,6 +111,7 @@ $Manrope: "Manrope", sans-serif
         flex-direction: column
         gap: .5rem
         animation: fadeInTextUnique .6s ease
+        right: .8rem
 
         .subtitle
           font-family: $Manrope
@@ -89,8 +124,24 @@ $Manrope: "Manrope", sans-serif
           word-break: break-all
           color: #ffca58
           text-transform: uppercase
+          text-shadow: 0 0 10px rgba(0, 0, 0, 0.6)
           font-size: 1.3rem
           width: 9rem
+
+        .buy-scen
+          width: 100%
+          height: 2.3rem
+          font-family: $Druk
+          font-size: .8rem
+          text-transform: uppercase
+          background: #ffca58
+          transition: all .3s ease
+          border: none
+          outline: none
+
+          &:hover
+            box-shadow: 0 0 20px 0px rgba(255, 202, 88, 0.6)
+            transition: all .3s ease
 
 @keyframes fadeInTextUnique
   from

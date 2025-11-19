@@ -13,6 +13,7 @@ import { selectCharStore } from "./menus/select-char.ts";
 import { createCharStore } from "./menus/create-char.ts";
 import { adminMenuStore } from "./menus/adminMenu.ts";
 import { playerReportsStore } from "./menus/playerReports.ts";
+import { spawnStore } from "./menus/spawn.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -44,6 +45,7 @@ window.App = {
   createCharReducer: createCharStore,
   adminMenuReducer: adminMenuStore,
   playerReportsReducer: playerReportsStore,
+  spawnReducer: spawnStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,

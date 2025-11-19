@@ -176,6 +176,18 @@ registerACommand(
     }
 )
 
+registerACommand(
+    'getmepos',
+    'Получить свои координаты',
+    [], 7,
+    (player: PlayerMp) => {
+      const pos = player.position
+      const heading = player.heading
+
+      rce.triggerCef(player, 'console:commandResponse', false, `${pos.x.toFixed(4)}, ${pos.y.toFixed(4)}, ${pos.z.toFixed(4)}, ${heading.toFixed(4)}`)
+    }
+)
+
 registerCMD('veh', (player: PlayerMp, [target, model, r, g, b, numberPlate]) => {
   try {
     // Проверка обязательных аргументов

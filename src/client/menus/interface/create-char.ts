@@ -201,7 +201,7 @@ function handleCharacterChange(fieldName: any, value: any) {
   }
 }
 
-export const createChar = (sid: number, numberSlot: number) => {
+export const createChar = (sid: number, numberSlot: number, uniqueScenario: string | undefined) => {
   const lcplayerPos = mp.players.local.position
   rce.trigger('moveSkyCamera', 'up', 2)
   rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604)

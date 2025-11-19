@@ -20,6 +20,7 @@ interface IPlayerCoords {
 }
 
 rce.registerClient('client:authPlayerVisible', (player: PlayerMp, visible: boolean) => {
+  console.log('Закрываем авторизацию')
 	if (visible === false) {
     player.alpha = 0
   } else {

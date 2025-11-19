@@ -1,12 +1,10 @@
 import { rce } from '../utils/rce'
 import { data } from '../database/mysql'
 import { getDataAccount } from '../data/getDataAccount'
-import { setNumberChar } from "../data/char/numberChar";
 import chalk from 'chalk'
-import {Player} from "rage-rpc";
-import {gui} from "../../client/menus/global";
 import {connectedUsers} from "../data/dataConnectedUser";
 import { setCustomizationChar } from '../index'
+import { decrementDonatCoins } from "../data/account/donatcoins";
 
 // rce.registerCef('cef:createChar:handleChange', (player: PlayerMp, fieldName: string, value: any) => {
 //   switch (fieldName) {
@@ -23,7 +21,7 @@ import { setCustomizationChar } from '../index'
 //   }
 // })
 
-const createSlotChar = (player: PlayerMp, numberSlot: number) => {
+const createSlotChar = async (player: PlayerMp, numberSlot: number) => {
   try {
     const sqlUid = 'SELECT MAX(uid) as maxUid from chars'
 
@@ -85,6 +83,35 @@ const closeCreateChar = async (player: PlayerMp) => {
     })
   }, 4000)
 }
+
+rce.registerCef('cef:buyUniqueScenario', async (player: PlayerMp, scenario: string) => {
+  const uid = await getDataAccount(player, 'uid', player.id)
+  const sid = await getDataAccount(player, 'sid', player.id)
+
+  if (scenario === 'walter_white' || scenario === 'crazy_que') {
+    try {
+      const sql = 'UPDATE chars SET unique_quest = ? WHERE uid = ?'
+      const priceScenario = 850
+
+      return new Promise((resolve: any, reject) => {
+        data.query(sql, [scenario, uid], (err, results) => {
+          if (err) {
+            console.log(chalk.bgRed('• SET UQUEST •') + chalk.red(` ${err}`))
+            reject(err)
+            return
+          }
+
+          decrementDonatCoins(player, sid, priceScenario)
+          resolve('ok')
+        })
+      })
+
+
+    } catch (e) {
+      console.log(chalk.bgRed('• SET UQUEST (GL) •') + chalk.red(` ${e}`))
+    }
+  }
+})
 
 rce.registerCef('handleCreateSlotChar', async (player: PlayerMp, numberSlot: number) => {
   const sid = await getDataAccount(player, 'sid', player.id)
