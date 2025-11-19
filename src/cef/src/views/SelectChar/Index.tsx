@@ -7,7 +7,6 @@ import useSmoothWheelScroll from "../../hooks/useSmoothScroll.ts";
 
 import BtnChar from './components/BtnChar'
 import MainBtn from "../../components/MainBtn/MainBtn.tsx";
-import SelectSpawn from "./components/SelectSpawn.tsx";
 import InfoChar from "./components/InfoChar.tsx";
 
 import svg_real_coins from './assets/img/real-coins.svg'
@@ -103,7 +102,8 @@ const SelectChar = memo(() => {
     const char = charsData[selectSlot - 1].data
 
     if (status === 'active') {
-      rce.triggerServer('handleSpawnPlayer', char?.nickname, char?.numberChar)
+      window.App.selectCharReducer.hideSelectChar()
+      window.App.spawnReducer.showSpawn(selectSlot, char.nickname)
     } else if (status === 'free') {
       rce.triggerServer('handleCreateSlotChar', char?.numberChar)
     } else if (status === 'donat') {

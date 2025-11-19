@@ -105,7 +105,7 @@
   padding-right: 0.5rem;
 }
 .gens-page .customize-gens .parents-block .list-parents::-webkit-scrollbar {
-  width: 0.2rem;
+  width: 0.3rem;
 }
 .gens-page .customize-gens .parents-block .list-parents::-webkit-scrollbar-track {
   opacity: 1;
@@ -114,11 +114,11 @@
 }
 .gens-page .customize-gens .parents-block .list-parents::-webkit-scrollbar-thumb {
   cursor: grabbing;
-  background-color: rgba(205, 205, 205, 0.1098039216);
+  background-color: rgba(255, 202, 88, 0.6);
   border-radius: 1px;
 }
 .gens-page .customize-gens .parents-block .list-parents::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(205, 205, 205, 0.2392156863);
+  background-color: rgb(255, 202, 88);
 }
 .gens-page .customize-gens .parents-block .list-parents .parent.selected {
   background: rgba(255, 202, 88, 0.17);

@@ -14,6 +14,7 @@ import { selectCharReducer } from './menus/select-char.ts';
 import { createCharReducer } from './menus/create-char.ts';
 import { adminMenuReducer } from "./menus/adminMenu.ts";
 import { playerReportsReducer } from "./menus/playerReports.ts";
+import { spawnReducer } from "./menus/spawn.ts";
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
@@ -37,6 +38,7 @@ export type RootState = {
   createCharReducer: ReturnType<typeof createCharReducer>
   adminMenuReducer: ReturnType<typeof adminMenuReducer>
   playerReportsReducer: ReturnType<typeof playerReportsReducer>
+  spawnReducer: ReturnType<typeof spawnReducer>
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
@@ -62,6 +64,7 @@ export const rootReducer = combineReducers({
   adminMenuReducer,
   reportReducer,
   playerReportsReducer,
+  spawnReducer,
 
   // Elements
   sendNotifyReducer,

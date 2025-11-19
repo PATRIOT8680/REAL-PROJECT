@@ -49,7 +49,7 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
           listLoginAccs.set(player.id, { sid, login })
           connectedUsers.setUser(player.id, { login: login, sid: sid })
 
-          data.query(checkChar, [sid], async (err, charResults) => {
+          data.query(checkChar, [sid], async (err, charResults: any) => {
             if (err) {
               console.log(chalk.bgRed('• CHAR •' + chalk.red(`Ошибка получения данных о char: ${err}`)))
               return
@@ -63,7 +63,16 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
 
               if (emptyChar) {
                 const sid = await getDataAccount(player, 'sid', player.id)
-                rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot)
+                const donatcoins = await getDataAccount(player, 'donatcoins', player.id)
+                const sql = 'SELECT unique_quest FROM chars WHERE sid = ? AND numberslot = ?'
+
+                data.query(sql, [sid, charResults[0].numberslot], (err, charResults) => {
+                  if (err) return console.log(chalk.bgRed('• GET UQUEST •') + chalk.red(` Ошибка: ${err}`))
+
+                  rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`)
+                  rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot, charResults)
+                })
+
               } else {
                 console.log('переходим к выборке')
                 // Все строки заполнены, переходим к выбору персонажа

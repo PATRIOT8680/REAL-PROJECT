@@ -38004,6 +38004,48 @@ const getDonatCoins = (sid) => {
         });
     });
 };
+const decrementDonatCoins = async (player, sid, amount) => {
+    try {
+        const checkSql = 'SELECT donatcoins FROM accounts WHERE sid = ?';
+        return new Promise((resolve, reject) => {
+            data.query(checkSql, [sid], async (err, result) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                if (result.length === 0) {
+                    resolve(false);
+                    return;
+                }
+                const currentCash = result[0].cash;
+                if (currentCash - amount < 0) {
+                    rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно донат - валюты!', 3700, 'bottom');
+                    resolve('noDonatCoins');
+                    return;
+                }
+                const updateSql = 'UPDATE accounts SET donatcoins = donatcoins - ? WHERE sid = ?';
+                data.query(updateSql, [amount, sid], (err, result) => {
+                    if (err) {
+                        console.log(chalk.bgRed('• DECREMENT DC •') + chalk.red(` Ошибка decrement: ${err}`));
+                        reject(err);
+                        return;
+                    }
+                    if (result.affectedRows > 0) {
+                        rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.decrementDonatCoins(${amount})`);
+                        resolve(true);
+                    }
+                    else {
+                        resolve(false);
+                    }
+                });
+            });
+        });
+    }
+    catch (e) {
+        console.log(chalk.bgRed('• DECREMENT DC •') + chalk.red(` Ошибка: ${e}`));
+        return false;
+    }
+};
 
 const getNickname = (uid) => {
     return new Promise((resolve, reject) => {
@@ -38239,7 +38281,10 @@ rce.registerClient('client:setSelectedChar', async (player, numberSlot, statusSl
         player.setClothes(6, 0, 0, 2);
     }
 });
-rce.registerCef('handleSpawnPlayer', (player, nickname, numberSlot) => {
+rce.registerCef('handleSpawnPlayer', (player, nickname, numberSlot, pointSpawn) => {
+    if (pointSpawn !== 'exit' && pointSpawn !== 'rent') {
+        return rce.triggerClient(player, 'sendNotify', 'info', 'В разработке!', 3500, 'top');
+    }
     const nameParts = nickname.trim().split(/\s+/);
     const firstName = nameParts[0];
     const lastName = nameParts.slice(1).join(' ');
@@ -38263,7 +38308,23 @@ rce.registerCef('handleSpawnPlayer', (player, nickname, numberSlot) => {
                 return;
             }
             try {
-                const coords = JSON.parse(results[0].coordquit);
+                let coords;
+                switch (pointSpawn) {
+                    case 'exit':
+                        coords = JSON.parse(results[0].coordquit);
+                        break;
+                    case 'rent':
+                        coords = {
+                            x: 1392.2622,
+                            y: 3594.6489,
+                            z: 34.8918,
+                            heading: -117.2898
+                        };
+                        break;
+                    default:
+                        rce.triggerClient(player, 'sendNotify', 'err', 'Неизвестная точка спавна!', 3500, 'top');
+                }
+                rce.triggerClient(player, 'execute', `window.App.spawnReducer.hideSpawn()`);
                 player.spawn(new mp.Vector3(parseFloat(coords.x), parseFloat(coords.y), parseFloat(coords.z)));
                 player.heading = parseFloat(coords.heading);
                 console.log('Сработка до запроса');
@@ -38322,13 +38383,28 @@ rce.registerClient('client:flyEndSelectChar', async (player) => {
                     return;
                 }
                 const slots = [];
-                let defaultCharApplied = false;
+                const firstSlotChar = Array.isArray(results) ? results.find((char) => char.numberslot === 1) : null;
+                if (firstSlotChar) {
+                    player.setClothes(8, 15, 0, 2);
+                    setCustomizationChar(player, JSON.parse(firstSlotChar.chardata));
+                }
+                else {
+                    player.setCustomization(true, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0, 0, 0, []);
+                    for (let i = 0; i < 13; i++) {
+                        player.setHeadOverlay(i, [0, 0.0, 0, 0]);
+                    }
+                    player.setClothes(2, 0, 0, 2);
+                    player.setClothes(11, 0, 0, 2);
+                    player.setClothes(4, 0, 0, 2);
+                    player.setClothes(6, 0, 0, 2);
+                }
                 for (let i = 1; i <= 5; i++) {
                     const charData = Array.isArray(results) ?
                         results.find((char) => char.numberslot === i) :
                         null;
                     if (charData) {
                         let status = 'active';
+                        console.log(`DC 2: ${donatcoins}`);
                         slots.push({
                             status: status,
                             nickname: `${charData.firstname} ${charData.lastname}`,
@@ -38338,11 +38414,6 @@ rce.registerClient('client:flyEndSelectChar', async (player) => {
                             cash: charData.cash,
                             bankmoney: charData.bankmoney,
                         });
-                        if (!defaultCharApplied) {
-                            player.setClothes(8, 15, 0, 2);
-                            setCustomizationChar(player, JSON.parse(charData.chardata));
-                            defaultCharApplied = true;
-                        }
                     }
                     else {
                         if (i <= 3) {
@@ -38355,13 +38426,17 @@ rce.registerClient('client:flyEndSelectChar', async (player) => {
                 }
                 const slotData = slots.map((slot) => {
                     if (slot.nickname) {
+                        console.log(`DC 4: ${donatcoins}`);
                         return `{ status: '${slot.status}', nickname: '${slot.nickname}', numberChar: ${slot.numberChar}, lvl: ${slot.lvl}, exp: ${slot.exp}, expMax: ${getMaxExpForLevel(slot.lvl)}, cash: ${slot.cash}, bankmoney: ${slot.bankmoney}, fraction: 'LSPD', family: 'Бездари'}`;
                     }
                     else {
+                        console.log(`DC 5: ${donatcoins}`);
                         return `{ status: '${slot.status}', numberChar: ${slot.numberChar} }`;
                     }
                 }).join(', ');
                 rce.triggerClient(player, 'execute', `window.App.selectCharReducer.showSelectChar(${slotData})`);
+                console.log(`DC 1: ${donatcoins}`);
+                // ДОБАВЛЕНО: Всегда устанавливаем донат-коины, независимо от состояния персонажа
                 rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`);
             });
         }
@@ -38442,7 +38517,14 @@ const loginUser = (player, login, password) => {
                             const emptyChar = charResults.find((char) => !char.firstname && !char.lastname && !char.age);
                             if (emptyChar) {
                                 const sid = await getDataAccount(player, 'sid', player.id);
-                                rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot);
+                                const donatcoins = await getDataAccount(player, 'donatcoins', player.id);
+                                const sql = 'SELECT unique_quest FROM chars WHERE sid = ? AND numberslot = ?';
+                                data.query(sql, [sid, charResults[0].numberslot], (err, charResults) => {
+                                    if (err)
+                                        return console.log(chalk.bgRed('• GET UQUEST •') + chalk.red(` Ошибка: ${err}`));
+                                    rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`);
+                                    rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot, charResults);
+                                });
                             }
                             else {
                                 console.log('переходим к выборке');
@@ -38734,6 +38816,11 @@ registerACommand('reborn', 'Воскресить игрока', [
     }
     playerReborn(target);
     rce.triggerClient(player, 'console:commandResponse', false, `Игрок ID:${targetId} воскрешен`);
+});
+registerACommand('getmepos', 'Получить свои координаты', [], 7, (player) => {
+    const pos = player.position;
+    const heading = player.heading;
+    rce.triggerCef(player, 'console:commandResponse', false, `${pos.x.toFixed(4)}, ${pos.y.toFixed(4)}, ${pos.z.toFixed(4)}, ${heading.toFixed(4)}`);
 });
 registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
     try {
@@ -53282,6 +53369,7 @@ const changePassRecovery = (player, email, code, newPass) => {
 };
 
 rce.registerClient('client:authPlayerVisible', (player, visible) => {
+    console.log('Закрываем авторизацию');
     if (visible === false) {
         player.alpha = 0;
     }
@@ -97842,7 +97930,7 @@ mp.events.add("packagesLoaded", () => {
 //       return ''
 //   }
 // })
-const createSlotChar = (player, numberSlot) => {
+const createSlotChar = async (player, numberSlot) => {
     try {
         const sqlUid = 'SELECT MAX(uid) as maxUid from chars';
         data.query(sqlUid, [], async (err, results) => {
@@ -97891,6 +97979,30 @@ const closeCreateChar = async (player) => {
         });
     }, 4000);
 };
+rce.registerCef('cef:buyUniqueScenario', async (player, scenario) => {
+    const uid = await getDataAccount(player, 'uid', player.id);
+    const sid = await getDataAccount(player, 'sid', player.id);
+    if (scenario === 'walter_white' || scenario === 'crazy_que') {
+        try {
+            const sql = 'UPDATE chars SET unique_quest = ? WHERE uid = ?';
+            const priceScenario = 850;
+            return new Promise((resolve, reject) => {
+                data.query(sql, [scenario, uid], (err, results) => {
+                    if (err) {
+                        console.log(chalk.bgRed('• SET UQUEST •') + chalk.red(` ${err}`));
+                        reject(err);
+                        return;
+                    }
+                    decrementDonatCoins(player, sid, priceScenario);
+                    resolve('ok');
+                });
+            });
+        }
+        catch (e) {
+            console.log(chalk.bgRed('• SET UQUEST (GL) •') + chalk.red(` ${e}`));
+        }
+    }
+});
 rce.registerCef('handleCreateSlotChar', async (player, numberSlot) => {
     const sid = await getDataAccount(player, 'sid', player.id);
     rce.triggerClient(player, 'closedSelectCreateChar', sid, numberSlot);

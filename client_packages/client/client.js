@@ -525,6 +525,7 @@ const enableAuth = () => {
 const disableAuth = () => {
     showLoading(1500);
     gui.execute('window.App.authReducer.hideAuth()');
+    mp.console.logInfo('Закрываем авторизацию');
     rce.triggerServer('client:authPlayerVisible', true);
     if (camera$1 && mp.cameras.exists(camera$1)) {
         camera$1.destroy();
@@ -1540,7 +1541,7 @@ function handleCharacterChange(fieldName, value) {
             break;
     }
 }
-const createChar = (sid, numberSlot) => {
+const createChar = (sid, numberSlot, uniqueScenario) => {
     mp.players.local.position;
     rce.trigger('moveSkyCamera', 'up', 2);
     rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604);
@@ -1682,7 +1683,7 @@ rce.registerAll('cef:selectSlotChar', async (slot, status) => {
                 setTimeout(() => {
                     const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
                     mp.players.local.taskStartScenarioInPlace(scenario, 0, false);
-                }, 100);
+                }, 400);
             }, 200);
         }
         catch (e) {
@@ -1701,7 +1702,7 @@ rce.registerAll('cef:selectSlotChar', async (slot, status) => {
     }, 500);
     mp.console.logInfo(`${JSON.stringify(listCameras[slot - 1].cameraPos)}`);
 });
-rce.registerServer('closedSelectCreateChar', (sid, numberSlot) => {
+rce.registerServer('closedSelectCreateChar', (sid, numberSlot, uniqueScenario) => {
     if (mp.cameras.exists(currentCamera))
         currentCamera.destroy();
     if (mp.cameras.exists(targetCamera))

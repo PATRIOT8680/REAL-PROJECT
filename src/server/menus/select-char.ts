@@ -76,11 +76,13 @@ rce.registerClient('client:setSelectedChar', async (player: PlayerMp, numberSlot
     player.setClothes(4, 0, 0, 2)
     player.setClothes(6, 0, 0, 2)
   }
-
-
 })
 
-rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, numberSlot: number) => {
+rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, numberSlot: number, pointSpawn: string) => {
+  if (pointSpawn !== 'exit' && pointSpawn !== 'rent') {
+    return rce.triggerClient(player, 'sendNotify', 'info', 'В разработке!', 3500, 'top')
+  }
+
   const nameParts = nickname.trim().split(/\s+/);
   const firstName = nameParts[0];
   const lastName = nameParts.slice(1).join(' ')
@@ -109,7 +111,26 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
       }
 
       try {
-        const coords = JSON.parse(results[0].coordquit)
+        let coords: any
+
+        switch (pointSpawn) {
+          case 'exit':
+            coords = JSON.parse(results[0].coordquit)
+            break
+
+          case 'rent':
+            coords = {
+              x: 1392.2622,
+              y: 3594.6489,
+              z: 34.8918,
+              heading: -117.2898
+            }
+            break
+          default:
+            rce.triggerClient(player, 'sendNotify', 'err', 'Неизвестная точка спавна!', 3500, 'top')
+        }
+
+        rce.triggerClient(player, 'execute', `window.App.spawnReducer.hideSpawn()`)
         player.spawn(new mp.Vector3(parseFloat(coords.x), parseFloat(coords.y), parseFloat(coords.z)))
         player.heading = parseFloat(coords.heading)
 
@@ -127,6 +148,7 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
           heading: player.heading.toFixed(3)
         }
         const coordString = JSON.stringify(coordExit)
+
 
         data.query(sql, [coordString, uid], (err, results) => {
           if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
@@ -175,14 +197,37 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
         }
 
         const slots = []
-        let defaultCharApplied = false
+        const firstSlotChar: any = Array.isArray(results) ? results.find((char: any) => char.numberslot === 1) : null
+
+        if (firstSlotChar) {
+          player.setClothes(8, 15, 0, 2)
+          setCustomizationChar(player, JSON.parse(firstSlotChar.chardata))
+        } else {
+          player.setCustomization(
+              true,
+              0, 0, 0, 0, 0, 0,
+              0.0, 0.0, 0, 0, 0, 0,
+              []
+          )
+
+          for (let i = 0; i < 13; i++) {
+            player.setHeadOverlay(i, [0, 0.0, 0, 0])
+          }
+
+          player.setClothes(2, 0, 0, 2)
+          player.setClothes(11, 0, 0, 2)
+          player.setClothes(4, 0, 0, 2)
+          player.setClothes(6, 0, 0, 2)
+        }
+
         for (let i = 1; i <= 5; i++) {
           const charData: any = Array.isArray(results) ?
-            results.find((char: any) => char.numberslot === i) :
-            null
+              results.find((char: any) => char.numberslot === i) :
+              null
 
           if (charData) {
             let status = 'active'
+            console.log(`DC 2: ${donatcoins}`)
 
             slots.push({
               status: status,
@@ -194,11 +239,6 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
               bankmoney: charData.bankmoney,
             })
 
-            if (!defaultCharApplied) {
-              player.setClothes(8, 15, 0, 2);
-              setCustomizationChar(player, JSON.parse(charData.chardata))
-              defaultCharApplied = true
-            }
           } else {
             if (i <= 3) {
               slots.push({ status: 'free', numberChar: i })
@@ -210,13 +250,18 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
 
         const slotData = slots.map((slot: any) => {
           if (slot.nickname) {
+            console.log(`DC 4: ${donatcoins}`)
             return `{ status: '${slot.status}', nickname: '${slot.nickname}', numberChar: ${slot.numberChar}, lvl: ${slot.lvl}, exp: ${slot.exp}, expMax: ${getMaxExpForLevel(slot.lvl)}, cash: ${slot.cash}, bankmoney: ${slot.bankmoney}, fraction: 'LSPD', family: 'Бездари'}`
           } else {
+            console.log(`DC 5: ${donatcoins}`)
             return `{ status: '${slot.status}', numberChar: ${slot.numberChar} }`
           }
         }).join(', ')
 
         rce.triggerClient(player, 'execute', `window.App.selectCharReducer.showSelectChar(${slotData})`)
+
+        console.log(`DC 1: ${donatcoins}`)
+        // ДОБАВЛЕНО: Всегда устанавливаем донат-коины, независимо от состояния персонажа
         rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`)
       })
     } catch (e) {

@@ -36,6 +36,7 @@ const enableAuth = () => {
 const disableAuth = () => {
   showLoading(1500)
   gui.execute('window.App.authReducer.hideAuth()')
+  mp.console.logInfo('Закрываем авторизацию')
   rce.triggerServer('client:authPlayerVisible', true)
 
   if (camera && mp.cameras.exists(camera)) {
