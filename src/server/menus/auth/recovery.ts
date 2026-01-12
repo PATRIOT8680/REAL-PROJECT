@@ -86,10 +86,10 @@ export const sendRecoveryCode = (player: PlayerMp, email: string) => {
         }
 
         rce.triggerCef(player, 'server:recovery:successSendNotify')
-        rce.triggerClient(player, 'sendNotify', 'info', `Код отправлен на почту "${email}". Если письма нет, то проверьте раздел "СПАМ"!`, 7000, 'right')
+        rce.triggerClient(player, 'sendNotify', 'info', `Код отправлен на почту "${email}". Если письма нет, то проверьте раздел "СПАМ"!`, 6000, 'bottom')
       })
     } else {
-      rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с данным Email не найден!`, 5000, 'right')
+      rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с данным Email не найден!`, 4000, 'bottom')
     }
   })
 }
@@ -112,10 +112,10 @@ export const changePassRecovery = (player: PlayerMp, email: string, code: string
 
         delete recoveryCodes[player.id]
         rce.triggerCef(player, 'server:auth:changePassSuccess')
-        rce.triggerClient(player, 'sendNotify', 'success', `Пароль для аккаунта "${email}" успешно изменён!`, 5000, 'right')
+        rce.triggerClient(player, 'sendNotify', 'success', `Пароль для аккаунта "${email}" успешно изменён! Теперь авторизуйтесь в аккаунт`, 5000, 'bottom')
       })
     })
   } else {
-    rce.triggerClient(player, 'sendNotify', 'err', `Неверный код восстановления!`, 4500, 'right')
+    rce.triggerClient(player, 'sendNotify', 'err', `Неверный код восстановления!`, 4500, 'bottom')
   }
 }

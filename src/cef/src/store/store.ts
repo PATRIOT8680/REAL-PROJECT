@@ -14,6 +14,7 @@ import { createCharStore } from "./menus/create-char.ts";
 import { adminMenuStore } from "./menus/adminMenu.ts";
 import { playerReportsStore } from "./menus/playerReports.ts";
 import { spawnStore } from "./menus/spawn.ts";
+import { inventoryStore, setStore } from "./menus/inventory.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -25,6 +26,8 @@ import { consoleBufferStore } from "./elements/adminMenu/consoleBuffer.ts";
 import { reportsListStore } from "./elements/adminMenu/reportsList.ts";
 
 export const store = createStore(rootReducer);
+
+setStore(store)
 
 declare global {
   interface Window {
@@ -46,6 +49,7 @@ window.App = {
   adminMenuReducer: adminMenuStore,
   playerReportsReducer: playerReportsStore,
   spawnReducer: spawnStore,
+  inventoryReducer: inventoryStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,

@@ -9,19 +9,26 @@ const Natives = {
 
 rce.registerAll('moveSkyCamera', (moveTo, switchType) => {
   const localplayer = mp.players.local
+  if (!localplayer || !localplayer.handle) return
+
+  let safeType = 1
+  if (switchType !== undefined || switchType !== null) {
+    let parsed = parseInt(switchType, 10)
+    if (!isNaN(parsed)) safeType = parsed
+  }
 
   mp.console.logInfo(`Sky camera: ${localplayer.handle}, ${moveTo}, ${switchType}`)
   switch (moveTo) {
     case 'up':
       mp.console.logInfo('Up')
-      mp.game.invoke(Natives.SWITCH_OUT_PLAYER, localplayer.handle, 0, parseInt(switchType));
-      break;
+      mp.game.invoke(Natives.SWITCH_OUT_PLAYER, localplayer.handle, 0, safeType)
+      break
     case 'down':
       mp.console.logInfo('Down')
       if (gui.browser.active === false) {
-        checkCamInAir();
+        checkCamInAir()
       }
-      mp.game.invoke(Natives.SWITCH_IN_PLAYER, localplayer.handle);
+      mp.game.invoke(Natives.SWITCH_IN_PLAYER, localplayer.handle)
       break;
    
     default:
@@ -31,8 +38,8 @@ rce.registerAll('moveSkyCamera', (moveTo, switchType) => {
 
 const checkCamInAir = () => {
   if (mp.game.invoke(Natives.IS_PLAYER_SWITCH_IN_PROGRESS)) {
-    setTimeout(() => {
-      checkCamInAir()
-    }, 400);
+    setTimeout(checkCamInAir, 400)
+  } else {
+    mp.players.local.freezePosition(false)
   }
 }

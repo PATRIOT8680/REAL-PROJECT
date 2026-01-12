@@ -3,13 +3,16 @@ import { rce } from "../utils/rce";
 export interface IConnectedUser {
   sid?: number | null,
   login?: string | undefined,
+  uid?: number | null,
   nickName?: string | undefined,
+  gender?: 'male' | 'female',
   adminLvl?: number | null,
   age?: number | null,
   cash?: number | null,
   bankmoney?: number | null,
   lvl?: number | null,
   exp?: number | null,
+  unique_quest?: string | null
 }
 
 const users = new Map<number, IConnectedUser>()
@@ -72,6 +75,26 @@ export const connectedUsers = {
           return playerId;
         }
       } else return
+    }
+    return undefined
+  },
+
+  getPlayerIdByUid: (uid: number): number | undefined => {
+    for (const [playerId, user] of users.entries()) {
+      const target = mp.players.at(playerId)
+      if (target) {
+        if (user.uid === uid) {
+          return playerId
+        }
+      } else return
+    }
+    return undefined
+  },
+
+  getPlayerByUid: (uid: number): PlayerMp | undefined => {
+    const playerId = connectedUsers.getPlayerIdByUid(uid)
+    if (playerId !== undefined) {
+      return mp.players.at(playerId)
     }
     return undefined
   }

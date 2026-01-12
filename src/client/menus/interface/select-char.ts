@@ -30,7 +30,6 @@ rce.registerServer('server:showSelectChar', async () => {
   const dataChars = await rce.callServer('selectChar:getDataAllChars')
   const scenario = scenarios[Math.floor(Math.random() * scenarios.length)]
   const plDimension = mp.players.local.dimension
-  mp.players.local.taskStartScenarioInPlace(scenario, 0, false)
   mp.game.ui.setPauseMenuActive(false)
 
   // setTimeout(() => {
@@ -73,11 +72,10 @@ rce.registerServer('server:showSelectChar', async () => {
       mp.gui.cursor.show(true, true)
 
       rce.triggerServer('client:flyEndSelectChar')
-
+      mp.players.local.taskStartScenarioInPlace(scenario, 0, true)
       clearInterval(intervalFly)
     }
   }, 100)
-
 })
 
 rce.registerAll('cef:selectSlotChar', async (slot: number, status: 'active' | 'free' | 'donat' | 'ban') => {
@@ -181,5 +179,5 @@ rce.registerServer('closeSelectChar', () => {
     gui.execute('window.App.hudReducer.showHud()')
     mp.players.local.freezePosition(false)
     mp.game.ui.displayRadar(true)
-  }, 4000)
+  }, 2000)
 })

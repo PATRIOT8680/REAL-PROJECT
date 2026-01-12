@@ -6,7 +6,7 @@ $Display: "Montserrat", sans-serif
     position: absolute
     flex-direction: column
     align-items: center
-    gap: 0.8rem
+    gap: 0.55rem
     z-index: 9999
 
     .notify-item.exit
@@ -20,21 +20,18 @@ $Display: "Montserrat", sans-serif
       min-height: 2.8rem
       animation: enterNotify 0.75s ease forwards
 
-      .block-icon
-        display: flex
-        align-items: center
-        justify-content: center
-        border-radius: 0.3rem
-        width: 2.8rem
-        height: 2.8rem
-
-        .icon
-          width: 1.35rem
-
       .block-notify
         display: flex
         flex-direction: row
+        position: relative
+        overflow: hidden
         gap: 0.4rem
+
+        .left-line
+          height: 100%
+          width: 4px
+          position: absolute
+          left: 0
 
         .text
           display: flex
@@ -42,30 +39,14 @@ $Display: "Montserrat", sans-serif
           justify-content: center
           max-width: 21vw
           box-sizing: border-box
-          border-radius: 0.3rem
-          padding: 0.8rem 1.2rem
+          border-radius: 0.12rem
+          padding: .9rem 1.5rem
           line-height: 147%
           font-family: $Display
           font-weight: 500
           font-size: 0.9rem
           color: #ffff
-
-        .progress-line
-          display: flex
-          align-items: flex-end
-          justify-content: center
-          width: 0.375rem
-          border-radius: 0.2rem
-          background: rgba(212, 211, 211, 0.53)
-
-          .active-line
-            width: 100%
-            height: 0%
-            border-radius: 0.2rem
-            animation: progress-line ease forwards
-
-          .active-line.paused
-            animation-play-state: paused
+          //border-left: 4px solid #ffffff
 
   .pos-bottom
     bottom: 1.5rem
@@ -88,47 +69,44 @@ $Display: "Montserrat", sans-serif
     transform: translate(0, -65%)
 
   #warning
-    .block-icon
-      background: #ff6614
+    .left-line
+      background: #FFCA58
+      box-shadow: 0 4px 17px 18px rgba(255, 202, 88, 0.25)
 
     .text
-      background: #ff6614
-
-    .active-line
-      background: #ff6614
+      color: #FFCA58
+      border-left-color: #FFCA58
+      background: rgba(37, 35, 30, 0.9)
 
   #err
-    .block-icon
-      background: #ff0d4a
+    .left-line
+      background: #FC4E51
+      box-shadow: 0 4px 17px 18px rgba(252, 78, 81, 0.25)
 
     .text
-      background: #ff0d4a
-
-    .active-line
-      background: #ff0d4a
+      color: #FC4E51
+      border-left-color: #FC4E51
+      background: rgba(43, 28, 28, 0.9)
 
   #info
-    .block-icon
-      background: #247bff
-
-      .icon
-        width: 0.75rem
+    .left-line
+      background: #3794FF
+      box-shadow: 0 4px 17px 18px rgba(55, 148, 255, 0.25)
 
     .text
-      background: #247bff
-
-    .active-line
-      background: #247bff
+      color: #3794FF
+      border-left-color: #3794FF
+      background: rgba(46, 58, 89, 0.9)
 
   #success
-    .block-icon
-      background: #07C339
+    .left-line
+      background: #88C394
+      box-shadow: 0 4px 17px 18px rgba(136, 195, 148, 0.25)
 
     .text
-      background: #07C339
-
-    .active-line
-      background: #07C339
+      color: #88C394
+      border-left-color: #88C394
+      background: rgba(27, 39, 29, 0.9)
 
 @keyframes progress-line
   from

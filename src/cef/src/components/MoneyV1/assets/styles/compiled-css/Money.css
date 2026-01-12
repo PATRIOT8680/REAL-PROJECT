@@ -1,0 +1,22 @@
+.money-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.money-block .cash {
+  font-family: "Druk Wide Cyr", sans-serif;
+  text-transform: uppercase;
+  color: #ffca58;
+}
+.money-block .bankmoney {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.money-block .bankmoney .text {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+/*# sourceMappingURL=Money.css.map */

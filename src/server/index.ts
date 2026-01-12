@@ -8,7 +8,6 @@ import './utils/rce'
 import './player/death'
 import './world/time'
 import './main/started'
-import './test/ped'
 import './data/getDataAccount'
 import './player/events'
 import './player/voice'
@@ -22,7 +21,11 @@ import './admin/spawnVeh'
 import './admin/reportMenu'
 import './data/dataConnectedUser'
 import './player/experience'
+import './modules/inventory/inventoryHandlers'
+import './player/clothes'
+import {rce} from "./utils/rce";
 
+mp.world.weather = 'XMAS'
 
 export const setCustomizationChar = (player: PlayerMp, dataChar: any) => {
   try {

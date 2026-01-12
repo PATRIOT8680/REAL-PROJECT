@@ -3,6 +3,9 @@ import { rce } from "../utils/rce"
 import { data } from "../database/mysql"
 import chalk from "chalk"
 import { setDataAccount } from "../data/setDataAccount";
+import { decrementCash, getCash } from "../data/char/cash";
+import { decrementBankMoney } from "../data/char/bankMoney";
+import { getDataAccount } from "../data/getDataAccount";
 
 let rentsData = []
 const MAX_RETRIES = 10
@@ -14,8 +17,10 @@ const playerRentData = new Map<number, {
   isWithdrawal: NodeJS.Timeout | null
 }>()
 
-mp.events.add('playerJoin', async (player: PlayerMp) => {
-  playerRentData.set(player.id, {
+rce.register('charSpawned', async (player: PlayerMp) => {
+  const uid = await getDataAccount(player, 'uid', player.id)
+
+  playerRentData.set(uid, {
     isTakenRent: false,
     vehicleRent: null,
     isWithdrawal: null,
@@ -26,8 +31,9 @@ mp.events.add('playerJoin', async (player: PlayerMp) => {
   })
 })
 
-mp.events.add('playerQuit', (player: PlayerMp) => {
-  const rentData = playerRentData.get(player.id)
+mp.events.add('playerQuit', async (player: PlayerMp) => {
+  const uid = await getDataAccount(player, 'uid', player.id)
+  const rentData = playerRentData.get(uid)
 
   if (rentData) {
     if (rentData.isWithdrawal) clearTimeout(rentData.isWithdrawal)
@@ -36,7 +42,7 @@ mp.events.add('playerQuit', (player: PlayerMp) => {
     }
   }
 
-  playerRentData.delete(player.id)
+  playerRentData.delete(uid)
 })
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -109,10 +115,11 @@ const loadRent = async (retryCount = 0) => {
   }
 }
 
-mp.events.add('playerEnterColshape', (player: PlayerMp, shape: ColshapeMp) => {
+mp.events.add('playerEnterColshape', async (player: PlayerMp, shape: ColshapeMp) => {
   if (!player.vehicle) {
-    const rentData = rentsData.find(rent => rent.colshape === shape);
-    const playerData = playerRentData.get(player.id)
+    const uid = await getDataAccount(player, 'uid', player.id)
+    const rentData = rentsData.find(rent => rent.colshape === shape)
+    const playerData = playerRentData.get(uid)
 
     if (rentData && playerData) {
       const filteredVehiclesData = rentData.vehiclesData.map(vehicle => ({
@@ -130,8 +137,9 @@ mp.events.add('playerEnterColshape', (player: PlayerMp, shape: ColshapeMp) => {
 });
 
 rce.registerCef('cef:handleRentCar', async (player: PlayerMp, id: number, nameCar: string, price: number, hours: number) => {
+  const uid = await getDataAccount(player, 'uid', player.id)
   const rentData = rentsData.find(rent => rent.id === id)
-  const playerData = playerRentData.get(player.id)
+  const playerData = playerRentData.get(uid)
 
   if (!rentData || !playerData) return
 
@@ -146,7 +154,13 @@ rce.registerCef('cef:handleRentCar', async (player: PlayerMp, id: number, nameCa
     return
   }
 
-  await setDataAccount(player, 'decrementCash', price, player.id)
+  const cashResult = await decrementCash(player, uid, price)
+  const cashNow = await getCash(uid)
+
+  if (cashResult === 'noCash') {
+    rce.triggerClient(player, 'sendNotify', 'err', `Недостаточно средств! Тебе не хватает $${price - cashNow}`, 3200, 'bottom')
+    return
+  }
 
   const vehPos = new mp.Vector3(Number(vehInfo.x), Number(vehInfo.y), Number(vehInfo.z))
   try {
@@ -189,8 +203,9 @@ rce.registerCef('cef:handleRentCar', async (player: PlayerMp, id: number, nameCa
   }
 })
 
-rce.registerCef('cef:cancelRentCar', (player: PlayerMp) => {
-  const playerData = playerRentData.get(player.id)
+rce.registerCef('cef:cancelRentCar', async (player: PlayerMp) => {
+  const uid = await getDataAccount(player, 'uid', player.id)
+  const playerData = playerRentData.get(uid)
   if (!playerData || !playerData.vehicleRent) return
 
   if (playerData.isWithdrawal) {
@@ -202,11 +217,12 @@ rce.registerCef('cef:cancelRentCar', (player: PlayerMp) => {
   rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Вы отменили аренду транспорта!', 3000, 'bottom')`)
 })
 
-mp.events.add('playerExitVehicle', (player: PlayerMp, vehicle: VehicleMp) => {
-  const playerData = playerRentData.get(player.id)
+mp.events.add('playerExitVehicle', async (player: PlayerMp, vehicle: VehicleMp) => {
+  const uid = await getDataAccount(player, 'uid', player.id)
+  const playerData = playerRentData.get(uid)
   if (!playerData || !playerData.vehicleRent || vehicle !== playerData.vehicleRent || !playerData.isTakenRent) return
 
-  rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('warning', 'Аренда будет отменена через 3 минуты!', 4500, 'bottom')`)
+  rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('warning', 'Аренда будет завершена через 3 минуты!', 4500, 'bottom')`)
 
   if (playerData.isWithdrawal) clearTimeout(playerData.isWithdrawal)
 
@@ -222,8 +238,9 @@ mp.events.add('playerExitVehicle', (player: PlayerMp, vehicle: VehicleMp) => {
 
 })
 
-mp.events.add('playerEnterVehicle', (player: PlayerMp, vehicle: VehicleMp) => {
-  const playerData = playerRentData.get(player.id)
+mp.events.add('playerEnterVehicle', async (player: PlayerMp, vehicle: VehicleMp) => {
+  const uid = await getDataAccount(player, 'uid', player.id)
+  const playerData = playerRentData.get(uid)
 
   if (!playerData || !playerData.vehicleRent || vehicle !== playerData.vehicleRent || !playerData.isWithdrawal) return
 

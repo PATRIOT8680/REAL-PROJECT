@@ -8,6 +8,7 @@ import './interface/loading'
 import './interface/chat'
 import './interface/amenu'
 import './interface/reportMenu'
+import './interface/inventory'
 
 mp.events.add('guiReady', () => {
   mp.gui.chat.show(false)

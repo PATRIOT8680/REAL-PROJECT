@@ -10,11 +10,13 @@ mp.events.add('setKey', (key: number) => {
 
 export class rce extends CustomEventBase {
     static callServerResponse = 1;
+    static cefCallId = 1
     static requestServerHandle = new Map<number, (value?: any) => any>();
     static callServerResponseCEF = 1;
     static requestServerHandleCEF = new Map<number, (value?: any) => any>();
     static registerServerEvents = new Map<string, Set<serverEventHandle>>();
     static registerSocketEvents = new Map<string, Set<serverEventHandle>>();
+    static cefPromises = new Map<number, (value: any) => void>();
 
     // Добавляем обработчики для событий из CEF
     static cefHandlers = new Map<string, Set<universalEventHandle>>();
@@ -30,6 +32,24 @@ export class rce extends CustomEventBase {
 
     static triggerServer(eventName: string, ...args: any[]) {
         mp.events.callRemote('trigger:client', rce.encryptEventName(eventName), JSON.stringify(args));
+    }
+
+    static async callCef(eventName: string, ...args: any[]): Promise<any> {
+      const id = this.cefCallId++
+      mp.console.logWarning(`[CLIENT] Вызываем CEF ${eventName} с id=${id}`)
+
+      return new Promise((resolve) => {
+        this.cefPromises.set(id, resolve)
+        this.triggerCef(eventName, id, ...args)
+      })
+    }
+
+    static handleCefResponse(id: number, result: any) {
+      const resolve = this.cefPromises.get(id)
+      if (resolve) {
+        resolve(result)
+        this.cefPromises.delete(id)
+      }
     }
 
     static callServer(eventName: string, ...args: any[]): Promise<any> {
@@ -145,6 +165,18 @@ mp.events.add("client:trigger:event:split", async (tid: number, index: number, l
     } else {
         splitTrigger.set(`${tid}_${eventname}`, d);
     }
+});
+
+mp.events.add('__cefResponse', (id: number, result: any) => {
+  let parsedResult
+
+  try {
+    parsedResult = JSON.parse(result)
+  } catch (e) {
+    parsedResult = ['error']
+  }
+
+  rce.handleCefResponse(id, parsedResult)
 });
 
 mp.events.add("client:call:event", async (eventname: string, requestID: number, argsstring: string) => {

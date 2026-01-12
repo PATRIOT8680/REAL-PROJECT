@@ -1,0 +1,63 @@
+$Montserrat: "Montserrat", sans-serif
+
+.indicators-player
+  display: flex
+  flex-direction: row
+  align-items: center
+  gap: 2rem
+
+  .indicator
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: .1rem
+
+    .info-indicator
+      font-family: $Montserrat
+      font-weight: 500
+      font-size: .75rem
+      color: rgba(255, 255, 255, 0.27)
+      white-space: nowrap
+      position: absolute
+      bottom: -1.4rem
+
+    .filling-scale
+      position: relative
+      display: flex
+      align-items: center
+      justify-content: center
+
+      img
+        position: absolute
+        width: .9rem
+        pointer-events: none
+        -webkit-user-drag: none
+
+      svg
+        width: 3rem
+        height: 3rem
+
+        .path-active
+          stroke-linecap: round
+          transition: stroke-dashoffset 0.8s ease-out
+
+  #eat
+    .filling-scale
+      .path-active
+        stroke: #FFCA58
+        box-shadow: 0 4px 5px rgb(222, 0, 255)
+
+  #water
+    .filling-scale
+      .path-active
+        stroke: #53b1fd
+
+  #health
+    .filling-scale
+      .path-active
+        stroke: #c5494b
+
+  #weight
+    .filling-scale
+      .path-active
+        stroke: #ffffff

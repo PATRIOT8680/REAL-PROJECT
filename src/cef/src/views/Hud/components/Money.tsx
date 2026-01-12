@@ -1,4 +1,3 @@
-import './assets/styles/compiled-css/Money.css'
 import { useSelector } from "react-redux";
 import { RootState } from "../../../reducers/rootReducer.ts";
 import { useEffect, useRef, useState } from "react";

@@ -1,0 +1,61 @@
+.clothes-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2.5rem;
+  gap: 1.5rem;
+}
+.clothes-section .nickname-char {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+.clothes-section .clothes-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.clothes-section .clothes-grid .clothes-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+.clothes-section .clothes-grid .clothes-row .inventory-slot:hover .bg-clothes-icon {
+  transition: all 0.3s ease;
+  opacity: 0.35;
+}
+.clothes-section .clothes-grid .clothes-row .inventory-slot:hover .name-type-clothes {
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.35);
+}
+.clothes-section .clothes-grid .clothes-row .inventory-slot .bg-clothes-icon {
+  user-select: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  transition: all 0.3s ease;
+  opacity: 0.17;
+  width: 1.85rem;
+  margin-bottom: 0.5rem;
+}
+.clothes-section .clothes-grid .clothes-row .inventory-slot .name-type-clothes {
+  position: absolute;
+  bottom: 0.2rem;
+  font-family: "Manrope", sans-serif;
+  font-weight: 500;
+  font-size: 0.57rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.17);
+  transition: all 0.3s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (max-height: 930px) {
+  .clothes-section {
+    zoom: 88%;
+  }
+}
+
+/*# sourceMappingURL=ClothesSection.css.map */

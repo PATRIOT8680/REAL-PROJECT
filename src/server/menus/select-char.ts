@@ -7,6 +7,7 @@ import { setNumberChar } from "../data/char/numberChar";
 import { connectedUsers } from "../data/dataConnectedUser";
 import { getMaxExpForLevel } from "../player/experience";
 import { setCustomizationChar } from "../index";
+import { sendInventoryToCef } from "../modules/inventory/inventoryHandlers";
 
 interface IDataChar {
   firstname: string,
@@ -23,9 +24,9 @@ export const selectChar = (player: PlayerMp) => {
   setTimeout(() => {
     player.position = new mp.Vector3(-142.221, -599.458, 211.775)
     player.heading = 30.854
-    rce.triggerClient(player, 'moveSkyCamera', 'down')
+    rce.triggerClient(player, 'moveSkyCamera', 'down', 2)
     rce.triggerClient(player, 'server:showSelectChar')
-  }, 4000)
+  }, 1000)
 }
 
 rce.registerClient('client:setSelectedChar', async (player: PlayerMp, numberSlot: number, statusSlot: string, plPos) => {
@@ -78,7 +79,7 @@ rce.registerClient('client:setSelectedChar', async (player: PlayerMp, numberSlot
   }
 })
 
-rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, numberSlot: number, pointSpawn: string) => {
+rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, numberSlot: number, pointSpawn: string) => {
   if (pointSpawn !== 'exit' && pointSpawn !== 'rent') {
     return rce.triggerClient(player, 'sendNotify', 'info', 'В разработке!', 3500, 'top')
   }
@@ -97,7 +98,7 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
   player.dimension = 0
 
   try {
-    const sql = `SELECT coordquit, adminlvl, age, cash, bankmoney, lvl, exp, chardata FROM chars WHERE firstname = ? AND lastname = ?`
+    const sql = `SELECT uid, coordquit, adminlvl, age, cash, bankmoney, lvl, exp, health, armour, chardata FROM chars WHERE firstname = ? AND lastname = ?`
 
     data.query(sql, [firstName, lastName], async (err, results) => {
       if (err) {
@@ -131,8 +132,12 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
         }
 
         rce.triggerClient(player, 'execute', `window.App.spawnReducer.hideSpawn()`)
+        sendInventoryToCef(player, await getDataAccount(player, 'uid', player.id))
+
         player.spawn(new mp.Vector3(parseFloat(coords.x), parseFloat(coords.y), parseFloat(coords.z)))
         player.heading = parseFloat(coords.heading)
+        player.health = results[0].health
+        player.armour = results[0].armour
 
         console.log('Сработка до запроса')
         const cash = await getDataAccount(player, 'cash', player.id)
@@ -140,6 +145,7 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
 
         const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?'
         const uid = await getDataAccount(player, 'uid', player.id)
+        const dataChar = JSON.parse(results[0].chardata)
 
         const coordExit = {
           x: player.position.x.toFixed(3),
@@ -147,8 +153,8 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
           z: player.position.z.toFixed(3),
           heading: player.heading.toFixed(3)
         }
-        const coordString = JSON.stringify(coordExit)
 
+        const coordString = JSON.stringify(coordExit)
 
         data.query(sql, [coordString, uid], (err, results) => {
           if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
@@ -156,24 +162,26 @@ rce.registerCef('handleSpawnPlayer', (player: PlayerMp, nickname: string, number
 
         player.setVariable('ADMIN_LVL', results[0].adminlvl)
         connectedUsers.setUser(player.id, {
+          uid: results[0].uid,
           nickName: `${firstName} ${lastName}`,
+          gender: dataChar.gender,
           adminLvl: results[0].adminlvl,
           age: results[0].age,
           cash: results[0].cash,
           bankmoney: results[0].bankmoney,
           lvl: results[0].lvl,
           exp: results[0].exp,
+          unique_quest: results[0].unique_quest
         })
 
-        rce.trigger('charSpawned', player.id)
+        rce.trigger('charSpawned', player)
+        player.setVariable('gender', dataChar.gender)
         rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
         rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 
-        setTimeout(() => {
-          setCustomizationChar(player, JSON.parse(results[0].chardata))
-          rce.triggerClient(player, 'moveSkyCamera', 'down')
-          rce.triggerClient(player, 'closeSelectChar')
-        }, 4000)
+        setCustomizationChar(player, JSON.parse(results[0].chardata))
+        rce.triggerClient(player, 'moveSkyCamera', 'down', 2)
+        rce.triggerClient(player, 'closeSelectChar')
       } catch (e) {
         console.log(chalk.bgRed('• SPAWN •') + chalk.red(` Ошибка парсинга координат: ${e}`))
       }
@@ -227,7 +235,6 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
 
           if (charData) {
             let status = 'active'
-            console.log(`DC 2: ${donatcoins}`)
 
             slots.push({
               status: status,
@@ -250,18 +257,14 @@ rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
 
         const slotData = slots.map((slot: any) => {
           if (slot.nickname) {
-            console.log(`DC 4: ${donatcoins}`)
             return `{ status: '${slot.status}', nickname: '${slot.nickname}', numberChar: ${slot.numberChar}, lvl: ${slot.lvl}, exp: ${slot.exp}, expMax: ${getMaxExpForLevel(slot.lvl)}, cash: ${slot.cash}, bankmoney: ${slot.bankmoney}, fraction: 'LSPD', family: 'Бездари'}`
           } else {
-            console.log(`DC 5: ${donatcoins}`)
             return `{ status: '${slot.status}', numberChar: ${slot.numberChar} }`
           }
         }).join(', ')
 
         rce.triggerClient(player, 'execute', `window.App.selectCharReducer.showSelectChar(${slotData})`)
 
-        console.log(`DC 1: ${donatcoins}`)
-        // ДОБАВЛЕНО: Всегда устанавливаем донат-коины, независимо от состояния персонажа
         rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`)
       })
     } catch (e) {

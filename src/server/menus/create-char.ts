@@ -5,21 +5,7 @@ import chalk from 'chalk'
 import {connectedUsers} from "../data/dataConnectedUser";
 import { setCustomizationChar } from '../index'
 import { decrementDonatCoins } from "../data/account/donatcoins";
-
-// rce.registerCef('cef:createChar:handleChange', (player: PlayerMp, fieldName: string, value: any) => {
-//   switch (fieldName) {
-//     case 'gender':
-//       if (value === 'male') player.model = mp.joaat('mp_m_freemode_01')
-//       else player.model = mp.joaat('mp_f_freemode_01')
-//       break
-//
-//     case 'father':
-//       player.setCustomization()
-//
-//     default:
-//       return ''
-//   }
-// })
+import { createInventoryForChar } from "../modules/inventory/inventory";
 
 const createSlotChar = async (player: PlayerMp, numberSlot: number) => {
   try {
@@ -32,13 +18,12 @@ const createSlotChar = async (player: PlayerMp, numberSlot: number) => {
       const newUid = maxUid + 1
 
       const sid = await getDataAccount(player, 'sid', player.id)
-      const sql = 'INSERT INTO chars (uid, sid, numberslot, adminlvl, cash, bankmoney, lvl, exp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+      const sql = 'INSERT INTO chars (uid, sid, numberslot, adminlvl, cash, bankmoney, lvl, exp, health, armour, friends) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
 
-      data.query(sql, [newUid, sid, numberSlot, 0, 1500, 200, 1, 0], (err, results) => {
+      data.query(sql, [newUid, sid, numberSlot, 0, 1500, 200, 1, 0, 100, 0, '[]'], (err, results) => {
         if (err) return console.log(chalk.bgRed('• CREATE SLOT CHAR •' + chalk.red(` Err insert data: ${err}`)))
       })
     })
-
 
   } catch (e) {
     console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createSlotChar(): ${e}`)));
@@ -51,20 +36,22 @@ const closeCreateChar = async (player: PlayerMp) => {
   rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
   rce.triggerClient(player, 'execute', 'window.App.createCharReducer.hideCreateChar()')
 
-  const cash = await getDataAccount(player, 'cash', player.id)
-  const bankmoney = await getDataAccount(player, 'bankmoney', player.id)
+  const cash = connectedUsers.getField(player.id, 'cash')
+  const bankmoney = connectedUsers.getField(player.id, 'bankmoney')
+  const nickname = connectedUsers.getField(player.id, 'nickName')
 
   player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 37.333740234375))
   player.dimension = 0
 
 
   rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
+  rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`)
   rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 
   console.log(`Закрываем создание 2`)
 
-  setTimeout(async () => {
-    rce.triggerClient(player, 'moveSkyCamera', 'down')
+  // setTimeout(async () => {
+    rce.triggerClient(player, 'moveSkyCamera', 'down', 2)
     rce.triggerClient(player, 'closeCreateChar')
 
     const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?'
@@ -80,8 +67,9 @@ const closeCreateChar = async (player: PlayerMp) => {
 
     data.query(sql, [coordString, uid], (err, results) => {
       if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
+      createInventoryForChar(player, uid, connectedUsers.getField(player.id, 'sid'))
     })
-  }, 4000)
+  // }, 4000)
 }
 
 rce.registerCef('cef:buyUniqueScenario', async (player: PlayerMp, scenario: string) => {
@@ -153,7 +141,7 @@ rce.registerCef('handleDonatCreatePlayer', async (player: PlayerMp, numberSlot: 
 
   rce.registerCef('cef:handleCreateChar', async (player: PlayerMp, numberSlot, dataChar)=> {
     try {
-      const { firstName, lastName, age } = dataChar
+      const { firstName, lastName, age, gender } = dataChar
       console.log(JSON.stringify(dataChar))
       const uid = await getDataAccount(player, 'uid', player.id)
       const checkDuplicateQuery = 'SELECT id FROM chars WHERE firstname = ? AND lastname = ?';
@@ -199,23 +187,28 @@ rce.registerCef('handleDonatCreatePlayer', async (player: PlayerMp, numberSlot: 
           }
 
           console.log('4')
+          player.dimension = 0
           player.setVariable('ADMIN_LVL', 0)
+          player.setVariable('gender', dataChar.gender)
           player.setVariable('player_spawned', true)
 
           connectedUsers.setUser(player.id, {
+            uid: uid,
             nickName: `${firstName} ${lastName}`,
+            gender: gender,
             adminLvl: 0,
             age: dataChar.age,
             cash: 1500,
             bankmoney: 200,
             lvl: 1,
-            exp: 0
+            exp: 0,
+            unique_quest: ''
           })
 
           setCustomizationChar(player, dataChar)
 
           console.log('5')
-          rce.trigger('charSpawned', player.id)
+          rce.trigger('charSpawned', player)
           closeCreateChar(player)
         });
       });

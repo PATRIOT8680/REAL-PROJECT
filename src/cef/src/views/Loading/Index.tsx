@@ -35,24 +35,13 @@ const Loading = () => {
 
   return(
     <div className={`loading ${exit ? 'exit' : ''}`}>
-      <div className="red_blur"></div>
       <div className="content">
-        <div className="loader">
-          <img className="star" src={star_svg} />
-          <svg className="circle" width="86" height="86" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M81 43C81 63.9868 63.9868 81 43 81C22.0132 81 5 63.9868 5 43C5 22.0132 22.0132 5 43 5C63.9868 5 81 22.0132 81 43Z" stroke="#63666E" strokeOpacity="0.5" strokeWidth="10" />
-            <path className="active_line" d="M81 43C81 63.9868 63.9868 81 43 81C22.0132 81 5 63.9868 5 43C5 22.0132 22.0132 5 43 5C63.9868 5 81 22.0132 81 43Z" stroke="#FF0C46" strokeWidth="10" />
-          </svg>
-        </div>
+        <svg className='icon-flash' width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M31.5 0C48.897 0 63 14.103 63 31.5C63 48.897 48.897 63 31.5 63C14.103 63 0 48.897 0 31.5C0 14.103 14.103 0 31.5 0ZM12.8819 35.6382H31.503L29.4349 52.1912L50.1251 27.3628H31.503L33.5722 10.8098L12.8819 35.6382Z" fill="#443F48" />
+        </svg>
         <div className="text-block">
-          <span className="header">
-            <span className="main">LOADING</span>
-            <span className="dot">.</span>
-            <span className="dot">.</span>
-            <span className="dot">.</span>
-          </span>
-
-          <span className="description">{t('one-span')}, <br/>{t('two-span')}</span>
+          <span className="main">Загрузка...</span>
+          <span className="description">Происходит загрузка ресурсов.<br/>Пожалуйста, подождите...</span>
         </div>
       </div>
     </div>

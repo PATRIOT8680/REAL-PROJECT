@@ -20,9 +20,20 @@ export class rce extends CustomEventBase {
   static requestServerHandle = new Map<number, (value?: any) => any>();
   static requestClientHandle = new Map<number, (value?: any) => any>();
 
-  // Изменяем метод triggerClient для отправки через общий канал
   static triggerClient(name: string, ...args: any[]) {
-    mp.trigger('triggerFromCef', name, ...args);
+    mp.trigger('triggerFromCef', name, ...args)
+  }
+
+  static registerCallable(name: string, handler: (...args: any[]) => any) {
+    this.register(name, (...handlerArgs) => {
+      const result = handler(...handlerArgs)
+
+      if (typeof handlerArgs[0] === 'number' && Number.isInteger(handlerArgs[0])) {
+        mp.trigger('__cefResponse', handlerArgs[0], result)
+      }
+
+      return result
+    })
   }
 
   static lastServerSend = 0;
