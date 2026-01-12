@@ -24,11 +24,11 @@ export const checkUser = (player: PlayerMp, login: string, email: string, passwo
     if (Array.isArray(users) && users.length > 0) {
       const existingSocialClub = users.find(user => user.socialClubName = socialClubName)
       if (existingSocialClub) {
-        rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с вашим Social Club уже зарегистрирован!`, 5500, 'right')
+        rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с вашим Social Club уже зарегистрирован!`, 4000, 'bottom')
         return
       }
 
-      rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с данным Email / логином уже зарегистрирован!`, 5000, 'right')
+      rce.triggerClient(player, 'sendNotify', 'err', `Пользователь с данным Email / логином уже зарегистрирован!`, 4000, 'bottom')
       return
     }
 
@@ -71,7 +71,7 @@ export const registerUser = (player: PlayerMp, login: string, email: string, pas
           selectChar(player)
           connectedUsers.setUser(player.id, { login: login, sid: sid })
           rce.triggerClient(player, 'server:auth:saveLogin', login)
-          rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 5000, 'bottom')
+          rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 4000, 'bottom')
           rce.triggerCef(player, 'server:authSuccess')
           console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`))
         }

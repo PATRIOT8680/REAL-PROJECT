@@ -55,10 +55,10 @@ export const decrementDonatCoins = async (player: PlayerMp, sid: number, amount:
           return
         }
 
-        const currentCash = result[0].cash
+        const currentCash = result[0].donatcoins
 
         if (currentCash - amount < 0) {
-          rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно донат - валюты!', 3700, 'bottom')
+          rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно донат - валюты!', 3700, 'top')
           resolve('noDonatCoins')
           return
         }

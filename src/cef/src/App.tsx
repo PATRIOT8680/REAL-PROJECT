@@ -37,6 +37,7 @@ import CreateChar from "./views/CreateChar/Index.tsx"
 import AdminMenu from "./views/AdminMenu/Index.tsx";
 import PlayerReports from "./views/PlayerReports/Index.tsx";
 import SpawnMenu from "./views/Spawn/Index.tsx";
+import Inventory from "./views/Inventory/Index.tsx";
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -63,11 +64,42 @@ const App = () => {
   const adminMenuVisible = useSelector((state: RootState) => state.adminMenuReducer.isVisible)
   const playerReportsVisible = useSelector((state: RootState) => state.playerReportsReducer.isVisible)
   const spawnVisible = useSelector((state: RootState) => state.spawnReducer.isVisible)
+  const inventoryState = useSelector((state: RootState) => state.inventoryReducer)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
   const playerInfoReducer = useSelector((state: RootState) => state.playerInfoReducer)
-  
+
+  rce.registerCallable('getOpenMenus', () => {
+    const menus = {
+      Auth: authVisible,
+      Chat: chatVisible,
+      Welcome: welcomeVisible,
+      Rent: rentVisible,
+      Death: deathReducer.isVisible,
+      HUD: hudVisible,
+      SelectChar: selectCharVisible,
+      CreateChar: createCharVisible,
+      AdminMenu: adminMenuVisible,
+      Reports: playerReportsVisible,
+      Spawn: spawnVisible,
+      Inventory: inventoryState.isVisible,
+    };
+
+    let open = Object.entries(menus)
+      .filter(([, visible]) => visible)
+      .map(([name]) => name);
+
+    // Всегда массив
+    if (!Array.isArray(open)) open = open ? [open] : ['none'];
+
+    // Самое важное: преобразуем в JSON-строку перед отправкой
+    const jsonResult = JSON.stringify(open);
+
+    console.log(`[CEF] Готовим отправку JSON: ${jsonResult}`);
+
+    return jsonResult; // возвращаем СТРОКУ
+  });
 
   useEffect(() => {
     ev = rce.register('client:setLanguage', (lang: string) => {
@@ -117,6 +149,7 @@ const App = () => {
       { adminMenuVisible && <AdminMenu /> }
       { playerReportsVisible && <PlayerReports /> }
       { spawnVisible && <SpawnMenu /> }
+      { inventoryState.isVisible && <Inventory haveDonateSlots={inventoryState.haveDonatSlots} /> }
 
       {/*<div className="language_ambients">*/}
       {/*  /!*{ shouldChangeLanguage && <ChangeLanguage /> }*!/*/}

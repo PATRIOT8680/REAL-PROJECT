@@ -292,7 +292,7 @@ const Chat = () => {
 
   const addMsg = useCallback((name: string, text: string, showTime: boolean, tile: string) => {
 		const coloredText = colorify(text)
-		addString(`<b>Гражданин #${playerInfo.sid}</b> • ${coloredText}`, true)
+		addString(`<b>Гражданин #${playerInfo.sid} сказал:</b> ${coloredText}`, true)
 	}, [])
 
   const handleActionInput = (action: string) => {

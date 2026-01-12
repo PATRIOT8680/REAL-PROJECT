@@ -166,11 +166,11 @@ export {
   savePlayerData
 }
 
-rce.register('charSpawned', async (playerId: number) => {
-  const player = mp.players.at(playerId)
-  await addPlayer(player)
+rce.register('charSpawned', (player: PlayerMp) => {
+  if (!player) return
+  addPlayer(player)
 })
 
-mp.events.add('playerQuit', async (player: PlayerMp) => {
-  await removePlayer(player)
+mp.events.add('playerQuit', (player: PlayerMp) => {
+  removePlayer(player)
 })

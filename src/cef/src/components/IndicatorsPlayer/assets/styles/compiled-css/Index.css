@@ -1,0 +1,56 @@
+.indicators-player {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+.indicators-player .indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+.indicators-player .indicator .info-indicator {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.27);
+  white-space: nowrap;
+  position: absolute;
+  bottom: -1.4rem;
+}
+.indicators-player .indicator .filling-scale {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.indicators-player .indicator .filling-scale img {
+  position: absolute;
+  width: 0.9rem;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.indicators-player .indicator .filling-scale svg {
+  width: 3rem;
+  height: 3rem;
+}
+.indicators-player .indicator .filling-scale svg .path-active {
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease-out;
+}
+.indicators-player #eat .filling-scale .path-active {
+  stroke: #FFCA58;
+  box-shadow: 0 4px 5px rgb(222, 0, 255);
+}
+.indicators-player #water .filling-scale .path-active {
+  stroke: #53b1fd;
+}
+.indicators-player #health .filling-scale .path-active {
+  stroke: #c5494b;
+}
+.indicators-player #weight .filling-scale .path-active {
+  stroke: #ffffff;
+}
+
+/*# sourceMappingURL=Index.css.map */

@@ -3,6 +3,7 @@ import './assets/styles/compiled-css/Vehicles.css'
 import { vehiclesList } from "./assets/conf/vehiclesList.ts";
 import {useState, useMemo, useEffect} from "react";
 import { rce } from "../../../modules/rce.ts";
+import { CDN_URL } from "../../../main.tsx";
 
 import LoadingComponent from "../components/Loading.tsx";
 
@@ -25,7 +26,7 @@ const VehiclesPage = () => {
           const img = new Image()
           img.onload = () => resolve()
           img.onerror = () => resolve()
-          img.src = `assets/img/vehicles-gta/${veh}.png`
+          img.src = `${CDN_URL}/img/vehicles-gta/${veh}.png`
         })
       })
 
@@ -186,7 +187,7 @@ const VehiclesPage = () => {
                       return (
                           <li className="veh-card" key={index}>
                             <div className="img-box">
-                              <img src={`assets/img/vehicles-gta/${veh}.png`} loading="lazy"/>
+                              <img src={`${CDN_URL}/img/vehicles-gta/${veh}.png`} loading="lazy"/>
                             </div>
                             <div className="line1">
                               <span className="veh-name">{veh.toLowerCase()}</span>

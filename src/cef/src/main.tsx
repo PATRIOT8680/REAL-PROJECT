@@ -26,6 +26,10 @@ if (typeof window !== 'undefined' && typeof window.mp === 'undefined') {
   };
 }
 
+const encdd = 'aHR0cDovL2Nkbi5kZXYtcmVhbC1ycC5ydQ'
+
+export const CDN_URL = atob(encdd)
+
 initI18n().then(() => {
   createRoot(document.getElementById('root')!).render(
     <Provider store={store}>

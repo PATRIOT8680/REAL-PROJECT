@@ -11,5 +11,5 @@ mp.events.add('browserDomReady', async (player: PlayerMp) => {
     setTimeout(() => {
       gui.execute('window.App.welcomeReducer.hideWelcome()')
     }, 200)
-  }, 7100)
+  }, 5100)
 })

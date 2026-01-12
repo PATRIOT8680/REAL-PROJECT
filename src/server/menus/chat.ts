@@ -6,12 +6,18 @@ const cmdHandlers: Record<string, CommandHandler> = {}
 const mutedPlayers: Map<PlayerMp, boolean> = new Map()
 const CHAT_MESSAGE_EVENT = 'chat:message'
 
-export const send = (player: PlayerMp | null, msg: string, showTime: boolean, tile?: string) => {
+export const send = (player: PlayerMp | null, msg: string, showTime: boolean, tile?: string, radius?: number) => {
   if (!player) {
     console.error('[CHAT SEND] player не должен быть равен null. Используй chat.broadcast')
     return
   } else {
-    rce.triggerClient(player, CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
+    if (radius) {
+      mp.players.forEachInRange(player.position, radius, (target: PlayerMp) => {
+        rce.triggerClient(player, CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
+      })
+    } else {
+      rce.triggerClient(player, CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
+    }
   }
 }
 

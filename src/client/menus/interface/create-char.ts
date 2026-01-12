@@ -226,6 +226,7 @@ export const createChar = (sid: number, numberSlot: number, uniqueScenario: stri
         hasExecuted = true
         mp.gui.cursor.show(true, true)
 
+        gui.execute('window.App.loadingReducer.showLoading(2500)')
         gui.execute(`window.App.createCharReducer.showCreateChar(${sid}, ${numberSlot})`)
         rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604)
         mp.console.logInfo(`Pos pl: ${mp.players.local.position}`)
@@ -256,8 +257,8 @@ export const createChar = (sid: number, numberSlot: number, uniqueScenario: stri
     }, 100)
 
     mp.players.local.freezePosition(true)
-    rce.trigger('moveSkyCamera', 'down')
-  }, 4000)
+    rce.trigger('moveSkyCamera', 'down', 2)
+  }, 1500)
 }
 
 rce.registerServer('closeCreateChar', () => {

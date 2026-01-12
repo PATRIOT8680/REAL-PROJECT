@@ -1,0 +1,63 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Manrope: "Manrope", sans-serif
+
+.header-inventory
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  z-index: 1
+
+  .left-sect
+    display: flex
+    flex-direction: row
+    align-items: center
+    position: relative
+    z-index: 1
+    gap: 3rem
+    user-select: none
+    -webkit-user-drag: none
+
+    .title
+      font-family: $Druk
+      text-transform: uppercase
+      font-size: 2rem
+      color: #ffca58
+
+  .indicators-player
+    position: absolute
+    left: 50%
+    transform: translate(-50%, 0)
+
+  .esc-exit
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    width: 4.3rem
+    height: 4.3rem
+    background: #2a242c
+    color: #636165
+    position: absolute
+    top: 0
+    right: 0
+    transition: all .3s ease
+    cursor: pointer
+    z-index: 1
+
+    &:hover
+      color: #FFCA58
+      background: #342d36
+      transition: all .3s ease
+
+    .keybind
+      font-family: $Druk
+      user-select: none
+      -webkit-user-drag: none
+
+    .description
+      font-size: .95rem
+      font-weight: 500
+      font-family: $Manrope
+      opacity: .8
+      user-select: none
+      -webkit-user-drag: none

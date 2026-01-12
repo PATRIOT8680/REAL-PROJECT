@@ -37,27 +37,53 @@ export const addBankMoney = (player: PlayerMp, uid: number, amount: number): Pro
   }
 }
 
-export const decrementBankMoney = (player: PlayerMp, uid: number, amount: number): Promise<boolean> => {
+export const decrementBankMoney = async (player: PlayerMp, uid: number, amount: number): Promise<boolean | string> => {
   try {
-    const sql = 'UPDATE chars SET bankmoney = bankmoney - ? WHERE uid = ?'
+    const checkSql = 'SELECT bankmoney FROM chars WHERE uid = ?'
 
     return new Promise((resolve, reject) => {
-      data.query(sql, [amount, uid], (err, result: any) => {
+      data.query(checkSql, [uid], async (err, result: any) => {
         if (err) {
-          console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка add: ${err}`))
+          console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка проверки: ${err}`))
           reject(err)
           return
         }
 
-        if (result.affectedRows > 0) {
-          rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.decrementBankMoney(${amount})`)
-          resolve(true)
-        } else {
+        if (result.length === 0) {
           resolve(false)
+          return
         }
+
+        const currentBankMoney = result[0].bankmoney
+
+        if (currentBankMoney - amount < 0) {
+          if (player && mp.players.exists(player)) {
+            rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно средств на банковском счёте!', 3700, 'bottom')
+          }
+          resolve('noBankMoney')
+          return
+        }
+
+
+        const updateSql = 'UPDATE chars SET bankmoney = bankmoney - ? WHERE uid = ?'
+        data.query(updateSql, [amount, uid], (err, result: any) => {
+          if (err) {
+            console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка списания: ${err}`))
+            reject(err)
+            return
+          }
+
+          if (result.affectedRows > 0) {
+            rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.decrementBankMoney(${amount})`)
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        })
       })
     })
   } catch (e) {
-    console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Ошибка: ${e}`))
+    console.log(chalk.bgRed('• DECREMENT BANKMONEY •') + chalk.red(` Критическая ошибка: ${e}`))
+    return false
   }
 }

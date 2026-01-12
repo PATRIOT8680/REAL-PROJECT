@@ -24,7 +24,7 @@ const Welcome = () => {
   const { t } = useTranslation('welcome')
 
   useEffect(() => {
-    const timer = setTimeout(() => setActiveExit(true),  7000)
+    const timer = setTimeout(() => setActiveExit(true),  5000)
 
     return () => {
       clearTimeout(timer)
@@ -47,7 +47,7 @@ const Welcome = () => {
         <div className="content">
           <div className="header-welcome">
             <span className="title">Добро пожаловать</span>
-            <div className="progress-line" style={{ animationDuration: '6s' }}></div>
+            <div className="progress-line" style={{ animationDuration: '5s' }}></div>
             <span className="subtitle">
               Ты входишь в мир, где главное — уважение к ролям и живая история.
               На нашем сервере ценится реализм, сюжет и честная игра без хаоса.

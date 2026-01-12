@@ -20,7 +20,7 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
     }
 
     if (Array.isArray(results) && results.length === 0) {
-      rce.triggerClient(player, 'sendNotify', 'err', `Аккаунт "${login}" не найден!`, 4500, 'right')
+      rce.triggerClient(player, 'sendNotify', 'err', `Аккаунт "${login}" не найден!`, 4500, 'bottom')
       return
     }
 
@@ -69,6 +69,7 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
                 data.query(sql, [sid, charResults[0].numberslot], (err, charResults) => {
                   if (err) return console.log(chalk.bgRed('• GET UQUEST •') + chalk.red(` Ошибка: ${err}`))
 
+                  rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'bottom')
                   rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`)
                   rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot, charResults)
                 })
@@ -77,6 +78,7 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
                 console.log('переходим к выборке')
                 // Все строки заполнены, переходим к выбору персонажа
                 selectChar(player)
+                rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'bottom')
               }
             } else {
               selectChar(player)
@@ -87,7 +89,7 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
             }
           })
         } else {
-          rce.triggerClient(player, 'sendNotify', 'err', 'Неверный логин или пароль!', 5000, 'right')
+          rce.triggerClient(player, 'sendNotify', 'err', 'Неверный логин или пароль!', 5000, 'bottom')
         }
       })
     }
@@ -108,6 +110,7 @@ mp.events.add('playerQuit', async (player: PlayerMp) => {
     }
 
     try {
+      console.log('сохранение при выборке перса')
       const sid = await getDataAccount(player, 'sid', player.id)
       console.log(getNumberChar(player.id))
       const sql = 'UPDATE chars SET coordquit = ? WHERE sid = ? AND numberslot = ?'

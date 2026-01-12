@@ -67,15 +67,9 @@ const Notify: FC<INotification> = ({ id, typeNotify, msg, dispatch, duration }) 
         onMouseEnter={handleStopTimer}
         onMouseLeave={handleStartTimer}
       >
-        <div className="block-icon"><img className='icon' src={`assets/img/notify/${typeNotify}.svg`} /></div>
         <div className="block-notify">
+          <div className="left-line"></div>
           <span className="text">{msg}</span>
-          <div className="progress-line">
-            <div 
-              className={`active-line ${timerWork ? '' : 'paused'}`}
-              style={{ animationDuration: `${duration}ms` }}
-            ></div>
-          </div>
         </div>
       </div>
     </>

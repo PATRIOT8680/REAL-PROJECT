@@ -58,10 +58,6 @@ export const decrementCash = async (player: PlayerMp, uid: number, amount: numbe
         const currentCash = result[0].cash
 
         if (currentCash - amount < 0) {
-          const player = mp.players.toArray().find(p => p.getVariable('uid') === uid)
-          if (player) {
-            rce.triggerClient(player, 'sendNotify', 'err', 'У вас недостаточно наличных!', 3700, 'bottom')
-          }
           resolve('noCash')
           return
         }

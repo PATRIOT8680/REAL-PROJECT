@@ -1,0 +1,119 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
+$Manrope: "Manrope", sans-serif
+
+.inventory-menu
+  width: 100%
+  height: 100%
+  background: rgba(29, 25, 31, 0.98)
+  box-sizing: border-box
+  padding: 1.25rem 1.7rem
+  transition: all .3s ease
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  overflow: hidden
+  animation: fadeIn .5s ease
+
+  &.hided
+    opacity: 0
+    transition: all .5s ease
+
+  .shadow-bg
+    position: absolute
+    top: -6rem
+    left: -18rem
+    width: 75rem
+    filter: blur(10rem)
+    z-index: 0
+    user-select: none
+    -webkit-user-drag: none
+    opacity: .6
+
+  .inventory-content
+    display: flex
+    flex-direction: row
+    width: 100%
+    justify-content: space-between
+    height: calc(100% - 3rem)
+    flex: 1
+    min-height: 0
+
+    .left-section
+      display: flex
+      flex-direction: column
+      height: 100%
+      justify-content: space-between
+      gap: 2rem
+      min-height: 0
+
+    .section-slots
+      display: flex
+      flex-direction: column
+      gap: 1rem
+      min-height: 0
+
+      &:nth-child(1)
+        .section-slots-grid
+          flex: 1
+          overflow-y: auto
+          grid-auto-rows: min-content
+          max-height: 100%
+          padding-right: .5rem
+
+          &::-webkit-scrollbar
+            width: 0.3rem
+
+          &::-webkit-scrollbar-track
+            opacity: 1
+            background-color: #cdcdcd15
+            border-radius: 1px
+
+          &::-webkit-scrollbar-thumb
+            cursor: grabbing
+            background-color: rgba(255, 202, 88, 0.6)
+            border-radius: 1px
+
+            &:hover
+              background-color: rgba(255, 202, 88)
+
+      &:nth-child(2)
+        flex: 0 0 auto
+        overflow: visible
+
+        .section-slots-grid
+          grid-auto-rows: min-content
+          align-content: start
+          overflow: visible
+          height: auto
+          min-height: auto
+
+      .name-section
+        font-family: $Montserrat
+        font-weight: 600
+        font-size: 1rem
+        text-transform: uppercase
+        color: rgba(255, 255, 255, 0.71)
+        user-select: none
+        -webkit-user-drag: none
+        flex-shrink: 0
+
+      .section-slots-grid
+        display: grid
+        grid-template-columns: repeat(5, 0fr)
+        gap: 14px
+        overflow-x: hidden
+
+    .right-section
+      display: flex
+      flex-direction: column
+      height: 100%
+      gap: 2rem
+      min-height: 0
+      justify-content: space-between
+
+    .center-section
+      display: flex
+      flex-direction: column
+      height: 100%
+      justify-content: space-between

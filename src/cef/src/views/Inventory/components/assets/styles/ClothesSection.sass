@@ -1,0 +1,62 @@
+$Montserrat: "Montserrat", sans-serif
+$Manrope: "Manrope", sans-serif
+
+.clothes-section
+  display: flex
+  flex-direction: column
+  align-items: center
+  margin-top: 2.5rem
+  gap: 1.5rem
+
+  .nickname-char
+    font-family: $Montserrat
+    font-weight: 600
+    text-transform: uppercase
+    color: rgba(255, 255, 255, 0.6)
+
+  .clothes-grid
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 1rem
+
+    .clothes-row
+      display: flex
+      flex-direction: row
+      gap: 1rem
+
+      .inventory-slot
+        &:hover
+          .bg-clothes-icon
+            transition: all .3s ease
+            opacity: .35
+
+          .name-type-clothes
+            transition: all .3s ease
+            color: rgba(255, 255, 255, 0.35)
+
+        .bg-clothes-icon
+          user-select: none
+          pointer-events: none
+          -webkit-user-drag: none
+          transition: all .3s ease
+          opacity: .17
+          width: 1.85rem
+          margin-bottom: .5rem
+
+        .name-type-clothes
+          position: absolute
+          bottom: .2rem
+          font-family: $Manrope
+          font-weight: 500
+          font-size: .57rem
+          text-transform: uppercase
+          color: rgba(255, 255, 255, 0.17)
+          transition: all .3s ease
+          user-select: none
+          -webkit-user-drag: none
+
+
+@media (max-height: 930px)
+  .clothes-section
+    zoom: 88%

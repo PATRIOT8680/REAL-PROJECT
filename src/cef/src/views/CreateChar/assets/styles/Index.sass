@@ -46,6 +46,7 @@ $Manrope: "Manrope", sans-serif
     padding: 1.35rem 2rem
     display: flex
     flex-direction: column
+    animation: fadeInCreateChar .6s ease
     gap: 2rem
 
     .header-create-char
@@ -179,3 +180,9 @@ $Manrope: "Manrope", sans-serif
     outline-offset: -12px
   100%
     background: #ffca58
+
+@keyframes fadeInCreateChar
+  from
+    opacity: 0
+  to
+    opacity: 1

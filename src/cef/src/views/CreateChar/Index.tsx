@@ -277,11 +277,11 @@ const CreateChar = memo(() => {
     });
   }, [dataChar])
 
-  useState(() => {
+  useEffect(() => {
     setTimeout(() => {
       initializeCharacter()
-    }, 1000)
-  })
+    }, 100)
+  }, [initializeCharacter])
 
   const setDefaultClothes = useCallback((gender: 'male' | 'female') => {
     const defaultTops = clothesChar[gender].tops[0];

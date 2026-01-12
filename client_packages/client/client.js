@@ -228,11 +228,13 @@ mp.events.add('setKey', (key) => {
 });
 class rce extends CustomEventBase {
     static callServerResponse = 1;
+    static cefCallId = 1;
     static requestServerHandle = new Map();
     static callServerResponseCEF = 1;
     static requestServerHandleCEF = new Map();
     static registerServerEvents = new Map();
     static registerSocketEvents = new Map();
+    static cefPromises = new Map();
     // Добавляем обработчики для событий из CEF
     static cefHandlers = new Map();
     static key;
@@ -244,6 +246,21 @@ class rce extends CustomEventBase {
     }
     static triggerServer(eventName, ...args) {
         mp.events.callRemote('trigger:client', rce.encryptEventName(eventName), JSON.stringify(args));
+    }
+    static async callCef(eventName, ...args) {
+        const id = this.cefCallId++;
+        mp.console.logWarning(`[CLIENT] Вызываем CEF ${eventName} с id=${id}`);
+        return new Promise((resolve) => {
+            this.cefPromises.set(id, resolve);
+            this.triggerCef(eventName, id, ...args);
+        });
+    }
+    static handleCefResponse(id, result) {
+        const resolve = this.cefPromises.get(id);
+        if (resolve) {
+            resolve(result);
+            this.cefPromises.delete(id);
+        }
     }
     static callServer(eventName, ...args) {
         const requestID = rce.callServerResponse++;
@@ -344,6 +361,16 @@ mp.events.add("client:trigger:event:split", async (tid, index, last, eventname, 
     else {
         splitTrigger.set(`${tid}_${eventname}`, d);
     }
+});
+mp.events.add('__cefResponse', (id, result) => {
+    let parsedResult;
+    try {
+        parsedResult = JSON.parse(result);
+    }
+    catch (e) {
+        parsedResult = ['error'];
+    }
+    rce.handleCefResponse(id, parsedResult);
 });
 mp.events.add("client:call:event", async (eventname, requestID, argsstring) => {
     try {
@@ -563,7 +590,7 @@ mp.events.add('browserDomReady', async (player) => {
         setTimeout(() => {
             gui.execute('window.App.welcomeReducer.hideWelcome()');
         }, 200);
-    }, 7100);
+    }, 5100);
 });
 
 const CHAT_MESSAGE_EVENT = 'chat:message';
@@ -723,6 +750,82 @@ rce.registerAll('cef:closeReportMenu', () => {
     mp.game.ui.displayRadar(true);
     mp.game.ui.setPauseMenuActive(true);
     mp.gui.cursor.show(false, false);
+});
+
+let inventoryVisible = false;
+const showInventory = async () => {
+    inventoryVisible = true;
+    const haveDonatSlots = await rce.callServer('existenceDonatSlots');
+    const health = mp.players.local.getHealth();
+    gui.execute(`window.App.playerInfoReducer.setHealth(${health})`);
+    gui.execute(`window.App.inventoryReducer.showInventory(${haveDonatSlots}, false)`);
+    gui.execute(`window.App.hudReducer.hideHud()`);
+    gui.execute(`window.App.chatReducer.hideChat()`);
+    mp.game.ui.displayRadar(false);
+    mp.gui.cursor.visible = true;
+};
+const hideInventory = () => {
+    inventoryVisible = false;
+    rce.triggerCef('fadeCloseInventory');
+    setTimeout(() => {
+        gui.execute(`window.App.inventoryReducer.hideInventory()`);
+        gui.execute(`window.App.hudReducer.showHud()`);
+        gui.execute(`window.App.chatReducer.showChat()`);
+        mp.game.ui.displayRadar(true);
+        mp.gui.cursor.visible = false;
+    }, 500);
+};
+mp.keys.bind(Keys.VK_TAB, false, async () => {
+    if (!inventoryVisible) {
+        const openedMenus = await rce.callCef('getOpenMenus');
+        mp.console.logWarning(openedMenus);
+        const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent'];
+        const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu));
+        if (!hasSpecialOpen) {
+            showInventory();
+        }
+    }
+    else {
+        hideInventory();
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    if (inventoryVisible) {
+        hideInventory();
+    }
+});
+rce.registerAll('showInventory', () => {
+    showInventory();
+});
+rce.registerAll('hideInventory', () => {
+    hideInventory();
+});
+// Колесо оружия
+mp.events.add('render', () => {
+    mp.game.controls.disableControlAction(0, 12, true);
+    mp.game.controls.disableControlAction(0, 14, true);
+    mp.game.controls.disableControlAction(0, 15, true);
+    mp.game.controls.disableControlAction(0, 16, true);
+    mp.game.controls.disableControlAction(0, 17, true);
+    mp.game.controls.disableControlAction(0, 37, true);
+    mp.game.controls.disableControlAction(0, 53, true);
+    mp.game.controls.disableControlAction(0, 54, true);
+    mp.game.controls.disableControlAction(0, 56, true);
+    mp.game.controls.disableControlAction(0, 99, true);
+    mp.game.controls.disableControlAction(0, 115, true);
+    mp.game.controls.disableControlAction(0, 116, true);
+    mp.game.controls.disableControlAction(0, 157, true);
+    mp.game.controls.disableControlAction(0, 158, true);
+    mp.game.controls.disableControlAction(0, 159, true);
+    mp.game.controls.disableControlAction(0, 160, true);
+    mp.game.controls.disableControlAction(0, 161, true);
+    mp.game.controls.disableControlAction(0, 162, true);
+    mp.game.controls.disableControlAction(0, 163, true);
+    mp.game.controls.disableControlAction(0, 164, true);
+    mp.game.controls.disableControlAction(0, 165, true);
+    mp.game.controls.disableControlAction(0, 261, true);
+    mp.game.controls.disableControlAction(0, 262, true);
+    mp.game.controls.disableControlAction(0, 100, true);
 });
 
 mp.events.add('guiReady', () => {
@@ -1557,6 +1660,7 @@ const createChar = (sid, numberSlot, uniqueScenario) => {
             if (!mp.game.invoke(Natives$2.IS_PLAYER_SWITCH_IN_PROGRESS) && !hasExecuted) {
                 hasExecuted = true;
                 mp.gui.cursor.show(true, true);
+                gui.execute('window.App.loadingReducer.showLoading(2500)');
                 gui.execute(`window.App.createCharReducer.showCreateChar(${sid}, ${numberSlot})`);
                 rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604);
                 mp.console.logInfo(`Pos pl: ${mp.players.local.position}`);
@@ -1573,8 +1677,8 @@ const createChar = (sid, numberSlot, uniqueScenario) => {
             }
         }, 100);
         mp.players.local.freezePosition(true);
-        rce.trigger('moveSkyCamera', 'down');
-    }, 4000);
+        rce.trigger('moveSkyCamera', 'down', 2);
+    }, 1500);
 };
 rce.registerServer('closeCreateChar', () => {
     cameraRotator.stop();
@@ -1614,7 +1718,6 @@ rce.registerServer('server:showSelectChar', async () => {
     await rce.callServer('selectChar:getDataAllChars');
     const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
     mp.players.local.dimension;
-    mp.players.local.taskStartScenarioInPlace(scenario, 0, false);
     mp.game.ui.setPauseMenuActive(false);
     // setTimeout(() => {
     //   dataChars.forEach((char: any) => {
@@ -1646,6 +1749,7 @@ rce.registerServer('server:showSelectChar', async () => {
             hasExecuted = true;
             mp.gui.cursor.show(true, true);
             rce.triggerServer('client:flyEndSelectChar');
+            mp.players.local.taskStartScenarioInPlace(scenario, 0, true);
             clearInterval(intervalFly);
         }
     }, 100);
@@ -1731,7 +1835,7 @@ rce.registerServer('closeSelectChar', () => {
         gui.execute('window.App.hudReducer.showHud()');
         mp.players.local.freezePosition(false);
         mp.game.ui.displayRadar(true);
-    }, 4000);
+    }, 2000);
 });
 
 const Natives = {
@@ -1741,11 +1845,19 @@ const Natives = {
 };
 rce.registerAll('moveSkyCamera', (moveTo, switchType) => {
     const localplayer = mp.players.local;
+    if (!localplayer || !localplayer.handle)
+        return;
+    let safeType = 1;
+    if (switchType !== undefined || switchType !== null) {
+        let parsed = parseInt(switchType, 10);
+        if (!isNaN(parsed))
+            safeType = parsed;
+    }
     mp.console.logInfo(`Sky camera: ${localplayer.handle}, ${moveTo}, ${switchType}`);
     switch (moveTo) {
         case 'up':
             mp.console.logInfo('Up');
-            mp.game.invoke(Natives.SWITCH_OUT_PLAYER, localplayer.handle, 0, parseInt(switchType));
+            mp.game.invoke(Natives.SWITCH_OUT_PLAYER, localplayer.handle, 0, safeType);
             break;
         case 'down':
             mp.console.logInfo('Down');
@@ -1758,9 +1870,10 @@ rce.registerAll('moveSkyCamera', (moveTo, switchType) => {
 });
 const checkCamInAir = () => {
     if (mp.game.invoke(Natives.IS_PLAYER_SWITCH_IN_PROGRESS)) {
-        setTimeout(() => {
-            checkCamInAir();
-        }, 400);
+        setTimeout(checkCamInAir, 400);
+    }
+    else {
+        mp.players.local.freezePosition(false);
     }
 };
 
@@ -1768,3 +1881,8 @@ rce.registerAll('getGroundZ', () => {
     const pos = mp.players.local.position;
     return mp.game.gameplay.getGroundZFor3DCoord(pos.x, pos.y, pos.z, false, false);
 });
+
+// import './game/locations'
+mp.game.invoke("0x6E9EF3A33C8899F8", true);
+mp.game.invoke("0x4CC7F0FEA5283FE0", true);
+mp.game.invoke("0xAEEDAD1420C65CC0", true);
