@@ -38,6 +38,7 @@ import AdminMenu from "./views/AdminMenu/Index.tsx";
 import PlayerReports from "./views/PlayerReports/Index.tsx";
 import SpawnMenu from "./views/Spawn/Index.tsx";
 import Inventory from "./views/Inventory/Index.tsx";
+import WaitingLoader from "./views/WaitingLoader/Index.tsx";
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -132,7 +133,7 @@ const App = () => {
   return(
     <>
       <div className="server-info">
-        <span className="text">real-rp.ru (pre-dev: v0.0.5)</span>
+        <span className="text">dev-real-rp.ru (pre-dev: v0.0.5.1)</span>
         <span className="text">{playerInfoReducer.nickname ? ` • ${playerInfoReducer.nickname}` : ''}</span>
         <span className="text">{playerInfoReducer.sid ? ` #${playerInfoReducer.sid}` : ''}</span>
         <span className="text"> • ID: {playerInfoReducer.id}</span>
@@ -150,6 +151,7 @@ const App = () => {
       { playerReportsVisible && <PlayerReports /> }
       { spawnVisible && <SpawnMenu /> }
       { inventoryState.isVisible && <Inventory haveDonateSlots={inventoryState.haveDonatSlots} /> }
+      <WaitingLoader />
 
       {/*<div className="language_ambients">*/}
       {/*  /!*{ shouldChangeLanguage && <ChangeLanguage /> }*!/*/}

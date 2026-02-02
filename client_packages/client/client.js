@@ -883,9 +883,7 @@ const getRandomChance = () => {
     return [percent, luck];
 };
 mp.events.add('playerDeath', async (player, reason, killer) => {
-    mp.console.logInfo('Сдох *_*');
     const [chance, luck] = getRandomChance();
-    mp.console.logInfo('Сдох *_* 2');
     rce.triggerServer('playerKnockout');
     gui.execute(`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`);
     gui.execute(`window.App.chatReducer.hideChat()`);
@@ -969,7 +967,7 @@ const ids = {
     RMB: 25
 };
 let ev = null;
-const localplayer = mp.players.local;
+const localplayer$1 = mp.players.local;
 const noclip = global.noclip;
 const camera = mp.cameras.new('gameplay');
 const controls = mp.game.controls;
@@ -1064,9 +1062,9 @@ mp.keys.bind(Keys.VK_F8, false, () => {
     noclip.active = !noclip.active;
     direction = camera.getDirection();
     camera.getCoord();
-    localplayer.setInvincible(noclip.active);
-    localplayer.freezePosition(noclip.active);
-    localplayer.setCollision(!noclip.active, !noclip.active);
+    localplayer$1.setInvincible(noclip.active);
+    localplayer$1.freezePosition(noclip.active);
+    localplayer$1.setCollision(!noclip.active, !noclip.active);
     rce.trigger('sendNotify', 'info', noclip.active ? 'Полёт включен' : 'Полёт отключен', 1200, 'top');
     if (!noclip.active && !controls.isControlPressed(0, ids.Space)) {
         const pos = mp.players.local.position;
@@ -1268,19 +1266,28 @@ rce.registerServer('rentColshape', (status, data) => {
         rentData = null;
     }
 });
-mp.keys.bind(Keys.VK_E, false, () => {
-    if (keyDownE !== 'disabled') {
-        mp.gui.cursor.show(true, true);
-        gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`);
-    }
+rce.registerServer('closeRent', () => {
+    handleHideRent();
 });
-mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+const handleShowRent = () => {
+    mp.gui.cursor.show(true, true);
+    gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`);
+};
+const handleHideRent = () => {
     mp.game.ui.setPauseMenuActive(false);
     mp.gui.cursor.show(false, false);
     gui.execute(`window.App.rentReducer.hideRent()`);
     setTimeout(() => {
         mp.game.ui.setPauseMenuActive(true);
     }, 300);
+};
+mp.keys.bind(Keys.VK_E, false, () => {
+    if (keyDownE !== 'disabled') {
+        handleShowRent();
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    handleHideRent();
 });
 
 const listCameras = [
@@ -1326,10 +1333,15 @@ const createCamera = (position, rotation, fov) => {
     }
 };
 
-const playAnim = (entity, animDict, animName) => {
+const playAnim = (animDict, animName, flag, duration) => {
     mp.game.streaming.requestAnimDict(animDict);
-    entity.taskPlayAnim(animDict, animName, 8.0, 1.0, -1, 1, 1.0, false, false, false);
+    setTimeout(() => {
+        mp.players.local.taskPlayAnim(animDict, animName, 8.0, 1.0, duration, flag, 1.0, false, false, false);
+    }, 350);
 };
+rce.registerAll('playAnim', (animDict, animName, flag, duration) => {
+    playAnim(animDict, animName, flag, duration);
+});
 
 const CameraRotator = () => {
     let camera = null;
@@ -1632,13 +1644,13 @@ function handleCharacterChange(fieldName, value) {
             if (value === 'male') {
                 localPlayer.model = mp.game.joaat('mp_m_freemode_01');
                 setTimeout(() => {
-                    playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4');
+                    playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1);
                 }, 500);
             }
             else {
                 localPlayer.model = mp.game.joaat('mp_f_freemode_01');
                 setTimeout(() => {
-                    playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4');
+                    playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1);
                 }, 500);
             }
             break;
@@ -1670,7 +1682,7 @@ const createChar = (sid, numberSlot, uniqueScenario) => {
                     cameraRotator.setZBound(-1, 2);
                     cameraRotator.setOffsetBound(2, 6);
                     setTimeout(() => {
-                        playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4');
+                        playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1);
                     }, 500);
                 }, 500);
                 clearInterval(intervalFly);
@@ -1882,7 +1894,232 @@ rce.registerAll('getGroundZ', () => {
     return mp.game.gameplay.getGroundZFor3DCoord(pos.x, pos.y, pos.z, false, false);
 });
 
-// import './game/locations'
+const applyUpperBody = (player) => {
+    if (!mp.players.exists(player) || !player.handle) {
+        return;
+    }
+    player.model === mp.game.joaat('mp_m_freemode_01') ? 'male' : 'female';
+    const jacket = player.getVariable('jacket');
+    const shirt = player.getVariable('shirt');
+    let topDrawable = 15;
+    let topTexture = 0;
+    if (jacket && typeof jacket.drawable === 'number' && jacket.drawable > 0 && jacket.drawable !== 15) {
+        topDrawable = jacket.drawable;
+        topTexture = jacket.texture ?? 0;
+    }
+    else if (shirt && typeof shirt.drawable === 'number' && shirt.drawable > 0 && shirt.drawable !== 15) {
+        topDrawable = shirt.drawable;
+        topTexture = shirt.texture ?? 0;
+    }
+    player.setComponentVariation(11, topDrawable, topTexture, 2);
+    let undershirtDrawable = 15;
+    let undershirtTexture = 0;
+    if (shirt && shirt.drawable > 0) {
+        undershirtDrawable = 0;
+        undershirtTexture = shirt.texture ?? 0;
+    }
+    player.setComponentVariation(8, undershirtDrawable, undershirtTexture, 2);
+    let torsoDrawable = 15;
+    if (topDrawable !== 15) {
+        torsoDrawable = 15;
+    }
+    player.setComponentVariation(3, torsoDrawable, 0, 2);
+    console.log(`[CLOTHES SYNC] Applied for player ${player.remoteId}: ` +
+        `top=${topDrawable}/${topTexture}, undershirt=${undershirtDrawable}/${undershirtTexture}, torso=${torsoDrawable}`);
+};
+mp.events.add('entityStreamIn', (entity) => {
+    if (entity.type !== 'player') {
+        return;
+    }
+    const player = entity;
+    applyUpperBody(player);
+});
+mp.events.addDataHandler('jacket', (entity, value) => {
+    if (entity.type === 'player') {
+        applyUpperBody(entity);
+    }
+});
+mp.events.addDataHandler('shirt', (entity, value) => {
+    if (entity.type === 'player') {
+        applyUpperBody(entity);
+    }
+});
+mp.events.add('playerReady', () => {
+    applyUpperBody(mp.players.local);
+});
+
+const getDistanceFactor = (distance, maxDistance = 400, baseScale = 0.25) => {
+    const clampedDist = Math.max(0.1, Math.min(distance, maxDistance));
+    const factor = clampedDist / maxDistance;
+    const minRelative = 0.6;
+    const relativeScale = 1 - factor * 0.65;
+    const finalRelative = Math.max(minRelative, relativeScale);
+    const alpha = Math.round(255 * (1 - factor * 0.4));
+    const maxLift = 0.045;
+    const yOffset = maxLift * factor;
+    return {
+        scale: [finalRelative * baseScale, finalRelative * baseScale],
+        alpha,
+        yOffset,
+        relativeFactor: finalRelative
+    };
+};
+
+const MAX_DIST = 7;
+const HIT_MAX_DIST = 2;
+const worldItems = new Map();
+let lastHitId = null;
+let isHitState = false;
+mp.events.add('render', () => {
+    mp.objects.forEachInStreamRange((obj) => {
+        const localplayer = mp.players.local;
+        const posPl = localplayer.position;
+        const posObj = obj.position;
+        const distToObj = mp.game.system.vdist(posObj.x, posObj.y, posObj.z, posPl.x, posPl.y, posPl.z);
+        const p = getDistanceFactor(distToObj, MAX_DIST, 0.37);
+        const itemInfo = worldItems.get(obj.id);
+        const textQuantity = itemInfo.value > 1 ? `[x ${itemInfo.value}]` : '';
+        if (distToObj <= MAX_DIST) {
+            mp.game.graphics.drawText(`${itemInfo.item.name} ${textQuantity}`, [posObj.x, posObj.y - p.yOffset - 0.01, posObj.z], {
+                font: 4,
+                color: [255, 255, 255, p.alpha - 30],
+                scale: p.scale,
+                outline: true
+            });
+        }
+        if (localplayer.vehicle) {
+            obj.setCollision(false, false);
+        }
+        else {
+            obj.setCollision(true, false);
+        }
+        checkCenterScreenHit();
+    });
+});
+rce.registerServer('droppedItemOnGround', (item, objId, objPos, value) => {
+    mp.console.logWarning(`${JSON.stringify(item)}, ${objPos}`);
+    worldItems.set(objId, { item, position: objPos, value });
+    mp.console.logInfo(`WorldItems: ${JSON.stringify(worldItems.get(item.id))}`);
+});
+const checkCenterScreenHit = () => {
+    let currentHitId = null;
+    const camera = mp.cameras.new('gameplay');
+    const coordCam = camera.getCoord();
+    const directionCam = camera.getDirection();
+    const raycastPos = {
+        x: coordCam.x + directionCam.x * 15,
+        y: coordCam.y + directionCam.y * 15,
+        z: coordCam.z + directionCam.z * 15,
+    };
+    const raycastEndPos = new mp.Vector3(raycastPos.x, raycastPos.y, raycastPos.z);
+    const raycastResult = mp.raycasting.testPointToPoint(coordCam, raycastEndPos, mp.players.local, 16);
+    //mp.game.graphics.drawLine(coordCam.x, coordCam.y, coordCam.z, raycastPos.x, raycastPos.y, raycastPos.z, 255, 255, 255, 255)
+    if (raycastResult && raycastResult.entity) {
+        const entityHandle = raycastResult.entity;
+        const objId = entityHandle.remoteId;
+        const hasObjId = objId !== undefined || objId !== null;
+        if (hasObjId && worldItems.has(objId)) {
+            const playerPos = mp.players.local.position;
+            const hitPos = raycastResult.position;
+            const distToHit = mp.game.system.vdist(playerPos.x, playerPos.y, playerPos.z, hitPos.x, hitPos.y, hitPos.z);
+            if (distToHit <= HIT_MAX_DIST) {
+                currentHitId = objId;
+            }
+        }
+    }
+    if (currentHitId !== null && lastHitId !== currentHitId) {
+        const itemData = worldItems.get(currentHitId);
+        if (itemData) {
+            gui.execute('window.App.hoverInteractionReducer.setHover()');
+            isHitState = true;
+        }
+    }
+    else if (currentHitId === null && lastHitId !== null) {
+        const itemData = worldItems.get(lastHitId);
+        if (itemData) {
+            gui.execute('window.App.hoverInteractionReducer.removeHover()');
+            isHitState = false;
+        }
+    }
+    lastHitId = currentHitId;
+};
+mp.keys.bind(Keys.VK_E, false, async () => {
+    if (lastHitId !== null && isHitState) {
+        const itemData = worldItems.get(lastHitId);
+        if (itemData) {
+            const { item, value } = itemData;
+            const pickUp = await rce.callServer('pickUpItem', lastHitId, item, value);
+            if (pickUp.status === 'destroyItem') {
+                worldItems.delete(lastHitId);
+                return;
+            }
+            if (pickUp.status === 'denied') {
+                if (pickUp.text) {
+                    gui.execute(`window.App.sendNotifyReducer.sendNotify('err', '${pickUp.text}', 3000, 'bottom')`);
+                }
+                return;
+            }
+            if (pickUp.status === 'approved') {
+                worldItems.delete(lastHitId);
+                gui.execute(`window.App.waitingLoaderReducer.showWaitingLoader(2000, 'Поднятие предмета')`);
+                gui.execute('window.App.hoverInteractionReducer.removeHover()');
+            }
+        }
+    }
+});
+
+let localplayer = mp.players.local;
+mp.events.add('playerEnterVehicle', (vehicle, seat) => {
+    if (vehicle && seat === -1) {
+        gui.execute('window.App.hudReducer.showHud(true)');
+    }
+});
+mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
+    if (vehicle && seat === -1) {
+        gui.execute('window.App.hudReducer.showHud(false)');
+    }
+});
+mp.events.add('render', () => {
+    if (localplayer.vehicle !== null) {
+        let speed = localplayer.vehicle.getSpeed() * 3.6;
+        gui.execute(`window.App.speedVehReducer.setSpeed(${speed})`);
+    }
+});
+
+const updateDiscord = () => {
+    const player = mp.players.local;
+    let subtitle;
+    if (player.getVariable('player_spawned') === undefined) {
+        subtitle = 'Входит в аккаунт';
+    }
+    else if (player.isInAnyVehicle(false)) {
+        if (player.getSeatIsTryingToEnter() !== -3) {
+            subtitle = 'Сидит в транспорте';
+        }
+        else {
+            subtitle = 'Управляет транспортом';
+        }
+    }
+    else if (player.getVariable('player_knockout')) {
+        subtitle = 'Без сознания...';
+    }
+    else if (player.isInWater()) {
+        subtitle = 'Плавает';
+    }
+    else {
+        subtitle = 'Странствует по штату';
+    }
+    mp.discord.update(subtitle, 'REAL RP');
+};
+setInterval(updateDiscord, 10000);
+
 mp.game.invoke("0x6E9EF3A33C8899F8", true);
 mp.game.invoke("0x4CC7F0FEA5283FE0", true);
 mp.game.invoke("0xAEEDAD1420C65CC0", true);
+mp.events.add('render', () => {
+    mp.game.ui.hideHudComponentThisFrame(3);
+    mp.game.ui.hideHudComponentThisFrame(4);
+    mp.game.ui.hideHudComponentThisFrame(6);
+    mp.game.ui.hideHudComponentThisFrame(7);
+    mp.game.ui.hideHudComponentThisFrame(9);
+});

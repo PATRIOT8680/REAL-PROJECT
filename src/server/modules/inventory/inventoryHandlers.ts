@@ -8,6 +8,7 @@ import { data } from "../../database/mysql";
 import chalk from "chalk";
 import { useClothes } from "./usageItems";
 import { usageClothes } from "../../player/clothes";
+import { dropItemOnGround } from "./itemsObject";
 
 interface IHaveBag {
   have: boolean,
@@ -17,6 +18,100 @@ interface IHaveBag {
 export interface IInventoryWeight {
   current: number,
   max: number
+}
+
+type InventorySection = 'main' | 'donat' | 'bag'
+
+interface SectionConfig {
+  table: string
+  column: string
+  defaultSlots: number
+  isBag?: boolean
+  getSlots: (inventory: any, uid: number) => Promise<any[] | null>
+  saveSlots: (uid: number, slots: any[], extra?: any) => Promise<boolean>
+}
+
+const SECTION_CONFIG: Record<InventorySection, SectionConfig> = {
+  main: {
+    table: 'inventory',
+    column: 'mainslots',
+    defaultSlots: 20,
+    getSlots: async (inv) => normalizeSlots(JSON.parse(inv.mainslots || '[]')),
+    saveSlots: async (uid, slots) => {
+      const json = JSON.stringify(normalizeSlots(slots, 20))
+      return new Promise<boolean>((resolve, reject) => {
+        data.query(
+          'UPDATE inventory SET mainslots = ? WHERE uid = ?',
+          [json, uid],
+          (err) => {
+            if (err) {
+              console.error(chalk.red('[SAVE MAIN]'), err)
+              reject(err)
+              return
+            }
+            resolve(true)
+          }
+        )
+      })
+    }
+  },
+
+  donat: {
+    table: 'inventory',
+    column: 'donatslots',
+    defaultSlots: 15,
+    getSlots: async (inv) => {
+      const d = JSON.parse(inv.donatslots || '{}')
+      return normalizeSlots(d.slots || [], 15)
+    },
+    saveSlots: async (uid, slots) => {
+      const json = JSON.stringify({ have: true, slots: normalizeSlots(slots, 15) })
+      return new Promise<boolean>((resolve, reject) => {
+        data.query(
+          'UPDATE inventory SET donatslots = ? WHERE uid = ?',
+          [json, uid],
+          (err) => {
+            if (err) {
+              console.error(chalk.red('[SAVE DONAT]'), err)
+              reject(err)
+              return
+            }
+            resolve(true)
+          }
+        )
+      })
+    }
+  },
+
+  bag: {
+    table: 'bags',
+    column: 'items',
+    defaultSlots: 20,
+    isBag: true,
+    getSlots: async (_, uid) => {
+      const bag = await getEquippedBag(uid)
+      return bag ? normalizeSlots(JSON.parse(bag.items || '[]')) : null
+    },
+    saveSlots: async (uid, slots, bagUid) => {
+      if (!bagUid) return false
+      const json = JSON.stringify(normalizeSlots(slots, 20))
+      const weight = calcWeightSlots(slots)
+      return new Promise<boolean>((resolve, reject) => {
+        data.query(
+          'UPDATE bags SET items = ?, weight = ? WHERE bag_uid = ? AND owner_uid = ?',
+          [json, weight, bagUid, uid],
+          (err) => {
+            if (err) {
+              console.error(chalk.red('[SAVE BAG]'), err)
+              reject(err)
+              return
+            }
+            resolve(true)
+          }
+        )
+      })
+    }
+  }
 }
 
 rce.registerCef('moveItemInInventory', async (
@@ -91,7 +186,7 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
       // Если есть donate — тоже можно проверить
       if (!realSection) {
         const donat = JSON.parse(inventory.donatslots);
-        tryFind(donat.slots || [], 'donate');
+        tryFind(donat.slots || [], 'donat');
       }
 
       // Если всё ещё не нашли — ошибка
@@ -108,45 +203,143 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
 
     // 🚨 ОБРАБОТКА ПРЕДМЕТОВ В СУМКЕ
     if (section === 'bag') {
-      console.log(chalk.cyan(`[USE ITEM BAG] Пытаемся использовать предмет из сумки: itemId=${itemId}, slotIdx=${slotIdx}`))
+      console.log(chalk.cyan(`[USE ITEM BAG] Пытаемся использовать предмет из сумки: itemId=${itemId}, slotIdx=${slotIdx}`));
 
-      const clothesSlots = JSON.parse(inventory.clothesslots)
-      const bagItem = clothesSlots[9]
+      const clothesSlots = JSON.parse(inventory.clothesslots);
+      const bagItem = clothesSlots[10];
 
       if (!bagItem || !bagItem.id) {
-        rce.triggerClient(player, 'sendNotify', 'err', 'Сумка не надета!', 3000, 'top')
-        return
+        rce.triggerClient(player, 'sendNotify', 'err', 'Сумка не надета!', 3000, 'top');
+        return;
       }
 
-      const bagItemData = getItemById(bagItem.id)
+      const bagItemData = getItemById(bagItem.id);
       if (!bagItemData ||
         !bagItemData.clothesData ||
-        bagItemData.clothesData.slot !== 9 ||
+        bagItemData.clothesData.slot !== 10 ||
         bagItemData.clothesData.maxWeight === undefined) {
-        console.log(chalk.red(`[USE ITEM BAG] Предмет в слоте 9 не является сумкой: id=${bagItem.id}`))
-        rce.triggerClient(player, 'sendNotify', 'err', 'Сумка не надета!', 3000, 'top')
-        return
+        console.log(chalk.red(`[USE ITEM BAG] Предмет в слоте 10 не является сумкой: id=${bagItem.id}`));
+        rce.triggerClient(player, 'sendNotify', 'err', 'Сумка не надета!', 3000, 'top');
+        return;
       }
 
-      // Получаем содержимое сумки
-      const bagData = await getEquippedBag(uid)
-      console.log(chalk.cyan(`[USE ITEM BAG] bagData: ${JSON.stringify(bagData)}`))
-
+      const bagData = await getEquippedBag(uid);
       if (!bagData) {
-        rce.triggerClient(player, 'sendNotify', 'err', 'Содержимое сумки не найдено!', 3000, 'top')
-        return
+        rce.triggerClient(player, 'sendNotify', 'err', 'Содержимое сумки не найдено!', 3000, 'top');
+        return;
       }
 
-      const slots = bagData.items ? JSON.parse(bagData.items) : Array(20).fill(null)
-      const slot = slots[slotIdx]
+      const slots = bagData.items ? JSON.parse(bagData.items) : Array(20).fill(null);
+      const slot = slots[slotIdx];
 
       if (!slot || slot.id !== itemId) {
-        console.log(chalk.red(`[USE ITEM BAG] Предмет не найден в сумке: slot=${JSON.stringify(slot)}, ожидаемый itemId=${itemId}`))
-        rce.triggerClient(player, 'sendNotify', 'err', 'Предмет не найден в сумке!', 3000, 'top')
-        return
+        console.log(chalk.red(`[USE ITEM BAG] Предмет не найден в сумке: slot=${JSON.stringify(slot)}, ожидаемый itemId=${itemId}`));
+        rce.triggerClient(player, 'sendNotify', 'err', 'Предмет не найден в сумке!', 3000, 'top');
+        return;
       }
 
-      console.log(chalk.cyan(`[USE ITEM BAG] Найден предмет: ${JSON.stringify(slot)}`))
+      console.log(chalk.cyan(`[USE ITEM BAG] Найден предмет: ${JSON.stringify(slot)}`));
+
+      // ─── Одежда из сумки ────────────────────────────────────────
+      if (itemData.type === 'clothes') {
+        console.log(chalk.cyan(`[USE ITEM BAG] Использование одежды из сумки: ${itemId}`));
+
+        const isEquipped = clothesSlots.some((s: any) => s?.id === itemId);
+        const clothesSlotIndex = itemData.clothesData?.slot ?? -1;
+
+        if (clothesSlotIndex === -1) {
+          rce.triggerClient(player, 'sendNotify', 'err', 'Неверные данные одежды!', 3000, 'top');
+          return;
+        }
+
+        if (isEquipped) {
+          // Снимаем
+          const freeSlotInfo = await findFreeSlotsInInventory(uid);
+          if (!freeSlotInfo.section) {
+            rce.triggerClient(player, 'sendNotify', 'err', 'Нет свободного слота!', 3000, 'top');
+            return;
+          }
+          const updatedClothes = clothesSlots.map((slot: any, idx: number) =>
+            idx === clothesSlotIndex ? null : slot
+          );
+          await updateSlotsArray(uid, 'clothes', updatedClothes);
+          const targetSection = freeSlotInfo.section;
+          const targetSlot = freeSlotInfo.slot;
+          let targetSlots: any[] = [];
+          switch (targetSection) {
+            case 'main':
+              targetSlots = normalizeSlots(JSON.parse(inventory.mainslots || '[]'));
+              break;
+            case 'donat':
+              const donat = JSON.parse(inventory.donatslots || '{}');
+              targetSlots = normalizeSlots(donat.slots || []);
+              break;
+            case 'bag':
+              const bag = await getEquippedBag(uid);
+              if (bag) targetSlots = normalizeSlots(JSON.parse(bag.items || '[]'));
+              break;
+            default:
+              rce.triggerClient(player, 'sendNotify', 'err', 'Неизвестная секция для возврата!', 3000, 'top');
+              return;
+          }
+          targetSlots[targetSlot] = { id: itemId, quantity: 1 };
+
+          // Сохраняем с проверкой на 'bag'
+          console.log(chalk.blue(`[USE CLOTHES OFF] Сохраняем в targetSection: ${targetSection}`));
+          if (targetSection === 'bag') {
+            const clothesSlots = JSON.parse(inventory.clothesslots);
+            const bagUid = clothesSlots[10]?.id;
+            if (!bagUid) {
+              console.log(chalk.red('[USE CLOTHES OFF] bagUid не найден'));
+              return;
+            }
+            await handleBagOperations(uid, 'update', bagUid, targetSlots);
+          } else {
+            await updateSlotsArray(uid, targetSection, targetSlots);
+          }
+
+          // ←←← Если снимаем сумку — unequip
+          if (clothesSlotIndex === 10 && itemData.clothesData?.maxWeight !== undefined) {
+            await handleBagOperations(uid, 'unequip', itemId);
+          }
+          usageClothes(player, clothesSlotIndex, -1, 0, itemId);
+          useClothes(player, itemId, false); // снял
+          await updateTotalWeightInventory(uid);
+          await sendInventoryToCef(player, uid);
+          console.log(chalk.green(`[USE CLOTHES] Снята и возвращена в ${targetSection}-${targetSlot}`));
+          return;
+        }
+
+        // Надеваем одежду
+        const updatedClothes = clothesSlots.map((s: any, idx: number) =>
+          idx === clothesSlotIndex ? { id: itemId, quantity: 1 } : s
+        );
+
+        // Удаляем из сумки
+        const updateSuccess = await updateSlot(uid, 'bag', slotIdx, null, bagItem.id);
+        if (!updateSuccess) {
+          console.error(chalk.red('[USE CLOTHES BAG] Ошибка при удалении из сумки'));
+          rce.triggerClient(player, 'sendNotify', 'err', 'Ошибка при обновлении инвентаря!', 3500, 'top');
+          return;
+        }
+
+        await updateSlotsArray(uid, 'clothes', updatedClothes);
+
+        if (clothesSlotIndex === 10 && itemData.clothesData?.maxWeight !== undefined) {
+          await handleBagOperations(uid, 'equip', itemId);
+        }
+
+        usageClothes(player, clothesSlotIndex, itemData.clothesData.drawable, itemData.clothesData.texture, itemId);
+        useClothes(player, itemId, true); // одел
+
+        await updateTotalWeightInventory(uid);
+        await sendInventoryToCef(player, uid);
+
+        rce.triggerClient(player, 'execute', `window.App.inventoryReducer.removeItem('bag', ${slotIdx})`);
+
+        console.log(chalk.green(`[USE CLOTHES BAG] Надета одежда ${itemId} из bag-${slotIdx} в слот ${clothesSlotIndex}`));
+        return;
+      }
 
       // Используем предмет
       try {
@@ -242,9 +435,9 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
     let slots
     if (section === 'main') {
       slots = JSON.parse(inventory.mainslots)
-    } else if (section === 'donate') {
-      const donateData = JSON.parse(inventory.donatslots)
-      slots = donateData.slots
+    } else if (section === 'donat') {
+      const donatData = JSON.parse(inventory.donatslots)
+      slots = donatData.slots
     } else if (section === 'clothes') {
       slots = JSON.parse(inventory.clothesslots)
     } else {
@@ -263,7 +456,6 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
       if (itemData.type === 'clothes') {
         const uid = await getDataAccount(player, 'uid', player.id);
         const inventory = await getPlayerInventory(uid);
-
         if (!inventory) {
           rce.triggerClient(player, 'sendNotify', 'err', 'Инвентарь не найден!', 3500, 'bottom');
           return;
@@ -279,21 +471,18 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
         }
 
         if (isEquipped) {
-          // Одежда уже надета → снимаем и возвращаем в исходный слот
+          // Снимаем
           const freeSlotInfo = await findFreeSlotsInInventory(uid);
-
           if (!freeSlotInfo.section) {
             rce.triggerClient(player, 'sendNotify', 'err', 'Нет свободного слота!', 3000, 'top');
             return;
           }
 
-          // 1. Удаляем из одежды
           const updatedClothes = clothesSlots.map((slot: any, idx: number) =>
             idx === clothesSlotIndex ? null : slot
           );
           await updateSlotsArray(uid, 'clothes', updatedClothes);
 
-          // 2. Добавляем обратно в свободный слот (main/donate/bag)
           const targetSection = freeSlotInfo.section;
           const targetSlot = freeSlotInfo.slot;
 
@@ -302,7 +491,7 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
             case 'main':
               targetSlots = normalizeSlots(JSON.parse(inventory.mainslots || '[]'));
               break;
-            case 'donate':
+            case 'donat':
               const donat = JSON.parse(inventory.donatslots || '{}');
               targetSlots = normalizeSlots(donat.slots || []);
               break;
@@ -317,8 +506,13 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
 
           targetSlots[targetSlot] = { id: itemId, quantity: 1 };
           await updateSlotsArray(uid, targetSection, targetSlots);
-          usageClothes(player, clothesSlotIndex, 0, 0)
 
+          // ←←← ВАЖНО: если снимаем сумку — вызываем unequip
+          if (clothesSlotIndex === 10 && itemData.clothesData?.maxWeight !== undefined) {
+            await handleBagOperations(uid, 'unequip', itemId);
+          }
+
+          usageClothes(player, clothesSlotIndex, -1, 0, itemId);
           useClothes(player, itemId, false); // снял
           await sendInventoryToCef(player, uid);
 
@@ -326,14 +520,20 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
           return;
         }
 
+        // Надеваем
         const updatedClothes = clothesSlots.map((slot: any, idx: number) =>
           idx === clothesSlotIndex ? { id: itemId, quantity: 1 } : slot
         );
 
         await updateSlot(uid, section, slotIdx, null);
-        await updateSlotsArray(uid, 'clothes', updatedClothes)
-        usageClothes(player, clothesSlotIndex, itemData.clothesData.drawable, itemData.clothesData.texture)
+        await updateSlotsArray(uid, 'clothes', updatedClothes);
 
+        // ←←← ВАЖНО: если надеваем сумку — вызываем equip
+        if (clothesSlotIndex === 10 && itemData.clothesData?.maxWeight !== undefined) {
+          await handleBagOperations(uid, 'equip', itemId);
+        }
+
+        usageClothes(player, clothesSlotIndex, itemData.clothesData.drawable, itemData.clothesData.texture, itemId);
         useClothes(player, itemId, true); // одел
         await sendInventoryToCef(player, uid);
 
@@ -424,6 +624,196 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
   }
 })
 
+rce.registerCef("dropItemOnGround", async (player: PlayerMp, itemId: number, slotId: number, section: string, value: number) => {
+  try {
+    const uid = connectedUsers.getField(player.id, 'uid')
+    if (!uid) return
+
+    const inventory = await getPlayerInventory(uid)
+    if (!inventory) {
+      return rce.triggerClient(player, 'sendNotify', 'err', 'Инвентарь не найден!', 3000, 'top')
+    }
+
+    let sourceSlots: any[] = []
+    let sourceIsBag = false
+    let sourceBagUid: number | null = null
+
+    switch (section) {
+      case 'main':
+        sourceSlots = normalizeSlots(JSON.parse(inventory.mainslots || '[]'))
+        break
+      case 'donat':
+        const donat = JSON.parse(inventory.donatslots || '{}')
+        sourceSlots = normalizeSlots(donat.slots || [], 15)
+        break
+      case 'bag':
+        const bagData = await getEquippedBag(uid)
+        if (!bagData) {
+          return rce.triggerClient(player, 'sendNotify', 'err', 'Сумка не надета!', 3000, 'top')
+        }
+        sourceSlots = normalizeSlots(bagData.items ? JSON.parse(bagData.items) : [])
+        sourceIsBag = true
+        const clothes = JSON.parse(inventory.clothesslots || '[]')
+        sourceBagUid = clothes[10]?.id || null
+        break
+      default:
+        return rce.triggerClient(player, 'sendNotify', 'err', 'Невозможно выкинуть!', 3000, 'top')
+    }
+
+    const sourceItem = sourceSlots[slotId]
+    if (!sourceItem || sourceItem.id !== itemId) {
+      return rce.triggerClient(player, 'sendNotify', 'err', 'Предмет не найден!', 3000, 'top')
+    }
+
+    const itemData = getItemById(itemId)
+    if (!itemData) {
+      return rce.triggerClient(player, 'sendNotify', 'err', 'Данные предмета не найдены!', 3000, 'top')
+    }
+
+    if (value <= 0 || value > sourceItem.quantity) {
+      return rce.triggerClient(player, 'sendNotify', 'err', 'Неверное количество для выброса!', 3000, 'top')
+    }
+
+    if (value === sourceItem.quantity) {
+      sourceSlots[slotId] = null
+    } else {
+      sourceSlots[slotId] = { ...sourceItem, quantity: sourceItem.quantity - value }
+    }
+
+    sourceSlots = normalizeSlots(sourceSlots, section === 'donat' ? 15 : 20)
+
+    if (sourceIsBag && sourceBagUid) {
+      await handleBagOperations(uid, 'update', sourceBagUid, sourceSlots)
+    } else {
+      await updateSlotsArray(uid, section, sourceSlots)
+    }
+
+    await updateTotalWeightInventory(uid)
+    await sendInventoryToCef(player, uid)
+
+    dropItemOnGround(player, itemId, slotId, section, value)
+  } catch (e) {
+    console.log(chalk.red('[DROP ERROR]') + ` Err: ${e}`)
+    rce.triggerClient(player, 'sendNotify', 'err', 'Не удалось выкинуть предмет', 3100, 'top')
+  }
+})
+
+rce.registerClientCef('splitItem', async (player: PlayerMp, itemId: number, slotIdx: number, section: string, quantity: number) => {
+  try {
+    const uid = connectedUsers.getField(player.id, 'uid')
+    if (!uid) return
+
+    const inventory = await getPlayerInventory(uid)
+    if (!inventory) {
+      return rce.triggerClient(player, 'sendNotify', 'err', 'Инвентарь не найден!', 3000, 'top')
+    }
+
+    let sourceSlots: any[] = []
+    let sourceIsBag = false
+    let sourceBagUid: number | null = null
+
+    switch (section) {
+      case 'main':
+        sourceSlots = normalizeSlots(JSON.parse(inventory.mainslots || '[]'))
+        break
+      case 'donat':
+        const donat = JSON.parse(inventory.donatslots || '{}')
+        sourceSlots = normalizeSlots(donat.slots || [], 15)
+        break
+      case 'bag':
+        const bagData = await getEquippedBag(uid)
+        if (!bagData) {
+          return rce.triggerClient(player, 'sendNotify', 'err', 'Сумка не надета!', 3000, 'top')
+        }
+        sourceSlots = normalizeSlots(bagData.items ? JSON.parse(bagData.items) : [])
+        sourceIsBag = true
+        const clothes = JSON.parse(inventory.clothesslots || '[]')
+        sourceBagUid = clothes[10]?.id || null
+        break
+      default:
+        return rce.triggerClient(player, 'sendNotify', 'err', 'Разделение в этой секции невозможно', 3000, 'top')
+    }
+
+    const sourceItem = sourceSlots[slotIdx]
+    if (!sourceItem || sourceItem.id !== itemId) {
+      return rce.triggerClient(player, 'sendNotify', 'err', 'Предмет не найден в слоте', 3000, 'top')
+    }
+
+    const itemData = getItemById(itemId)
+    if (!itemData?.stackable || sourceItem.quantity <= quantity || quantity < 1) {
+      return rce.triggerClient(player, 'sendNotify', 'err', 'Нельзя разделить этот предмет', 3000, 'top')
+    }
+
+    const freeSlotInfo = await findFreeSlotsInInventory(uid)
+    if (!freeSlotInfo.section) {
+      return rce.triggerClient(player, 'sendNotify', 'err', 'Нет свободного слота в инвентаре!', 4000, 'top')
+    }
+
+    const remaining = sourceItem.quantity - quantity
+    if (remaining > 0) {
+      sourceSlots[slotIdx] = { ...sourceItem, quantity: remaining }
+    } else {
+      sourceSlots[slotIdx] = null
+    }
+
+    let targetSlots: any[] = []
+    let targetIsBag = false
+    let targetBagUid: number | null = null
+
+    if (freeSlotInfo.section === section) {
+      sourceSlots[freeSlotInfo.slot] = { id: itemId, quantity: quantity }
+      sourceSlots = normalizeSlots(sourceSlots, section === 'donat' ? 15 : 20)
+
+      if (sourceIsBag && sourceBagUid) {
+        await handleBagOperations(uid, 'update', sourceBagUid, sourceSlots)
+      } else {
+        await updateSlotsArray(uid, section, sourceSlots)
+      }
+    } else {
+      switch (freeSlotInfo.section) {
+        case 'main':
+          targetSlots = normalizeSlots(JSON.parse(inventory.mainslots || '[]'))
+          break
+        case 'donat':
+          const donat = JSON.parse(inventory.donatslots || '{}')
+          targetSlots = normalizeSlots(donat.slots || [], 15)
+          break
+        case 'bag':
+          const bagData = await getEquippedBag(uid)
+          if (!bagData) throw new Error('Сумка исчезла во время операции')
+          targetSlots = normalizeSlots(bagData.items ? JSON.parse(bagData.items) : [])
+          targetIsBag = true
+          const clothesTarget = JSON.parse(inventory.clothesslots || '[]')
+          targetBagUid = clothesTarget[10]?.id || null
+          break
+      }
+
+      targetSlots[freeSlotInfo.slot] = { id: itemId, quantity: quantity }
+
+      sourceSlots = normalizeSlots(sourceSlots, section === 'donat' ? 15 : 20)
+      if (sourceIsBag && sourceBagUid) {
+        await handleBagOperations(uid, 'update', sourceBagUid, sourceSlots)
+      } else {
+        await updateSlotsArray(uid, section, sourceSlots)
+      }
+
+      targetSlots = normalizeSlots(targetSlots, freeSlotInfo.section === 'donat' ? 15 : 20)
+      if (targetIsBag && targetBagUid) {
+        await handleBagOperations(uid, 'update', targetBagUid, targetSlots)
+      } else {
+        await updateSlotsArray(uid, freeSlotInfo.section, targetSlots)
+      }
+    }
+
+    await updateTotalWeightInventory(uid)
+    await sendInventoryToCef(player, uid)
+
+  } catch (e) {
+    console.log(chalk.red('[SPLIT ERROR]') + ` Err: ${e}`)
+    rce.triggerClient(player, 'sendNotify', 'err', 'Не удалось разделить предмет', 4000, 'top')
+  }
+})
+
 rce.registerClientCef('bagOperation', async (
   player: PlayerMp,
   operation: 'equip' | 'unequip' | 'update',
@@ -456,6 +846,10 @@ rce.registerCef('cef:buy-donat-slots', async (player: PlayerMp) => {
     }
 
     donatSlotsObj.have = true
+
+    if (!donatSlotsObj.slots || !Array.isArray(donatSlotsObj.slots)) {
+      donatSlotsObj.slots = Array(15).fill(null)
+    }
 
     // ✅ Увеличиваем максимальный вес на 30 единиц
     const newMaxWeight = (inventory.maxweight || 20) + 30
@@ -517,6 +911,54 @@ export const getPlayerInventory = async (uid: number): Promise<any> => {
   })
 }
 
+export const addItemToInventory = async (
+  uid: number,
+  itemId: number,
+  quantity: number = 1
+): Promise<{ success: boolean; reason?: string }> => {
+  const inventory = await getPlayerInventory(uid)
+  if (!inventory) return { success: false, reason: 'Инвентарь не найден' }
+
+  const item = getItemById(itemId);
+  if (!item) return { success: false, reason: 'Предмет не найден' }
+
+  const addedWeight = item.weight * quantity
+  if (inventory.weight + addedWeight > inventory.maxweight) {
+    return { success: false, reason: 'Недостаточно места в инвентаре' }
+  }
+
+  const free = await findFreeSlotsInInventory(uid)
+  if (!free.section) return { success: false, reason: 'Нет свободного слота' }
+
+  const config = SECTION_CONFIG[free.section]
+  if (!config) return { success: false, reason: 'Неизвестная секция' }
+
+  let slots = await config.getSlots(inventory, uid)
+  if (!slots) return { success: false, reason: 'Не удалось загрузить слоты' }
+
+  let added = false
+  for (let i = 0; i < slots.length; i++) {
+    if (slots[i]?.id === itemId && item.stackable) {
+      const max = item.maxStack || 999
+      if (slots[i].quantity + quantity <= max) {
+        slots[i].quantity += quantity
+        added = true
+        break
+      }
+    }
+  }
+
+  if (!added) {
+    slots[free.slot] = { id: itemId, quantity }
+  }
+
+  const success = await config.saveSlots(uid, slots, free.section === 'bag' ? null : undefined)
+  if (!success) return { success: false, reason: 'Ошибка сохранения' }
+
+  await updateTotalWeightInventory(uid)
+  return { success: true }
+}
+
 export const updateSlot = async (
   uid: number,
   section: string,
@@ -541,7 +983,7 @@ export const updateSlot = async (
           }
 
           const clothesSlots = JSON.parse(results[0].clothesslots)
-          const equippedBag = clothesSlots[9]
+          const equippedBag = clothesSlots[10]
 
           if (!equippedBag || equippedBag.imageId !== 109) {
             reject('Сумка не надета!')
@@ -636,10 +1078,11 @@ export const updateSlot = async (
             columnName = 'mainslots'
             break
 
-          case 'donate':
+          case 'donat':
             const donatData = JSON.parse(inventory.donatslots)
-            slots = donatData.slots
-            columnName = 'donateslots'
+            slots = Array.isArray(donatData) ? donatData : (donatData.slots || [])
+            columnName = 'donatslots'
+            isDonate = true
             break
 
           case 'clothes':
@@ -722,7 +1165,7 @@ export const updateTotalWeightInventory = async (uid: number): Promise<void> => 
               const itemData = getItemById(slot.id)
               if (itemData) {
                 let itemWeight = itemData.weight * slot.quantity
-                if (itemData.clothesData && itemData.clothesData.slot === 9) {
+                if (itemData.clothesData && itemData.clothesData.slot === 10) {
                   const bagContentWeight = await getBagWeight(uid, slot.id)
                   itemWeight += bagContentWeight
                 }
@@ -897,6 +1340,10 @@ export const calcWeightSlots = (slots: any[]): number => {
 }
 
 export const convertSlots = (slots: any[]): any[] => {
+  if (!slots || !Array.isArray(slots)) {
+    return []
+  }
+
   return slots.map((slot: any) => {
     if (!slot) return null
 
@@ -946,13 +1393,38 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
       return
     }
 
-    const mainSlotsData = JSON.parse(inventory.mainslots)
-    const donatSlotsData = JSON.parse(inventory.donatslots)
-    const clothesSlotsData = JSON.parse(inventory.clothesslots)
-    const fastSlotsData = JSON.parse(inventory.fastslots)
+    // Безопасное получение и парсинг данных
+    const mainSlotsData = inventory.mainslots
+      ? JSON.parse(inventory.mainslots)
+      : Array(20).fill(null)
+
+    const donatSlotsData = inventory.donatslots
+      ? JSON.parse(inventory.donatslots)
+      : { have: false, slots: Array(15).fill(null) }
+
+    const clothesSlotsData = inventory.clothesslots
+      ? JSON.parse(inventory.clothesslots)
+      : Array(13).fill(null)
+
+    const fastSlotsData = inventory.fastslots
+      ? JSON.parse(inventory.fastslots)
+      : Array(4).fill(null)
+
+    // Получаем слоты для доната (обрабатываем и старый формат массива)
+    let donatSlotsArray: any[] = []
+    if (Array.isArray(donatSlotsData)) {
+      // Старый формат: просто массив
+      donatSlotsArray = donatSlotsData
+    } else if (donatSlotsData.slots && Array.isArray(donatSlotsData.slots)) {
+      // Новый формат: объект с полем slots
+      donatSlotsArray = donatSlotsData.slots
+    } else {
+      // На всякий случай
+      donatSlotsArray = Array(15).fill(null)
+    }
 
     const mainSlotsForCef = convertSlots(mainSlotsData)
-    const donateSlotsForCef = convertSlots(donatSlotsData.slots)
+    const donatSlotsForCef = convertSlots(donatSlotsArray)
     const clothesSlotsForCef = convertSlots(clothesSlotsData)
     const fastSlotsForCef = convertSlots(fastSlotsData)
 
@@ -968,22 +1440,35 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
       max: maxWeight
     }
 
-    if (clothesSlotsData[9] && clothesSlotsData[9].id) {
-      const bagItem = clothesSlotsData[9]
-
+    // Проверяем, надета ли сумка
+    const bagItem = clothesSlotsData[10]
+    if (bagItem && bagItem.id) {
       try {
-        // Получаем данные сумки через Promise
-        const bagData = await new Promise<any>((resolve, reject) => {
-          const getBagSql = 'SELECT items, weight FROM bags WHERE bag_uid = ? AND owner_uid = ?'
+        // Получаем данные сумки
+        let bagData = await new Promise<any>((resolve, reject) => {
+          const getBagSql = 'SELECT items, weight FROM bags WHERE bag_uid = ? AND owner_uid = ?';
           data.query(getBagSql, [bagItem.id, uid], (err, results: any) => {
-            if (err) {
-              console.log(chalk.bgRed('• [INV] Bag operation equip •') + chalk.red(` ${err}`))
-              reject(err)
-              return
-            }
-            resolve(results.length > 0 ? results[0] : null)
-          })
-        })
+            if (err) reject(err);
+            else resolve(results.length > 0 ? results[0] : null);
+          });
+        });
+
+        // Если записи нет - создаем
+        if (!bagData) {
+          console.log(chalk.yellow(`[SEND INV] Запись для сумки ${bagItem.id} не найдена, создаем...`));
+          const createBagResult = await handleBagOperations(uid, 'equip', bagItem.id);
+
+          if (createBagResult.success) {
+            // Повторно запрашиваем
+            bagData = await new Promise<any>((resolve, reject) => {
+              const getBagSql = 'SELECT items, weight FROM bags WHERE bag_uid = ? AND owner_uid = ?';
+              data.query(getBagSql, [bagItem.id, uid], (err, results: any) => {
+                if (err) reject(err);
+                else resolve(results.length > 0 ? results[0] : null);
+              });
+            });
+          }
+        }
 
         if (bagData) {
           haveBag = {
@@ -997,8 +1482,8 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
 
           console.log(chalk.cyan(`[SEND INV] Bag data for bag_uid=${bagItem.id}:`))
           console.log(chalk.cyan(`[SEND INV] bagItems: ${JSON.stringify(bagItems)}`))
-          console.log(chalk.cyan(`[SEND INV] bagSlotsForCef: ${JSON.stringify(bagSlotsForCef)}`))
 
+          // Обновляем данные сумки в clothesSlotsForCef
           const bagItemIndex = clothesSlotsForCef.findIndex((item: any) => item && item.id === bagItem.id)
           if (bagItemIndex !== -1 && clothesSlotsForCef[bagItemIndex]) {
             clothesSlotsForCef[bagItemIndex].bagId = bagItem.id
@@ -1008,38 +1493,38 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
       } catch (error) {
         console.log(chalk.bgRed('• SEND INV BAG ERROR •') + chalk.red(` ${error}`))
       }
-
-      rce.triggerClient(player, 'execute', `
-        window.App.inventoryReducer.setInventory(
-          ${JSON.stringify(mainSlotsForCef)},
-          ${JSON.stringify(bagSlotsForCef)},
-          ${JSON.stringify(donateSlotsForCef)},
-          [],
-          [],
-          ${JSON.stringify(clothesSlotsForCef)},
-          ${JSON.stringify(fastSlotsForCef)},
-          ${JSON.stringify(haveBag)},
-          ${JSON.stringify(inventoryWeight)}
-        )
-      `)
-    } else {
-      rce.triggerClient(player, 'execute', `
-        window.App.inventoryReducer.setInventory(
-          ${JSON.stringify(mainSlotsForCef)},
-          ${JSON.stringify(bagSlotsForCef)},
-          ${JSON.stringify(donateSlotsForCef)},
-          [],
-          [],
-          ${JSON.stringify(clothesSlotsForCef)},
-          ${JSON.stringify(fastSlotsForCef)},
-          ${JSON.stringify({ have: false })},
-          ${JSON.stringify(inventoryWeight)}
-        )
-      `)
     }
+
+    // Отправляем данные на клиент
+    rce.triggerClient(player, 'execute', `
+      window.App.inventoryReducer.setInventory(
+        ${JSON.stringify(mainSlotsForCef)},
+        ${JSON.stringify(bagSlotsForCef)},
+        ${JSON.stringify(donatSlotsForCef)},
+        [],
+        [],
+        ${JSON.stringify(clothesSlotsForCef)},
+        ${JSON.stringify(fastSlotsForCef)},
+        ${JSON.stringify(haveBag)},
+        ${JSON.stringify(inventoryWeight)}
+      )
+    `)
+
   } catch (e) {
     console.log(chalk.bgRed('• SEND INV CEF [try] •') + chalk.red(` ${e}`))
+    console.log(chalk.red('Stack trace:'), e.stack)
   }
+}
+
+const calculateBaseMaxWeight = (inventory: any): number => {
+  let baseWeight = 20
+
+  const donatSlotsObj = JSON.parse(inventory.donatslots)
+  if (donatSlotsObj.have) {
+    baseWeight += 30
+  }
+
+  return baseWeight
 }
 
 export const handleBagOperations = async (
@@ -1048,7 +1533,7 @@ export const handleBagOperations = async (
   bagItemId?: number,
   bagItems?: any[]
 ): Promise<{success: boolean, bagId?: number}> => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     switch (action) {
       case 'equip': {
         if (!bagItemId) {
@@ -1064,86 +1549,124 @@ export const handleBagOperations = async (
         }
 
         // Проверяем, что это сумка
-        if (!itemData.clothesData || itemData.clothesData.slot !== 9) {
-          console.log(chalk.red(`[BAG] Предмет не является сумкой: ${bagItemId}`))
-          resolve({ success: false })
-          return
+        if (!itemData.clothesData || itemData.clothesData.slot !== 10) {
+          console.log(chalk.red(`[BAG] Предмет не является сумкой: ${bagItemId}`));
+          resolve({ success: false });
+          return;
         }
 
-        const bagMaxWeight = itemData.clothesData?.maxWeight || 0
+        const bagMaxWeight = itemData.clothesData?.maxWeight || 0;
+        console.log(chalk.cyan(`[BAG] Надеваем сумку ${bagItemId} с maxWeight=${bagMaxWeight}`));
 
-        console.log(chalk.cyan(`[BAG] Надеваем сумку ${bagItemId} с maxWeight=${bagMaxWeight}`))
+        // Получаем текущий инвентарь для расчета правильного веса
+        const getCurrentInventory = () => {
+          return new Promise<any>((resolve, reject) => {
+            const sql = 'SELECT maxweight, donatslots FROM inventory WHERE uid = ?';
+            data.query(sql, [uid], (err, results: any) => {
+              if (err) reject(err);
+              else resolve(results[0]);
+            });
+          });
+        };
 
-        // Обновляем максимальный вес в инвентаре
-        const updateMaxWeightSql = 'UPDATE inventory SET maxweight = maxweight + ? WHERE uid = ?'
-        data.query(updateMaxWeightSql, [bagMaxWeight, uid], (updateErr) => {
-          if (updateErr) {
-            console.log(chalk.bgRed('• [INV] Bag operation equip (update maxweight) •') + chalk.red(` ${updateErr}`))
-            reject(updateErr)
-            return
-          }
+        try {
+          const currentInventory = await getCurrentInventory();
+          const baseWeight = calculateBaseMaxWeight(currentInventory);
+          const newMaxWeight = baseWeight + bagMaxWeight;
 
-          // Продолжаем с созданием записи в bags
-          const checkSql = 'SELECT id FROM bags WHERE bag_uid = ? AND owner_uid = ?'
-          data.query(checkSql, [bagItemId, uid], (err, results: any) => {
-            if (err) {
-              console.log(chalk.bgRed('• [INV] Bag operation equip •') + chalk.red(` ${err}`))
-              reject(err)
-              return
+          console.log(chalk.cyan(`[BAG] Расчет веса: base=${baseWeight}, bag=${bagMaxWeight}, total=${newMaxWeight}`));
+
+          // Обновляем максимальный вес в инвентаре
+          const updateMaxWeightSql = 'UPDATE inventory SET maxweight = ? WHERE uid = ?';
+          data.query(updateMaxWeightSql, [newMaxWeight, uid], (updateErr) => {
+            if (updateErr) {
+              console.log(chalk.bgRed('• [INV] Bag operation equip •') + chalk.red(` ${updateErr}`));
+              resolve({ success: false });
+              return;
             }
 
-            if (results.length > 0) {
-              console.log(chalk.green(`[BAG] Запись уже существует для сумки ${bagItemId}`))
-              resolve({ success: true, bagId: results[0].id })
-            } else {
-              const insertSql = `INSERT INTO bags (bag_uid, owner_uid, items, weight) VALUES (?, ?, ?, ?)`
+            // Продолжаем с созданием записи в bags
+            const checkSql = 'SELECT id FROM bags WHERE bag_uid = ? AND owner_uid = ?';
+            data.query(checkSql, [bagItemId, uid], (err, results: any) => {
+              if (err) {
+                console.log(chalk.bgRed('• [INV] Bag operation equip •') + chalk.red(` ${err}`));
+                reject(err);
+                return;
+              }
 
-              data.query(insertSql, [bagItemId, uid, JSON.stringify(Array(20).fill(null)), 0], (err, results: any) => {
-                if (err) {
-                  console.log(chalk.bgRed('• [INV] Bag operation equip (2) •') + chalk.red(` ${err}`))
-                  reject(err)
-                  return
-                }
+              if (results.length > 0) {
+                console.log(chalk.green(`[BAG] Запись уже существует для сумки ${bagItemId}`));
+                resolve({ success: true, bagId: results[0].id });
+              } else {
+                const insertSql = `INSERT INTO bags (bag_uid, owner_uid, items, weight) VALUES (?, ?, ?, ?)`;
 
-                console.log(chalk.green(`[BAG] Создана запись для сумки bag_uid=${bagItemId}`))
-                resolve({ success: true, bagId: results.insertId })
-              })
-            }
-          })
-        })
+                data.query(insertSql, [bagItemId, uid, JSON.stringify(Array(20).fill(null)), 0], (err, results: any) => {
+                  if (err) {
+                    console.log(chalk.bgRed('• [INV] Bag operation equip (2) •') + chalk.red(` ${err}`));
+                    reject(err);
+                    return;
+                  }
 
-        break
+                  console.log(chalk.green(`[BAG] Создана запись для сумки bag_uid=${bagItemId}`));
+                  resolve({ success: true, bagId: results.insertId });
+                });
+              }
+            });
+          });
+        } catch (error) {
+          console.log(chalk.bgRed('• [INV] Bag operation equip error •') + chalk.red(` ${error}`));
+          resolve({ success: false });
+        }
+        break;
       }
 
       case 'unequip': {
         if (!bagItemId) {
-          resolve({ success: false })
-          return
+          resolve({ success: false });
+          return;
         }
 
-        const itemData = getItemById(bagItemId)
+        const itemData = getItemById(bagItemId);
         if (!itemData) {
-          console.log(chalk.red(`[BAG] Предмет не найден для снятия: ${bagItemId}`))
-          resolve({ success: false })
-          return
+          console.log(chalk.red(`[BAG] Предмет не найден для снятия: ${bagItemId}`));
+          resolve({ success: false });
+          return;
         }
 
-        const bagMaxWeight = itemData.clothesData?.maxWeight || 0
+        console.log(chalk.cyan(`[BAG] Снимаем сумку ${bagItemId}`));
 
-        console.log(chalk.cyan(`[BAG] Снимаем сумку ${bagItemId} с maxWeight=${bagMaxWeight}`))
+        // Получаем текущий инвентарь для расчета базового веса
+        const getCurrentInventory = () => {
+          return new Promise<any>((resolve, reject) => {
+            const sql = 'SELECT maxweight, donatslots FROM inventory WHERE uid = ?';
+            data.query(sql, [uid], (err, results: any) => {
+              if (err) reject(err);
+              else resolve(results[0]);
+            });
+          });
+        };
 
-        // Уменьшаем максимальный вес в инвентаре
-        const updateMaxWeightSql = 'UPDATE inventory SET maxweight = maxweight - ? WHERE uid = ?'
-        data.query(updateMaxWeightSql, [bagMaxWeight, uid], (updateErr) => {
-          if (updateErr) {
-            console.log(chalk.bgRed('• [INV] Bag operation unequip (update maxweight) •') + chalk.red(` ${updateErr}`))
-            reject(updateErr)
-          } else {
-            resolve({ success: true })
-          }
-        })
+        try {
+          const currentInventory = await getCurrentInventory();
+          const baseWeight = calculateBaseMaxWeight(currentInventory);
 
-        break
+          console.log(chalk.cyan(`[BAG] Устанавливаем базовый вес: ${baseWeight}`));
+
+          // Устанавливаем базовый вес в инвентаре
+          const updateMaxWeightSql = 'UPDATE inventory SET maxweight = ? WHERE uid = ?';
+          data.query(updateMaxWeightSql, [baseWeight, uid], (updateErr) => {
+            if (updateErr) {
+              console.log(chalk.bgRed('• [INV] Bag operation unequip •') + chalk.red(` ${updateErr}`));
+              reject(updateErr);
+            } else {
+              resolve({ success: true });
+            }
+          });
+        } catch (error) {
+          console.log(chalk.bgRed('• [INV] Bag operation unequip error •') + chalk.red(` ${error}`));
+          resolve({ success: false });
+        }
+        break;
       }
 
       case 'update': {
@@ -1211,12 +1734,12 @@ export const getEquippedBag = async (uid: number): Promise<any> => {
       }
 
       const clothesSlots = JSON.parse(results[0].clothesslots)
-      const bagItem = clothesSlots[9]
+      const bagItem = clothesSlots[10]
 
-      console.log(chalk.cyan(`[GET EQUIPPED BAG] bagItem в слоте 9: ${JSON.stringify(bagItem)}`))
+      console.log(chalk.cyan(`[GET EQUIPPED BAG] bagItem в слоте 10: ${JSON.stringify(bagItem)}`))
 
       if (!bagItem) {
-        console.log(chalk.yellow(`[GET EQUIPPED BAG] В слоте 9 нет предмета`))
+        console.log(chalk.yellow(`[GET EQUIPPED BAG] В слоте 10 нет предмета`))
         resolve(null)
         return
       }
@@ -1269,10 +1792,10 @@ export const updateSlotsInDB = async (
           columnName = 'mainslots'
           break
 
-        case 'donate':
-          const donateData = JSON.parse(inventory.donatslots)
-          donateData.slots[slotIndex] = itemData
-          updatedValue = JSON.stringify(donateData)
+        case 'donat':
+          const donatData = JSON.parse(inventory.donatslots)
+          donatData.slots[slotIndex] = itemData
+          updatedValue = JSON.stringify(donatData)
           columnName = 'donatslots'
           break
 

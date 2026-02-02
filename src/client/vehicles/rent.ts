@@ -17,14 +17,16 @@ rce.registerServer('rentColshape', (status, data) => {
   }
 })
 
-mp.keys.bind(Keys.VK_E, false, () => {
-  if (keyDownE !== 'disabled') {
-    mp.gui.cursor.show(true, true)
-    gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`)
-  }
+rce.registerServer('closeRent', () => {
+  handleHideRent()
 })
 
-mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+const handleShowRent = () => {
+  mp.gui.cursor.show(true, true)
+  gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`)
+}
+
+const handleHideRent = () => {
   mp.game.ui.setPauseMenuActive(false)
   mp.gui.cursor.show(false, false)
   gui.execute(`window.App.rentReducer.hideRent()`)
@@ -32,4 +34,14 @@ mp.keys.bind(Keys.VK_ESCAPE, false, () => {
   setTimeout(() => {
     mp.game.ui.setPauseMenuActive(true)
   }, 300)
+}
+
+mp.keys.bind(Keys.VK_E, false, () => {
+  if (keyDownE !== 'disabled') {
+    handleShowRent()
+  }
+})
+
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+  handleHideRent()
 })

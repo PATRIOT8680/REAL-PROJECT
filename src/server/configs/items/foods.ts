@@ -1,6 +1,6 @@
 
-// [id, name, description, weight, maxStack, stackable, health, eat, water, price]
+// [id, name, description, weight, maxStack, stackable, health, eat, water, price, hashObj, waitingUsage, anim: { dict, name }]
 export const FOODS_CONFIG = [
-  [1, "Газировка 'Sprunk'", '-45% жажды, +5% к сытости', 0.5, 3, true, 5, 5, 45, 150],
-  [2, "Бургер Чиз Классик", '+50% к сытости, -5% жажды', 0.5, 3, true, 5, 50, 5, 150]
+  [1, "Sprunk Soda", '-45% жажды, +5% к сытости', 0.5, 3, true, 5, 5, 45, 150, 'ng_proc_sodacan_01b', 4000, { dict: 'amb@world_human_drinking@beer@male@idle_a', name: 'idle_c', flag: 49 }],
+  [2, "Бургер Чиз Классик", '+50% к сытости, -5% жажды', 0.5, 3, true, 5, 50, 5, 150, 'prop_cs_burger_01', 6000, { dict: 'amb@code_human_wander_eating_donut@female@idle_a', name: 'idle_a', flag: 49 }]
 ]

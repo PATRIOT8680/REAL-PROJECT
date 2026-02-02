@@ -25,7 +25,7 @@ const BuyDonatSlots = () => {
               <InventorySlot
                 slotId={index}
                 item={null}
-                section="donate"
+                section="donat"
                 slotType="locked"
                 onDragStart={() => {}}
                 onDrop={() => {}}

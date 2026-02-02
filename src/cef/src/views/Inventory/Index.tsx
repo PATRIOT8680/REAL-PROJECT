@@ -1,5 +1,5 @@
 import './assets/styles/compiled-css/Index.css'
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../reducers/rootReducer.ts";
 import { Item, InventoryState, moveItem, setDraggedItem, IHaveBag, typeSlots } from "../../actions/menus/inventory.ts";
@@ -27,7 +27,7 @@ const Inventory = ({ haveDonateSlots, haveBagSlots }: IInventory) => {
   const draggedItem = useSelector((state: RootState) => state.inventoryReducer?.draggedItem || null);
   const inventoryState = useSelector((state: RootState) => state.inventoryReducer)
   const clSlots = useSelector((state: RootState) => state.inventoryReducer.clothesSlots)
-  const isBagEquipped = !!clSlots?.[9]
+  const isBagEquipped = !!clSlots?.[10]
 
   rce.register('fadeCloseInventory', () => {
     setHidedInventory(true)
@@ -83,7 +83,7 @@ const Inventory = ({ haveDonateSlots, haveBagSlots }: IInventory) => {
             { inventoryState.haveDonatSlots ? (
               <DonateSection
                 onItemDragStart={handleItemDragStart}
-                onItemDrop={(slot, source) => handleItemDrop(slot, source, 'donate')}
+                onItemDrop={(slot, source) => handleItemDrop(slot, source, 'donat')}
               />
             ) : (
               <BuyDonatSlots />

@@ -189,12 +189,12 @@ function handleCharacterChange(fieldName: any, value: any) {
       if (value === 'male') {
         localPlayer.model = mp.game.joaat('mp_m_freemode_01')
         setTimeout(() => {
-          playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4')
+          playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1)
         }, 500)
       } else {
         localPlayer.model = mp.game.joaat('mp_f_freemode_01')
         setTimeout(() => {
-          playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4')
+          playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1)
         }, 500)
       }
       break;
@@ -249,7 +249,7 @@ export const createChar = (sid: number, numberSlot: number, uniqueScenario: stri
           cameraRotator.setOffsetBound(2, 6)
 
           setTimeout(() => {
-            playAnim(mp.players.local, 'anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4')
+            playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1)
           }, 500)
         }, 500)
         clearInterval(intervalFly)

@@ -1,5 +1,6 @@
 export interface ICarData {
   nameCar: string,
+  type: string,
   price: number
 }
 
@@ -16,8 +17,9 @@ const initialState = {
   isTakenRent: false,
   data: [
     {
-      nameCar: '',
-      price: 0
+      nameCar: 'khanjo',
+      type: 'car',
+      price: 100
     },
   ]
 }

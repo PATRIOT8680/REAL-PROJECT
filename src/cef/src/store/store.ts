@@ -15,6 +15,7 @@ import { adminMenuStore } from "./menus/adminMenu.ts";
 import { playerReportsStore } from "./menus/playerReports.ts";
 import { spawnStore } from "./menus/spawn.ts";
 import { inventoryStore, setStore } from "./menus/inventory.ts";
+import { waitingLoaderStore } from "./menus/waitingLoader.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -24,6 +25,8 @@ import { bankMoneyStore } from "./elements/bankMoney.ts";
 import { donatCoinsStore } from "./elements/donatcoins.ts";
 import { consoleBufferStore } from "./elements/adminMenu/consoleBuffer.ts";
 import { reportsListStore } from "./elements/adminMenu/reportsList.ts";
+import { hoverInteractionStore } from "./elements/hoverInteraction.ts";
+import { speedVehStore } from "./elements/vehicle/speed.ts";
 
 export const store = createStore(rootReducer);
 
@@ -50,6 +53,7 @@ window.App = {
   playerReportsReducer: playerReportsStore,
   spawnReducer: spawnStore,
   inventoryReducer: inventoryStore,
+  waitingLoaderReducer: waitingLoaderStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,
@@ -59,4 +63,6 @@ window.App = {
   donatCoinsReducer: donatCoinsStore,
   consoleBufferReducer: consoleBufferStore,
   reportsListReducer: reportsListStore,
+  hoverInteractionReducer: hoverInteractionStore,
+  speedVehReducer: speedVehStore,
 };

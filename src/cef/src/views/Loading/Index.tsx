@@ -31,7 +31,7 @@ const Loading = () => {
     }
   }, [loadingState.isVisible, loadingState.duration])
 
-  if (!loadingState.isVisible || !ready) return null;
+  if (!loadingState.isVisible || !ready) return null
 
   return(
     <div className={`loading ${exit ? 'exit' : ''}`}>
