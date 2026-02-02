@@ -110,4 +110,4 @@ rce.registerAll('chat:pushLine', (text: string, showTime: boolean, tile?: string
   pushLine(text, showTime, tile)
 })
 
-pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello')
+pushLine(`Ваше приключение начинается на ⚡️ {FCD53F}<b>REAL ROLEPLAY!</b>`, false, 'hello')
