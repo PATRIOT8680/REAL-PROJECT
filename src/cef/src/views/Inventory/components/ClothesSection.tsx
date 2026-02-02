@@ -19,8 +19,8 @@ const ClothesSection = ({ onItemDragStart, onItemDrop }: IClothesSection) => {
     { slots: [1, 2, 3], justify: 'space-between' },
     { slots: [4, 5, 6], justify: 'space-between' },
     { slots: [7, 8, 9], justify: 'space-between' },
-    { slots: [10], justify: 'center' },
-    { slots: [11], justify: 'center' },
+    { slots: [10, 11], justify: 'center' },
+    { slots: [12], justify: 'center' },
   ]
 
   const slotNames = [
@@ -33,6 +33,7 @@ const ClothesSection = ({ onItemDragStart, onItemDrop }: IClothesSection) => {
     'Перчатки',
     'Бронежилет',
     'Верх',
+    'Часы',
     'Рюкзак',
     'Штаны',
     'Обувь'

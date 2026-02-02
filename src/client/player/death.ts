@@ -13,9 +13,7 @@ const getRandomChance = (): [number, boolean] => {
 }
 
 mp.events.add('playerDeath', async (player: PlayerMp, reason: number, killer: PlayerMp) => {
-  mp.console.logInfo('Сдох *_*')
   const [chance, luck] = getRandomChance()
-  mp.console.logInfo('Сдох *_* 2')
 
   rce.triggerServer('playerKnockout')
   gui.execute(`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`)

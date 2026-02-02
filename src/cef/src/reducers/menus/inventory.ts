@@ -45,10 +45,10 @@ const testItems: Item[] = [
 
 const initialMainSlots = Array(20).fill(null)
 const initialBagSlots = Array(20).fill(null)
-const initialDonateSlots = Array(15).fill(null)
+const initialDonatSlots = Array(15).fill(null)
 const initialTradeSlots = Array(5).fill(null)
 const initialReturnTradeSlots = Array(5).fill(null)
-const initialClothesSlots = Array(12).fill(null)
+const initialClothesSlots = Array(13).fill(null)
 const initialFastSlots = Array(4).fill(null)
 
 initialMainSlots[0] = testItems[0]
@@ -59,7 +59,7 @@ const initialState: InventoryState = {
   isVisible: false,
   mainSlots: initialMainSlots,
   bagSlots: initialBagSlots,
-  donateSlots: initialDonateSlots,
+  donatSlots: initialDonatSlots,
   tradeSlots: initialTradeSlots,
   returnTradeSlots: initialReturnTradeSlots,
   clothesSlots: initialClothesSlots,
@@ -89,7 +89,7 @@ const findAndUpdateIsFast = (state: InventoryState, itemId: number, isFast: bool
   return {
     ...state,
     mainSlots: updateSlots(state.mainSlots),
-    donateSlots: updateSlots(state.donateSlots),
+    donatSlots: updateSlots(state.donatSlots),
     bagSlots: updateSlots(state.bagSlots),
     tradeSlots: updateSlots(state.tradeSlots),
     returnTradeSlots: updateSlots(state.returnTradeSlots),
@@ -141,7 +141,7 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
           switch(section) {
             case 'main': return state.mainSlots
             case 'bag': return state.bagSlots
-            case 'donate': return state.donateSlots
+            case 'donat': return state.donatSlots
             case 'trade': return state.tradeSlots
             case 'returnTrade': return state.returnTradeSlots
             case 'clothes': return state.clothesSlots
@@ -231,7 +231,7 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
           // Обновляем source-секцию
           if (sourceSection === 'main') newState.mainSlots = newSourceSlots;
           else if (sourceSection === 'bag') newState.bagSlots = newSourceSlots;
-          else if (sourceSection === 'donate') newState.donateSlots = newSourceSlots;
+          else if (sourceSection === 'donat') newState.donatSlots = newSourceSlots;
           else if (sourceSection === 'trade') newState.tradeSlots = newSourceSlots;
           else if (sourceSection === 'returnTrade') newState.returnTradeSlots = newSourceSlots;
           else if (sourceSection === 'clothes') newState.clothesSlots = newSourceSlots;
@@ -260,7 +260,7 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
             newClothesSlots[targetSlotIndex] = sourceItem
             newSourceSlots[sourceSlot] = existingItem
 
-            if (targetSlotIndex === 9 && existingItem.imageId === 109) {
+            if (targetSlotIndex === 10 && existingItem.imageId === 109) {
               rce.triggerServer('bagOperation', 'unequip', existingItem.id)
             }
           } else {
@@ -268,7 +268,7 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
             newSourceSlots[sourceSlot] = null
           }
 
-          if (targetSlotIndex === 9 && sourceItem.imageId === 109) {
+          if (targetSlotIndex === 10 && sourceItem.imageId === 109) {
             rce.triggerServer('bagOperation', 'equip', sourceItem.id)
           }
 
@@ -276,7 +276,7 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
 
           if (sourceSection === 'main') newState.mainSlots = newSourceSlots
           else if (sourceSection === 'bag') newState.bagSlots = newSourceSlots
-          else if (sourceSection === 'donate') newState.donateSlots = newSourceSlots
+          else if (sourceSection === 'donat') newState.donatSlots = newSourceSlots
           else if (sourceSection === 'trade') newState.tradeSlots = newSourceSlots
           else if (sourceSection === 'returnTrade') newState.returnTradeSlots = newSourceSlots
           else if (sourceSection === 'clothes') newState.clothesSlots = newSourceSlots
@@ -298,7 +298,7 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
           // Значит здесь targetSection !== 'clothes' → просто снимаем
 
           // Если снимаем сумку — уведомляем сервер
-          if (sourceSlot === 9 && sourceItem.imageId === 109) {
+          if (sourceSlot === 10 && sourceItem.imageId === 109) {
             rce.triggerServer('bagOperation', 'unequip', sourceItem.id)
           }
 
@@ -322,7 +322,7 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
           // Обновляем целевую секцию
           if (targetSection === 'main') newState.mainSlots = newTargetSlots
           else if (targetSection === 'bag') newState.bagSlots = newTargetSlots
-          else if (targetSection === 'donate') newState.donateSlots = newTargetSlots
+          else if (targetSection === 'donat') newState.donatSlots = newTargetSlots
 
           rce.triggerServer('moveItemInInventory', 'clothes', sourceSlot, targetSection, targetSlot)
 
@@ -361,7 +361,7 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
           const stateKey =
             sourceSection === 'main' ? 'mainSlots' :
               sourceSection === 'bag' ? 'bagSlots' :
-                sourceSection === 'donate' ? 'donateSlots' :
+                sourceSection === 'donat' ? 'donatSlots' :
                   sourceSection === 'trade' ? 'tradeSlots' :
                     sourceSection === 'returnTrade' ? 'returnTradeSlots' :
                       sourceSection === 'fast' ? 'fastSlots' :  // ← Вот это и не хватало!
@@ -412,8 +412,8 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
             newState.mainSlots = newSourceSlots
           } else if (sourceSection === 'bag') {
             newState.bagSlots = newSourceSlots
-          } else if (sourceSection === 'donate') {
-            newState.donateSlots = newSourceSlots
+          } else if (sourceSection === 'donat') {
+            newState.donatSlots = newSourceSlots
           } else if (sourceSection === 'trade') {
             newState.tradeSlots = newSourceSlots
           } else if (sourceSection === 'returnTrade') {
@@ -426,8 +426,8 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
             newState.mainSlots = newTargetSlots
           } else if (targetSection === 'bag') {
             newState.bagSlots = newTargetSlots
-          } else if (targetSection === 'donate') {
-            newState.donateSlots = newTargetSlots
+          } else if (targetSection === 'donat') {
+            newState.donatSlots = newTargetSlots
           } else if (targetSection === 'trade') {
             newState.tradeSlots = newTargetSlots
           } else if (targetSection === 'returnTrade') {
@@ -454,9 +454,9 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
             slots = state.bagSlots
             stateKey = 'bagSlots'
             break
-          case 'donate':
-            slots = state.donateSlots
-            stateKey = 'donateSlots'
+          case 'donat':
+            slots = state.donatSlots
+            stateKey = 'donatSlots'
             break
           case 'trade':
             slots = state.tradeSlots
@@ -530,9 +530,9 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
             slots = state.bagSlots
             stateKey = 'bagSlots'
             break
-          case 'donate':
-            slots = state.donateSlots
-            stateKey = 'donateSlots'
+          case 'donat':
+            slots = state.donatSlots
+            stateKey = 'donatSlots'
             break
           case 'trade':
             slots = state.tradeSlots
@@ -579,9 +579,9 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
             slots = state.bagSlots
             stateKey = 'bagSlots'
             break
-          case 'donate':
-            slots = state.donateSlots
-            stateKey = 'donateSlots'
+          case 'donat':
+            slots = state.donatSlots
+            stateKey = 'donatSlots'
             break
           case 'trade':
             slots = state.tradeSlots
@@ -641,9 +641,9 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
             slots = state.bagSlots
             stateKey = 'bagSlots'
             break
-          case 'donate':
-            slots = state.donateSlots
-            stateKey = 'donateSlots'
+          case 'donat':
+            slots = state.donatSlots
+            stateKey = 'donatSlots'
             break
           case 'trade':
             slots = state.tradeSlots
@@ -692,7 +692,7 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
           ...state,
           mainSlots: updateSlots(state.mainSlots),
           bagSlots: updateSlots(state.bagSlots),
-          donateSlots: updateSlots(state.donateSlots),
+          donatSlots: updateSlots(state.donatSlots),
           tradeSlots: updateSlots(state.tradeSlots),
           returnTradeSlots: updateSlots(state.returnTradeSlots),
           clothesSlots: updateSlots(state.clothesSlots),
@@ -700,12 +700,12 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
       }
 
       case 'SET_INVENTORY': {
-        const { mainSlots, bagSlots, donateSlots, tradeSlots, returnTradeSlots, clothesSlots, fastSlots, haveBag, weight } = action.payload
+        const { mainSlots, bagSlots, donatSlots, tradeSlots, returnTradeSlots, clothesSlots, fastSlots, haveBag, weight } = action.payload
         return {
           ...state,
           mainSlots,
           bagSlots,
-          donateSlots,
+          donatSlots,
           tradeSlots,
           returnTradeSlots,
           clothesSlots: clothesSlots || initialClothesSlots,

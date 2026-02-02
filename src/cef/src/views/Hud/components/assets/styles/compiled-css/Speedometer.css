@@ -1,0 +1,67 @@
+.speedometer {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 1rem;
+  -webkit-user-drag: none;
+  animation: fadeInSpeedometer 0.8s ease;
+}
+.speedometer .bg-shadow {
+  position: absolute;
+  bottom: -2rem;
+  right: -2rem;
+  width: 19rem;
+  height: 19rem;
+  filter: blur(7rem);
+  z-index: 0;
+  pointer-events: none;
+}
+.speedometer .main-section {
+  position: relative;
+  z-index: 1;
+}
+.speedometer .main-section .speed-veh {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 1.95rem;
+  user-select: none;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+.speedometer .main-section .units {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  fill: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  user-select: none;
+}
+.speedometer .main-section .tick.showedHighSpeed {
+  animation: fadeInHighSpeed 0.6s ease;
+}
+.speedometer .main-section .designation-speed {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.7rem;
+  fill-opacity: 0.85;
+  user-select: none;
+}
+.speedometer .main-section .designation-speed.showedHighSpeed {
+  animation: fadeInHighSpeed 0.6s ease;
+}
+
+@keyframes fadeInHighSpeed {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeInSpeedometer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=Speedometer.css.map */

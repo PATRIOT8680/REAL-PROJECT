@@ -1,9 +1,20 @@
-export const hudReducer = (state = { isVisible: false }, action: any) => {
+const initialState = {
+  isVisible: false,
+  speedometerVisible: false,
+}
+
+export const hudReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case 'SHOW_HUD':
-      return { isVisible: true }
+      return {
+        isVisible: true,
+        speedometerVisible: action.speedometerVisible
+      }
     case 'HIDE_HUD':
-      return { isVisible: false }
+      return {
+        ...state,
+        isVisible: false
+      }
     default:
       return state
   }

@@ -1,0 +1,63 @@
+$Montserrat: "Montserrat", sans-serif
+$Druk: "Druk Wide Cyr", sans-serif
+
+.speedometer
+  position: absolute
+  bottom: .5rem
+  right: 1rem
+  -webkit-user-drag: none
+  animation: fadeInSpeedometer .8s ease
+
+  .bg-shadow
+    position: absolute
+    bottom: -2rem
+    right: -2rem
+    width: 19rem
+    height: 19rem
+    filter: blur(7rem)
+    z-index: 0
+    pointer-events: none
+
+  .main-section
+    position: relative
+    z-index: 1
+
+    .speed-veh
+      font-family: $Druk
+      font-size: 1.95rem
+      user-select: none
+      transition: all 0.3s ease
+      transform-origin: center
+
+    .units
+      font-family: $Montserrat
+      font-weight: 600
+      font-size: .7rem
+      fill: rgba(255, 255, 255, 0.6)
+      text-transform: uppercase
+      user-select: none
+
+    .tick
+      &.showedHighSpeed
+        animation: fadeInHighSpeed .6s ease
+
+    .designation-speed
+      font-family: $Montserrat
+      font-size: .7rem
+      fill-opacity: .85
+      user-select: none
+
+      &.showedHighSpeed
+        animation: fadeInHighSpeed .6s ease
+
+@keyframes fadeInHighSpeed
+  from
+    opacity: 0
+  to
+    opacity: 1
+
+@keyframes fadeInSpeedometer
+  from
+    opacity: 0
+  to
+    opacity: 1

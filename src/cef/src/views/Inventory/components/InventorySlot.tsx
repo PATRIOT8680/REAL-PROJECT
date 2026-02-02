@@ -12,6 +12,8 @@ import svg_drop from './assets/img/drop.svg'
 import img_err from './assets/img/err-img.png'
 import svg_fast from './assets/img/fast.svg'
 
+import SeparateItem from "./SeparateItem.tsx";
+
 interface InventorySlotProps {
   slotId: number;
   item: Item | null;
@@ -40,11 +42,21 @@ const InventorySlot = ({
   const [isDragging, setIsDragging] = useState<boolean>(false)
   const [infoPosition, setInfoPosition] = useState({ top: 0, left: 0 })
   const [isImageLoading, setIsImageLoading] = useState<boolean>(true)
+  const [visibleSeparate, setVisibleSeparate] = useState<boolean>(false)
+  const [separate, setSeparate] = useState<number>(1)
+  const [valueDrop, setValueDrop] = useState<number>(1)
   const slotRef = useRef<HTMLDivElement>(null)
   const infoRef = useRef<HTMLDivElement>(null)
   const isLeavingRef = useRef<boolean>(false)
   const dragImageRef = useRef<HTMLDivElement>(null)
   const fastSlots = useSelector((state: RootState) => state.inventoryReducer.fastSlots)
+  const [separateMenu, setSeparateMenu] = useState<{
+    visible: boolean
+    type: 'separated' | 'drop'
+  }>({
+    visible: false,
+    type: 'separated'
+  })
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -264,6 +276,49 @@ const InventorySlot = ({
     (e.target as HTMLImageElement).src = img_err
   }
 
+  const handleDropOnGround = () => {
+    if (!item) return
+
+    if (item.quantity > 1) {
+      setSeparateMenu({
+        visible: true,
+        type: 'drop'
+      })
+
+      setValueDrop(1)
+      setShowItemInfo(false)
+    } else {
+      rce.triggerServer('dropItemOnGround', item.id, slotId, section, 1)
+      setShowItemInfo(false)
+    }
+  }
+
+  const handleShowSeparate = () => {
+    const ignoredSections: string[] = ['fast', 'clothes', 'trade', 'returnTrade']
+    if (!item) return
+    if (item.quantity <= 1) return
+    if (ignoredSections.includes(item.type)) return
+    if (item?.isFast && section !== 'fast' && getFastSlotNumber() !== null) {
+      window.App.sendNotifyReducer.sendNotify('err', 'Уберите предмет с быстрого слота!', 3000, 'top')
+      return
+    }
+
+    setSeparateMenu({
+      visible: true,
+      type: 'separated'
+    })
+
+    setSeparate(1)
+    setShowItemInfo(false)
+  }
+
+  const handleCloseSeparate = () => {
+    setSeparateMenu({
+      ...separateMenu,
+      visible: false,
+    })
+  }
+
   return (
     <>
       {/* Скрытый элемент для drag image */}
@@ -319,6 +374,7 @@ const InventorySlot = ({
         onDragEnd={handleDragEnd}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
+        onDoubleClick={handleUseItem}
         onDrop={handleDrop}
         onMouseLeave={handleSlotMouseLeave}
         onContextMenu={handleContextMenu}
@@ -379,13 +435,13 @@ const InventorySlot = ({
                     </svg>
                     <span className="text">Использовать</span>
                   </span>
-                  <span className="btn">
+                  <span className="btn" onClick={handleShowSeparate}>
                     <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M6.66667 0L8.19333 1.52667L6.27333 3.44667L7.22 4.39333L9.14 2.47333L10.6667 4V0H6.66667ZM4 0H0V4L1.52667 2.47333L4.66667 5.60667V10.6667H6V5.06L2.47333 1.52667L4 0Z" fill="#FCFCFD"/>
                     </svg>
-                    <span className="text">Разделить</span>
+                    <span className="text">Отделить</span>
                   </span>
-                  <span className="btn">
+                  <span className="btn" onClick={handleDropOnGround}>
                     <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M9.33333 4H6.66667V0H2.66667V4H0L4.66667 8.66667L9.33333 4ZM4 5.33333V1.33333H5.33333V5.33333H6.11333L4.66667 6.78L3.22 5.33333H4ZM0 10H9.33333V11.3333H0V10Z" fill="#FCFCFD"/>
                     </svg>
@@ -406,6 +462,18 @@ const InventorySlot = ({
           </>
         ) }
       </div>
+      { separateMenu.visible && item && (
+        <SeparateItem
+          item={item}
+          slotId={slotId}
+          section={section}
+          type={separateMenu.type}
+          max={false}
+          value={separateMenu.type === 'separated' ? separate : valueDrop}
+          setValue={separateMenu.type === 'separated' ? setSeparate : setValueDrop}
+          onClose={handleCloseSeparate}
+        />
+      ) }
     </>
   )
 }

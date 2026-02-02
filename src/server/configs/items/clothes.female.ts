@@ -16,12 +16,15 @@ export const CLOTHES_FEMALE_CONFIG = {
   // УКРАШЕНИЯ - props[2], clothes[7] //
   1: [
     // clothes[7]
-    [3, 'Ручная повязка', 0.1, 300, undefined, 6],
-    [6, "Кулон 'Sapphire'", 0.15, 4000, undefined, 6],
-    [7, "Кулон 'Love of Love'", 0.2, 3800, undefined, 2],
-    [9, "Шарф 'Silver'", 0.2, 2000, undefined, 1],
-    [10, "Браслеты 'Stack'", 0.25, 1500, undefined, 4],
-    [11, "Кулон 'Pearl'", 0.25, 4500, undefined, 4],
+    [3, 'Ручная повязка', 0.1, 300, undefined, 6, 7],
+    [6, "Кулон 'Sapphire'", 0.15, 4000, undefined, 6, 7],
+    [7, "Кулон 'Love of Love'", 0.2, 3800, undefined, 2, 7],
+    [9, "Шарф 'Silver'", 0.2, 2000, undefined, 1, 7],
+    [10, "Браслеты 'Stack'", 0.25, 1500, undefined, 4, 7],
+    [11, "Кулон 'Pearl'", 0.25, 4500, undefined, 4, 7],
+
+    // props[2]
+    [3, "Серьги 'Droplet'", 0.25, 4350, undefined, 1, 2],
   ],
 
   // МАСКИ - clothes[1] //
@@ -45,14 +48,7 @@ export const CLOTHES_FEMALE_CONFIG = {
 
   // БРАСЛЕТЫ / ЧАСЫ - props[6], props[7] //
   4: [
-    // props[6]
-    [2, "Часы 'Golder'", 0.2, 1900, undefined, 4],
-    [3, "Часы 'Classic'", 0.15, 2900, undefined, 3],
-    [4, "Часы 'Elegant'", 0.05, 3999, undefined, 3],
-    [5, "Часы 'Hexagon'", 0.25, 2199, undefined, 3],
-    [6, "Часы 'Dancer'", 0.2, 2199, undefined, 3],
-    [7, "Часы 'Crocodile'", 0.15, 4599, undefined, 3],
-    [8, "Часы 'Square'", 0.1, 4000, undefined, 3],
+    [8, "Золотой браслет 'Senra'", 0.1, 5000, undefined, 1],
   ],
 
   // ФУТБОЛКИ - clothes[11] //
@@ -91,8 +87,19 @@ export const CLOTHES_FEMALE_CONFIG = {
     [8, "Куртка 'Leather'", 0.5, 1200, undefined, 16],
   ],
 
-  // СУМКИ - clothes[5] //
+  // ЧАСЫ - props[6]
   9: [
+    [2, "Часы 'Golder'", 0.2, 1900, undefined, 4],
+    [3, "Часы 'Classic'", 0.15, 2900, undefined, 3],
+    [4, "Часы 'Elegant'", 0.05, 3999, undefined, 3],
+    [5, "Часы 'Hexagon'", 0.25, 2199, undefined, 3],
+    [6, "Часы 'Dancer'", 0.2, 2199, undefined, 3],
+    [7, "Часы 'Crocodile'", 0.15, 4599, undefined, 3],
+    [8, "Часы 'Square'", 0.1, 4000, undefined, 3],
+  ],
+
+  // СУМКИ - clothes[5] //
+  10: [
     [40, 'Сумка Darnel', 0.3, 4500, 20.0, 1],
     [41, 'Сумка Darnel 2', 0.3, 5500, 25.0, 1],
     [44, 'Сумка Varnet', 0.3, 7000, 30.0, 1],
@@ -105,7 +112,7 @@ export const CLOTHES_FEMALE_CONFIG = {
   ],
 
   // ШТАНЫ - clothes[4] //
-  10: [
+  11: [
     [0, 'Джинсы зауженные #1', 0.3, 1000, undefined, 16],
     [1, 'Джинсы прямого кроя', 0.3, 500, undefined, 16],
     [2, 'Короткие свободные штаны', 0.3, 400, undefined, 3],
@@ -115,7 +122,7 @@ export const CLOTHES_FEMALE_CONFIG = {
   ],
 
   // ОБУВЬ - clothes[6] //
-  11: [
+  12: [
     [0, "Каблуки 'Heel'", 0.4, 1100, undefined, 4],
     [1, 'Кеды повседневные', 0.4, 600, undefined, 16],
     [2, "Ботиночки 'Eath'", 0.5, 1299, undefined, 16],

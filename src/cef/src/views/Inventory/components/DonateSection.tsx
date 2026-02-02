@@ -11,10 +11,10 @@ interface IDonateSection {
 }
 
 const DonateSection = ({ onItemDragStart, onItemDrop }: IDonateSection) => {
-  const donateSlots = useSelector((state: RootState) => state.inventoryReducer.donateSlots)
+  const donatSlots = useSelector((state: RootState) => state.inventoryReducer.donatSlots)
 
   const handleDragStart = (item: Item, slotIndex: number) => {
-    onItemDragStart(item, `donate-${slotIndex}`)
+    onItemDragStart(item, `donat-${slotIndex}`)
   }
 
   const handleDrop = (slotIndex: number, sourceData: string) => {
@@ -37,12 +37,12 @@ const DonateSection = ({ onItemDragStart, onItemDrop }: IDonateSection) => {
         className="section-slots-grid"
         onDragOver={handleDragOver}
       >
-        {donateSlots.map((item, index) => (
+        {donatSlots.map((item, index) => (
           <InventorySlot
             key={index}
             slotId={index}
             item={item}
-            section="donate"
+            section="donat"
             onDragStart={handleDragStart}
             onDrop={handleDrop}
             slotType={getSlotType(index)}

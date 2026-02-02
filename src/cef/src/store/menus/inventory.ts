@@ -49,7 +49,7 @@ export const inventoryStore = {
   setInventory: (
     mainSlots: (Item | null)[],
     bagSlots: (Item | null)[],
-    donateSlots: (Item | null)[],
+    donatSlots: (Item | null)[],
     tradeSlots: (Item | null)[],
     returnTradeSlots: (Item | null)[],
     clothesSlots: (Item | null)[],
@@ -57,7 +57,7 @@ export const inventoryStore = {
     haveBag?: IHaveBag,
     weight?: IInventoryWeight,
   ) =>
-    storeInstance.dispatch(setInventory(mainSlots, bagSlots, donateSlots, tradeSlots, returnTradeSlots, clothesSlots, fastSlots, haveBag, weight)),
+    storeInstance.dispatch(setInventory(mainSlots, bagSlots, donatSlots, tradeSlots, returnTradeSlots, clothesSlots, fastSlots, haveBag, weight)),
 
   getInventoryState: () => {
     const state = storeInstance.getState()
@@ -67,8 +67,8 @@ export const inventoryStore = {
   findEmptySlot: (section: typeSlots): number => {
     const state = storeInstance.getState().inventoryReducer
     const slots = section === 'main' ? state.mainSlots : section === 'bag'
-      ? state.bagSlots : section === 'donate'
-        ? state.donateSlots : section === 'trade'
+      ? state.bagSlots : section === 'donat'
+        ? state.donatSlots : section === 'trade'
           ? state.tradeSlots : section === 'returnTrade'
             ? state.returnTradeSlots : state.fastSlots
 
@@ -77,13 +77,13 @@ export const inventoryStore = {
 
   hasItem: (itemId: number): boolean => {
     const state = storeInstance.getState().inventoryReducer
-    const allSlots = [...state.mainSlots, ...state.bagSlots, ...state.donateSlots, ...state.tradeSlots]
+    const allSlots = [...state.mainSlots, ...state.bagSlots, ...state.donatSlots, ...state.tradeSlots]
     return allSlots.some(slot => slot?.id === itemId)
   },
 
   getItemQuantity: (itemId: number): number => {
     const state = storeInstance.getState().inventoryReducer
-    const allSlots = [...state.mainSlots, ...state.bagSlots, ...state.donateSlots, ...state.tradeSlots]
+    const allSlots = [...state.mainSlots, ...state.bagSlots, ...state.donatSlots, ...state.tradeSlots]
     return allSlots
       .filter(slot => slot?.id === itemId)
       .reduce((total, slot) => total + (slot?.quantity || 0), 0)

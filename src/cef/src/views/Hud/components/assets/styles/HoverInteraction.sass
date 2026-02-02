@@ -1,0 +1,20 @@
+.hover-interaction
+  display: flex
+  align-items: center
+  justify-content: center
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+  &.hovered
+    circle
+      stroke: #ffca58
+      stroke-opacity: 1
+
+  svg
+    position: absolute
+
+  .point
+    border-radius: 1rem
+    box-shadow: 0 0 30px 5px rgba(255, 202, 88, 0.6)

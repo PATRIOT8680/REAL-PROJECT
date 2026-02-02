@@ -48,7 +48,7 @@ export interface InventoryState {
   isVisible: boolean
   mainSlots: (Item | null)[]
   bagSlots: (Item | null)[]
-  donateSlots: (Item | null)[]
+  donatSlots: (Item | null)[]
   tradeSlots: (Item | null)[]
   clothesSlots: (Item | null)[]
   returnTradeSlots: (Item | null)[]
@@ -59,21 +59,22 @@ export interface InventoryState {
   weight?: IInventoryWeight
 }
 
-export type typeSlots = 'main' | 'bag' | 'donate' | 'trade' | 'returnTrade' | 'clothes' | 'fast'
+export type typeSlots = 'main' | 'bag' | 'donat' | 'trade' | 'returnTrade' | 'clothes' | 'fast'
 
 export const CLOTHES_SLOT_TYPES = [
   'hat',      // 0: Головной убор
-  'jewelry', // 1: Украшения
-  'mask',      // 2: Маска
-  'glasses',   // 3: Очки
-  'bracelet',  // 4: Браслет
-  'tshirt',    // 5: Футболка
-  'gloves',    // 6: Перчатки
-  'armor',     // 7: Бронежилет
-  'jacket',    // 8: Куртка/толстовка
-  'bag',       // 9: Рюкзак/сумка
-  'pants',     // 10: Штаны
-  'shoes'      // 11: Обувь
+  'jewelry',  // 1: Украшения
+  'mask',     // 2: Маска
+  'glasses',  // 3: Очки
+  'bracelet', // 4: Браслет
+  'tshirt',   // 5: Футболка
+  'gloves',   // 6: Перчатки
+  'armor',    // 7: Бронежилет
+  'jacket',   // 8: Куртка/толстовка
+  'watch',    // 9: Часы (НОВЫЙ)
+  'bag',      // 10: Рюкзак/сумка
+  'pants',    // 11: Штаны
+  'shoes'     // 12: Обувь
 ] as const
 
 export const CLOTHES_IMAGE_IDS = {
@@ -86,6 +87,7 @@ export const CLOTHES_IMAGE_IDS = {
   GLOVES: 106,   // Перчатки
   ARMOR: 107,    // Бронежилет
   JACKET: 108,   // Куртка/толстовка
+  WATCH: 112,    // Часы
   BAG: 109,      // Рюкзак/сумка
   PANTS: 110,    // Штаны
   SHOES: 111     // Обувь
@@ -159,7 +161,7 @@ export const updateItemIsFast = (itemId: number, isFast: boolean) => ({
 export const setInventory = (
   mainSlots: (Item | null)[],
   bagSlots: (Item | null)[],
-  donateSlots: (Item | null)[],
+  donatSlots: (Item | null)[],
   tradeSlots: (Item | null)[],
   returnTradeSlots: (Item | null)[],
   clothesSlots: (Item | null)[],
@@ -169,7 +171,7 @@ export const setInventory = (
 ) => {
   return {
     type: 'SET_INVENTORY' as const,
-    payload: { mainSlots, bagSlots, donateSlots, tradeSlots, returnTradeSlots, clothesSlots, fastSlots, haveBag, weight }
+    payload: { mainSlots, bagSlots, donatSlots, tradeSlots, returnTradeSlots, clothesSlots, fastSlots, haveBag, weight }
   }
 }
 
@@ -197,12 +199,13 @@ export const getClothesSlotType = (imageId: number): ClothesSlotType => {
     case 106: return 'gloves'   // Перчатки
     case 107: return 'armor'    // Бронежилет
     case 108: return 'jacket'   // Куртка/толстовка
+    case 112: return 'watch'    // Часы
     case 109: return 'bag'      // Рюкзак/сумка
     case 110: return 'pants'    // Штаны
     case 111: return 'shoes'    // Обувь
     default:
-      const index = (imageId - 1) % 12
-      return CLOTHES_SLOT_TYPES[Math.max(0, Math.min(index, 11))] || 'hat'
+      const index = (imageId - 1) % 13
+      return CLOTHES_SLOT_TYPES[Math.max(0, Math.min(index, 12))] || 'hat'
   }
 }
 
@@ -217,9 +220,10 @@ export const getClothesIconId = (slotType: ClothesSlotType): number => {
     gloves: 7,
     armor: 8,
     jacket: 9,
-    bag: 10,
-    pants: 11,
-    shoes: 12
+    watch: 10,
+    bag: 11,
+    pants: 12,
+    shoes: 13
   }
 
   return iconMap[slotType]

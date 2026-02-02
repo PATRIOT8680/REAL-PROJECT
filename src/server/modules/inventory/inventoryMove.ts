@@ -135,7 +135,7 @@ export const processInventoryMove = async (
           const mainSlots = normalizeSlots(JSON.parse(inventory.mainslots))
           sourceItemForCheck = mainSlots[sourceSlot]
           break
-        case 'donate':
+        case 'donat':
           const donatData = JSON.parse(inventory.donatslots)
           sourceItemForCheck = donatData.slots[sourceSlot]
           break
@@ -152,7 +152,7 @@ export const processInventoryMove = async (
 
       if (sourceItemForCheck) {
         const itemData = getItemById(sourceItemForCheck.id)
-        if (itemData && itemData.clothesData?.slot === 9) {
+        if (itemData && itemData.clothesData?.slot === 10) {
           console.log(chalk.red('• PROCESS INV MOVE • Нельзя перемещать сумку в секцию сумки!'))
           return false
         }
@@ -173,9 +173,9 @@ export const processInventoryMove = async (
         case 'main':
           slots = normalizeSlots(JSON.parse(inventory.mainslots))
           break
-        case 'donate':
+        case 'donat':
           const donatData = JSON.parse(inventory.donatslots)
-          slots = normalizeSlots(donatData.slots)
+          slots = normalizeSlots(donatData.slots || [], 15)
           break
         case 'clothes':
           slots = normalizeSlots(JSON.parse(inventory.clothesslots))
@@ -190,7 +190,7 @@ export const processInventoryMove = async (
           isBagSection = true
           // Получаем bag_uid из одежды
           const clothesSlots = JSON.parse(inventory.clothesslots)
-          bagUid = clothesSlots[9]?.id || null
+          bagUid = clothesSlots[10]?.id || null
           break
         case 'fast':
           slots = normalizeFastSlots(
@@ -295,9 +295,9 @@ export const processInventoryMove = async (
       case 'main':
         sourceSlots = normalizeSlots(JSON.parse(inventory.mainslots))
         break
-      case 'donate':
+      case 'donat':
         const donatData = JSON.parse(inventory.donatslots)
-        sourceSlots = normalizeSlots(donatData.slots)
+        sourceSlots = normalizeSlots(Array.isArray(donatData) ? donatData : (donatData.slots || []), 15)
         break
       case 'clothes':
         sourceSlots = normalizeSlots(JSON.parse(inventory.clothesslots))
@@ -308,7 +308,7 @@ export const processInventoryMove = async (
         sourceSlots = normalizeSlots(sourceBagData.items ? JSON.parse(sourceBagData.items) : Array(20).fill(null))
         sourceIsBag = true
         const clothesSlotsSource = JSON.parse(inventory.clothesslots)
-        sourceBagUid = clothesSlotsSource[9]?.id || null
+        sourceBagUid = clothesSlotsSource[10]?.id || null
         break
       case 'fast':
         sourceSlots = normalizeFastSlots(
@@ -325,9 +325,9 @@ export const processInventoryMove = async (
       case 'main':
         targetSlots = normalizeSlots(JSON.parse(inventory.mainslots))
         break
-      case 'donate':
+      case 'donat':
         const donatData = JSON.parse(inventory.donatslots)
-        targetSlots = normalizeSlots(donatData.slots)
+        targetSlots = normalizeSlots(donatData.slots || [], 15)
         break
       case 'clothes':
         targetSlots = normalizeSlots(JSON.parse(inventory.clothesslots))
@@ -338,7 +338,7 @@ export const processInventoryMove = async (
         targetSlots = normalizeSlots(targetBagData.items ? JSON.parse(targetBagData.items) : Array(20).fill(null))
         targetIsBag = true
         const clothesSlotsTarget = JSON.parse(inventory.clothesslots)
-        targetBagUid = clothesSlotsTarget[9]?.id || null
+        targetBagUid = clothesSlotsTarget[10]?.id || null
         break
       case 'fast':
         targetSlots = normalizeFastSlots(
@@ -373,8 +373,8 @@ export const processInventoryMove = async (
 
       // Защита для сумок без slot (если вдруг старые айтемы)
       if (clothesSlotIndex === -1 && fullItemData.clothesData.maxWeight !== undefined) {
-        clothesSlotIndex = 9;
-        console.log(chalk.yellow(`[FIX] Сумка ${sourceItem.id} без slot — принудительно в 9`));
+        clothesSlotIndex = 10;
+        console.log(chalk.yellow(`[FIX] Сумка ${sourceItem.id} без slot — принудительно в 10`));
       }
 
       if (clothesSlotIndex === -1) {
@@ -396,14 +396,8 @@ export const processInventoryMove = async (
       const player = mp.players.at(connectedUsers.getPlayerIdByUid(uid));
       if (player) {
         console.log(chalk.green(`[CLOTHES MOVE] Применяем usageClothes на слот ${clothesSlotIndex}`));
-        usageClothes(player, clothesSlotIndex, fullItemData.clothesData.drawable, fullItemData.clothesData.texture);
+        usageClothes(player, clothesSlotIndex, fullItemData.clothesData.drawable, fullItemData.clothesData.texture, sourceItem.id);
         useClothes(player, sourceItem.id, true);
-      }
-
-      // 6. Сумка отдельно
-      if (clothesSlotIndex === 9 && fullItemData.clothesData.maxWeight !== undefined) {
-        console.log(chalk.cyan(`[BAG] Надеваем сумку ${sourceItem.id}`));
-        await handleBagOperations(uid, 'equip', sourceItem.id);
       }
 
       // 7. Сохраняем
@@ -418,25 +412,17 @@ export const processInventoryMove = async (
 // 2. Снимаем (source = clothes)
     if (sourceSection === 'clothes') {
       if (!sourceItem) return false;
-
       // Снимаем визуально
       const player = mp.players.at(connectedUsers.getPlayerIdByUid(uid));
       if (player) {
-        usageClothes(player, sourceSlot, 0, 0);
-        useClothes(player, sourceItem.id, false); // "снял"
+        usageClothes(player, sourceSlot, -1, 0, sourceItem.id);
+        useClothes(player, sourceItem.id, false);
       }
-
-      // Сумка — отдельно
-      if (sourceSlot === 9 && sourceItem.clothesData?.maxWeight !== undefined) {
-        await handleBagOperations(uid, 'unequip', sourceItem.id);
-      }
-
       sourceSlots[sourceSlot] = null;
 
       // Если целевой слот занят — ищем свободный
       let finalTargetSection: any = targetSection;
       let finalTargetSlot = targetSlot;
-
       if (targetItem) {
         const free = await findFreeSlotsInInventory(uid);
         if (!free.section) {
@@ -445,11 +431,10 @@ export const processInventoryMove = async (
         }
         finalTargetSection = free.section;
         finalTargetSlot = free.slot;
-
         // Загружаем targetSlots для свободного слота
         switch (finalTargetSection) {
           case 'main': targetSlots = normalizeSlots(JSON.parse(inventory.mainslots)); break;
-          case 'donate':
+          case 'donat':
             const donat = JSON.parse(inventory.donatslots);
             targetSlots = normalizeSlots(donat.slots || []);
             break;
@@ -462,11 +447,24 @@ export const processInventoryMove = async (
 
       targetSlots[finalTargetSlot] = { id: sourceItem.id, quantity: 1 };
 
-      // Сохраняем
+      // Сохраняем изменения для clothes (source)
       await updateSlotsArray(uid, 'clothes', sourceSlots);
-      await updateSlotsArray(uid, finalTargetSection, targetSlots);
-      await updateTotalWeightInventory(uid);
 
+      // Сохраняем для target с проверкой на 'bag'
+      console.log(chalk.blue(`[MOVE CLOTHES OFF] Сохраняем в finalTargetSection: ${finalTargetSection}`));
+      if (finalTargetSection === 'bag') {
+        const clothesSlots = JSON.parse(inventory.clothesslots);  // Заново загружаем, если нужно
+        const bagUid = clothesSlots[10]?.id;
+        if (!bagUid) {
+          console.log(chalk.red('[MOVE CLOTHES OFF] bagUid не найден'));
+          return false;
+        }
+        await handleBagOperations(uid, 'update', bagUid, targetSlots);
+      } else {
+        await updateSlotsArray(uid, finalTargetSection, targetSlots);
+      }
+
+      await updateTotalWeightInventory(uid);
       console.log(chalk.green(`[MOVE] Одежда ${sourceItem.id} снята в ${finalTargetSection}-${finalTargetSlot}`));
       return true;
     }
@@ -561,12 +559,14 @@ export const processInventoryMove = async (
   }
 }
 
-export const normalizeSlots = (slots: any[]): any[] => {
-  if (!Array.isArray(slots)) return Array(20).fill(null);
-  if (slots.length === 20) return slots;
-  if (slots.length > 20) return slots.slice(0, 20);
-  return [...slots, ...Array(20 - slots.length).fill(null)];
-};
+export const normalizeSlots = (slots: any[], targetLength: number = 20): any[] => {
+  if (!Array.isArray(slots)) return Array(targetLength).fill(null)
+
+  if (slots.length === targetLength) return slots
+  if (slots.length > targetLength) return slots.slice(0, targetLength)
+
+  return [...slots, ...Array(targetLength - slots.length).fill(null)]
+}
 
 const normalizeFastSlots = (slots: any[]): any[] => {
   if (!Array.isArray(slots)) return Array(4).fill(null);
@@ -605,11 +605,19 @@ export const updateSlotsArray = async (
           updatedValue = JSON.stringify(slots)
           break
 
-        case 'donate':
+        case 'donat':
           columnName = 'donatslots'
-          const donateData = JSON.parse(inventory.donatslots)
-          donateData.slots = slots
-          updatedValue = JSON.stringify(donateData)
+
+          let donatData = typeof inventory.donatslots === 'string'
+            ? JSON.parse(inventory.donatslots)
+            : inventory.donatslots
+
+          if (!donatData || typeof donatData !== 'object' || Array.isArray(donatData)) {
+            donatData = { have: false, slots: Array(15).fill(null) }
+          }
+
+          donatData.slots = normalizeSlots(slots, 15)
+          updatedValue = JSON.stringify(donatData)
           break
 
         case 'clothes':
@@ -648,9 +656,9 @@ export const findFreeSlotsInInventory = async (uid: number) => {
   if (freeSlot !== -1) return { section: 'main', slot: freeSlot }
 
   const donatData = JSON.parse(inventory.donatslots)
-  const donatSlots = normalizeSlots(JSON.parse(donatData))
+  const donatSlots = normalizeSlots(donatData.slots || [], 15)
   freeSlot = donatSlots.findIndex(slot => slot === null)
-  if (freeSlot !== -1) return { section: 'donate', slot: freeSlot }
+  if (freeSlot !== -1) return { section: 'donat', slot: freeSlot }
 
   const bagData = await getEquippedBag(uid)
   if (bagData) {

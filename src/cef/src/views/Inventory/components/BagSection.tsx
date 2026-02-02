@@ -13,7 +13,7 @@ const BagSection = ({ onItemDragStart, onItemDrop }: IBagSection) => {
   const bagSlots = useSelector((state: RootState) => state.inventoryReducer.bagSlots)
   const clothesSlots = useSelector((state: RootState) => state.inventoryReducer.clothesSlots)
 
-  const bagSlotIndex = 9
+  const bagSlotIndex = 10
   const hasBagEquipped = clothesSlots[bagSlotIndex] && clothesSlots[bagSlotIndex]!.imageId === 109
 
   if (!hasBagEquipped) return null

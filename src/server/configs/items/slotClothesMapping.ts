@@ -27,9 +27,9 @@ export const SLOT_MAPPING = {
     name: 'Очки'
   },
 
-  // Браслет - props[6], props[7]
+  // Браслет - props[7]
   4: {
-    clothesSection: 6,
+    clothesSection: 7,
     type: 'props' as const,
     name: 'Браслет'
   },
@@ -62,39 +62,48 @@ export const SLOT_MAPPING = {
     name: 'Верх'
   },
 
-  // Сумка - clothes[5]
+  // Часы - props[6]
   9: {
+    clothesSection: 6,
+    type: 'props' as const,
+    name: 'Часы'
+  },
+
+  // Сумка - clothes[5]
+  10: {
     clothesSection: 5,
     type: 'clothes' as const,
     name: 'Рюкзак'
   },
 
   // Штаны - clothes[4]
-  10: {
+  11: {
     clothesSection: 4,
     type: 'clothes' as const,
     name: 'Штаны'
   },
 
   // Обувь - clothes[6]
-  11: {
+  12: {
     clothesSection: 6,
     type: 'clothes' as const,
     name: 'Обувь'
   }
-}
+} as const
+
 
 export const CLOTHES_IMAGE_IDS = {
-  0: 100,  // Головной убор
-  1: 101,  // Украшения
-  2: 102,  // Маска
-  3: 103,  // Очки
-  4: 104,  // Браслет
-  5: 105,  // Футболка
-  6: 106,  // Перчатки
-  7: 107,  // Бронежилет
-  8: 108,  // Куртка
-  9: 109,  // Сумка
-  10: 110, // Штаны
-  11: 111  // Обувь
+  0: 100,   // Головной убор
+  1: 101,   // Украшения
+  2: 102,   // Маска
+  3: 103,   // Очки
+  4: 104,   // Браслет
+  5: 105,   // Футболка
+  6: 106,   // Перчатки
+  7: 107,   // Бронежилет
+  8: 108,   // Куртка
+  9: 112,   // Часы
+  10: 109,  // Сумка
+  11: 110,  // Штаны
+  12: 111   // Обувь
 } as const;

@@ -1,4 +1,6 @@
 import chalk from 'chalk'
+import { rce } from "../../utils/rce";
+import { ServerItem } from "../../../shared/types/items";
 
 import { CLOTHES_MALE_CONFIG } from "../../configs/items/clothes.male";
 import { CLOTHES_FEMALE_CONFIG } from "../../configs/items/clothes.female";
@@ -8,41 +10,11 @@ import { SLOT_MAPPING, CLOTHES_IMAGE_IDS } from "../../configs/items/slotClothes
 
 import { getUsageFunction, usageFunctions } from "./usageItems";
 
-export interface ServerItem {
-  id: number;
-  name: string;
-  description: string;
-  imageId: number;
-  maxStack: number;
-  type: string;
-  weight: number;
-  stackable: boolean;
-  consumable: boolean;
-  price?: number,
-  usage?: (player: PlayerMp) => void,
-
-  clothesData?: {
-    type: 'clothes' | 'props',
-    gender: 'male' | 'female',
-    sectionId: number,
-    drawable: number,
-    texture: number,
-    slot: number,
-    maxWeight?: number,
-  },
-
-  weaponData?: {
-    ammoType?: string,
-  },
-
-  foodData?: {
-    healthRestore?: number,
-    eatRestore?: number,
-    waterRestore?: number,
-  },
-}
-
 const itemsRegistry = new Map<number, ServerItem>()
+
+rce.registerClient('getAllItems', (player: PlayerMp) => {
+  return getAllItems()
+})
 
 export const registerItem = (item: ServerItem) => {
   itemsRegistry.set(item.id, item)
@@ -93,6 +65,11 @@ const loadClothes = () => {
     const slot = parseInt(slotStr)
     const slotInfo = SLOT_MAPPING[slot as keyof typeof SLOT_MAPPING]
 
+    if (!slotInfo) {
+      console.warn(`[ITEMS] SLOT_MAPPING не найден для слота ${slot}`);
+      return;
+    }
+
     items.forEach((itemData: any) => {
       const drawable = itemData[0]
       const name = itemData[1]
@@ -100,6 +77,7 @@ const loadClothes = () => {
       const price = itemData[3] || 0
       const maxWeight = itemData[4]
       const variations = itemData[5] || 1
+      const specialId = itemData[6] || 0  // ← фикс: если нет — 0
 
       for (let texture = 0; texture < variations; texture++) {
         const uniqueId = generateClothesItemId(
@@ -128,7 +106,8 @@ const loadClothes = () => {
             drawable: drawable,
             texture: texture,
             slot: slot,
-            maxWeight: maxWeight
+            maxWeight: maxWeight,
+            propId: specialId,
           }
         }
 
@@ -141,6 +120,11 @@ const loadClothes = () => {
     const slot = parseInt(slotStr)
     const slotInfo = SLOT_MAPPING[slot as keyof typeof SLOT_MAPPING]
 
+    if (!slotInfo) {
+      console.warn(`[ITEMS] SLOT_MAPPING не найден для слота ${slot}`);
+      return;
+    }
+
     items.forEach((itemData: any) => {
       const drawable = itemData[0]
       const name = itemData[1]
@@ -148,6 +132,7 @@ const loadClothes = () => {
       const price = itemData[3] || 0
       const maxWeight = itemData[4]
       const variations = itemData[5] || 1
+      const specialId = itemData[6] || 0
 
       for (let texture = 0; texture < variations; texture++) {
         const uniqueId = generateClothesItemId(
@@ -176,7 +161,8 @@ const loadClothes = () => {
             drawable: drawable,
             texture: texture,
             slot: slot,
-            maxWeight: maxWeight
+            maxWeight: maxWeight,
+            propId: specialId,
           }
         }
 
@@ -214,7 +200,7 @@ const loadWeapons = () => {
 
 const loadFoods = () => {
   FOODS_CONFIG.forEach((food: any[]) => {
-    const [id, name, description, weight, maxStack, stackable, health, eat, water, price, usage] = food
+    const [id, name, description, weight, maxStack, stackable, health, eat, water, price, hashObj, waitingUsage, anim] = food
 
     const item: ServerItem = {
       id: id,
@@ -227,11 +213,14 @@ const loadFoods = () => {
       stackable,
       consumable: true,
       price,
+      hashObj: hashObj,
       usage: usageFunctions[id],
       foodData: {
         healthRestore: health,
         eatRestore: eat,
-        waterRestore: water
+        waterRestore: water,
+        waitingUsage: waitingUsage,
+        anim: anim,
       }
     }
 
@@ -290,7 +279,7 @@ export const isBagItem = (itemId: number): boolean => {
   const item = getItemById(itemId)
   if (!item) return false
 
-  return item.clothesData?.slot === 9 && item.clothesData?.maxWeight !== undefined
+  return item.clothesData?.slot === 10 && item.clothesData?.maxWeight !== undefined
 }
 
 export const getBagMaxWeight = (itemId: number): number => {
@@ -302,8 +291,8 @@ export const getBagMaxWeight = (itemId: number): number => {
 
 export const getItemImageIdForCef = (item: ServerItem): number => {
   if (item.type === 'clothes' && item.clothesData) {
+    // Используем обновленный CLOTHES_IMAGE_IDS
     return CLOTHES_IMAGE_IDS[item.clothesData.slot as keyof typeof CLOTHES_IMAGE_IDS] || 0
   }
-
   return item.imageId
 }

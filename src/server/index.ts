@@ -23,6 +23,7 @@ import './data/dataConnectedUser'
 import './player/experience'
 import './modules/inventory/inventoryHandlers'
 import './player/clothes'
+import './modules/inventory/itemsObject'
 import {rce} from "./utils/rce";
 
 mp.world.weather = 'XMAS'

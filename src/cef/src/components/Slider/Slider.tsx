@@ -4,7 +4,7 @@ import svg_arrow from './assets/img/arrow.svg'
 import { CSSProperties, useState, useEffect } from "react";
 
 interface ISlider {
-  title: string,
+  title?: string,
   value: number,
   onChange: (value: number) => void,
   minVal: number,
@@ -103,7 +103,7 @@ const Slider = ({
   return (
       <div className="main-slider">
         <header className="header-slider">
-          <span className="title">{title}</span>
+          { title && <span className="title">{title}</span> }
           { random && (
               <svg onClick={handleRandomClick} className='random-btn' width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.95611 5.45722L1.48833 0L0 1.48833L5.45722 6.94555L6.95611 5.45722ZM11.0833 0L13.2367 2.15333L0 15.4006L1.48833 16.8889L14.7356 3.65222L16.8889 5.80556V0H11.0833ZM11.4317 9.93278L9.94333 11.4211L13.2472 14.725L11.0833 16.8889H16.8889V11.0833L14.7356 13.2367L11.4317 9.93278Z" fill="#888888" />

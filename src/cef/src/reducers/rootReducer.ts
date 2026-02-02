@@ -16,6 +16,7 @@ import { adminMenuReducer } from "./menus/adminMenu.ts";
 import { playerReportsReducer } from "./menus/playerReports.ts";
 import { spawnReducer } from "./menus/spawn.ts";
 import { inventoryReducer } from "./menus/inventory.ts";
+import { waitingLoaderReducer } from "./menus/waitingLoader.ts";
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
@@ -25,6 +26,8 @@ import { bankMoneyReducer } from "./elements/player/bankMoney.ts"
 import { donatCoinsReducer } from "./elements/player/donatcoins.ts"
 import { consoleBufferReducer } from "./elements/adminMenu/consoleBuffer.ts";
 import { reportReducer } from "./elements/adminMenu/reportsList.ts";
+import { hoverInteractionReducer } from "./elements/hoverInteraction.ts";
+import { speedVehReducer } from "./elements/vehicle/speed.ts";
 
 export type RootState = {
 	// Menus
@@ -41,6 +44,7 @@ export type RootState = {
   playerReportsReducer: ReturnType<typeof playerReportsReducer>
   spawnReducer: ReturnType<typeof spawnReducer>
   inventoryReducer: ReturnType<typeof inventoryReducer>
+  waitingLoaderReducer: ReturnType<typeof waitingLoaderReducer>
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
@@ -50,6 +54,8 @@ export type RootState = {
   donatCoinsReducer: ReturnType<typeof donatCoinsReducer>
   consoleBufferReducer: ReturnType<typeof consoleBufferReducer>
   reportReducer: ReturnType<typeof reportReducer>
+  hoverInteractionReducer: ReturnType<typeof hoverInteractionReducer>
+  speedVehReducer: ReturnType<typeof speedVehReducer>
 }
 
 export const rootReducer = combineReducers({
@@ -67,6 +73,7 @@ export const rootReducer = combineReducers({
   playerReportsReducer,
   spawnReducer,
   inventoryReducer,
+  waitingLoaderReducer,
 
   // Elements
   sendNotifyReducer,
@@ -76,4 +83,6 @@ export const rootReducer = combineReducers({
   donatCoinsReducer,
   consoleBufferReducer,
   reportReducer,
+  hoverInteractionReducer,
+  speedVehReducer,
 });

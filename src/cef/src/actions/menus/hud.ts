@@ -1,5 +1,5 @@
-export const showHud = () => {
-  return { type: 'SHOW_HUD' }
+export const showHud = (speedometerVisible?: boolean) => {
+  return { type: 'SHOW_HUD', speedometerVisible }
 }
 
 export const hideHud = () => {
