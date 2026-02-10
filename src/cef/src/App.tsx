@@ -39,6 +39,8 @@ import PlayerReports from "./views/PlayerReports/Index.tsx";
 import SpawnMenu from "./views/Spawn/Index.tsx";
 import Inventory from "./views/Inventory/Index.tsx";
 import WaitingLoader from "./views/WaitingLoader/Index.tsx";
+import Interaction from './views/Interaction/Index.tsx'
+import Offer from './views/Offer/Index.tsx'
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -66,6 +68,7 @@ const App = () => {
   const playerReportsVisible = useSelector((state: RootState) => state.playerReportsReducer.isVisible)
   const spawnVisible = useSelector((state: RootState) => state.spawnReducer.isVisible)
   const inventoryState = useSelector((state: RootState) => state.inventoryReducer)
+  const interactionVisible = useSelector((state: RootState) => state.interactionReducer.isVisible)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -85,22 +88,21 @@ const App = () => {
       Reports: playerReportsVisible,
       Spawn: spawnVisible,
       Inventory: inventoryState.isVisible,
-    };
+      Interaction: interactionVisible,
+    }
 
     let open = Object.entries(menus)
       .filter(([, visible]) => visible)
-      .map(([name]) => name);
+      .map(([name]) => name)
 
-    // Всегда массив
-    if (!Array.isArray(open)) open = open ? [open] : ['none'];
+    if (!Array.isArray(open)) open = open ? [open] : ['none']
 
-    // Самое важное: преобразуем в JSON-строку перед отправкой
-    const jsonResult = JSON.stringify(open);
+    const jsonResult = JSON.stringify(open)
 
-    console.log(`[CEF] Готовим отправку JSON: ${jsonResult}`);
+    console.log(`[CEF] Готовим отправку JSON: ${jsonResult}`)
 
-    return jsonResult; // возвращаем СТРОКУ
-  });
+    return jsonResult
+  })
 
   useEffect(() => {
     ev = rce.register('client:setLanguage', (lang: string) => {
@@ -152,6 +154,8 @@ const App = () => {
       { spawnVisible && <SpawnMenu /> }
       { inventoryState.isVisible && <Inventory haveDonateSlots={inventoryState.haveDonatSlots} /> }
       <WaitingLoader />
+      { interactionVisible && <Interaction /> }
+      <Offer />
 
       {/*<div className="language_ambients">*/}
       {/*  /!*{ shouldChangeLanguage && <ChangeLanguage /> }*!/*/}

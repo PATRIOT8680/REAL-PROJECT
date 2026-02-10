@@ -8,12 +8,13 @@ import Speedometer from "./components/Speedometer.tsx";
 
 const Hud = memo(() => {
   const { speedometerVisible } = useSelector((state: RootState) => state.hudReducer)
+  const hoverVisible = useSelector((state: RootState) => state.hoverInteractionReducer.isVisible)
 
   return (
     <>
       <div className="hud">
         <NearMinimap />
-        <HoverInteraction />
+        { hoverVisible && <HoverInteraction /> }
         { speedometerVisible && <Speedometer /> }
       </div>
     </>

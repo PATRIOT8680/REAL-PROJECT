@@ -16,6 +16,8 @@ import { playerReportsStore } from "./menus/playerReports.ts";
 import { spawnStore } from "./menus/spawn.ts";
 import { inventoryStore, setStore } from "./menus/inventory.ts";
 import { waitingLoaderStore } from "./menus/waitingLoader.ts";
+import { interactionStore } from "./menus/interaction.ts";
+import { offerStore } from "./menus/offer.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -54,6 +56,8 @@ window.App = {
   spawnReducer: spawnStore,
   inventoryReducer: inventoryStore,
   waitingLoaderReducer: waitingLoaderStore,
+  interactionReducer: interactionStore,
+  offerReducer: offerStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,

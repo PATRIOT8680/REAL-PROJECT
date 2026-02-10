@@ -1,4 +1,3 @@
-
 const updateDiscord = () => {
   const player: PlayerMp = mp.players.local
 
