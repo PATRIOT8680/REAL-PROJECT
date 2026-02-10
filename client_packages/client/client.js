@@ -679,7 +679,7 @@ rce.registerAll('chat:pushMsg', (name, text, showTime, tile) => {
 rce.registerAll('chat:pushLine', (text, showTime, tile) => {
     pushLine(text, showTime, tile);
 });
-pushLine(`Ваше приключение начинается на 🌟 {FCD53F}<b>REDSTAR ROLEPLAY!</b>`, false, 'hello');
+pushLine(`Ваше приключение начинается на ⚡️ {FCD53F}<b>REAL ROLEPLAY!</b>`, false, 'hello');
 
 let visibleAMenu$1 = false;
 const plLocal = mp.players.local;
@@ -778,7 +778,6 @@ const hideInventory = () => {
 mp.keys.bind(Keys.VK_TAB, false, async () => {
     if (!inventoryVisible) {
         const openedMenus = await rce.callCef('getOpenMenus');
-        mp.console.logWarning(openedMenus);
         const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent'];
         const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu));
         if (!hasSpecialOpen) {
@@ -966,7 +965,7 @@ const ids = {
     LCtrl: 326,
     RMB: 25
 };
-let ev = null;
+let ev$1 = null;
 const localplayer$1 = mp.players.local;
 const noclip = global.noclip;
 const camera = mp.cameras.new('gameplay');
@@ -974,11 +973,11 @@ const controls = mp.game.controls;
 let direction = null;
 const startNoclip = () => {
     rce.triggerServer('toggleNoclip', true);
-    if (ev) {
-        ev.destroy();
-        ev = null;
+    if (ev$1) {
+        ev$1.destroy();
+        ev$1 = null;
     }
-    ev = new mp.Event("render", () => {
+    ev$1 = new mp.Event("render", () => {
         if (noclip.active) {
             let updated = false;
             const pos = mp.players.local.position;
@@ -1047,9 +1046,9 @@ const startNoclip = () => {
 };
 const stopNoclip = () => {
     rce.triggerServer('toggleNoclip', false);
-    if (ev) {
-        ev.destroy();
-        ev = null;
+    if (ev$1) {
+        ev$1.destroy();
+        ev$1 = null;
     }
     noclip.f = 2.0;
     noclip.w = 2.0;
@@ -1965,21 +1964,68 @@ const getDistanceFactor = (distance, maxDistance = 400, baseScale = 0.25) => {
     };
 };
 
-const MAX_DIST = 7;
-const HIT_MAX_DIST = 2;
+let lastHit = {
+    type: 'none',
+    remoteId: null,
+    distToHit: 0
+};
+const checkCenterScreenHit = (rayLength, hitMaxDist, flags) => {
+    const camera = mp.cameras.new("gameplay");
+    const start = camera.getCoord();
+    const dir = camera.getDirection();
+    const end = new mp.Vector3(start.x + dir.x * rayLength, start.y + dir.y * rayLength, start.z + dir.z * rayLength);
+    const ignore = mp.players.local.handle;
+    const result = mp.raycasting.testPointToPoint(start, end, ignore, flags);
+    const currentHit = {
+        type: 'none',
+        remoteId: null,
+        handle: null,
+        position: null,
+        entity: null,
+        distToHit: 0,
+    };
+    if (!result || !result.entity) {
+        return currentHit;
+    }
+    const entity = result.entity;
+    const hitPos = result.position;
+    const playerPos = mp.players.local.position;
+    const distToHit = mp.game.system.vdist(playerPos.x, playerPos.y, playerPos.z, hitPos.x, hitPos.y, hitPos.z);
+    if (distToHit > hitMaxDist) {
+        return currentHit;
+    }
+    currentHit.position = hitPos;
+    currentHit.distToHit = distToHit;
+    currentHit.entity = entity;
+    currentHit.handle = entity.handle;
+    if (entity.type) {
+        currentHit.type = entity.type;
+        currentHit.remoteId = entity.remoteId ?? null;
+    }
+    return currentHit;
+};
+const updateLastHit = (newHit) => {
+    lastHit = newHit;
+};
+
+const MAX_DIST_TEXT = 7;
+const HIT_MAX_DIST$1 = 2;
+const RAY_LENGTH$1 = 15;
 const worldItems = new Map();
-let lastHitId = null;
-let isHitState = false;
+let lastObjectCheckTime = 0;
 mp.events.add('render', () => {
     mp.objects.forEachInStreamRange((obj) => {
         const localplayer = mp.players.local;
         const posPl = localplayer.position;
         const posObj = obj.position;
         const distToObj = mp.game.system.vdist(posObj.x, posObj.y, posObj.z, posPl.x, posPl.y, posPl.z);
-        const p = getDistanceFactor(distToObj, MAX_DIST, 0.37);
         const itemInfo = worldItems.get(obj.id);
-        const textQuantity = itemInfo.value > 1 ? `[x ${itemInfo.value}]` : '';
-        if (distToObj <= MAX_DIST) {
+        if (!itemInfo)
+            return;
+        // Отображаем текст предмета
+        if (distToObj <= MAX_DIST_TEXT) {
+            const p = getDistanceFactor(distToObj, MAX_DIST_TEXT, 0.37);
+            const textQuantity = itemInfo.value > 1 ? `[x ${itemInfo.value}]` : '';
             mp.game.graphics.drawText(`${itemInfo.item.name} ${textQuantity}`, [posObj.x, posObj.y - p.yOffset - 0.01, posObj.z], {
                 font: 4,
                 color: [255, 255, 255, p.alpha - 30],
@@ -1987,84 +2033,56 @@ mp.events.add('render', () => {
                 outline: true
             });
         }
+        // Управление коллизией
         if (localplayer.vehicle) {
             obj.setCollision(false, false);
         }
         else {
             obj.setCollision(true, false);
         }
-        checkCenterScreenHit();
     });
+    // Проверяем луч только для объектов (флаг 16)
+    const hit = checkCenterScreenHit(RAY_LENGTH$1, HIT_MAX_DIST$1, 16);
+    const currentTime = Date.now();
+    const changed = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId;
+    // Проверяем хит для объектов только если прошло достаточно времени
+    if (changed && currentTime - lastObjectCheckTime > 50) {
+        lastObjectCheckTime = currentTime;
+        // Сбрасываем наведение только если у нас было наведение на объект
+        if (lastHit.type === 'object') {
+            gui.execute(`window.App.hoverInteractionReducer.removeHover()`);
+        }
+        updateLastHit(hit);
+        // Устанавливаем наведение только если луч попал в объект на допустимой дистанции
+        if (hit.type === 'object' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST$1) {
+            gui.execute(`window.App.hoverInteractionReducer.setHover()`);
+        }
+    }
 });
 rce.registerServer('droppedItemOnGround', (item, objId, objPos, value) => {
-    mp.console.logWarning(`${JSON.stringify(item)}, ${objPos}`);
     worldItems.set(objId, { item, position: objPos, value });
-    mp.console.logInfo(`WorldItems: ${JSON.stringify(worldItems.get(item.id))}`);
 });
-const checkCenterScreenHit = () => {
-    let currentHitId = null;
-    const camera = mp.cameras.new('gameplay');
-    const coordCam = camera.getCoord();
-    const directionCam = camera.getDirection();
-    const raycastPos = {
-        x: coordCam.x + directionCam.x * 15,
-        y: coordCam.y + directionCam.y * 15,
-        z: coordCam.z + directionCam.z * 15,
-    };
-    const raycastEndPos = new mp.Vector3(raycastPos.x, raycastPos.y, raycastPos.z);
-    const raycastResult = mp.raycasting.testPointToPoint(coordCam, raycastEndPos, mp.players.local, 16);
-    //mp.game.graphics.drawLine(coordCam.x, coordCam.y, coordCam.z, raycastPos.x, raycastPos.y, raycastPos.z, 255, 255, 255, 255)
-    if (raycastResult && raycastResult.entity) {
-        const entityHandle = raycastResult.entity;
-        const objId = entityHandle.remoteId;
-        const hasObjId = objId !== undefined || objId !== null;
-        if (hasObjId && worldItems.has(objId)) {
-            const playerPos = mp.players.local.position;
-            const hitPos = raycastResult.position;
-            const distToHit = mp.game.system.vdist(playerPos.x, playerPos.y, playerPos.z, hitPos.x, hitPos.y, hitPos.z);
-            if (distToHit <= HIT_MAX_DIST) {
-                currentHitId = objId;
-            }
-        }
-    }
-    if (currentHitId !== null && lastHitId !== currentHitId) {
-        const itemData = worldItems.get(currentHitId);
-        if (itemData) {
-            gui.execute('window.App.hoverInteractionReducer.setHover()');
-            isHitState = true;
-        }
-    }
-    else if (currentHitId === null && lastHitId !== null) {
-        const itemData = worldItems.get(lastHitId);
-        if (itemData) {
-            gui.execute('window.App.hoverInteractionReducer.removeHover()');
-            isHitState = false;
-        }
-    }
-    lastHitId = currentHitId;
-};
 mp.keys.bind(Keys.VK_E, false, async () => {
-    if (lastHitId !== null && isHitState) {
-        const itemData = worldItems.get(lastHitId);
-        if (itemData) {
-            const { item, value } = itemData;
-            const pickUp = await rce.callServer('pickUpItem', lastHitId, item, value);
-            if (pickUp.status === 'destroyItem') {
-                worldItems.delete(lastHitId);
-                return;
-            }
-            if (pickUp.status === 'denied') {
-                if (pickUp.text) {
-                    gui.execute(`window.App.sendNotifyReducer.sendNotify('err', '${pickUp.text}', 3000, 'bottom')`);
-                }
-                return;
-            }
-            if (pickUp.status === 'approved') {
-                worldItems.delete(lastHitId);
-                gui.execute(`window.App.waitingLoaderReducer.showWaitingLoader(2000, 'Поднятие предмета')`);
-                gui.execute('window.App.hoverInteractionReducer.removeHover()');
-            }
+    if (lastHit.type !== 'object' || lastHit.remoteId === null)
+        return;
+    const itemData = worldItems.get(lastHit.remoteId);
+    if (!itemData)
+        return;
+    const { item, value } = itemData;
+    const pickUp = await rce.callServer('pickUpItem', lastHit.remoteId, item, value);
+    if (pickUp.status === 'destroyItem') {
+        worldItems.delete(lastHit.remoteId);
+        return;
+    }
+    if (pickUp.status === 'denied') {
+        if (pickUp.text) {
+            gui.execute(`window.App.sendNotifyReducer.sendNotify('err', '${pickUp.text}', 3000, 'bottom')`);
         }
+        return;
+    }
+    if (pickUp.status === 'approved') {
+        worldItems.delete(lastHit.remoteId);
+        gui.execute(`window.App.waitingLoaderReducer.showWaitingLoader(2000, 'Поднятие предмета')`);
     }
 });
 
@@ -2112,6 +2130,143 @@ const updateDiscord = () => {
     mp.discord.update(subtitle, 'REAL RP');
 };
 setInterval(updateDiscord, 10000);
+
+rce.registerAll('handleActionInteraction', (typeEntity, action, targetId) => {
+    const target = typeEntity === 'player' ? mp.players.at(targetId) : mp.vehicles.at(targetId);
+    if (target === undefined)
+        return;
+    const lcplayer = mp.players.local;
+    const distToEntity = mp.game.system.vdist(lcplayer.position.x, lcplayer.position.y, lcplayer.position.z, target.position.x, target.position.y, target.position.z);
+    if (distToEntity <= 7) {
+        if (typeEntity === 'player') {
+            rce.triggerServer('handleInteractionPlayer', action, targetId);
+        }
+    }
+    else {
+        gui.execute(`window.App.sendNotifyReducer.sendNotify('err', 'Игрок далеко от вас!', 3000, 'bottom')`);
+    }
+});
+
+let ev = null;
+rce.registerServer('showOffer', (senderId, title, description, duration) => {
+    const playerSender = mp.players.at(senderId);
+    if (!playerSender)
+        return;
+    const lcplayer = mp.players.local;
+    const distToSender = mp.game.system.vdist(lcplayer.position.x, lcplayer.position.y, lcplayer.position.z, playerSender.position.x, playerSender.position.y, playerSender.position.z);
+    gui.execute(`window.App.offerReducer.showOffer('${title}', '${description}', ${duration})`);
+    return new Promise((resolve) => {
+        let resolved = false;
+        const timeoutId = setTimeout(() => {
+            if (!resolved) {
+                resolved = true;
+                resolve('timeout');
+                cleanup();
+            }
+        }, duration);
+        const keyHandler = () => {
+            if (resolved) {
+                cleanup();
+                return;
+            }
+            if (mp.keys.isDown(Keys.VK_Y)) {
+                if (distToSender > 8) {
+                    gui.execute(`window.App.sendNotifyReducer.sendNotify('err', 'Игрок не рядом с вами!', 3500, 'bottom')`);
+                    cleanup();
+                    return;
+                }
+                clearTimeout(timeoutId);
+                resolve(true);
+                cleanup();
+            }
+            if (mp.keys.isDown(Keys.VK_N)) {
+                clearTimeout(timeoutId);
+                resolve(false);
+                cleanup();
+            }
+        };
+        if (ev) {
+            resolved = true;
+            ev.destroy();
+        }
+        ev = new mp.Event("render", keyHandler);
+        const cleanup = () => {
+            if (ev) {
+                ev.destroy();
+                ev = null;
+            }
+        };
+    });
+});
+
+const HIT_MAX_DIST = 2.5;
+const RAY_LENGTH = 15;
+let openedInteraction = false;
+mp.events.add('render', () => {
+    const hit = checkCenterScreenHit(RAY_LENGTH, HIT_MAX_DIST, 2);
+    const changedHit = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId;
+    if (openedInteraction && (hit.type !== 'vehicle' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST)) {
+        openedInteraction = false;
+        gui.execute(`window.App.interactionReducer.hideInteraction()`);
+        mp.gui.cursor.visible = false;
+    }
+    if (hit.type === 'vehicle' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST && !mp.players.local.vehicle) {
+        const veh = mp.vehicles.atRemoteId(hit.remoteId);
+        if (veh && !mp.players.local.vehicle) {
+            const posVeh = veh.position;
+            const factor = getDistanceFactor(hit.distToHit, HIT_MAX_DIST, 0.48);
+            mp.game.graphics.drawText('[E]', [posVeh.x, posVeh.y - factor.yOffset, posVeh.z], {
+                font: 4,
+                color: [255, 255, 255, factor.alpha - 30],
+                scale: factor.scale,
+                outline: true
+            });
+        }
+        if (changedHit) {
+            if (lastHit.type !== 'none') {
+                gui.execute(`window.App.hoverInteractionReducer.removeHover()`);
+            }
+            updateLastHit(hit);
+            gui.execute(`window.App.hoverInteractionReducer.setHover()`);
+        }
+    }
+    else {
+        if (changedHit && lastHit.type === 'vehicle') {
+            gui.execute(`window.App.hoverInteractionReducer.removeHover()`);
+        }
+    }
+});
+mp.keys.bind(Keys.VK_E, false, async () => {
+    if (lastHit.type === 'none')
+        return;
+    if (openedInteraction) {
+        openedInteraction = false;
+        mp.gui.cursor.visible = false;
+        gui.execute(`window.App.interactionReducer.hideInteraction()`);
+        return;
+    }
+    const openedMenus = await rce.callCef('getOpenMenus');
+    const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent'];
+    const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu));
+    if (lastHit.type === 'vehicle' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST && !hasSpecialOpen) {
+        openedInteraction = true;
+        gui.execute(`window.App.interactionReducer.showInteraction('vehicle', ${lastHit.remoteId})`);
+        mp.gui.cursor.visible = true;
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    if (openedInteraction) {
+        openedInteraction = false;
+        gui.execute(`window.App.interactionReducer.hideInteraction()`);
+        mp.gui.cursor.visible = false;
+    }
+});
+mp.events.add('playerEnterVehicle', (vehicle, seat) => {
+    gui.execute(`window.App.hoverInteractionReducer.visibleHover(false)`);
+});
+mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
+    gui.execute(`window.App.hoverInteractionReducer.visibleHover(true)`);
+});
 
 mp.game.invoke("0x6E9EF3A33C8899F8", true);
 mp.game.invoke("0x4CC7F0FEA5283FE0", true);

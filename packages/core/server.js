@@ -57423,8 +57423,28 @@ rce.registerClientCef('getFormatedDateTime', (player, date, time, fullTime) => {
 mp.events.add('packagesLoaded', () => {
     initTimeSystem();
     initItems();
-    loadItems();
+    setTimeout(async () => {
+        await waitForDatabase();
+        loadItems();
+    }, 2000);
 });
+async function waitForDatabase() {
+    const maxAttempts = 15;
+    for (let i = 0; i < maxAttempts; i++) {
+        try {
+            await new Promise((res, rej) => {
+                data.query('SELECT 1', [], (err) => err ? rej(err) : res(true));
+            });
+            console.log(chalk.green('[DB OK]') + ' База готова');
+            return;
+        }
+        catch {
+            console.log(chalk.yellow('[DB WAIT]') + ` Попытка ${i + 1}/${maxAttempts}...`);
+            await new Promise(r => setTimeout(r, 1000));
+        }
+    }
+    throw new Error('База данных недоступна');
+}
 
 rce.registerClientCef('getIdPlayer', (player) => {
     return player.id;
@@ -58169,6 +58189,32 @@ rce.registerCef('cef:amenu:sendAMsg', (player, id, reportData, playerNickname) =
     }
     catch (e) {
         console.log(chalk.bgRed('• logs_reports (sendMsg 4) •', e));
+    }
+});
+
+rce.registerClient('handleInteractionPlayer', async (player, action, targetId) => {
+    if (mp.players.exists(targetId)) {
+        const target = mp.players.at(targetId);
+        const playerSid = connectedUsers.getField(player.id, 'sid');
+        const targetSid = connectedUsers.getField(targetId, 'sid');
+        switch (action) {
+            case 'trade': {
+                const result = await rce.callClient(target, 'showOffer', player.id, 'Обмен', `Игрок #${playerSid} предлагает начать обмен`, 10000);
+                if (result === 'timeout') {
+                    rce.triggerClient(player, 'sendNotify', 'info', `Время вышло. Игрок #${targetSid} не принял ваше предложение`, 4500, 'bottom');
+                    return;
+                }
+                if (result === true) {
+                    rce.triggerClient(player, 'sendNotify', 'success', `Игрок #${targetSid} согласился на обмен`, 3500, 'bottom');
+                }
+                else {
+                    rce.triggerClient(player, 'sendNotify', 'err', `Игрок #${targetSid} отказался обмениваться!`, 3500, 'bottom');
+                }
+            }
+        }
+    }
+    else {
+        rce.triggerClient(player, 'sendNotify', 'err', 'Игрок не найден!', 3500, 'bottom');
     }
 });
 
