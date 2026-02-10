@@ -24,7 +24,7 @@ import './player/experience'
 import './modules/inventory/inventoryHandlers'
 import './player/clothes'
 import './modules/inventory/itemsObject'
-import {rce} from "./utils/rce";
+import './player/interaction'
 
 mp.world.weather = 'XMAS'
 

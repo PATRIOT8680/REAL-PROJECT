@@ -1,0 +1,138 @@
+$Manrope: "Manrope", sans-serif
+
+.interaction-menu
+  position: absolute
+  top: 65%
+  left: 60%
+  transform: translate(-50%, -50%)
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  animation: fadeInInteraction .6s ease
+  gap: .8rem
+
+  .id-player
+    color: rgba(255, 255, 255, 0.5)
+    font-family: $Manrope
+    font-size: .7rem
+    background: rgba(29, 25, 31, 0.98)
+    border-radius: 2px
+    width: 100%
+    padding: .5rem .7rem
+    user-select: none
+
+  .block-item
+    display: flex
+    flex-direction: column
+    gap: .5rem
+    width: 100%
+
+    &.opened
+      .category-int
+        svg
+          transition: transform 1s ease
+          transform: rotate(-180deg)
+
+    li
+      display: flex
+      flex-direction: row
+      align-items: center
+      gap: 1rem
+      padding: .7rem 1.2rem
+      background: rgba(29, 25, 31, 0.98)
+      transition: all .3s ease
+      user-select: none
+      cursor: pointer
+      border-radius: 2px
+
+      &:hover
+        box-shadow: inset 0 0 13px 3px rgba(255, 202, 88, 0.35)
+        transition: all .3s ease
+
+        span
+          color: #FFCA58
+          transition: all .3s ease
+
+      span
+        font-family: $Manrope
+        color: rgba(255, 255, 255, 0.85)
+        transition: all .3s ease
+
+      img
+        width: 1.2rem
+
+    .category-int
+      width: 100%
+      display: flex
+      flex-direction: row
+      align-items: center
+      justify-content: space-between
+      gap: 2.5rem
+
+      &:hover
+        svg
+          opacity: .8
+          transition: all .3s ease
+
+      .left-el
+        display: flex
+        flex-direction: row
+        align-items: center
+        gap: 1rem
+
+        img
+          width: .9rem
+
+        .name-category
+          font-size: .78rem
+
+      svg
+        width: .6rem
+        opacity: .5
+        transition: transform .4s ease
+        transform: rotate(0deg)
+
+    .list-actions
+      padding-left: 1rem
+      display: flex
+      flex-direction: column
+      overflow: hidden
+      max-height: 200px
+      opacity: 1
+      gap: .5rem
+
+      &.closing
+        animation: fadeOutActionsInt .4s ease forwards
+
+      &.opened
+        animation: fadeInActionsInt .4s ease forwards
+
+      img
+        width: .9rem
+
+      .name-action
+        font-size: .72rem
+
+@keyframes fadeInActionsInt
+  from
+    max-height: 0
+    opacity: 0
+    margin-top: 0
+  to
+    max-height: 200px
+    opacity: 1
+
+@keyframes fadeOutActionsInt
+  from
+    max-height: 200px
+    opacity: 1
+  to
+    max-height: 0
+    opacity: 0
+    margin-top: 0
+
+@keyframes fadeInInteraction
+  from
+    opacity: 0
+  to
+    opacity: 1

@@ -36,7 +36,6 @@ const hideInventory = () => {
 mp.keys.bind(Keys.VK_TAB, false, async () => {
   if (!inventoryVisible) {
     const openedMenus = await rce.callCef('getOpenMenus')
-    mp.console.logWarning(openedMenus)
     const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent']
     const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu))
 
