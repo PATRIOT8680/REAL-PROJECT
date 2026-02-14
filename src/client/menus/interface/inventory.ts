@@ -4,13 +4,13 @@ import Keys from "../../utils/keys";
 
 let inventoryVisible: boolean = false
 
-const showInventory = async () => {
+const showInventory = async (tradeOpen?: boolean) => {
   inventoryVisible = true
   const haveDonatSlots = await rce.callServer('existenceDonatSlots')
   const health = mp.players.local.getHealth()
 
   gui.execute(`window.App.playerInfoReducer.setHealth(${health})`)
-  gui.execute(`window.App.inventoryReducer.showInventory(${haveDonatSlots}, false)`)
+  gui.execute(`window.App.inventoryReducer.showInventory(${haveDonatSlots}, ${tradeOpen})`)
   gui.execute(`window.App.hudReducer.hideHud()`)
   gui.execute(`window.App.chatReducer.hideChat()`)
 
@@ -53,8 +53,8 @@ mp.keys.bind(Keys.VK_ESCAPE, false, () => {
   }
 })
 
-rce.registerAll('showInventory', () => {
-  showInventory()
+rce.registerAll('showInventory', (tradeOpen?: boolean) => {
+  showInventory(tradeOpen)
 })
 
 rce.registerAll('hideInventory', () => {
