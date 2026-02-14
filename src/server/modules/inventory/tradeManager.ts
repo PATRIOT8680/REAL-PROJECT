@@ -175,8 +175,8 @@ export const acceptTrade = (player: PlayerMp, requestorId: number) => {
     confirmTimer: null
   })
 
-  rce.triggerClient(requestor, 'showInventory')
-  rce.triggerClient(player, 'showInventory')
+  rce.triggerClient(requestor, 'showInventory', true)
+  rce.triggerClient(player, 'showInventory', true)
 }
 
 // -----------
