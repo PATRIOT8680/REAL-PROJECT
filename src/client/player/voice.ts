@@ -47,11 +47,10 @@ mp.keys.bind(Keys.VK_F10, false, () => {
 let voiceManager: IVoiceManager = {
   list: [],
 
-  new(player: any)  {
+  new(player: PlayerMp)  {
     if (this.list.indexOf(player) === -1) {
-      mp.events.callRemote('client:voice:new', player)
+      rce.triggerServer('client:voice:new', player.remoteId)
       this.list.push(player)
-      player.isListening = true
 
       if (autovolume) {
         player.voiceAutoVolume = true
@@ -65,17 +64,15 @@ let voiceManager: IVoiceManager = {
     }
   },
 
-  delete(player: any, removedVoice: boolean) {
+  delete(player: PlayerMp, removedVoice: boolean) {
     let index = this.list.indexOf(player)
 
     if (index !== -1) {
       this.list.splice(index, 1)
     }
 
-    player.isListening = false
-
     if (removedVoice) {
-      mp.events.callRemote('client:voice:deleted', player)
+      rce.triggerServer('client:voice:deleted', player.remoteId)
     }
   }
 }
