@@ -18,14 +18,14 @@ interface IActiveTrade {
 }
 
 
-const activeTrades = new Map<string, IActiveTrade>()
+export const activeTrades = new Map<string, IActiveTrade>()
 
-const getTradeKey = (p1: PlayerMp, p2: PlayerMp): string => {
+export const getTradeKey = (p1: PlayerMp, p2: PlayerMp): string => {
   const ids = [p1.id, p2.id].sort((a, b) => a - b)
   return `${ids[0]}-${ids[1]}`
 }
 
-const getTradeForPlayer = (player: PlayerMp): { key: string, trade: IActiveTrade } => {
+export const getTradeForPlayer = (player: PlayerMp): { key: string, trade: IActiveTrade } => {
   for (const [key, trade] of activeTrades.entries()) {
     if (trade.player1 === player || trade.player2 === player) {
       return { key, trade }
@@ -34,15 +34,15 @@ const getTradeForPlayer = (player: PlayerMp): { key: string, trade: IActiveTrade
   return null
 }
 
-const getMyOffers = (trade: IActiveTrade, player: PlayerMp): (ITradeOffer | null)[] => {
+export const getMyOffers = (trade: IActiveTrade, player: PlayerMp): (ITradeOffer | null)[] => {
   return player === trade.player1 ? trade.offers1 : trade.offers2
 }
 
-const getPartnerOffers = (trade: IActiveTrade, player: PlayerMp): (ITradeOffer | null)[] => {
+export const getPartnerOffers = (trade: IActiveTrade, player: PlayerMp): (ITradeOffer | null)[] => {
   return player === trade.player1 ? trade.offers2 : trade.offers1
 }
 
-const updateStatuses = (trade: IActiveTrade) => {
+export const updateStatuses = (trade: IActiveTrade) => {
   [trade.player1, trade.player2].forEach((player: PlayerMp) => {
     if (!player || mp.players.at(player.id) !== player) return
 
@@ -59,7 +59,7 @@ const updateStatuses = (trade: IActiveTrade) => {
   })
 }
 
-const cancelTrade = (key: string, reason?: string) => {
+export const cancelTrade = (key: string, reason?: string) => {
   const trade = activeTrades.get(key)
   if (!trade) return
 
@@ -83,7 +83,7 @@ const cancelTrade = (key: string, reason?: string) => {
   })
 }
 
-const executeTrade = async (key: string) => {
+export const executeTrade = async (key: string) => {
   const trade = activeTrades.get(key)
   if (!trade) return
 
@@ -211,3 +211,10 @@ rce.registerCef('tradeCancel', (player: PlayerMp) => {
 
   cancelTrade(tradeInfo.key, 'Обмен отменен одним из игроков')
 })
+
+mp.events.add('playerQuit', (player: PlayerMp) => {
+  const tradeInfo = getTradeForPlayer(player)
+  if (tradeInfo) {
+    cancelTrade(tradeInfo.key, 'Игрок отключился от сервера')
+  }
+});
