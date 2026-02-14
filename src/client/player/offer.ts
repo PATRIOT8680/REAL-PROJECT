@@ -60,6 +60,7 @@ rce.registerServer('showOffer', (senderId: number, title: string, description: s
 
     const cleanup = () => {
       if (ev) {
+        gui.execute(`window.App.offerReducer.hideOffer()`)
         ev.destroy()
         ev = null
       }

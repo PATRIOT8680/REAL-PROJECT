@@ -2,8 +2,9 @@ import chalk from "chalk"
 import { getItemById } from "./items"
 import {
   getPlayerInventory, calcTotalWeight, getEquippedBag, handleBagOperations, updateSlotsInDB,
-  updateTotalWeightInventory, getBagWeight
+  updateTotalWeightInventory, getBagWeight, sendInventoryToCef
 } from "./inventoryHandlers"
+import {getMyOffers, getTradeForPlayer} from "./tradeManager";
 import { usageClothes } from "../../player/clothes";
 import { useClothes } from "./usageItems";
 import { connectedUsers } from "../../data/dataConnectedUser";
@@ -123,7 +124,114 @@ export const processInventoryMove = async (
       return false
     }
 
-    // 🚨 ЗАПРЕТ: Нельзя перемещать сумку в секцию сумки
+    const player = mp.players.at(connectedUsers.getPlayerIdByUid(uid))
+    if (!player) return false
+
+    if (sourceSection === 'trade' || targetSection === 'trade' || sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
+      if (sourceSection === 'returnTrade' || targetSection === 'returnTrade') return false
+
+      const tradeInfo = getTradeForPlayer(player)
+      if (!tradeInfo) return false
+
+      const { trade } = tradeInfo
+      const myReady = player === trade.player1 ? trade.ready1 : trade.ready2
+      if (myReady) return false
+
+      let myOffers = getMyOffers(trade, player)
+      let sourceSlots: any[] = myOffers
+      let targetSlots: any[] = myOffers
+
+      let sourceRealSection = sourceSection
+      let targetRealSection = targetSection
+
+      if (sourceSection !== 'trade') {
+        switch (sourceSection) {
+          case 'main':
+            sourceSlots = normalizeSlots(JSON.parse(inventory.mainslots))
+            break
+          case 'donat':
+            const donat = JSON.parse(inventory.donatslots)
+            sourceSlots = normalizeSlots(donat.slots || [], 15)
+            break
+          case 'bag':
+            const bag = await getEquippedBag(uid)
+            if (!bag) return false
+            sourceSlots = normalizeSlots(JSON.parse(bag.items || '[]'))
+            break
+          case 'clothes':
+            sourceSlots = normalizeSlots(JSON.parse(inventory.clothesslots))
+            break
+          default:
+            return false
+        }
+        sourceRealSection = sourceSection
+      }
+
+      if (targetSection !== 'trade') {
+        switch (targetSection) {
+          case 'main':
+            targetSlots = normalizeSlots(JSON.parse(inventory.mainslots))
+            break
+          case 'donat':
+            const donat = JSON.parse(inventory.donatslots)
+            targetSlots = normalizeSlots(donat.slots || [], 15)
+            break
+          case 'bag':
+            const bag = await getEquippedBag(uid)
+            if (!bag) return false
+            targetSlots = normalizeSlots(JSON.parse(bag.items || '[]'))
+            break
+          case 'clothes':
+            targetSlots = normalizeSlots(JSON.parse(inventory.clothesslots))
+            break
+          default:
+            return false
+        }
+        targetRealSection = targetSection
+      }
+
+      const { newSourceSlots, newTargetSlots } = moveItemSlots(sourceSlots, sourceSlot, targetSlots, targetSlot)
+
+      if (sourceSection === 'trade' && targetSection === 'trade') {
+        if (player === trade.player1) trade.offers1 = newSourceSlots
+        else trade.offers2 = newSourceSlots
+      } else if (sourceSection !== 'trade' && targetSection === 'trade') {
+        if (player === trade.player1) trade.offers1 = newSourceSlots
+        else trade.offers2 = newSourceSlots
+
+        if (sourceRealSection === 'bag') {
+          const bagItem = JSON.parse(inventory.clothesslots)[10]
+          if (bagItem) {
+            await handleBagOperations(uid, 'update', bagItem.id, newSourceSlots)
+          }
+        } else {
+          await updateSlotsArray(uid, sourceRealSection, newSourceSlots)
+        }
+      } else if (sourceSection ===  'trade' && targetSection !== 'trade') {
+        if (player === trade.player1) trade.offers1 = newSourceSlots
+        else trade.offers2 = newSourceSlots
+
+        if (targetRealSection === 'bag') {
+          const bagItem = JSON.parse(inventory.clothesslots)[10]
+          if (bagItem) {
+            await handleBagOperations(uid, 'update', bagItem.id, newTargetSlots)
+          }
+        } else {
+          await updateSlotsArray(uid, targetRealSection, newTargetSlots)
+        }
+      }
+
+      await updateTotalWeightInventory(uid)
+
+      const partner = player === trade.player1 ? trade.player2 : trade.player1
+      const uidPartner = connectedUsers.getField(partner.id, 'uid')
+
+      await sendInventoryToCef(player, uid)
+      if (partner && uidPartner) sendInventoryToCef(partner, uidPartner)
+
+      return true
+    }
+
     if (targetSection === 'bag') {
       console.log(chalk.blue(`• PROCESS INV MOVE • Проверяем, не сумка ли перемещается в bag...`))
 

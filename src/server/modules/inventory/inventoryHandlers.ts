@@ -9,6 +9,7 @@ import chalk from "chalk";
 import { useClothes } from "./usageItems";
 import { usageClothes } from "../../player/clothes";
 import { dropItemOnGround } from "./itemsObject";
+import { getMyOffers, getPartnerOffers, getTradeForPlayer } from "./tradeManager";
 
 interface IHaveBag {
   have: boolean,
@@ -1428,7 +1429,10 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
     const clothesSlotsForCef = convertSlots(clothesSlotsData)
     const fastSlotsForCef = convertSlots(fastSlotsData)
 
+    let tradeSlotsForCef = Array(5).fill(null)
+    let returnTradeSlotsForCef = Array(5).fill(null)
     let bagSlotsForCef: any[] = Array(20).fill(null)
+
     let haveBag: IHaveBag = { have: false }
     let currentBagWeight = 0
 
@@ -1438,6 +1442,16 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
     const inventoryWeight: IInventoryWeight = {
       current: currentWeight,
       max: maxWeight
+    }
+
+    const tradeInfo = getTradeForPlayer(player)
+    if (tradeInfo) {
+      const { trade } = tradeInfo
+      const myOffers = getMyOffers(trade, player)
+      const partnerOffers = getPartnerOffers(trade, player)
+
+      tradeSlotsForCef = convertSlots(myOffers)
+      returnTradeSlotsForCef = convertSlots(partnerOffers)
     }
 
     // Проверяем, надета ли сумка
@@ -1501,8 +1515,8 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
         ${JSON.stringify(mainSlotsForCef)},
         ${JSON.stringify(bagSlotsForCef)},
         ${JSON.stringify(donatSlotsForCef)},
-        [],
-        [],
+        ${JSON.stringify(tradeSlotsForCef)},
+        ${JSON.stringify(returnTradeSlotsForCef)},
         ${JSON.stringify(clothesSlotsForCef)},
         ${JSON.stringify(fastSlotsForCef)},
         ${JSON.stringify(haveBag)},

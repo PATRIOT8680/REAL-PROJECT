@@ -56,7 +56,7 @@ initialMainSlots[1] = testItems[1]
 initialMainSlots[2] = testItems[2]
 
 const initialState: InventoryState = {
-  isVisible: true,
+  isVisible: false,
   mainSlots: initialMainSlots,
   bagSlots: initialBagSlots,
   donatSlots: initialDonatSlots,
@@ -66,7 +66,7 @@ const initialState: InventoryState = {
   fastSlots: initialFastSlots,
   draggedItem: null,
   haveDonatSlots: false,
-  tradeOpen: true,
+  tradeOpen: false,
   weight: {
     current: 29,
     max: 50
