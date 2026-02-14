@@ -32,6 +32,16 @@
   color: #ffca58;
   transition: all 0.3s ease;
 }
+.rent .left-section .list-vehicles {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.rent .left-section .list-vehicles .item-veh {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
 
 @keyframes fadeInRent {
   from {

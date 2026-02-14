@@ -56,7 +56,8 @@ export interface InventoryState {
   draggedItem: { item: Item; source: string } | null,
   haveDonatSlots: boolean
   tradeOpen: boolean,
-  weight?: IInventoryWeight
+  weight?: IInventoryWeight,
+  tradeStatus: string
 }
 
 export type typeSlots = 'main' | 'bag' | 'donat' | 'trade' | 'returnTrade' | 'clothes' | 'fast'
@@ -158,6 +159,13 @@ export const updateItemIsFast = (itemId: number, isFast: boolean) => ({
   payload: { itemId, isFast }
 })
 
+export const setTradeStatus = (status: string) => {
+  return {
+    type: 'SET_TRADE_STATUS' as const,
+    payload: status
+  }
+}
+
 export const setInventory = (
   mainSlots: (Item | null)[],
   bagSlots: (Item | null)[],
@@ -186,6 +194,7 @@ export type InventoryAction =
   | ReturnType<typeof useItem>
   | ReturnType<typeof updateItemIsFast>
   | ReturnType<typeof setInventory>
+  | ReturnType<typeof setTradeStatus>
 
 
 export const getClothesSlotType = (imageId: number): ClothesSlotType => {

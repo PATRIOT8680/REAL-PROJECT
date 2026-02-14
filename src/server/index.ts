@@ -25,6 +25,7 @@ import './modules/inventory/inventoryHandlers'
 import './player/clothes'
 import './modules/inventory/itemsObject'
 import './player/interaction'
+import './modules/inventory/tradeManager'
 
 mp.world.weather = 'XMAS'
 

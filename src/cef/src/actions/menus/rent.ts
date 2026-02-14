@@ -1,12 +1,14 @@
-interface IData {
-  nameCar: string,
+export interface ICarData {
+  fullNameCar: string,
+  keyNameCar: string,
+  type: string,
   price: number
 }
 
 export interface IRentData {
   id: number,
   isTakenRent: boolean,
-  data: IData[]
+  data: ICarData[]
 }
 
 export const showRent = (rentData: IRentData) => {
