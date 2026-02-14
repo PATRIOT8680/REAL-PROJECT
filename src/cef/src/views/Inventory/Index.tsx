@@ -41,7 +41,9 @@ const Inventory = ({ haveDonateSlots, haveBagSlots }: IInventory) => {
   }
 
   const closeInventory = () => {
+    inventoryStore.setTradeStatus('no-ready')
     rce.triggerClient('hideInventory')
+    rce.triggerServer('tradeCancel')
   }
 
   const handleItemDragStart = (item: Item, source: string) => {

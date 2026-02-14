@@ -56,7 +56,7 @@ initialMainSlots[1] = testItems[1]
 initialMainSlots[2] = testItems[2]
 
 const initialState: InventoryState = {
-  isVisible: false,
+  isVisible: true,
   mainSlots: initialMainSlots,
   bagSlots: initialBagSlots,
   donatSlots: initialDonatSlots,
@@ -66,11 +66,12 @@ const initialState: InventoryState = {
   fastSlots: initialFastSlots,
   draggedItem: null,
   haveDonatSlots: false,
-  tradeOpen: false,
+  tradeOpen: true,
   weight: {
     current: 29,
     max: 50
-  }
+  },
+  tradeStatus: 'other-ready'
 }
 
 const findEmptySlot = (slots: (Item | null)[]): number => {
@@ -698,6 +699,12 @@ export const inventoryReducer = (state: InventoryState = initialState, action: I
           clothesSlots: updateSlots(state.clothesSlots),
         }
       }
+
+      case 'SET_TRADE_STATUS':
+        return {
+          ...state,
+          tradeStatus: action.payload
+        }
 
       case 'SET_INVENTORY': {
         const { mainSlots, bagSlots, donatSlots, tradeSlots, returnTradeSlots, clothesSlots, fastSlots, haveBag, weight } = action.payload

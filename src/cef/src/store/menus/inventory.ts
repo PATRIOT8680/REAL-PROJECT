@@ -12,7 +12,7 @@ import {
   IHaveBag,
   IInventoryWeight,
   Item,
-  typeSlots
+  typeSlots, setTradeStatus
 } from "../../actions/menus/inventory.ts";
 
 let storeInstance: any = null;
@@ -45,6 +45,9 @@ export const inventoryStore = {
 
   updateItemIsFast: (itemId: number, isFast: boolean) =>
     storeInstance.dispatch(updateItemIsFast(itemId, isFast)),
+
+  setTradeStatus: (status: string) =>
+    storeInstance.dispatch(setTradeStatus(status)),
 
   setInventory: (
     mainSlots: (Item | null)[],

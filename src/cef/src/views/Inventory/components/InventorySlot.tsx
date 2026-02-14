@@ -19,8 +19,8 @@ interface InventorySlotProps {
   item: Item | null;
   section: string;
   slotType: string;
-  onDragStart: (item: Item, slotIndex: number) => void;
-  onDrop: (slotIndex: number, sourceData: string) => void;
+  onDragStart?: (item: Item, slotIndex: number) => void;
+  onDrop?: (slotIndex: number, sourceData: string) => void;
   isSlotsDisabled?: boolean;
   additionalData?: {
     backgroundIcon?: string;
@@ -151,7 +151,7 @@ const InventorySlot = ({
   }
 
   const handleDragStart = (e: DragEvent) => {
-    if (!item) return
+    if (!item || onDragStart === undefined) return
 
     e.dataTransfer.setData('text/plain', `${section}-${slotId}`)
     onDragStart(item, slotId)
@@ -185,6 +185,7 @@ const InventorySlot = ({
   }
 
   const handleDrop = (e: React.DragEvent) => {
+    if (onDrop === undefined) return
     e.preventDefault()
     e.currentTarget.classList.remove('drag-over')
 
