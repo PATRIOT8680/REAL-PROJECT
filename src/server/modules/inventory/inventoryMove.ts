@@ -329,7 +329,7 @@ export const processInventoryMove = async (
         if (player === trade.player1) trade.offers1 = newTargetSlots;
         else trade.offers2 = newTargetSlots;
 
-        // Обновляем оригинальный инвентарь (удаляем предмет
+        // Обновляем оригинальный инвентарь (удаляем предм
         if (sourceIsBag && sourceBagUid) {
           await handleBagOperations(uid, 'update', sourceBagUid, newSourceSlots);
         } else {
