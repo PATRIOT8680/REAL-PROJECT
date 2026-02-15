@@ -20,4 +20,7 @@ dist-ssr
 *.sw?
 bin
 resources
+client_packages/cef/assets/*.js
+client_packages/cef/assets/*.css
+client_packages/cef/assets/*.map
 .codegpt
