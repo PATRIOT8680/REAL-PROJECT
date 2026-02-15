@@ -20,12 +20,4 @@ dist-ssr
 *.sw?
 bin
 resources
-src/server/database/mysql.ts
-client_packages/.listcache
-client_packages/cef/index.html
-client_packages/client/client.js
-packages/core/server.js
-src/server/index.ts
-client_packages/cef/assets/index-BcXnZyzn.js
-client_packages/cef/assets/index-dxbnMsPn.css
 .codegpt
