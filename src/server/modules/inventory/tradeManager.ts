@@ -165,7 +165,7 @@ export const acceptTrade = (player: PlayerMp, requestorId: number) => {
     return
   }
 
-  activeTrades.set(key, {
+  const trade = {
     player1: requestor,
     player2: player,
     offers1: Array(5).fill(null),
@@ -173,10 +173,14 @@ export const acceptTrade = (player: PlayerMp, requestorId: number) => {
     ready1: false,
     ready2: false,
     confirmTimer: null
-  })
+  }
+
+  activeTrades.set(key, trade)
 
   rce.triggerClient(requestor, 'showInventory', true)
   rce.triggerClient(player, 'showInventory', true)
+
+  updateStatuses(trade)
 }
 
 // -----------
