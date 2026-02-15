@@ -753,12 +753,12 @@ rce.registerAll('cef:closeReportMenu', () => {
 });
 
 let inventoryVisible = false;
-const showInventory = async () => {
+const showInventory = async (tradeOpen) => {
     inventoryVisible = true;
     const haveDonatSlots = await rce.callServer('existenceDonatSlots');
     const health = mp.players.local.getHealth();
     gui.execute(`window.App.playerInfoReducer.setHealth(${health})`);
-    gui.execute(`window.App.inventoryReducer.showInventory(${haveDonatSlots}, false)`);
+    gui.execute(`window.App.inventoryReducer.showInventory(${haveDonatSlots}, ${tradeOpen})`);
     gui.execute(`window.App.hudReducer.hideHud()`);
     gui.execute(`window.App.chatReducer.hideChat()`);
     mp.game.ui.displayRadar(false);
@@ -793,8 +793,8 @@ mp.keys.bind(Keys.VK_ESCAPE, false, () => {
         hideInventory();
     }
 });
-rce.registerAll('showInventory', () => {
-    showInventory();
+rce.registerAll('showInventory', (tradeOpen) => {
+    showInventory(tradeOpen);
 });
 rce.registerAll('hideInventory', () => {
     hideInventory();
@@ -1113,9 +1113,8 @@ let voiceManager = {
     list: [],
     new(player) {
         if (this.list.indexOf(player) === -1) {
-            mp.events.callRemote('client:voice:new', player);
+            rce.triggerServer('client:voice:new', player.remoteId);
             this.list.push(player);
-            player.isListening = true;
             {
                 player.voiceVolume = 1.0;
             }
@@ -1129,9 +1128,8 @@ let voiceManager = {
         if (index !== -1) {
             this.list.splice(index, 1);
         }
-        player.isListening = false;
         if (removedVoice) {
-            mp.events.callRemote('client:voice:deleted', player);
+            rce.triggerServer('client:voice:deleted', player.remoteId);
         }
     }
 };
@@ -2009,8 +2007,8 @@ const updateLastHit = (newHit) => {
 };
 
 const MAX_DIST_TEXT = 7;
-const HIT_MAX_DIST$1 = 2;
-const RAY_LENGTH$1 = 15;
+const HIT_MAX_DIST$2 = 2;
+const RAY_LENGTH$2 = 15;
 const worldItems = new Map();
 let lastObjectCheckTime = 0;
 mp.events.add('render', () => {
@@ -2042,7 +2040,7 @@ mp.events.add('render', () => {
         }
     });
     // Проверяем луч только для объектов (флаг 16)
-    const hit = checkCenterScreenHit(RAY_LENGTH$1, HIT_MAX_DIST$1, 16);
+    const hit = checkCenterScreenHit(RAY_LENGTH$2, HIT_MAX_DIST$2, 16);
     const currentTime = Date.now();
     const changed = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId;
     // Проверяем хит для объектов только если прошло достаточно времени
@@ -2054,7 +2052,7 @@ mp.events.add('render', () => {
         }
         updateLastHit(hit);
         // Устанавливаем наведение только если луч попал в объект на допустимой дистанции
-        if (hit.type === 'object' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST$1) {
+        if (hit.type === 'object' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST$2) {
             gui.execute(`window.App.hoverInteractionReducer.setHover()`);
         }
     }
@@ -2192,6 +2190,7 @@ rce.registerServer('showOffer', (senderId, title, description, duration) => {
         ev = new mp.Event("render", keyHandler);
         const cleanup = () => {
             if (ev) {
+                gui.execute(`window.App.offerReducer.hideOffer()`);
                 ev.destroy();
                 ev = null;
             }
@@ -2199,22 +2198,22 @@ rce.registerServer('showOffer', (senderId, title, description, duration) => {
     });
 });
 
-const HIT_MAX_DIST = 2.5;
-const RAY_LENGTH = 15;
-let openedInteraction = false;
+const HIT_MAX_DIST$1 = 2.5;
+const RAY_LENGTH$1 = 15;
+let openedInteraction$1 = false;
 mp.events.add('render', () => {
-    const hit = checkCenterScreenHit(RAY_LENGTH, HIT_MAX_DIST, 2);
+    const hit = checkCenterScreenHit(RAY_LENGTH$1, HIT_MAX_DIST$1, 2);
     const changedHit = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId;
-    if (openedInteraction && (hit.type !== 'vehicle' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST)) {
-        openedInteraction = false;
+    if (openedInteraction$1 && (hit.type !== 'vehicle' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST$1)) {
+        openedInteraction$1 = false;
         gui.execute(`window.App.interactionReducer.hideInteraction()`);
         mp.gui.cursor.visible = false;
     }
-    if (hit.type === 'vehicle' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST && !mp.players.local.vehicle) {
+    if (hit.type === 'vehicle' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST$1 && !mp.players.local.vehicle) {
         const veh = mp.vehicles.atRemoteId(hit.remoteId);
         if (veh && !mp.players.local.vehicle) {
             const posVeh = veh.position;
-            const factor = getDistanceFactor(hit.distToHit, HIT_MAX_DIST, 0.48);
+            const factor = getDistanceFactor(hit.distToHit, HIT_MAX_DIST$1, 0.48);
             mp.game.graphics.drawText('[E]', [posVeh.x, posVeh.y - factor.yOffset, posVeh.z], {
                 font: 4,
                 color: [255, 255, 255, factor.alpha - 30],
@@ -2239,8 +2238,8 @@ mp.events.add('render', () => {
 mp.keys.bind(Keys.VK_E, false, async () => {
     if (lastHit.type === 'none')
         return;
-    if (openedInteraction) {
-        openedInteraction = false;
+    if (openedInteraction$1) {
+        openedInteraction$1 = false;
         mp.gui.cursor.visible = false;
         gui.execute(`window.App.interactionReducer.hideInteraction()`);
         return;
@@ -2248,15 +2247,15 @@ mp.keys.bind(Keys.VK_E, false, async () => {
     const openedMenus = await rce.callCef('getOpenMenus');
     const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent'];
     const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu));
-    if (lastHit.type === 'vehicle' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST && !hasSpecialOpen) {
-        openedInteraction = true;
+    if (lastHit.type === 'vehicle' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST$1 && !hasSpecialOpen) {
+        openedInteraction$1 = true;
         gui.execute(`window.App.interactionReducer.showInteraction('vehicle', ${lastHit.remoteId})`);
         mp.gui.cursor.visible = true;
     }
 });
 mp.keys.bind(Keys.VK_ESCAPE, false, () => {
-    if (openedInteraction) {
-        openedInteraction = false;
+    if (openedInteraction$1) {
+        openedInteraction$1 = false;
         gui.execute(`window.App.interactionReducer.hideInteraction()`);
         mp.gui.cursor.visible = false;
     }
@@ -2268,9 +2267,73 @@ mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
     gui.execute(`window.App.hoverInteractionReducer.visibleHover(true)`);
 });
 
-mp.game.invoke("0x6E9EF3A33C8899F8", true);
-mp.game.invoke("0x4CC7F0FEA5283FE0", true);
-mp.game.invoke("0xAEEDAD1420C65CC0", true);
+const HIT_MAX_DIST = 2.5;
+const RAY_LENGTH = 15;
+let openedInteraction = false;
+mp.events.add('render', () => {
+    const hit = checkCenterScreenHit(RAY_LENGTH, HIT_MAX_DIST, 2);
+    const changedHit = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId;
+    if (openedInteraction && (hit.type !== 'ped' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST)) {
+        openedInteraction = false;
+        gui.execute(`window.App.interactionReducer.hideInteraction()`);
+        mp.gui.cursor.visible = false;
+    }
+    if (hit.type === 'ped' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST && !mp.players.local.vehicle) {
+        const target = mp.players.atRemoteId(hit.remoteId);
+        if (target && !mp.players.local.vehicle) {
+            const posTarget = target.position;
+            const factor = getDistanceFactor(hit.distToHit, HIT_MAX_DIST, 0.48);
+            mp.game.graphics.drawText('[E]', [posTarget.x, posTarget.y - factor.yOffset, posTarget.z], {
+                font: 4,
+                color: [44, 255, 132, factor.alpha],
+                scale: factor.scale,
+                outline: true
+            });
+        }
+        if (changedHit) {
+            if (lastHit.type !== 'none') {
+                gui.execute(`window.App.hoverInteractionReducer.removeHover()`);
+            }
+            updateLastHit(hit);
+            gui.execute(`window.App.hoverInteractionReducer.setHover()`);
+        }
+    }
+    else {
+        if (changedHit && lastHit.type === 'ped') {
+            gui.execute(`window.App.hoverInteractionReducer.removeHover()`);
+        }
+    }
+});
+mp.keys.bind(Keys.VK_E, false, async () => {
+    if (lastHit.type === 'none')
+        return;
+    if (openedInteraction) {
+        openedInteraction = false;
+        mp.gui.cursor.visible = false;
+        gui.execute(`window.App.interactionReducer.hideInteraction()`);
+        return;
+    }
+    const openedMenus = await rce.callCef('getOpenMenus');
+    const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent'];
+    const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu));
+    if (lastHit.type === 'ped' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST && !hasSpecialOpen) {
+        openedInteraction = true;
+        mp.console.logWarning(`Взаимодействуете с ID: ${lastHit.remoteId}`);
+        gui.execute(`window.App.interactionReducer.showInteraction('player', ${lastHit.remoteId})`);
+        mp.gui.cursor.visible = true;
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    if (openedInteraction) {
+        openedInteraction = false;
+        gui.execute(`window.App.interactionReducer.hideInteraction()`);
+        mp.gui.cursor.visible = false;
+    }
+});
+
+// mp.game.invoke("0x6E9EF3A33C8899F8", true)
+// mp.game.invoke("0x4CC7F0FEA5283FE0", true)
+// mp.game.invoke("0xAEEDAD1420C65CC0", true)
 mp.events.add('render', () => {
     mp.game.ui.hideHudComponentThisFrame(3);
     mp.game.ui.hideHudComponentThisFrame(4);

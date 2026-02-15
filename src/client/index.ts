@@ -24,9 +24,9 @@ import './player/offer'
 import './vehicles/interaction'
 import './player/interaction'
 
-mp.game.invoke("0x6E9EF3A33C8899F8", true)
-mp.game.invoke("0x4CC7F0FEA5283FE0", true)
-mp.game.invoke("0xAEEDAD1420C65CC0", true)
+// mp.game.invoke("0x6E9EF3A33C8899F8", true)
+// mp.game.invoke("0x4CC7F0FEA5283FE0", true)
+// mp.game.invoke("0xAEEDAD1420C65CC0", true)
 
 mp.events.add('render', () => {
   mp.game.ui.hideHudComponentThisFrame(3)

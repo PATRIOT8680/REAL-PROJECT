@@ -27,7 +27,7 @@ import './modules/inventory/itemsObject'
 import './player/interaction'
 import './modules/inventory/tradeManager'
 
-mp.world.weather = 'XMAS'
+//mp.world.weather = 'XMAS'
 
 export const setCustomizationChar = (player: PlayerMp, dataChar: any) => {
   try {

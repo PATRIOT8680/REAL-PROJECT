@@ -4,7 +4,7 @@ import {
   getPlayerInventory, calcTotalWeight, getEquippedBag, handleBagOperations, updateSlotsInDB,
   updateTotalWeightInventory, getBagWeight, sendInventoryToCef
 } from "./inventoryHandlers"
-import {getMyOffers, getTradeForPlayer} from "./tradeManager";
+import {getMyOffers, getTradeForPlayer, updateStatuses} from "./tradeManager";
 import { usageClothes } from "../../player/clothes";
 import { useClothes } from "./usageItems";
 import { connectedUsers } from "../../data/dataConnectedUser";
@@ -127,7 +127,7 @@ export const processInventoryMove = async (
     const player = mp.players.at(connectedUsers.getPlayerIdByUid(uid))
     if (!player) return false
 
-    if (sourceSection === 'trade' || targetSection === 'trade' || sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
+    /*if (sourceSection === 'trade' || targetSection === 'trade' || sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
       if (sourceSection === 'returnTrade' || targetSection === 'returnTrade') return false
 
       const tradeInfo = getTradeForPlayer(player)
@@ -230,6 +230,142 @@ export const processInventoryMove = async (
       if (partner && uidPartner) sendInventoryToCef(partner, uidPartner)
 
       return true
+    }*/
+
+    if (sourceSection === 'trade' || targetSection === 'trade' || sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
+      if (sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
+        console.log(chalk.yellow('[TRADE] Попытка изменить returnTrade — запрещено'));
+        return false;
+      }
+
+      const tradeInfo = getTradeForPlayer(player);
+      if (!tradeInfo) {
+        console.log(chalk.yellow('[TRADE] Перемещение в trade, но трейд не активен'));
+        return false;
+      }
+
+      const { trade } = tradeInfo;
+      const myReady = player === trade.player1 ? trade.ready1 : trade.ready2;
+      if (myReady) {
+        console.log(chalk.yellow('[TRADE] Нельзя менять слоты после нажатия "Обменяться"'));
+        return false;
+      }
+
+      let myOffers = getMyOffers(trade, player);
+
+      let sourceSlots: any[] = (sourceSection === 'trade') ? myOffers : [];
+      let targetSlots: any[] = (targetSection === 'trade') ? myOffers : [];
+
+      let sourceIsBag = false;
+      let targetIsBag = false;
+      let sourceBagUid: number | null = null;
+      let targetBagUid: number | null = null;
+
+      if (sourceSection !== 'trade') {
+        switch (sourceSection) {
+          case 'main':
+            sourceSlots = normalizeSlots(JSON.parse(inventory.mainslots));
+            break;
+          case 'donat':
+            const donat = JSON.parse(inventory.donatslots);
+            sourceSlots = normalizeSlots(donat.slots || [], 15);
+            break;
+          case 'bag':
+            const bag = await getEquippedBag(uid);
+            if (!bag) return false;
+            sourceSlots = normalizeSlots(JSON.parse(bag.items || '[]'));
+            sourceIsBag = true;
+            const clothes = JSON.parse(inventory.clothesslots);
+            sourceBagUid = clothes[10]?.id || null;
+            break;
+          case 'clothes':
+            sourceSlots = normalizeSlots(JSON.parse(inventory.clothesslots));
+            break;
+          case 'fast':
+            sourceSlots = normalizeFastSlots(JSON.parse(inventory.fastslots || '[]'));
+            break;
+          default:
+            return false;
+        }
+      }
+
+      if (targetSection !== 'trade') {
+        switch (targetSection) {
+          case 'main':
+            targetSlots = normalizeSlots(JSON.parse(inventory.mainslots));
+            break;
+          case 'donat':
+            const donat = JSON.parse(inventory.donatslots);
+            targetSlots = normalizeSlots(donat.slots || [], 15);
+            break;
+          case 'bag':
+            const bag = await getEquippedBag(uid);
+            if (!bag) return false;
+            targetSlots = normalizeSlots(JSON.parse(bag.items || '[]'));
+            targetIsBag = true;
+            const clothes = JSON.parse(inventory.clothesslots);
+            targetBagUid = clothes[10]?.id || null;
+            break;
+          case 'clothes':
+            targetSlots = normalizeSlots(JSON.parse(inventory.clothesslots));
+            break;
+          case 'fast':
+            targetSlots = normalizeFastSlots(JSON.parse(inventory.fastslots || '[]'));
+            break;
+          default:
+            return false;
+        }
+      }
+
+      const { newSourceSlots, newTargetSlots } = moveItemSlots(sourceSlots, sourceSlot, targetSlots, targetSlot);
+
+      // Обновляем trade offers и инвентарь
+      if (sourceSection === 'trade' && targetSection === 'trade') {
+        // Внутри trade — просто обновляем offers
+        if (player === trade.player1) trade.offers1 = newTargetSlots; // или newSourceSlots, т.к. один массив
+        else trade.offers2 = newTargetSlots;
+      } else if (sourceSection !== 'trade' && targetSection === 'trade') {
+        // Из инвентаря в trade
+        if (player === trade.player1) trade.offers1 = newTargetSlots;
+        else trade.offers2 = newTargetSlots;
+
+        // Обновляем оригинальный инвентарь (удаляем предмет)
+        if (sourceIsBag && sourceBagUid) {
+          await handleBagOperations(uid, 'update', sourceBagUid, newSourceSlots);
+        } else {
+          await updateSlotsArray(uid, sourceSection, newSourceSlots);
+        }
+      } else if (sourceSection === 'trade' && targetSection !== 'trade') {
+        // Из trade обратно в инвентарь
+        if (player === trade.player1) trade.offers1 = newSourceSlots;
+        else trade.offers2 = newSourceSlots;
+
+        // Обновляем инвентарь (добавляем предмет)
+        if (targetIsBag && targetBagUid) {
+          await handleBagOperations(uid, 'update', targetBagUid, newTargetSlots);
+        } else {
+          await updateSlotsArray(uid, targetSection, newTargetSlots);
+        }
+      }
+
+      await updateTotalWeightInventory(uid);
+
+      // Обновляем CEF для обоих
+      const partner = player === trade.player1 ? trade.player2 : trade.player1;
+      const uidPartner = connectedUsers.getField(partner?.id, 'uid');
+      await sendInventoryToCef(player, uid);
+      if (partner && mp.players.exists(partner) && uidPartner) {
+        await sendInventoryToCef(partner, uidPartner);
+      }
+
+      // Если перемещение после ready — сбросить статусы
+      if (trade.ready1 || trade.ready2) {
+        trade.ready1 = false;
+        trade.ready2 = false;
+        updateStatuses(trade);
+      }
+
+      return true;
     }
 
     if (targetSection === 'bag') {
