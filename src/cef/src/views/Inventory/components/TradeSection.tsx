@@ -28,7 +28,11 @@ const TradeSection = ({ onItemDragStart, onItemDrop }: ITradeSection) => {
   }
 
   const handleCancelTrade = () => {
-    rce.triggerServer('tradeSetReady', false)
+    if (statusTrade === 'no-ready') {
+      rce.triggerServer('tradeCancel')
+    } else {
+      rce.triggerServer('tradeSetReady', false)
+    }
   }
 
   const handleDragStartTrade = (item: Item, slotIndex: number) => {
@@ -121,7 +125,7 @@ const TradeSection = ({ onItemDragStart, onItemDrop }: ITradeSection) => {
             ) }
           </button>
         ) }
-        <button className={`action ${ statusTrade === 'no-ready' ? 'cancel' : 'stoped' }`}>
+        <button className={`action ${ statusTrade === 'no-ready' ? 'cancel' : 'stoped' }`} onClick={handleCancelTrade}>
           { statusTrade === 'no-ready' ? 'Отменить' : 'Приостановить' }
         </button>
       </div>
