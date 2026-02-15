@@ -59,7 +59,7 @@ export const updateStatuses = (trade: IActiveTrade) => {
   })
 }
 
-export const cancelTrade = (key: string, reason?: string) => {
+export const cancelTrade = async (key: string, reason?: string) => {
   const trade = activeTrades.get(key)
   if (!trade) return
 
@@ -67,6 +67,23 @@ export const cancelTrade = (key: string, reason?: string) => {
     clearTimeout(trade.confirmTimer)
     trade.confirmTimer = null
   }
+
+  const { player1, player2, offers1, offers2 } = trade
+
+  const returnItems = async (player: PlayerMp, offers: (ITradeOffer | null)[]) => {
+    const uid = connectedUsers.getField(player.id, 'uid')
+    if (!uid) return
+
+    for (const offer of offers) {
+      if (offer) {
+        await addItemToInventory(uid, offer.id, offer.quantity)
+      }
+    }
+    await sendInventoryToCef(player, uid)
+  }
+
+  await returnItems(player1, offers1)
+  await returnItems(player2, offers2)
 
   activeTrades.delete(key);
 

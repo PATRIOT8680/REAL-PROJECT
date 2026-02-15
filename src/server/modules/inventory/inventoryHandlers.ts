@@ -1325,7 +1325,7 @@ export const calcTotalWeight = (inventory: any): number => {
 }
 
 export const calcWeightSlots = (slots: any[]): number => {
-  let totalWeight =  0
+  let totalWeight = 0
 
   slots.forEach((slot: any) => {
     if (slot && slot.id && slot.quantity) {
@@ -1450,8 +1450,8 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
       const myOffers = getMyOffers(trade, player)
       const partnerOffers = getPartnerOffers(trade, player)
 
-      tradeSlotsForCef = convertSlots(myOffers)
-      returnTradeSlotsForCef = convertSlots(partnerOffers)
+      tradeSlotsForCef = convertSlots(normalizeSlots(myOffers, 5))
+      returnTradeSlotsForCef = convertSlots(normalizeSlots(partnerOffers, 5))
     }
 
     // Проверяем, надета ли сумка
