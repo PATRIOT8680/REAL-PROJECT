@@ -4,7 +4,7 @@ export interface ICreateChar {
   numberSlot: number
 }
 
-export const createCharReducer = (state: ICreateChar = { isVisible: true, sid: 0, numberSlot: 0 }, action: any) => {
+export const createCharReducer = (state: ICreateChar = { isVisible: false, sid: 0, numberSlot: 0 }, action: any) => {
   switch (action.type) {
     case 'SHOW_CREATE_CHAR':
       return {
