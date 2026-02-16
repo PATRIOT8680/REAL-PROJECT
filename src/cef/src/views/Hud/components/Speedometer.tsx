@@ -3,12 +3,24 @@ import { memo, useRef, useEffect, useState, useMemo } from "react"
 import { useSelector } from "react-redux";
 import { RootState } from "../../../reducers/rootReducer.ts";
 
-interface SpeedometerProps {
-  speed: number;
-}
-
 const Speedometer = memo(() => {
   const { speed } = useSelector((state: RootState) => state.speedVehReducer)
+
+  // Получаем текущее значение --app-scale
+  const [scale, setScale] = useState(1)
+
+  useEffect(() => {
+    const updateScale = () => {
+      const root = document.documentElement
+      const scaleValue = getComputedStyle(root).getPropertyValue('--app-scale').trim()
+      const parsed = parseFloat(scaleValue)
+      setScale(isNaN(parsed) ? 1 : parsed)
+    }
+
+    updateScale()
+    window.addEventListener('resize', updateScale)
+    return () => window.removeEventListener('resize', updateScale)
+  }, [])
 
   const MAX_SPEED = 240
   const SAFE_MAX = 160
@@ -21,24 +33,25 @@ const Speedometer = memo(() => {
 
   const visibleMax = speed >= SAFE_MAX ? MAX_SPEED : SAFE_MAX
 
-  const size = 265
+  // Базовый размер для Full HD
+  const baseSize = 265
+  const size = baseSize * scale
   const center = size / 2
-  const scale = size / 240
 
+  // Масштабируем все геометрические параметры
   const arcRadius = 90 * scale
   const tickOuter = 95 * scale
   const tickInnerMajor = 85 * scale
   const tickInnerMinor = 90 * scale
-  const labelRadius = (tickOuter + 18)
+  const labelRadius = tickOuter + 18 * scale
 
-  const needleStartRadius = arcRadius - 33
-  const needleEndRadius = arcRadius - 17
-  const needleWidth = 3.5
+  const needleStartRadius = arcRadius - 33 * scale
+  const needleEndRadius = arcRadius - 17 * scale
+  const needleWidth = 3.5 * scale
 
   const [animatedSpeed, setAnimatedSpeed] = useState(speed)
 
   const animationRef = useRef<number | null>(null)
-  const prevSpeedRef = useRef<number>(speed)
 
   const getAngle = useMemo(() => (val: number) => {
     return startAngle + (val / MAX_SPEED) * totalAngle
@@ -102,10 +115,6 @@ const Speedometer = memo(() => {
     }
   }, [speed])
 
-  useEffect(() => {
-    prevSpeedRef.current = speed
-  }, [speed])
-
   const ticks: JSX.Element[] = []
 
   for (let v = 0; v <= visibleMax; v += MINOR_STEP) {
@@ -113,7 +122,7 @@ const Speedometer = memo(() => {
     const isDanger = v > SAFE_MAX
     const angle = getAngle(v)
 
-    const outerR = isMajor ? tickOuter : arcRadius + 3
+    const outerR = isMajor ? tickOuter : arcRadius + 3 * scale
     const innerR = isMajor ? tickInnerMajor : tickInnerMinor
 
     const outer = getPos(angle, outerR)
@@ -128,7 +137,7 @@ const Speedometer = memo(() => {
         y2={inner.y}
         stroke="#ffffff"
         className={`tick ${isDanger ? 'showedHighSpeed' : ''}`}
-        strokeWidth={isMajor ? 3 : 1.5}
+        strokeWidth={isMajor ? 3 * scale : 1.5 * scale}
         strokeLinecap="round"
       />
     )
@@ -144,6 +153,7 @@ const Speedometer = memo(() => {
           textAnchor="middle"
           dominantBaseline="central"
           fill={isDanger ? '#FF4617' : '#ffffff'}
+          style={{ fontSize: `${12 * scale}px` }}
         >
           {v}
         </text>
@@ -164,12 +174,17 @@ const Speedometer = memo(() => {
       <svg className='bg-shadow' width="259" height="259" viewBox="0 0 259 259" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="129.5" cy="129.5" r="129.5" fill="#131C33" fillOpacity="0.4" />
       </svg>
-      <svg className='main-section' width={size} height={size - 20} viewBox={`0 0 ${size} ${size - 20}`}>
+      <svg
+        className='main-section'
+        width={size}
+        height={size - 20 * scale}
+        viewBox={`0 0 ${size} ${size - 20 * scale}`}
+      >
         <path
           d={calculateArcPath.path}
           fill="none"
           stroke={animatedSpeed > SAFE_MAX ? "#FF4617" : "#EFAC1D"}
-          strokeWidth={18}
+          strokeWidth={18 * scale}
           strokeDasharray={`${dashLength} ${gapLength}`}
           strokeDashoffset="0"
         />
@@ -192,11 +207,12 @@ const Speedometer = memo(() => {
         <text
           className="speed-veh"
           x={center}
-          y={center - 10}
+          y={center - 10 * scale}
           textAnchor="middle"
           dominantBaseline="central"
           fill={animatedSpeed > SAFE_MAX ? '#FF4617' : '#ffffff'}
           style={{
+            fontSize: `${31 * scale}px`,
             transition: 'all 0.6s ease'
           }}
         >
@@ -205,10 +221,11 @@ const Speedometer = memo(() => {
 
         <text
           x={center}
-          y={center + 30}
+          y={center + 30 * scale}
           fill="#555"
           textAnchor="middle"
           className='units'
+          style={{ fontSize: `${11 * scale}px` }}
         >
           км / ч
         </text>

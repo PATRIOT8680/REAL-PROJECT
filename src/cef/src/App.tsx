@@ -135,19 +135,22 @@ const App = () => {
   useEffect(() => {
     const updateScale = () => {
       const width = window.innerWidth
-      let scale = width / 1920
 
-      scale = Math.min(scale, 2)
-      scale = Math.max(scale, 0.8)
+      let scale = (width / 1920) * 1.15
+
+      scale = Math.min(scale, 2.2)
+      scale = Math.max(scale, 1.0)
 
       document.documentElement.style.setProperty('--app-scale', scale.toString())
     }
 
     updateScale()
     window.addEventListener('resize', updateScale)
+    window.addEventListener('orientationchange', updateScale)
 
     return () => {
       window.removeEventListener('resize', updateScale)
+      window.removeEventListener('orientationchange', updateScale)
     }
   }, [])
   
