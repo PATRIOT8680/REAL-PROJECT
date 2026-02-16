@@ -46,6 +46,7 @@
 }
 .left-selected-btns .select-page-cmpnt .btn-page svg {
   width: 1.4rem;
+  height: auto;
   opacity: 0.9;
   transition: all 0.3s ease;
 }
@@ -131,3 +132,5 @@
 .left-selected-btns .btn-actions .cancel-action svg {
   width: 14rem;
 }
+
+/*# sourceMappingURL=SelectPage.css.map */

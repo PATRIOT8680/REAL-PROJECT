@@ -22,8 +22,8 @@ const Input: FC<IInput> = ({ type, value, onChange, placeholder, maxLength, isVa
 
   return (
       <div className="form-inp">
-        <svg className='svg_icon' width="13" height="16">
-          <path d="M1.35303 13.8022L11.353 1.38728M11.353 1.38728H1.35303M11.353 1.38728V13.8022" stroke="white" strokeOpacity="0.4" strokeWidth="2.48299" strokeLinecap="round" strokeLinejoin="round" />
+        <svg className='svg_icon' width="13" height="15" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.7607 0.0302779C12.4235 0.0322072 12.959 0.571643 12.957 1.23438L12.9541 2.17969L12.9551 2.18067L12.9512 13.7705C12.951 14.4511 12.3993 15.003 11.7188 15.0029C11.0382 15.0027 10.4864 14.451 10.4863 13.7705L10.4893 4.85743L2.70215 14.4111C2.26829 14.9434 1.48549 15.0235 0.95313 14.5898C0.420772 14.1559 0.34048 13.3722 0.774419 12.8398L9.20801 2.49219L1.23145 2.46973C0.549408 2.46774 -0.00195191 1.91349 5.19408e-06 1.23145C0.00199284 0.549492 0.556367 -0.00181465 1.23829 4.48899e-06L11.7607 0.0302779Z" fill="white" fill-opacity="0.4"/>
         </svg>
         <input
             type={actualTypeInp}

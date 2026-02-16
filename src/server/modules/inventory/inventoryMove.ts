@@ -358,6 +358,8 @@ export const processInventoryMove = async (
         await sendInventoryToCef(partner, uidPartner);
       }
 
+      updateStatuses(trade)
+
       // Если перемещение после ready — сбросить статусы
       if (trade.ready1 || trade.ready2) {
         trade.ready1 = false;
@@ -900,9 +902,11 @@ export const findFreeSlotsInInventory = async (uid: number) => {
   if (freeSlot !== -1) return { section: 'main', slot: freeSlot }
 
   const donatData = JSON.parse(inventory.donatslots)
-  const donatSlots = normalizeSlots(donatData.slots || [], 15)
-  freeSlot = donatSlots.findIndex(slot => slot === null)
-  if (freeSlot !== -1) return { section: 'donat', slot: freeSlot }
+  if (donatData.have) {
+    const donatSlots = normalizeSlots(donatData.slots || [], 15)
+    freeSlot = donatSlots.findIndex(slot => slot === null)
+    if (freeSlot !== -1) return { section: 'donat', slot: freeSlot }
+  }
 
   const bagData = await getEquippedBag(uid)
   if (bagData) {
