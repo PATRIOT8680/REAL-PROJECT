@@ -1,3 +1,8 @@
+:root {
+  --app-scale: 1;
+  font-size: calc(14px * var(--app-scale));
+}
+
 p {
   margin-block-start: 0;
   margin-block-end: 0;
@@ -23,3 +28,5 @@ p {
   margin: 0.8rem;
   gap: 0.5rem;
 }
+
+/*# sourceMappingURL=Index.css.map */

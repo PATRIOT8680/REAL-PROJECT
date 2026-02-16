@@ -131,6 +131,25 @@ const App = () => {
       stopAmbient();
     }
   }, [shouldPlayAudio, ambientActive]);
+
+  useEffect(() => {
+    const updateScale = () => {
+      const width = window.innerWidth
+      let scale = width / 1920
+
+      scale = Math.min(scale, 2)
+      scale = Math.max(scale, 0.8)
+
+      document.documentElement.style.setProperty('--app-scale', scale.toString())
+    }
+
+    updateScale()
+    window.addEventListener('resize', updateScale)
+
+    return () => {
+      window.removeEventListener('resize', updateScale)
+    }
+  }, [])
   
   return(
     <>

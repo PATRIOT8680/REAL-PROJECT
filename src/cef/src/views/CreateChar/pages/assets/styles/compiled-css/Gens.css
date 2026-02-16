@@ -70,6 +70,10 @@
   transition: all 0.3s ease;
   fill: #888888;
 }
+.gens-page .selector-gender-parents .parent .bg-parent {
+  width: 3.5rem;
+  height: auto;
+}
 .gens-page .selector-gender-parents .parent .bg-parent path {
   transition: all 0.3s ease;
 }
@@ -186,3 +190,5 @@
     opacity: 1;
   }
 }
+
+/*# sourceMappingURL=Gens.css.map */

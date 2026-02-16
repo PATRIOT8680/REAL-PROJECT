@@ -49,6 +49,7 @@
 }
 .info-player .gender-block .gender svg {
   width: 1.5rem;
+  height: 1.2rem;
 }
 .info-player .gender-block .gender svg path {
   transition: all 0.3s ease;
@@ -67,3 +68,5 @@
     opacity: 1;
   }
 }
+
+/*# sourceMappingURL=Info.css.map */

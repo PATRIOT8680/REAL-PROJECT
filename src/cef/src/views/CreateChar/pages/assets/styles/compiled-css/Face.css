@@ -60,7 +60,8 @@
 }
 .face-page .selector-part-head .part .icon-part {
   position: absolute;
-  width: 1.7rem;
+  width: 1.3rem;
+  height: 1.2rem;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -69,6 +70,10 @@
 .face-page .selector-part-head .part .icon-part path {
   transition: all 0.3s ease;
   fill: #888888;
+}
+.face-page .selector-part-head .part .bg-part {
+  width: 3.5rem;
+  height: auto;
 }
 .face-page .selector-part-head .part .bg-part path {
   transition: all 0.3s ease;
@@ -157,3 +162,5 @@
   box-shadow: 0 0 15px 0 rgba(255, 202, 88, 0.3);
   opacity: 1;
 }
+
+/*# sourceMappingURL=Face.css.map */
