@@ -34,7 +34,7 @@ const Speedometer = memo(() => {
   const visibleMax = speed >= SAFE_MAX ? MAX_SPEED : SAFE_MAX
 
   // Базовый размер для Full HD
-  const baseSize = 265
+  const baseSize = 280
   const size = baseSize * scale
   const center = size / 2
 
@@ -45,9 +45,9 @@ const Speedometer = memo(() => {
   const tickInnerMinor = 90 * scale
   const labelRadius = tickOuter + 18 * scale
 
-  const needleStartRadius = arcRadius - 33 * scale
-  const needleEndRadius = arcRadius - 17 * scale
-  const needleWidth = 3.5 * scale
+  const needleStartRadius = arcRadius - 25 * scale
+  const needleEndRadius = arcRadius - 15 * scale
+  const needleWidth = 3 * scale
 
   const [animatedSpeed, setAnimatedSpeed] = useState(speed)
 
@@ -137,7 +137,7 @@ const Speedometer = memo(() => {
         y2={inner.y}
         stroke="#ffffff"
         className={`tick ${isDanger ? 'showedHighSpeed' : ''}`}
-        strokeWidth={isMajor ? 3 * scale : 1.5 * scale}
+        strokeWidth={isMajor ? 2 * scale : 1.5 * scale}
         strokeLinecap="round"
       />
     )
@@ -153,7 +153,7 @@ const Speedometer = memo(() => {
           textAnchor="middle"
           dominantBaseline="central"
           fill={isDanger ? '#FF4617' : '#ffffff'}
-          style={{ fontSize: `${12 * scale}px` }}
+          style={{ fontSize: `${9 * scale}px` }}
         >
           {v}
         </text>
@@ -212,7 +212,7 @@ const Speedometer = memo(() => {
           dominantBaseline="central"
           fill={animatedSpeed > SAFE_MAX ? '#FF4617' : '#ffffff'}
           style={{
-            fontSize: `${31 * scale}px`,
+            fontSize: `${28 * scale}px`,
             transition: 'all 0.6s ease'
           }}
         >
