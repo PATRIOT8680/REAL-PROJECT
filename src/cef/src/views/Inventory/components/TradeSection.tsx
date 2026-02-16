@@ -111,20 +111,37 @@ const TradeSection = ({ onItemDragStart, onItemDrop }: ITradeSection) => {
         ))}
       </div>
       <div className="btns-action">
-        { tradeSlots.some(slot => slot !== null) && (
-          <button
-            className={`action ${statusTrade}`}
-            onClick={(statusTrade === 'no-ready' || statusTrade === 'other-ready') ? handleReadyTrade : undefined}
-            disabled={statusTrade === 'my-ready' || statusTrade === 'both-ready'}
-          >
-            { getStatusText() }
-            { statusTrade === 'both-ready' && (
-              <svg className='loader-svg' viewBox="0 0 57 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M46.1777 3.50014C49.674 6.99646 52.055 11.451 53.0196 16.3006C53.9843 21.1501 53.4892 26.1768 51.597 30.7449C49.7048 35.3131 46.5005 39.2176 42.3892 41.9646C38.278 44.7116 33.4445 46.1778 28.4999 46.1778C23.5554 46.1778 18.7219 44.7115 14.6107 41.9645C10.4994 39.2174 7.29513 35.3129 5.40297 30.7448C3.5108 26.1766 3.01575 21.1499 3.98041 16.3004C4.94508 11.4509 7.32614 6.99629 10.8225 3.5" stroke="#FFCA58" stroke-width="7" stroke-linecap="round"/>
-              </svg>
-            ) }
-          </button>
-        ) }
+        {(() => {
+          if (tradeSlots.some(slot => slot !== null)) {
+            return (
+              <button
+                className={`action ${statusTrade}`}
+                onClick={(statusTrade === 'no-ready' || statusTrade === 'other-ready') ? handleReadyTrade : undefined}
+                disabled={statusTrade === 'my-ready' || statusTrade === 'both-ready'}
+              >
+                {getStatusText()}
+                {statusTrade === 'both-ready' && (
+                  <svg className='loader-svg' viewBox="0 0 57 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M46.1777 3.50014C49.674 6.99646 52.055 11.451 53.0196 16.3006C53.9843 21.1501 53.4892 26.1768 51.597 30.7449C49.7048 35.3131 46.5005 39.2176 42.3892 41.9646C38.278 44.7116 33.4445 46.1778 28.4999 46.1778C23.5554 46.1778 18.7219 44.7115 14.6107 41.9645C10.4994 39.2174 7.29513 35.3129 5.40297 30.7448C3.5108 26.1766 3.01575 21.1499 3.98041 16.3004C4.94508 11.4509 7.32614 6.99629 10.8225 3.5" stroke="#FFCA58" stroke-width="7" stroke-linecap="round"/>
+                  </svg>
+                )}
+              </button>
+            )
+          }
+
+          if (statusTrade === 'other-ready') {
+            return (
+              <button
+                className={`action ${statusTrade}`}
+                onClick={handleReadyTrade}
+              >
+                Подтвердить
+              </button>
+            )
+          }
+
+          return null
+        })()}
         <button className={`action ${ statusTrade === 'no-ready' ? 'cancel' : 'stoped' }`} onClick={handleCancelTrade}>
           { statusTrade === 'no-ready' ? 'Отменить' : 'Приостановить' }
         </button>

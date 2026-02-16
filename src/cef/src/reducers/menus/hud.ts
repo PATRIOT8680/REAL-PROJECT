@@ -1,6 +1,6 @@
 const initialState = {
-  isVisible: false,
-  speedometerVisible: false,
+  isVisible: true,
+  speedometerVisible: true,
 }
 
 export const hudReducer = (state = initialState, action: any) => {
