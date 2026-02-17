@@ -1,5 +1,5 @@
 export interface IHitInfo {
-  type: 'object' | 'vehicle' | 'ped' | 'none',
+  type: 'object' | 'vehicle' | 'player' | 'ped' | 'none',
   remoteId: number | null,
   handle: number | null,
   position: Vector3 | null,
