@@ -2,6 +2,7 @@ import './assets/styles/compiled-css/Clothes.css'
 import { IDataChar } from "../Index.tsx";
 import { useCallback, useEffect } from "react";
 import { rce } from "../../../modules/rce.ts";
+import { CDN_URL } from "../../../main.tsx";
 
 import { clothesChar } from "./assets/conf/clothes.ts";
 import useSmoothWheelScroll from "../../../hooks/useSmoothScroll.ts";
@@ -16,7 +17,16 @@ const Clothes = ({ dataChar, handleChange }: IClothes) => {
 
   const getComponentId = (category: 'tops' | 'legs' | 'shoes'): number => {
     switch (category) {
-      case 'tops': return 11
+      case 'tops': return 5
+      case 'legs': return 11
+      case 'shoes': return 12
+      default: return 11
+    }
+  }
+
+  const getRealComponentId = (category: 'tops' | 'legs' | 'shoes'): number => {
+    switch (category) {
+      case 'tops':  return 11
       case 'legs': return 4
       case 'shoes': return 6
       default: return 11
@@ -48,7 +58,7 @@ const Clothes = ({ dataChar, handleChange }: IClothes) => {
       return <div className="loading">Загрузка...</div>;
     }
 
-    const gender = dataChar.gender;
+    const gender = dataChar.gender === 'male' ? 'm' : 'f'
 
     return (
         <div className="select-img-block" key={`${gender}-${category}`}>
@@ -62,9 +72,8 @@ const Clothes = ({ dataChar, handleChange }: IClothes) => {
                 >
                   <img
                       loading='lazy'
-                      src={`assets/img/create-char/clothes/${gender}/${category}/${id}.jpg`}
+                      src={`${CDN_URL}/img/items/clothes/${gender}/${getRealComponentId(category)}/${id}/0.png`}
                       onError={(e) => {
-                        console.error(`Не удалось загрузить изображение: assets/img/create-char/clothes/${gender}/${category}/${id}.jpg`)
                         e.currentTarget.style.display = 'none'
                       }}
                       alt={`${title} ${id}`}

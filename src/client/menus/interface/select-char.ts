@@ -64,18 +64,12 @@ rce.registerServer('server:showSelectChar', async () => {
     mp.game.cam.renderScriptCams(true, false, 0, true, false)
   }
 
-  let hasExecuted = false;
-
-  const intervalFly = setInterval(() => {
-    if (!mp.game.invoke(Natives.IS_PLAYER_SWITCH_IN_PROGRESS) && !hasExecuted) {
-      hasExecuted = true
-      mp.gui.cursor.show(true, true)
-
-      rce.triggerServer('client:flyEndSelectChar')
-      mp.players.local.taskStartScenarioInPlace(scenario, 0, true)
-      clearInterval(intervalFly)
-    }
-  }, 100)
+  const timeoutLoading = setTimeout(() => {
+    mp.gui.cursor.show(true, true)
+    rce.triggerServer('client:playerSpawnedBeforeAuth')
+    mp.players.local.taskStartScenarioInPlace(scenario, 0, true)
+    clearInterval(timeoutLoading)
+  }, 1500)
 })
 
 rce.registerAll('cef:selectSlotChar', async (slot: number, status: 'active' | 'free' | 'donat' | 'ban') => {
@@ -171,6 +165,7 @@ rce.registerServer('closeSelectChar', () => {
   currentCamera = null
   targetCamera = null
 
+  gui.execute('window.App.loadingReducer.showLoading(1000)')
   mp.game.cam.renderScriptCams(false, false, 0, true, false)
   mp.gui.cursor.show(false, false)
 
@@ -179,5 +174,5 @@ rce.registerServer('closeSelectChar', () => {
     gui.execute('window.App.hudReducer.showHud()')
     mp.players.local.freezePosition(false)
     mp.game.ui.displayRadar(true)
-  }, 2000)
+  }, 1000)
 })

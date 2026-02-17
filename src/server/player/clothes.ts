@@ -191,9 +191,8 @@ export const usageClothes = (player: PlayerMp, internalSlot: number, drawable: n
   }
 
   console.log(`[CLOTHES usageClothes] FINISH`);
-};
+}
 
-// CEF событие — должно приходить componentId, drawable, texture
 rce.registerClientCef('setClothes', (player: PlayerMp, componentId: number, drawable: number, texture: number) => {
   console.log(
     `[CEF → SERVER] setClothes event received: slot=${componentId}, drawable=${drawable}, texture=${texture}, player=${player.id}`

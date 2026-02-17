@@ -73,7 +73,7 @@ const CreateChar = memo(() => {
         0 // Neck
       ],
       clothes: {
-        tops: 14,
+        tops: 22,
         legs: 1,
         shoes: 1
       }
@@ -237,6 +237,22 @@ const CreateChar = memo(() => {
     rce.triggerClient('pauseCameraRotator', false)
   }
 
+  const setDefaultClothes = useCallback((gender: 'male' | 'female') => {
+    const defaultTops = clothesChar[gender === 'male' ? 'm' : 'f'].tops[0];
+    const defaultLegs = clothesChar[gender === 'male' ? 'm' : 'f'].legs[0];
+    const defaultShoes = clothesChar[gender === 'male' ? 'm' : 'f'].shoes[0];
+
+    rce.triggerServer('setClothes', 5, defaultTops, 0)
+    rce.triggerServer('setClothes', 11, defaultLegs, 0)
+    rce.triggerServer('setClothes', 12, defaultShoes, 0)
+
+    return {
+      tops: defaultTops,
+      legs: defaultLegs,
+      shoes: defaultShoes
+    };
+  }, []);
+
   const handleChange = useCallback((fieldName: string, value: any) => {
     console.log(`[CHANGE] Field: ${fieldName}, Value:`, value);
 
@@ -246,13 +262,14 @@ const CreateChar = memo(() => {
     };
 
     if (fieldName === 'gender') {
-      const gender = value as keyof typeof clothesChar;
+      const gender = value === 'male' ? 'm' : 'f';
       const defaultClothes = {
         tops: clothesChar[gender].tops[0],
         legs: clothesChar[gender].legs[0],
         shoes: clothesChar[gender].shoes[0]
       };
-      newData.clothes = defaultClothes;
+      newData.clothes = defaultClothes
+      setDefaultClothes(value)
     }
 
     // Обновляем историю
@@ -282,24 +299,6 @@ const CreateChar = memo(() => {
       initializeCharacter()
     }, 100)
   }, [initializeCharacter])
-
-  const setDefaultClothes = useCallback((gender: 'male' | 'female') => {
-    const defaultTops = clothesChar[gender].tops[0];
-    const defaultLegs = clothesChar[gender].legs[0];
-    const defaultShoes = clothesChar[gender].shoes[0];
-
-    console.log(`[DEFAULT CLOTHES] Setting default clothes for ${gender}: tops=${defaultTops}, legs=${defaultLegs}, shoes=${defaultShoes}`);
-
-    rce.triggerServer('setClothes', 11, defaultTops, 0);
-    rce.triggerServer('setClothes', 4, defaultLegs, 0);
-    rce.triggerServer('setClothes', 6, defaultShoes, 0);
-
-    return {
-      tops: defaultTops,
-      legs: defaultLegs,
-      shoes: defaultShoes
-    };
-  }, []);
 
   useEffect(() => {
     setDefaultClothes(dataChar.gender)

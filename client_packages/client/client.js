@@ -524,7 +524,6 @@ const showLoading = (duration) => {
     }, duration);
 };
 rce.register('client:showLoading', showLoading);
-mp.console.logError('');
 
 let camera$1 = null;
 const enableAuth = () => {
@@ -1517,9 +1516,6 @@ rce.registerAll('pauseCameraRotator', (toggle) => {
     cameraRotator.pause(toggle);
 });
 
-const Natives$2 = {
-    IS_PLAYER_SWITCH_IN_PROGRESS: '0xD9D2CFFF49FAB35F'
-};
 let currentCamera$1 = null;
 let targetCamera$1 = null;
 let localPlayer = mp.players.local;
@@ -1654,43 +1650,32 @@ function handleCharacterChange(fieldName, value) {
     }
 }
 const createChar = (sid, numberSlot, uniqueScenario) => {
-    mp.players.local.position;
-    rce.trigger('moveSkyCamera', 'up', 2);
     rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604);
     rce.triggerServer('setNumberChar', numberSlot);
+    currentCamera$1 = createCamera(new mp.Vector3(-112.6367, 355.0139, 113.0961), new mp.Vector3(-2, 0, -28.83), 30);
+    if (currentCamera$1) {
+        currentCamera$1.setActive(true);
+        mp.game.cam.renderScriptCams(true, false, 0, true, false);
+    }
+    gui.execute('window.App.loadingReducer.showLoading(2500)');
+    gui.execute(`window.App.createCharReducer.showCreateChar(${sid}, ${numberSlot})`);
+    rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604);
+    mp.console.logInfo(`Pos pl: ${mp.players.local.position}`);
     setTimeout(() => {
-        currentCamera$1 = createCamera(new mp.Vector3(-112.6367, 355.0139, 113.0961), new mp.Vector3(-2, 0, -28.83), 30);
-        if (currentCamera$1) {
-            currentCamera$1.setActive(true);
-            mp.game.cam.renderScriptCams(true, false, 0, true, false);
-        }
-        let hasExecuted = false;
-        const intervalFly = setInterval(() => {
-            if (!mp.game.invoke(Natives$2.IS_PLAYER_SWITCH_IN_PROGRESS) && !hasExecuted) {
-                hasExecuted = true;
-                mp.gui.cursor.show(true, true);
-                gui.execute('window.App.loadingReducer.showLoading(2500)');
-                gui.execute(`window.App.createCharReducer.showCreateChar(${sid}, ${numberSlot})`);
-                rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604);
-                mp.console.logInfo(`Pos pl: ${mp.players.local.position}`);
-                setTimeout(() => {
-                    cameraRotator.start(currentCamera$1, mp.players.local.position, new mp.Vector3(mp.players.local.position.x, mp.players.local.position.y, mp.players.local.position.z + 0.4), new mp.Vector3(0, 2.5, 0.8), 155, 30);
-                    cameraRotator.pause(false);
-                    cameraRotator.setZBound(-1, 2);
-                    cameraRotator.setOffsetBound(2, 6);
-                    setTimeout(() => {
-                        playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1);
-                    }, 500);
-                }, 500);
-                clearInterval(intervalFly);
-            }
-        }, 100);
-        mp.players.local.freezePosition(true);
-        rce.trigger('moveSkyCamera', 'down', 2);
-    }, 1500);
+        mp.gui.cursor.visible = true;
+        cameraRotator.start(currentCamera$1, mp.players.local.position, new mp.Vector3(mp.players.local.position.x, mp.players.local.position.y, mp.players.local.position.z + 0.4), new mp.Vector3(0, 2.5, 0.8), 155, 30);
+        cameraRotator.pause(false);
+        cameraRotator.setZBound(-1, 2);
+        cameraRotator.setOffsetBound(2, 6);
+        setTimeout(() => {
+            playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1);
+        }, 500);
+    }, 500);
+    mp.players.local.freezePosition(true);
 };
 rce.registerServer('closeCreateChar', () => {
     cameraRotator.stop();
+    gui.execute('window.App.loadingReducer.showLoading(2500)');
     if (mp.cameras.exists(currentCamera$1))
         currentCamera$1.destroy();
     if (mp.cameras.exists(targetCamera$1))
@@ -1698,7 +1683,7 @@ rce.registerServer('closeCreateChar', () => {
     currentCamera$1 = null;
     targetCamera$1 = null;
     mp.game.cam.renderScriptCams(false, false, 0, true, false);
-    mp.gui.cursor.show(false, false);
+    mp.gui.cursor.visible = false;
     setTimeout(() => {
         gui.execute('window.App.chatReducer.showChat()');
         gui.execute('window.App.hudReducer.showHud()');
@@ -1718,9 +1703,6 @@ const scenarios = [
     "EAR_TO_TEXT_FAT",
     "WORLD_HUMAN_AA_SMOKE",
 ];
-const Natives$1 = {
-    IS_PLAYER_SWITCH_IN_PROGRESS: '0xD9D2CFFF49FAB35F'
-};
 let currentCamera = null;
 let targetCamera = null;
 rce.registerServer('server:showSelectChar', async () => {
@@ -1752,16 +1734,12 @@ rce.registerServer('server:showSelectChar', async () => {
         currentCamera.setActive(true);
         mp.game.cam.renderScriptCams(true, false, 0, true, false);
     }
-    let hasExecuted = false;
-    const intervalFly = setInterval(() => {
-        if (!mp.game.invoke(Natives$1.IS_PLAYER_SWITCH_IN_PROGRESS) && !hasExecuted) {
-            hasExecuted = true;
-            mp.gui.cursor.show(true, true);
-            rce.triggerServer('client:flyEndSelectChar');
-            mp.players.local.taskStartScenarioInPlace(scenario, 0, true);
-            clearInterval(intervalFly);
-        }
-    }, 100);
+    const timeoutLoading = setTimeout(() => {
+        mp.gui.cursor.show(true, true);
+        rce.triggerServer('client:playerSpawnedBeforeAuth');
+        mp.players.local.taskStartScenarioInPlace(scenario, 0, true);
+        clearInterval(timeoutLoading);
+    }, 1500);
 });
 rce.registerAll('cef:selectSlotChar', async (slot, status) => {
     mp.console.logInfo('Oppps. Сработка!');
@@ -1837,6 +1815,7 @@ rce.registerServer('closeSelectChar', () => {
         targetCamera.destroy();
     currentCamera = null;
     targetCamera = null;
+    gui.execute('window.App.loadingReducer.showLoading(1000)');
     mp.game.cam.renderScriptCams(false, false, 0, true, false);
     mp.gui.cursor.show(false, false);
     setTimeout(() => {
@@ -1844,7 +1823,7 @@ rce.registerServer('closeSelectChar', () => {
         gui.execute('window.App.hudReducer.showHud()');
         mp.players.local.freezePosition(false);
         mp.game.ui.displayRadar(true);
-    }, 2000);
+    }, 1000);
 });
 
 const Natives = {
