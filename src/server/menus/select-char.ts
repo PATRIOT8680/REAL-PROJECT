@@ -18,15 +18,11 @@ interface IDataChar {
 }
 
 export const selectChar = (player: PlayerMp) => {
-  rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
   rce.triggerClient(player, 'player:freeze', true)
 
-  setTimeout(() => {
-    player.position = new mp.Vector3(-142.221, -599.458, 211.775)
-    player.heading = 30.854
-    rce.triggerClient(player, 'moveSkyCamera', 'down', 2)
-    rce.triggerClient(player, 'server:showSelectChar')
-  }, 1000)
+  player.position = new mp.Vector3(-142.221, -599.458, 211.775)
+  player.heading = 30.854
+  rce.triggerClient(player, 'server:showSelectChar')
 }
 
 rce.registerClient('client:setSelectedChar', async (player: PlayerMp, numberSlot: number, statusSlot: string, plPos) => {
@@ -91,7 +87,6 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
   rce.triggerClient(player, 'execute', 'window.App.selectCharReducer.hideSelectChar()')
   player.setVariable('player_spawned', true)
 
-  rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
   rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`)
   console.log(nickname)
   setNumberChar(player.id, numberSlot)
@@ -131,6 +126,7 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
             rce.triggerClient(player, 'sendNotify', 'err', 'Неизвестная точка спавна!', 3500, 'top')
         }
 
+
         rce.triggerClient(player, 'execute', `window.App.spawnReducer.hideSpawn()`)
         sendInventoryToCef(player, await getDataAccount(player, 'uid', player.id))
 
@@ -139,7 +135,6 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
         player.health = results[0].health
         player.armour = results[0].armour
 
-        console.log('Сработка до запроса')
         const cash = await getDataAccount(player, 'cash', player.id)
         const bankmoney = await getDataAccount(player, 'bankmoney', player.id)
 
@@ -180,7 +175,6 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
         rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 
         setCustomizationChar(player, JSON.parse(results[0].chardata))
-        rce.triggerClient(player, 'moveSkyCamera', 'down', 2)
         rce.triggerClient(player, 'closeSelectChar')
       } catch (e) {
         console.log(chalk.bgRed('• SPAWN •') + chalk.red(` Ошибка парсинга координат: ${e}`))
@@ -191,7 +185,7 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
   }
 })
 
-rce.registerClient('client:flyEndSelectChar', async (player: PlayerMp) => {
+rce.registerClient('client:playerSpawnedBeforeAuth', async (player: PlayerMp) => {
   if (listLoginAccs.has(player.id)) {
     try {
       const sid = await getDataAccount(player, 'sid', player.id)

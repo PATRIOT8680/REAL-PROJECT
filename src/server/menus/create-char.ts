@@ -6,6 +6,7 @@ import {connectedUsers} from "../data/dataConnectedUser";
 import { setCustomizationChar } from '../index'
 import { decrementDonatCoins } from "../data/account/donatcoins";
 import { createInventoryForChar } from "../modules/inventory/inventory";
+import { addItemToInventory, sendInventoryToCef } from "../modules/inventory/inventoryHandlers";
 
 const createSlotChar = async (player: PlayerMp, numberSlot: number) => {
   try {
@@ -31,9 +32,9 @@ const createSlotChar = async (player: PlayerMp, numberSlot: number) => {
 
 }
 
-const closeCreateChar = async (player: PlayerMp) => {
-  console.log(`Закрываем создание`)
-  rce.triggerClient(player, 'moveSkyCamera', 'up', 2)
+const closeCreateChar = async (player: PlayerMp, dataChar) => {
+  const { clothes } = dataChar
+
   rce.triggerClient(player, 'execute', 'window.App.createCharReducer.hideCreateChar()')
 
   const cash = connectedUsers.getField(player.id, 'cash')
@@ -43,33 +44,42 @@ const closeCreateChar = async (player: PlayerMp) => {
   player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 37.333740234375))
   player.dimension = 0
 
-
   rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
   rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`)
   rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 
-  console.log(`Закрываем создание 2`)
+  rce.triggerClient(player, 'closeCreateChar')
 
-  // setTimeout(async () => {
-    rce.triggerClient(player, 'moveSkyCamera', 'down', 2)
-    rce.triggerClient(player, 'closeCreateChar')
+  const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?'
+  const uid = await getDataAccount(player, 'uid', player.id)
 
-    const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?'
-    const uid = await getDataAccount(player, 'uid', player.id)
+  const coordExit = {
+    x: player.position.x.toFixed(3),
+    y: player.position.y.toFixed(3),
+    z: player.position.z.toFixed(3),
+    heading: player.heading.toFixed(3)
+  }
+  const coordString = JSON.stringify(coordExit)
 
-    const coordExit = {
-      x: player.position.x.toFixed(3),
-      y: player.position.y.toFixed(3),
-      z: player.position.z.toFixed(3),
-      heading: player.heading.toFixed(3)
+  data.query(sql, [coordString, uid], async (err, results) => {
+    if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
+    await createInventoryForChar(player, uid, connectedUsers.getField(player.id, 'sid'))
+
+    const itemsToAdd = [
+      { id: clothes.tops, quantity: 1 },
+      { id: clothes.legs, quantity: 1 },
+      { id: clothes.shoes, quantity: 1 }
+    ]
+
+    for (const item of itemsToAdd) {
+      if (item.id === 0 || item.id === undefined) {
+        continue
+      }
+      await addItemToInventory(uid, item.id, item.quantity)
     }
-    const coordString = JSON.stringify(coordExit)
 
-    data.query(sql, [coordString, uid], (err, results) => {
-      if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
-      createInventoryForChar(player, uid, connectedUsers.getField(player.id, 'sid'))
-    })
-  // }, 4000)
+    await sendInventoryToCef(player, uid)
+  })
 }
 
 rce.registerCef('cef:buyUniqueScenario', async (player: PlayerMp, scenario: string) => {
@@ -139,80 +149,72 @@ rce.registerCef('handleDonatCreatePlayer', async (player: PlayerMp, numberSlot: 
   await createSlotChar(player, numberSlot)
 })
 
-  rce.registerCef('cef:handleCreateChar', async (player: PlayerMp, numberSlot, dataChar)=> {
-    try {
-      const { firstName, lastName, age, gender } = dataChar
-      console.log(JSON.stringify(dataChar))
-      const uid = await getDataAccount(player, 'uid', player.id)
-      const checkDuplicateQuery = 'SELECT id FROM chars WHERE firstname = ? AND lastname = ?';
-      console.log('0.1')
-      // Проверка дубликата
-      data.query(checkDuplicateQuery, [firstName, lastName], (error, duplicateResult: any) => {
+rce.registerCef('cef:handleCreateChar', async (player: PlayerMp, numberSlot, dataChar)=> {
+  try {
+    const { firstName, lastName, age, gender } = dataChar
+    const uid = await getDataAccount(player, 'uid', player.id)
+    const checkDuplicateQuery = 'SELECT id FROM chars WHERE firstname = ? AND lastname = ?';
+
+    data.query(checkDuplicateQuery, [firstName, lastName], (error, duplicateResult: any) => {
+      if (error) {
+        console.error('Ошибка при проверке дубликата:', error);
+        return;
+      }
+
+      if (duplicateResult && duplicateResult.length > 0) {
+        rce.triggerClient(player, 'sendNotify', 'err', 'Персонаж с таким никнеймом уже существует!', 5000, 'bottom');
+        return;
+      }
+
+      const updateCharQuery = `
+          UPDATE chars 
+          SET firstname = ?, lastname = ?, age = ?, chardata = ? 
+          WHERE uid = ?
+      `;
+
+      data.query(updateCharQuery, [
+        firstName,
+        lastName,
+        Number(age),
+        JSON.stringify(dataChar),
+        uid
+      ], (error, updateResult: any) => {
         if (error) {
-          console.error('Ошибка при проверке дубликата:', error);
+          console.error('Ошибка при обновлении персонажа:', error);
           return;
         }
 
-        console.log('1')
-        if (duplicateResult && duplicateResult.length > 0) {
-          rce.triggerClient(player, 'sendNotify', 'err', 'Персонаж с таким никнеймом уже существует!', 5000, 'bottom');
+        if (updateResult.affectedRows === 0) {
+          console.error(`Не удалось обновить персонажа UID: ${uid}, слот: ${numberSlot}`);
+          rce.triggerClient(player, 'sendNotify', 'err', 'Ошибка сохранения персонажа!', 5000, 'bottom');
           return;
         }
 
-        console.log('2')
-        const updateCharQuery = `
-            UPDATE chars 
-            SET firstname = ?, lastname = ?, age = ?, chardata = ? 
-            WHERE uid = ?
-        `;
+        player.dimension = 0
+        player.setVariable('ADMIN_LVL', 0)
+        player.setVariable('gender', dataChar.gender)
+        player.setVariable('player_spawned', true)
 
-        // Обновление данных персонажа
-        data.query(updateCharQuery, [
-          firstName,
-          lastName,
-          Number(age),
-          JSON.stringify(dataChar),
-          uid
-        ], (error, updateResult: any) => {
-          if (error) {
-            console.error('Ошибка при обновлении персонажа:', error);
-            return;
-          }
+        connectedUsers.setUser(player.id, {
+          uid: uid,
+          nickName: `${firstName} ${lastName}`,
+          gender: gender,
+          adminLvl: 0,
+          age: dataChar.age,
+          cash: 1500,
+          bankmoney: 200,
+          lvl: 1,
+          exp: 0,
+          unique_quest: ''
+        })
 
-          console.log('3')
-          if (updateResult.affectedRows === 0) {
-            console.error(`Не удалось обновить персонажа UID: ${uid}, слот: ${numberSlot}`);
-            rce.triggerClient(player, 'sendNotify', 'err', 'Ошибка сохранения персонажа!', 5000, 'bottom');
-            return;
-          }
+        setCustomizationChar(player, dataChar)
 
-          console.log('4')
-          player.dimension = 0
-          player.setVariable('ADMIN_LVL', 0)
-          player.setVariable('gender', dataChar.gender)
-          player.setVariable('player_spawned', true)
-
-          connectedUsers.setUser(player.id, {
-            uid: uid,
-            nickName: `${firstName} ${lastName}`,
-            gender: gender,
-            adminLvl: 0,
-            age: dataChar.age,
-            cash: 1500,
-            bankmoney: 200,
-            lvl: 1,
-            exp: 0,
-            unique_quest: ''
-          })
-
-          setCustomizationChar(player, dataChar)
-
-          console.log('5')
-          rce.trigger('charSpawned', player)
-          closeCreateChar(player)
-        });
+        rce.trigger('charSpawned', player)
+        closeCreateChar(player, dataChar)
       });
-    } catch (e) {
-      console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createChar(): ${e}`)));
-    }
-  })
+    });
+  } catch (e) {
+    console.error(chalk.bgRed('• CREATE CHAR •' + chalk.red(` Ошибка createChar(): ${e}`)));
+  }
+})

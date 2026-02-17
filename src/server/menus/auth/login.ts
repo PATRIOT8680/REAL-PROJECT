@@ -34,10 +34,7 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
         }
 
         if (match) {
-          //selectChar(player)
           player.setVariable('login_player', login)
-          //player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 38.833740234375))
-          //rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно авторизовались!`, 4000, 'bottom')
 
           rce.triggerClient(player, 'server:auth:saveLogin', login)
           rce.triggerCef(player, 'server:authSuccess')
@@ -45,7 +42,6 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
 
           const checkChar = 'SELECT numberslot, firstname, lastname, age FROM chars WHERE sid = ?'
           const sid = await getDataAccount(player, 'sid', player.id)
-          console.log('ага ага 2')
           listLoginAccs.set(player.id, { sid, login })
           connectedUsers.setUser(player.id, { login: login, sid: sid })
 
@@ -54,7 +50,6 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
               console.log(chalk.bgRed('• CHAR •' + chalk.red(`Ошибка получения данных о char: ${err}`)))
               return
             }
-            console.log('Хе хе бой 0')
 
             if (Array.isArray(charResults) && charResults.length > 0) {
               const emptyChar: any = charResults.find((char: any) =>
@@ -75,17 +70,12 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
                 })
 
               } else {
-                console.log('переходим к выборке')
-                // Все строки заполнены, переходим к выбору персонажа
                 selectChar(player)
                 rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'bottom')
               }
             } else {
               selectChar(player)
               console.log('Нет данных о персонаже для SID:', sid);
-              // Обработка случая, когда у аккаунта нет персонажей
-              // Возможно, нужно вызвать создание нового персонажа
-              //rce.call('handleCreateNewChar');
             }
           })
         } else {

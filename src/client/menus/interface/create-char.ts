@@ -202,12 +202,9 @@ function handleCharacterChange(fieldName: any, value: any) {
 }
 
 export const createChar = (sid: number, numberSlot: number, uniqueScenario: string | undefined) => {
-  const lcplayerPos = mp.players.local.position
-  rce.trigger('moveSkyCamera', 'up', 2)
   rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604)
   rce.triggerServer('setNumberChar', numberSlot)
 
-  setTimeout(() => {
     currentCamera = createCamera(
         new mp.Vector3(-112.6367, 355.0139, 113.0961),
         new mp.Vector3(-2, 0, -28.83),
@@ -219,50 +216,42 @@ export const createChar = (sid: number, numberSlot: number, uniqueScenario: stri
       mp.game.cam.renderScriptCams(true, false, 0, true, false)
     }
 
-    let hasExecuted = false
 
-    const intervalFly = setInterval(() => {
-      if (!mp.game.invoke(Natives.IS_PLAYER_SWITCH_IN_PROGRESS) && !hasExecuted) {
-        hasExecuted = true
-        mp.gui.cursor.show(true, true)
 
-        gui.execute('window.App.loadingReducer.showLoading(2500)')
-        gui.execute(`window.App.createCharReducer.showCreateChar(${sid}, ${numberSlot})`)
-        rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604)
-        mp.console.logInfo(`Pos pl: ${mp.players.local.position}`)
+    gui.execute('window.App.loadingReducer.showLoading(2500)')
+    gui.execute(`window.App.createCharReducer.showCreateChar(${sid}, ${numberSlot})`)
+    rce.triggerServer('setSpawnChar', -111.3426, 357.2092, 112.6961, 153.0604)
+    mp.console.logInfo(`Pos pl: ${mp.players.local.position}`)
 
-        setTimeout(() => {
-          cameraRotator.start(
-              currentCamera,
-              mp.players.local.position,
-              new mp.Vector3(
-                  mp.players.local.position.x,
-                  mp.players.local.position.y,
-                  mp.players.local.position.z + 0.4
-              ),
-              new mp.Vector3(0, 2.5, 0.8),
-              155,
-              30
-          );
-          cameraRotator.pause(false)
-          cameraRotator.setZBound(-1, 2)
-          cameraRotator.setOffsetBound(2, 6)
+    setTimeout(() => {
+      mp.gui.cursor.visible = true
+      cameraRotator.start(
+          currentCamera,
+          mp.players.local.position,
+          new mp.Vector3(
+              mp.players.local.position.x,
+              mp.players.local.position.y,
+              mp.players.local.position.z + 0.4
+          ),
+          new mp.Vector3(0, 2.5, 0.8),
+          155,
+          30
+      );
+      cameraRotator.pause(false)
+      cameraRotator.setZBound(-1, 2)
+      cameraRotator.setOffsetBound(2, 6)
 
-          setTimeout(() => {
-            playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1)
-          }, 500)
-        }, 500)
-        clearInterval(intervalFly)
-      }
-    }, 100)
+      setTimeout(() => {
+        playAnim('anim@amb@business@meth@meth_smash_weight_check@', 'break_weigh_v2_methbag01^4', 1, -1)
+      }, 500)
+    }, 500)
 
     mp.players.local.freezePosition(true)
-    rce.trigger('moveSkyCamera', 'down', 2)
-  }, 1500)
 }
 
 rce.registerServer('closeCreateChar', () => {
   cameraRotator.stop()
+  gui.execute('window.App.loadingReducer.showLoading(2500)')
   if (mp.cameras.exists(currentCamera)) currentCamera.destroy()
   if (mp.cameras.exists(targetCamera)) targetCamera.destroy()
 
@@ -270,7 +259,7 @@ rce.registerServer('closeCreateChar', () => {
   targetCamera = null
 
   mp.game.cam.renderScriptCams(false, false, 0, true, false)
-  mp.gui.cursor.show(false, false)
+  mp.gui.cursor.visible = false
 
   setTimeout(() => {
     gui.execute('window.App.chatReducer.showChat()')

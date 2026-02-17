@@ -19,4 +19,3 @@ export const showLoading = (duration) => {
 }
 
 rce.register('client:showLoading', showLoading)
-mp.console.logError('')

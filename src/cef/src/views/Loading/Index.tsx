@@ -22,7 +22,7 @@ const Loading = () => {
         const hideTimer = setTimeout(() => {
           dispatch(hideLoading())
           setExit(false)
-        }, 1500)
+        }, 1000)
 
         return () => clearTimeout(hideTimer)
       }, loadingState.duration)
