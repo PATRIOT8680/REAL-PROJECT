@@ -44,15 +44,6 @@ function _interopNamespaceDefault(e) {
 var fs__namespace = /*#__PURE__*/_interopNamespaceDefault(fs);
 var path__namespace = /*#__PURE__*/_interopNamespaceDefault(path);
 
-mp.events.add('playerJoin', (player) => {
-    const socialClub = player.socialClub;
-    const whitelist = ['HaseNRP', 'Anaken74', 'whysh1n3'];
-    if (!whitelist.includes(socialClub)) {
-        player.kick('Вы не добавлены в Whitelist!');
-        console.log(`Not in Whitelist: ${player.socialClub}`);
-    }
-});
-
 class CustomEventBase {
     static registerLocalIds = 1;
     static registerHandles = new Map();
@@ -3904,8 +3895,8 @@ var hasRequiredSqlString;
 function requireSqlString () {
 	if (hasRequiredSqlString) return SqlString;
 	hasRequiredSqlString = 1;
-	(function (exports) {
-		var SqlString  = exports;
+	(function (exports$1) {
+		var SqlString  = exports$1;
 
 		var ID_GLOBAL_REGEXP    = /`/g;
 		var QUAL_GLOBAL_REGEXP  = /\./g;
@@ -4205,328 +4196,328 @@ var hasRequiredCharsets;
 function requireCharsets () {
 	if (hasRequiredCharsets) return charsets;
 	hasRequiredCharsets = 1;
-	(function (exports) {
+	(function (exports$1) {
 
-		exports.BIG5_CHINESE_CI = 1;
-		exports.LATIN2_CZECH_CS = 2;
-		exports.DEC8_SWEDISH_CI = 3;
-		exports.CP850_GENERAL_CI = 4;
-		exports.LATIN1_GERMAN1_CI = 5;
-		exports.HP8_ENGLISH_CI = 6;
-		exports.KOI8R_GENERAL_CI = 7;
-		exports.LATIN1_SWEDISH_CI = 8;
-		exports.LATIN2_GENERAL_CI = 9;
-		exports.SWE7_SWEDISH_CI = 10;
-		exports.ASCII_GENERAL_CI = 11;
-		exports.UJIS_JAPANESE_CI = 12;
-		exports.SJIS_JAPANESE_CI = 13;
-		exports.CP1251_BULGARIAN_CI = 14;
-		exports.LATIN1_DANISH_CI = 15;
-		exports.HEBREW_GENERAL_CI = 16;
-		exports.TIS620_THAI_CI = 18;
-		exports.EUCKR_KOREAN_CI = 19;
-		exports.LATIN7_ESTONIAN_CS = 20;
-		exports.LATIN2_HUNGARIAN_CI = 21;
-		exports.KOI8U_GENERAL_CI = 22;
-		exports.CP1251_UKRAINIAN_CI = 23;
-		exports.GB2312_CHINESE_CI = 24;
-		exports.GREEK_GENERAL_CI = 25;
-		exports.CP1250_GENERAL_CI = 26;
-		exports.LATIN2_CROATIAN_CI = 27;
-		exports.GBK_CHINESE_CI = 28;
-		exports.CP1257_LITHUANIAN_CI = 29;
-		exports.LATIN5_TURKISH_CI = 30;
-		exports.LATIN1_GERMAN2_CI = 31;
-		exports.ARMSCII8_GENERAL_CI = 32;
-		exports.UTF8_GENERAL_CI = 33;
-		exports.CP1250_CZECH_CS = 34;
-		exports.UCS2_GENERAL_CI = 35;
-		exports.CP866_GENERAL_CI = 36;
-		exports.KEYBCS2_GENERAL_CI = 37;
-		exports.MACCE_GENERAL_CI = 38;
-		exports.MACROMAN_GENERAL_CI = 39;
-		exports.CP852_GENERAL_CI = 40;
-		exports.LATIN7_GENERAL_CI = 41;
-		exports.LATIN7_GENERAL_CS = 42;
-		exports.MACCE_BIN = 43;
-		exports.CP1250_CROATIAN_CI = 44;
-		exports.UTF8MB4_GENERAL_CI = 45;
-		exports.UTF8MB4_BIN = 46;
-		exports.LATIN1_BIN = 47;
-		exports.LATIN1_GENERAL_CI = 48;
-		exports.LATIN1_GENERAL_CS = 49;
-		exports.CP1251_BIN = 50;
-		exports.CP1251_GENERAL_CI = 51;
-		exports.CP1251_GENERAL_CS = 52;
-		exports.MACROMAN_BIN = 53;
-		exports.UTF16_GENERAL_CI = 54;
-		exports.UTF16_BIN = 55;
-		exports.UTF16LE_GENERAL_CI = 56;
-		exports.CP1256_GENERAL_CI = 57;
-		exports.CP1257_BIN = 58;
-		exports.CP1257_GENERAL_CI = 59;
-		exports.UTF32_GENERAL_CI = 60;
-		exports.UTF32_BIN = 61;
-		exports.UTF16LE_BIN = 62;
-		exports.BINARY = 63;
-		exports.ARMSCII8_BIN = 64;
-		exports.ASCII_BIN = 65;
-		exports.CP1250_BIN = 66;
-		exports.CP1256_BIN = 67;
-		exports.CP866_BIN = 68;
-		exports.DEC8_BIN = 69;
-		exports.GREEK_BIN = 70;
-		exports.HEBREW_BIN = 71;
-		exports.HP8_BIN = 72;
-		exports.KEYBCS2_BIN = 73;
-		exports.KOI8R_BIN = 74;
-		exports.KOI8U_BIN = 75;
-		exports.UTF8_TOLOWER_CI = 76;
-		exports.LATIN2_BIN = 77;
-		exports.LATIN5_BIN = 78;
-		exports.LATIN7_BIN = 79;
-		exports.CP850_BIN = 80;
-		exports.CP852_BIN = 81;
-		exports.SWE7_BIN = 82;
-		exports.UTF8_BIN = 83;
-		exports.BIG5_BIN = 84;
-		exports.EUCKR_BIN = 85;
-		exports.GB2312_BIN = 86;
-		exports.GBK_BIN = 87;
-		exports.SJIS_BIN = 88;
-		exports.TIS620_BIN = 89;
-		exports.UCS2_BIN = 90;
-		exports.UJIS_BIN = 91;
-		exports.GEOSTD8_GENERAL_CI = 92;
-		exports.GEOSTD8_BIN = 93;
-		exports.LATIN1_SPANISH_CI = 94;
-		exports.CP932_JAPANESE_CI = 95;
-		exports.CP932_BIN = 96;
-		exports.EUCJPMS_JAPANESE_CI = 97;
-		exports.EUCJPMS_BIN = 98;
-		exports.CP1250_POLISH_CI = 99;
-		exports.UTF16_UNICODE_CI = 101;
-		exports.UTF16_ICELANDIC_CI = 102;
-		exports.UTF16_LATVIAN_CI = 103;
-		exports.UTF16_ROMANIAN_CI = 104;
-		exports.UTF16_SLOVENIAN_CI = 105;
-		exports.UTF16_POLISH_CI = 106;
-		exports.UTF16_ESTONIAN_CI = 107;
-		exports.UTF16_SPANISH_CI = 108;
-		exports.UTF16_SWEDISH_CI = 109;
-		exports.UTF16_TURKISH_CI = 110;
-		exports.UTF16_CZECH_CI = 111;
-		exports.UTF16_DANISH_CI = 112;
-		exports.UTF16_LITHUANIAN_CI = 113;
-		exports.UTF16_SLOVAK_CI = 114;
-		exports.UTF16_SPANISH2_CI = 115;
-		exports.UTF16_ROMAN_CI = 116;
-		exports.UTF16_PERSIAN_CI = 117;
-		exports.UTF16_ESPERANTO_CI = 118;
-		exports.UTF16_HUNGARIAN_CI = 119;
-		exports.UTF16_SINHALA_CI = 120;
-		exports.UTF16_GERMAN2_CI = 121;
-		exports.UTF16_CROATIAN_CI = 122;
-		exports.UTF16_UNICODE_520_CI = 123;
-		exports.UTF16_VIETNAMESE_CI = 124;
-		exports.UCS2_UNICODE_CI = 128;
-		exports.UCS2_ICELANDIC_CI = 129;
-		exports.UCS2_LATVIAN_CI = 130;
-		exports.UCS2_ROMANIAN_CI = 131;
-		exports.UCS2_SLOVENIAN_CI = 132;
-		exports.UCS2_POLISH_CI = 133;
-		exports.UCS2_ESTONIAN_CI = 134;
-		exports.UCS2_SPANISH_CI = 135;
-		exports.UCS2_SWEDISH_CI = 136;
-		exports.UCS2_TURKISH_CI = 137;
-		exports.UCS2_CZECH_CI = 138;
-		exports.UCS2_DANISH_CI = 139;
-		exports.UCS2_LITHUANIAN_CI = 140;
-		exports.UCS2_SLOVAK_CI = 141;
-		exports.UCS2_SPANISH2_CI = 142;
-		exports.UCS2_ROMAN_CI = 143;
-		exports.UCS2_PERSIAN_CI = 144;
-		exports.UCS2_ESPERANTO_CI = 145;
-		exports.UCS2_HUNGARIAN_CI = 146;
-		exports.UCS2_SINHALA_CI = 147;
-		exports.UCS2_GERMAN2_CI = 148;
-		exports.UCS2_CROATIAN_CI = 149;
-		exports.UCS2_UNICODE_520_CI = 150;
-		exports.UCS2_VIETNAMESE_CI = 151;
-		exports.UCS2_GENERAL_MYSQL500_CI = 159;
-		exports.UTF32_UNICODE_CI = 160;
-		exports.UTF32_ICELANDIC_CI = 161;
-		exports.UTF32_LATVIAN_CI = 162;
-		exports.UTF32_ROMANIAN_CI = 163;
-		exports.UTF32_SLOVENIAN_CI = 164;
-		exports.UTF32_POLISH_CI = 165;
-		exports.UTF32_ESTONIAN_CI = 166;
-		exports.UTF32_SPANISH_CI = 167;
-		exports.UTF32_SWEDISH_CI = 168;
-		exports.UTF32_TURKISH_CI = 169;
-		exports.UTF32_CZECH_CI = 170;
-		exports.UTF32_DANISH_CI = 171;
-		exports.UTF32_LITHUANIAN_CI = 172;
-		exports.UTF32_SLOVAK_CI = 173;
-		exports.UTF32_SPANISH2_CI = 174;
-		exports.UTF32_ROMAN_CI = 175;
-		exports.UTF32_PERSIAN_CI = 176;
-		exports.UTF32_ESPERANTO_CI = 177;
-		exports.UTF32_HUNGARIAN_CI = 178;
-		exports.UTF32_SINHALA_CI = 179;
-		exports.UTF32_GERMAN2_CI = 180;
-		exports.UTF32_CROATIAN_CI = 181;
-		exports.UTF32_UNICODE_520_CI = 182;
-		exports.UTF32_VIETNAMESE_CI = 183;
-		exports.UTF8_UNICODE_CI = 192;
-		exports.UTF8_ICELANDIC_CI = 193;
-		exports.UTF8_LATVIAN_CI = 194;
-		exports.UTF8_ROMANIAN_CI = 195;
-		exports.UTF8_SLOVENIAN_CI = 196;
-		exports.UTF8_POLISH_CI = 197;
-		exports.UTF8_ESTONIAN_CI = 198;
-		exports.UTF8_SPANISH_CI = 199;
-		exports.UTF8_SWEDISH_CI = 200;
-		exports.UTF8_TURKISH_CI = 201;
-		exports.UTF8_CZECH_CI = 202;
-		exports.UTF8_DANISH_CI = 203;
-		exports.UTF8_LITHUANIAN_CI = 204;
-		exports.UTF8_SLOVAK_CI = 205;
-		exports.UTF8_SPANISH2_CI = 206;
-		exports.UTF8_ROMAN_CI = 207;
-		exports.UTF8_PERSIAN_CI = 208;
-		exports.UTF8_ESPERANTO_CI = 209;
-		exports.UTF8_HUNGARIAN_CI = 210;
-		exports.UTF8_SINHALA_CI = 211;
-		exports.UTF8_GERMAN2_CI = 212;
-		exports.UTF8_CROATIAN_CI = 213;
-		exports.UTF8_UNICODE_520_CI = 214;
-		exports.UTF8_VIETNAMESE_CI = 215;
-		exports.UTF8_GENERAL_MYSQL500_CI = 223;
-		exports.UTF8MB4_UNICODE_CI = 224;
-		exports.UTF8MB4_ICELANDIC_CI = 225;
-		exports.UTF8MB4_LATVIAN_CI = 226;
-		exports.UTF8MB4_ROMANIAN_CI = 227;
-		exports.UTF8MB4_SLOVENIAN_CI = 228;
-		exports.UTF8MB4_POLISH_CI = 229;
-		exports.UTF8MB4_ESTONIAN_CI = 230;
-		exports.UTF8MB4_SPANISH_CI = 231;
-		exports.UTF8MB4_SWEDISH_CI = 232;
-		exports.UTF8MB4_TURKISH_CI = 233;
-		exports.UTF8MB4_CZECH_CI = 234;
-		exports.UTF8MB4_DANISH_CI = 235;
-		exports.UTF8MB4_LITHUANIAN_CI = 236;
-		exports.UTF8MB4_SLOVAK_CI = 237;
-		exports.UTF8MB4_SPANISH2_CI = 238;
-		exports.UTF8MB4_ROMAN_CI = 239;
-		exports.UTF8MB4_PERSIAN_CI = 240;
-		exports.UTF8MB4_ESPERANTO_CI = 241;
-		exports.UTF8MB4_HUNGARIAN_CI = 242;
-		exports.UTF8MB4_SINHALA_CI = 243;
-		exports.UTF8MB4_GERMAN2_CI = 244;
-		exports.UTF8MB4_CROATIAN_CI = 245;
-		exports.UTF8MB4_UNICODE_520_CI = 246;
-		exports.UTF8MB4_VIETNAMESE_CI = 247;
-		exports.GB18030_CHINESE_CI = 248;
-		exports.GB18030_BIN = 249;
-		exports.GB18030_UNICODE_520_CI = 250;
-		exports.UTF8_GENERAL50_CI = 253; // deprecated
-		exports.UTF8MB4_0900_AI_CI = 255;
-		exports.UTF8MB4_DE_PB_0900_AI_CI = 256;
-		exports.UTF8MB4_IS_0900_AI_CI = 257;
-		exports.UTF8MB4_LV_0900_AI_CI = 258;
-		exports.UTF8MB4_RO_0900_AI_CI = 259;
-		exports.UTF8MB4_SL_0900_AI_CI = 260;
-		exports.UTF8MB4_PL_0900_AI_CI = 261;
-		exports.UTF8MB4_ET_0900_AI_CI = 262;
-		exports.UTF8MB4_ES_0900_AI_CI = 263;
-		exports.UTF8MB4_SV_0900_AI_CI = 264;
-		exports.UTF8MB4_TR_0900_AI_CI = 265;
-		exports.UTF8MB4_CS_0900_AI_CI = 266;
-		exports.UTF8MB4_DA_0900_AI_CI = 267;
-		exports.UTF8MB4_LT_0900_AI_CI = 268;
-		exports.UTF8MB4_SK_0900_AI_CI = 269;
-		exports.UTF8MB4_ES_TRAD_0900_AI_CI = 270;
-		exports.UTF8MB4_LA_0900_AI_CI = 271;
-		exports.UTF8MB4_EO_0900_AI_CI = 273;
-		exports.UTF8MB4_HU_0900_AI_CI = 274;
-		exports.UTF8MB4_HR_0900_AI_CI = 275;
-		exports.UTF8MB4_VI_0900_AI_CI = 277;
-		exports.UTF8MB4_0900_AS_CS = 278;
-		exports.UTF8MB4_DE_PB_0900_AS_CS = 279;
-		exports.UTF8MB4_IS_0900_AS_CS = 280;
-		exports.UTF8MB4_LV_0900_AS_CS = 281;
-		exports.UTF8MB4_RO_0900_AS_CS = 282;
-		exports.UTF8MB4_SL_0900_AS_CS = 283;
-		exports.UTF8MB4_PL_0900_AS_CS = 284;
-		exports.UTF8MB4_ET_0900_AS_CS = 285;
-		exports.UTF8MB4_ES_0900_AS_CS = 286;
-		exports.UTF8MB4_SV_0900_AS_CS = 287;
-		exports.UTF8MB4_TR_0900_AS_CS = 288;
-		exports.UTF8MB4_CS_0900_AS_CS = 289;
-		exports.UTF8MB4_DA_0900_AS_CS = 290;
-		exports.UTF8MB4_LT_0900_AS_CS = 291;
-		exports.UTF8MB4_SK_0900_AS_CS = 292;
-		exports.UTF8MB4_ES_TRAD_0900_AS_CS = 293;
-		exports.UTF8MB4_LA_0900_AS_CS = 294;
-		exports.UTF8MB4_EO_0900_AS_CS = 296;
-		exports.UTF8MB4_HU_0900_AS_CS = 297;
-		exports.UTF8MB4_HR_0900_AS_CS = 298;
-		exports.UTF8MB4_VI_0900_AS_CS = 300;
-		exports.UTF8MB4_JA_0900_AS_CS = 303;
-		exports.UTF8MB4_JA_0900_AS_CS_KS = 304;
-		exports.UTF8MB4_0900_AS_CI = 305;
-		exports.UTF8MB4_RU_0900_AI_CI = 306;
-		exports.UTF8MB4_RU_0900_AS_CS = 307;
-		exports.UTF8MB4_ZH_0900_AS_CS = 308;
-		exports.UTF8MB4_0900_BIN = 309;
+		exports$1.BIG5_CHINESE_CI = 1;
+		exports$1.LATIN2_CZECH_CS = 2;
+		exports$1.DEC8_SWEDISH_CI = 3;
+		exports$1.CP850_GENERAL_CI = 4;
+		exports$1.LATIN1_GERMAN1_CI = 5;
+		exports$1.HP8_ENGLISH_CI = 6;
+		exports$1.KOI8R_GENERAL_CI = 7;
+		exports$1.LATIN1_SWEDISH_CI = 8;
+		exports$1.LATIN2_GENERAL_CI = 9;
+		exports$1.SWE7_SWEDISH_CI = 10;
+		exports$1.ASCII_GENERAL_CI = 11;
+		exports$1.UJIS_JAPANESE_CI = 12;
+		exports$1.SJIS_JAPANESE_CI = 13;
+		exports$1.CP1251_BULGARIAN_CI = 14;
+		exports$1.LATIN1_DANISH_CI = 15;
+		exports$1.HEBREW_GENERAL_CI = 16;
+		exports$1.TIS620_THAI_CI = 18;
+		exports$1.EUCKR_KOREAN_CI = 19;
+		exports$1.LATIN7_ESTONIAN_CS = 20;
+		exports$1.LATIN2_HUNGARIAN_CI = 21;
+		exports$1.KOI8U_GENERAL_CI = 22;
+		exports$1.CP1251_UKRAINIAN_CI = 23;
+		exports$1.GB2312_CHINESE_CI = 24;
+		exports$1.GREEK_GENERAL_CI = 25;
+		exports$1.CP1250_GENERAL_CI = 26;
+		exports$1.LATIN2_CROATIAN_CI = 27;
+		exports$1.GBK_CHINESE_CI = 28;
+		exports$1.CP1257_LITHUANIAN_CI = 29;
+		exports$1.LATIN5_TURKISH_CI = 30;
+		exports$1.LATIN1_GERMAN2_CI = 31;
+		exports$1.ARMSCII8_GENERAL_CI = 32;
+		exports$1.UTF8_GENERAL_CI = 33;
+		exports$1.CP1250_CZECH_CS = 34;
+		exports$1.UCS2_GENERAL_CI = 35;
+		exports$1.CP866_GENERAL_CI = 36;
+		exports$1.KEYBCS2_GENERAL_CI = 37;
+		exports$1.MACCE_GENERAL_CI = 38;
+		exports$1.MACROMAN_GENERAL_CI = 39;
+		exports$1.CP852_GENERAL_CI = 40;
+		exports$1.LATIN7_GENERAL_CI = 41;
+		exports$1.LATIN7_GENERAL_CS = 42;
+		exports$1.MACCE_BIN = 43;
+		exports$1.CP1250_CROATIAN_CI = 44;
+		exports$1.UTF8MB4_GENERAL_CI = 45;
+		exports$1.UTF8MB4_BIN = 46;
+		exports$1.LATIN1_BIN = 47;
+		exports$1.LATIN1_GENERAL_CI = 48;
+		exports$1.LATIN1_GENERAL_CS = 49;
+		exports$1.CP1251_BIN = 50;
+		exports$1.CP1251_GENERAL_CI = 51;
+		exports$1.CP1251_GENERAL_CS = 52;
+		exports$1.MACROMAN_BIN = 53;
+		exports$1.UTF16_GENERAL_CI = 54;
+		exports$1.UTF16_BIN = 55;
+		exports$1.UTF16LE_GENERAL_CI = 56;
+		exports$1.CP1256_GENERAL_CI = 57;
+		exports$1.CP1257_BIN = 58;
+		exports$1.CP1257_GENERAL_CI = 59;
+		exports$1.UTF32_GENERAL_CI = 60;
+		exports$1.UTF32_BIN = 61;
+		exports$1.UTF16LE_BIN = 62;
+		exports$1.BINARY = 63;
+		exports$1.ARMSCII8_BIN = 64;
+		exports$1.ASCII_BIN = 65;
+		exports$1.CP1250_BIN = 66;
+		exports$1.CP1256_BIN = 67;
+		exports$1.CP866_BIN = 68;
+		exports$1.DEC8_BIN = 69;
+		exports$1.GREEK_BIN = 70;
+		exports$1.HEBREW_BIN = 71;
+		exports$1.HP8_BIN = 72;
+		exports$1.KEYBCS2_BIN = 73;
+		exports$1.KOI8R_BIN = 74;
+		exports$1.KOI8U_BIN = 75;
+		exports$1.UTF8_TOLOWER_CI = 76;
+		exports$1.LATIN2_BIN = 77;
+		exports$1.LATIN5_BIN = 78;
+		exports$1.LATIN7_BIN = 79;
+		exports$1.CP850_BIN = 80;
+		exports$1.CP852_BIN = 81;
+		exports$1.SWE7_BIN = 82;
+		exports$1.UTF8_BIN = 83;
+		exports$1.BIG5_BIN = 84;
+		exports$1.EUCKR_BIN = 85;
+		exports$1.GB2312_BIN = 86;
+		exports$1.GBK_BIN = 87;
+		exports$1.SJIS_BIN = 88;
+		exports$1.TIS620_BIN = 89;
+		exports$1.UCS2_BIN = 90;
+		exports$1.UJIS_BIN = 91;
+		exports$1.GEOSTD8_GENERAL_CI = 92;
+		exports$1.GEOSTD8_BIN = 93;
+		exports$1.LATIN1_SPANISH_CI = 94;
+		exports$1.CP932_JAPANESE_CI = 95;
+		exports$1.CP932_BIN = 96;
+		exports$1.EUCJPMS_JAPANESE_CI = 97;
+		exports$1.EUCJPMS_BIN = 98;
+		exports$1.CP1250_POLISH_CI = 99;
+		exports$1.UTF16_UNICODE_CI = 101;
+		exports$1.UTF16_ICELANDIC_CI = 102;
+		exports$1.UTF16_LATVIAN_CI = 103;
+		exports$1.UTF16_ROMANIAN_CI = 104;
+		exports$1.UTF16_SLOVENIAN_CI = 105;
+		exports$1.UTF16_POLISH_CI = 106;
+		exports$1.UTF16_ESTONIAN_CI = 107;
+		exports$1.UTF16_SPANISH_CI = 108;
+		exports$1.UTF16_SWEDISH_CI = 109;
+		exports$1.UTF16_TURKISH_CI = 110;
+		exports$1.UTF16_CZECH_CI = 111;
+		exports$1.UTF16_DANISH_CI = 112;
+		exports$1.UTF16_LITHUANIAN_CI = 113;
+		exports$1.UTF16_SLOVAK_CI = 114;
+		exports$1.UTF16_SPANISH2_CI = 115;
+		exports$1.UTF16_ROMAN_CI = 116;
+		exports$1.UTF16_PERSIAN_CI = 117;
+		exports$1.UTF16_ESPERANTO_CI = 118;
+		exports$1.UTF16_HUNGARIAN_CI = 119;
+		exports$1.UTF16_SINHALA_CI = 120;
+		exports$1.UTF16_GERMAN2_CI = 121;
+		exports$1.UTF16_CROATIAN_CI = 122;
+		exports$1.UTF16_UNICODE_520_CI = 123;
+		exports$1.UTF16_VIETNAMESE_CI = 124;
+		exports$1.UCS2_UNICODE_CI = 128;
+		exports$1.UCS2_ICELANDIC_CI = 129;
+		exports$1.UCS2_LATVIAN_CI = 130;
+		exports$1.UCS2_ROMANIAN_CI = 131;
+		exports$1.UCS2_SLOVENIAN_CI = 132;
+		exports$1.UCS2_POLISH_CI = 133;
+		exports$1.UCS2_ESTONIAN_CI = 134;
+		exports$1.UCS2_SPANISH_CI = 135;
+		exports$1.UCS2_SWEDISH_CI = 136;
+		exports$1.UCS2_TURKISH_CI = 137;
+		exports$1.UCS2_CZECH_CI = 138;
+		exports$1.UCS2_DANISH_CI = 139;
+		exports$1.UCS2_LITHUANIAN_CI = 140;
+		exports$1.UCS2_SLOVAK_CI = 141;
+		exports$1.UCS2_SPANISH2_CI = 142;
+		exports$1.UCS2_ROMAN_CI = 143;
+		exports$1.UCS2_PERSIAN_CI = 144;
+		exports$1.UCS2_ESPERANTO_CI = 145;
+		exports$1.UCS2_HUNGARIAN_CI = 146;
+		exports$1.UCS2_SINHALA_CI = 147;
+		exports$1.UCS2_GERMAN2_CI = 148;
+		exports$1.UCS2_CROATIAN_CI = 149;
+		exports$1.UCS2_UNICODE_520_CI = 150;
+		exports$1.UCS2_VIETNAMESE_CI = 151;
+		exports$1.UCS2_GENERAL_MYSQL500_CI = 159;
+		exports$1.UTF32_UNICODE_CI = 160;
+		exports$1.UTF32_ICELANDIC_CI = 161;
+		exports$1.UTF32_LATVIAN_CI = 162;
+		exports$1.UTF32_ROMANIAN_CI = 163;
+		exports$1.UTF32_SLOVENIAN_CI = 164;
+		exports$1.UTF32_POLISH_CI = 165;
+		exports$1.UTF32_ESTONIAN_CI = 166;
+		exports$1.UTF32_SPANISH_CI = 167;
+		exports$1.UTF32_SWEDISH_CI = 168;
+		exports$1.UTF32_TURKISH_CI = 169;
+		exports$1.UTF32_CZECH_CI = 170;
+		exports$1.UTF32_DANISH_CI = 171;
+		exports$1.UTF32_LITHUANIAN_CI = 172;
+		exports$1.UTF32_SLOVAK_CI = 173;
+		exports$1.UTF32_SPANISH2_CI = 174;
+		exports$1.UTF32_ROMAN_CI = 175;
+		exports$1.UTF32_PERSIAN_CI = 176;
+		exports$1.UTF32_ESPERANTO_CI = 177;
+		exports$1.UTF32_HUNGARIAN_CI = 178;
+		exports$1.UTF32_SINHALA_CI = 179;
+		exports$1.UTF32_GERMAN2_CI = 180;
+		exports$1.UTF32_CROATIAN_CI = 181;
+		exports$1.UTF32_UNICODE_520_CI = 182;
+		exports$1.UTF32_VIETNAMESE_CI = 183;
+		exports$1.UTF8_UNICODE_CI = 192;
+		exports$1.UTF8_ICELANDIC_CI = 193;
+		exports$1.UTF8_LATVIAN_CI = 194;
+		exports$1.UTF8_ROMANIAN_CI = 195;
+		exports$1.UTF8_SLOVENIAN_CI = 196;
+		exports$1.UTF8_POLISH_CI = 197;
+		exports$1.UTF8_ESTONIAN_CI = 198;
+		exports$1.UTF8_SPANISH_CI = 199;
+		exports$1.UTF8_SWEDISH_CI = 200;
+		exports$1.UTF8_TURKISH_CI = 201;
+		exports$1.UTF8_CZECH_CI = 202;
+		exports$1.UTF8_DANISH_CI = 203;
+		exports$1.UTF8_LITHUANIAN_CI = 204;
+		exports$1.UTF8_SLOVAK_CI = 205;
+		exports$1.UTF8_SPANISH2_CI = 206;
+		exports$1.UTF8_ROMAN_CI = 207;
+		exports$1.UTF8_PERSIAN_CI = 208;
+		exports$1.UTF8_ESPERANTO_CI = 209;
+		exports$1.UTF8_HUNGARIAN_CI = 210;
+		exports$1.UTF8_SINHALA_CI = 211;
+		exports$1.UTF8_GERMAN2_CI = 212;
+		exports$1.UTF8_CROATIAN_CI = 213;
+		exports$1.UTF8_UNICODE_520_CI = 214;
+		exports$1.UTF8_VIETNAMESE_CI = 215;
+		exports$1.UTF8_GENERAL_MYSQL500_CI = 223;
+		exports$1.UTF8MB4_UNICODE_CI = 224;
+		exports$1.UTF8MB4_ICELANDIC_CI = 225;
+		exports$1.UTF8MB4_LATVIAN_CI = 226;
+		exports$1.UTF8MB4_ROMANIAN_CI = 227;
+		exports$1.UTF8MB4_SLOVENIAN_CI = 228;
+		exports$1.UTF8MB4_POLISH_CI = 229;
+		exports$1.UTF8MB4_ESTONIAN_CI = 230;
+		exports$1.UTF8MB4_SPANISH_CI = 231;
+		exports$1.UTF8MB4_SWEDISH_CI = 232;
+		exports$1.UTF8MB4_TURKISH_CI = 233;
+		exports$1.UTF8MB4_CZECH_CI = 234;
+		exports$1.UTF8MB4_DANISH_CI = 235;
+		exports$1.UTF8MB4_LITHUANIAN_CI = 236;
+		exports$1.UTF8MB4_SLOVAK_CI = 237;
+		exports$1.UTF8MB4_SPANISH2_CI = 238;
+		exports$1.UTF8MB4_ROMAN_CI = 239;
+		exports$1.UTF8MB4_PERSIAN_CI = 240;
+		exports$1.UTF8MB4_ESPERANTO_CI = 241;
+		exports$1.UTF8MB4_HUNGARIAN_CI = 242;
+		exports$1.UTF8MB4_SINHALA_CI = 243;
+		exports$1.UTF8MB4_GERMAN2_CI = 244;
+		exports$1.UTF8MB4_CROATIAN_CI = 245;
+		exports$1.UTF8MB4_UNICODE_520_CI = 246;
+		exports$1.UTF8MB4_VIETNAMESE_CI = 247;
+		exports$1.GB18030_CHINESE_CI = 248;
+		exports$1.GB18030_BIN = 249;
+		exports$1.GB18030_UNICODE_520_CI = 250;
+		exports$1.UTF8_GENERAL50_CI = 253; // deprecated
+		exports$1.UTF8MB4_0900_AI_CI = 255;
+		exports$1.UTF8MB4_DE_PB_0900_AI_CI = 256;
+		exports$1.UTF8MB4_IS_0900_AI_CI = 257;
+		exports$1.UTF8MB4_LV_0900_AI_CI = 258;
+		exports$1.UTF8MB4_RO_0900_AI_CI = 259;
+		exports$1.UTF8MB4_SL_0900_AI_CI = 260;
+		exports$1.UTF8MB4_PL_0900_AI_CI = 261;
+		exports$1.UTF8MB4_ET_0900_AI_CI = 262;
+		exports$1.UTF8MB4_ES_0900_AI_CI = 263;
+		exports$1.UTF8MB4_SV_0900_AI_CI = 264;
+		exports$1.UTF8MB4_TR_0900_AI_CI = 265;
+		exports$1.UTF8MB4_CS_0900_AI_CI = 266;
+		exports$1.UTF8MB4_DA_0900_AI_CI = 267;
+		exports$1.UTF8MB4_LT_0900_AI_CI = 268;
+		exports$1.UTF8MB4_SK_0900_AI_CI = 269;
+		exports$1.UTF8MB4_ES_TRAD_0900_AI_CI = 270;
+		exports$1.UTF8MB4_LA_0900_AI_CI = 271;
+		exports$1.UTF8MB4_EO_0900_AI_CI = 273;
+		exports$1.UTF8MB4_HU_0900_AI_CI = 274;
+		exports$1.UTF8MB4_HR_0900_AI_CI = 275;
+		exports$1.UTF8MB4_VI_0900_AI_CI = 277;
+		exports$1.UTF8MB4_0900_AS_CS = 278;
+		exports$1.UTF8MB4_DE_PB_0900_AS_CS = 279;
+		exports$1.UTF8MB4_IS_0900_AS_CS = 280;
+		exports$1.UTF8MB4_LV_0900_AS_CS = 281;
+		exports$1.UTF8MB4_RO_0900_AS_CS = 282;
+		exports$1.UTF8MB4_SL_0900_AS_CS = 283;
+		exports$1.UTF8MB4_PL_0900_AS_CS = 284;
+		exports$1.UTF8MB4_ET_0900_AS_CS = 285;
+		exports$1.UTF8MB4_ES_0900_AS_CS = 286;
+		exports$1.UTF8MB4_SV_0900_AS_CS = 287;
+		exports$1.UTF8MB4_TR_0900_AS_CS = 288;
+		exports$1.UTF8MB4_CS_0900_AS_CS = 289;
+		exports$1.UTF8MB4_DA_0900_AS_CS = 290;
+		exports$1.UTF8MB4_LT_0900_AS_CS = 291;
+		exports$1.UTF8MB4_SK_0900_AS_CS = 292;
+		exports$1.UTF8MB4_ES_TRAD_0900_AS_CS = 293;
+		exports$1.UTF8MB4_LA_0900_AS_CS = 294;
+		exports$1.UTF8MB4_EO_0900_AS_CS = 296;
+		exports$1.UTF8MB4_HU_0900_AS_CS = 297;
+		exports$1.UTF8MB4_HR_0900_AS_CS = 298;
+		exports$1.UTF8MB4_VI_0900_AS_CS = 300;
+		exports$1.UTF8MB4_JA_0900_AS_CS = 303;
+		exports$1.UTF8MB4_JA_0900_AS_CS_KS = 304;
+		exports$1.UTF8MB4_0900_AS_CI = 305;
+		exports$1.UTF8MB4_RU_0900_AI_CI = 306;
+		exports$1.UTF8MB4_RU_0900_AS_CS = 307;
+		exports$1.UTF8MB4_ZH_0900_AS_CS = 308;
+		exports$1.UTF8MB4_0900_BIN = 309;
 
 		// short aliases
-		exports.BIG5 = exports.BIG5_CHINESE_CI;
-		exports.DEC8 = exports.DEC8_SWEDISH_CI;
-		exports.CP850 = exports.CP850_GENERAL_CI;
-		exports.HP8 = exports.HP8_ENGLISH_CI;
-		exports.KOI8R = exports.KOI8R_GENERAL_CI;
-		exports.LATIN1 = exports.LATIN1_SWEDISH_CI;
-		exports.LATIN2 = exports.LATIN2_GENERAL_CI;
-		exports.SWE7 = exports.SWE7_SWEDISH_CI;
-		exports.ASCII = exports.ASCII_GENERAL_CI;
-		exports.UJIS = exports.UJIS_JAPANESE_CI;
-		exports.SJIS = exports.SJIS_JAPANESE_CI;
-		exports.HEBREW = exports.HEBREW_GENERAL_CI;
-		exports.TIS620 = exports.TIS620_THAI_CI;
-		exports.EUCKR = exports.EUCKR_KOREAN_CI;
-		exports.KOI8U = exports.KOI8U_GENERAL_CI;
-		exports.GB2312 = exports.GB2312_CHINESE_CI;
-		exports.GREEK = exports.GREEK_GENERAL_CI;
-		exports.CP1250 = exports.CP1250_GENERAL_CI;
-		exports.GBK = exports.GBK_CHINESE_CI;
-		exports.LATIN5 = exports.LATIN5_TURKISH_CI;
-		exports.ARMSCII8 = exports.ARMSCII8_GENERAL_CI;
-		exports.UTF8 = exports.UTF8_GENERAL_CI;
-		exports.UCS2 = exports.UCS2_GENERAL_CI;
-		exports.CP866 = exports.CP866_GENERAL_CI;
-		exports.KEYBCS2 = exports.KEYBCS2_GENERAL_CI;
-		exports.MACCE = exports.MACCE_GENERAL_CI;
-		exports.MACROMAN = exports.MACROMAN_GENERAL_CI;
-		exports.CP852 = exports.CP852_GENERAL_CI;
-		exports.LATIN7 = exports.LATIN7_GENERAL_CI;
-		exports.UTF8MB4 = exports.UTF8MB4_GENERAL_CI;
-		exports.CP1251 = exports.CP1251_GENERAL_CI;
-		exports.UTF16 = exports.UTF16_GENERAL_CI;
-		exports.UTF16LE = exports.UTF16LE_GENERAL_CI;
-		exports.CP1256 = exports.CP1256_GENERAL_CI;
-		exports.CP1257 = exports.CP1257_GENERAL_CI;
-		exports.UTF32 = exports.UTF32_GENERAL_CI;
-		exports.CP932 = exports.CP932_JAPANESE_CI;
-		exports.EUCJPMS = exports.EUCJPMS_JAPANESE_CI;
-		exports.GB18030 = exports.GB18030_CHINESE_CI;
-		exports.GEOSTD8 = exports.GEOSTD8_GENERAL_CI; 
+		exports$1.BIG5 = exports$1.BIG5_CHINESE_CI;
+		exports$1.DEC8 = exports$1.DEC8_SWEDISH_CI;
+		exports$1.CP850 = exports$1.CP850_GENERAL_CI;
+		exports$1.HP8 = exports$1.HP8_ENGLISH_CI;
+		exports$1.KOI8R = exports$1.KOI8R_GENERAL_CI;
+		exports$1.LATIN1 = exports$1.LATIN1_SWEDISH_CI;
+		exports$1.LATIN2 = exports$1.LATIN2_GENERAL_CI;
+		exports$1.SWE7 = exports$1.SWE7_SWEDISH_CI;
+		exports$1.ASCII = exports$1.ASCII_GENERAL_CI;
+		exports$1.UJIS = exports$1.UJIS_JAPANESE_CI;
+		exports$1.SJIS = exports$1.SJIS_JAPANESE_CI;
+		exports$1.HEBREW = exports$1.HEBREW_GENERAL_CI;
+		exports$1.TIS620 = exports$1.TIS620_THAI_CI;
+		exports$1.EUCKR = exports$1.EUCKR_KOREAN_CI;
+		exports$1.KOI8U = exports$1.KOI8U_GENERAL_CI;
+		exports$1.GB2312 = exports$1.GB2312_CHINESE_CI;
+		exports$1.GREEK = exports$1.GREEK_GENERAL_CI;
+		exports$1.CP1250 = exports$1.CP1250_GENERAL_CI;
+		exports$1.GBK = exports$1.GBK_CHINESE_CI;
+		exports$1.LATIN5 = exports$1.LATIN5_TURKISH_CI;
+		exports$1.ARMSCII8 = exports$1.ARMSCII8_GENERAL_CI;
+		exports$1.UTF8 = exports$1.UTF8_GENERAL_CI;
+		exports$1.UCS2 = exports$1.UCS2_GENERAL_CI;
+		exports$1.CP866 = exports$1.CP866_GENERAL_CI;
+		exports$1.KEYBCS2 = exports$1.KEYBCS2_GENERAL_CI;
+		exports$1.MACCE = exports$1.MACCE_GENERAL_CI;
+		exports$1.MACROMAN = exports$1.MACROMAN_GENERAL_CI;
+		exports$1.CP852 = exports$1.CP852_GENERAL_CI;
+		exports$1.LATIN7 = exports$1.LATIN7_GENERAL_CI;
+		exports$1.UTF8MB4 = exports$1.UTF8MB4_GENERAL_CI;
+		exports$1.CP1251 = exports$1.CP1251_GENERAL_CI;
+		exports$1.UTF16 = exports$1.UTF16_GENERAL_CI;
+		exports$1.UTF16LE = exports$1.UTF16LE_GENERAL_CI;
+		exports$1.CP1256 = exports$1.CP1256_GENERAL_CI;
+		exports$1.CP1257 = exports$1.CP1257_GENERAL_CI;
+		exports$1.UTF32 = exports$1.UTF32_GENERAL_CI;
+		exports$1.CP932 = exports$1.CP932_JAPANESE_CI;
+		exports$1.EUCJPMS = exports$1.EUCJPMS_JAPANESE_CI;
+		exports$1.GB18030 = exports$1.GB18030_CHINESE_CI;
+		exports$1.GEOSTD8 = exports$1.GEOSTD8_GENERAL_CI; 
 	} (charsets));
 	return charsets;
 }
 
-var version$1 = "3.14.2";
+var version$1 = "3.15.3";
 var require$$3$1 = {
 	version: version$1};
 
@@ -7578,7 +7569,7 @@ var hasRequiredSsl_profiles;
 function requireSsl_profiles () {
 	if (hasRequiredSsl_profiles) return ssl_profiles;
 	hasRequiredSsl_profiles = 1;
-	(function (exports) {
+	(function (exports$1) {
 
 		const awsCaBundle = requireLib$2();
 
@@ -7586,7 +7577,7 @@ function requireSsl_profiles () {
 		 * @deprecated
 		 * Please, use [**aws-ssl-profiles**](https://github.com/mysqljs/aws-ssl-profiles).
 		 */
-		exports['Amazon RDS'] = {
+		exports$1['Amazon RDS'] = {
 		  ca: awsCaBundle.ca,
 		}; 
 	} (ssl_profiles));
@@ -7661,6 +7652,7 @@ function requireConnection_config () {
 	  queueLimit: 1,
 	  waitForConnections: 1,
 	  jsonStrings: 1,
+	  gracefulEnd: 1,
 	};
 
 	class ConnectionConfig {
@@ -7783,6 +7775,7 @@ function requireConnection_config () {
 	    };
 	    this.maxPreparedStatements = options.maxPreparedStatements || 16000;
 	    this.jsonStrings = options.jsonStrings || false;
+	    this.gracefulEnd = options.gracefulEnd || false;
 	  }
 
 	  static mergeFlags(default_flags, user_flags) {
@@ -7896,13 +7889,14 @@ function requireLib$1 () {
 	Object.defineProperty(lib$1, "__esModule", { value: true });
 	lib$1.createLRU = void 0;
 	const createLRU = (options) => {
-	    let { max, onEviction } = options;
+	    let { max } = options;
 	    if (!(Number.isInteger(max) && max > 0))
 	        throw new TypeError('`max` must be a positive integer');
 	    let size = 0;
 	    let head = 0;
 	    let tail = 0;
 	    let free = [];
+	    const { onEviction } = options;
 	    const keyMap = new Map();
 	    const keyList = new Array(max).fill(undefined);
 	    const valList = new Array(max).fill(undefined);
@@ -8144,7 +8138,9 @@ function requireParser_cache () {
 	    Boolean(options.rowsAsArray),
 	    Boolean(options.supportBigNumbers || config.supportBigNumbers),
 	    Boolean(options.bigNumberStrings || config.bigNumberStrings),
-	    typeof options.typeCast,
+	    typeof options.typeCast === 'boolean'
+	      ? options.typeCast
+	      : typeof options.typeCast,
 	    options.timezone || config.timezone,
 	    Boolean(options.decimalNumbers),
 	    options.dateStrings,
@@ -8693,7 +8689,7 @@ var hasRequiredErrors;
 function requireErrors () {
 	if (hasRequiredErrors) return errors;
 	hasRequiredErrors = 1;
-	(function (exports) {
+	(function (exports$1) {
 
 		// originally copied from https://raw.githubusercontent.com/mysqljs/mysql/7770ee5bb13260c56a160b91fe480d9165dbeeba/lib/protocol/constants/errors.js
 		// (c) node-mysql authors
@@ -8709,5402 +8705,5583 @@ function requireErrors () {
 		 * !! Generated by generate-error-constants.js, do not modify by hand !!
 		 */
 
-		exports.EE_CANTCREATEFILE = 1;
-		exports.EE_READ = 2;
-		exports.EE_WRITE = 3;
-		exports.EE_BADCLOSE = 4;
-		exports.EE_OUTOFMEMORY = 5;
-		exports.EE_DELETE = 6;
-		exports.EE_LINK = 7;
-		exports.EE_EOFERR = 9;
-		exports.EE_CANTLOCK = 10;
-		exports.EE_CANTUNLOCK = 11;
-		exports.EE_DIR = 12;
-		exports.EE_STAT = 13;
-		exports.EE_CANT_CHSIZE = 14;
-		exports.EE_CANT_OPEN_STREAM = 15;
-		exports.EE_GETWD = 16;
-		exports.EE_SETWD = 17;
-		exports.EE_LINK_WARNING = 18;
-		exports.EE_OPEN_WARNING = 19;
-		exports.EE_DISK_FULL = 20;
-		exports.EE_CANT_MKDIR = 21;
-		exports.EE_UNKNOWN_CHARSET = 22;
-		exports.EE_OUT_OF_FILERESOURCES = 23;
-		exports.EE_CANT_READLINK = 24;
-		exports.EE_CANT_SYMLINK = 25;
-		exports.EE_REALPATH = 26;
-		exports.EE_SYNC = 27;
-		exports.EE_UNKNOWN_COLLATION = 28;
-		exports.EE_FILENOTFOUND = 29;
-		exports.EE_FILE_NOT_CLOSED = 30;
-		exports.EE_CHANGE_OWNERSHIP = 31;
-		exports.EE_CHANGE_PERMISSIONS = 32;
-		exports.EE_CANT_SEEK = 33;
-		exports.EE_CAPACITY_EXCEEDED = 34;
-		exports.EE_DISK_FULL_WITH_RETRY_MSG = 35;
-		exports.EE_FAILED_TO_CREATE_TIMER = 36;
-		exports.EE_FAILED_TO_DELETE_TIMER = 37;
-		exports.EE_FAILED_TO_CREATE_TIMER_QUEUE = 38;
-		exports.EE_FAILED_TO_START_TIMER_NOTIFY_THREAD = 39;
-		exports.EE_FAILED_TO_CREATE_TIMER_NOTIFY_THREAD_INTERRUPT_EVENT = 40;
-		exports.EE_EXITING_TIMER_NOTIFY_THREAD = 41;
-		exports.EE_WIN_LIBRARY_LOAD_FAILED = 42;
-		exports.EE_WIN_RUN_TIME_ERROR_CHECK = 43;
-		exports.EE_FAILED_TO_DETERMINE_LARGE_PAGE_SIZE = 44;
-		exports.EE_FAILED_TO_KILL_ALL_THREADS = 45;
-		exports.EE_FAILED_TO_CREATE_IO_COMPLETION_PORT = 46;
-		exports.EE_FAILED_TO_OPEN_DEFAULTS_FILE = 47;
-		exports.EE_FAILED_TO_HANDLE_DEFAULTS_FILE = 48;
-		exports.EE_WRONG_DIRECTIVE_IN_CONFIG_FILE = 49;
-		exports.EE_SKIPPING_DIRECTIVE_DUE_TO_MAX_INCLUDE_RECURSION = 50;
-		exports.EE_INCORRECT_GRP_DEFINITION_IN_CONFIG_FILE = 51;
-		exports.EE_OPTION_WITHOUT_GRP_IN_CONFIG_FILE = 52;
-		exports.EE_CONFIG_FILE_PERMISSION_ERROR = 53;
-		exports.EE_IGNORE_WORLD_WRITABLE_CONFIG_FILE = 54;
-		exports.EE_USING_DISABLED_OPTION = 55;
-		exports.EE_USING_DISABLED_SHORT_OPTION = 56;
-		exports.EE_USING_PASSWORD_ON_CLI_IS_INSECURE = 57;
-		exports.EE_UNKNOWN_SUFFIX_FOR_VARIABLE = 58;
-		exports.EE_SSL_ERROR_FROM_FILE = 59;
-		exports.EE_SSL_ERROR = 60;
-		exports.EE_NET_SEND_ERROR_IN_BOOTSTRAP = 61;
-		exports.EE_PACKETS_OUT_OF_ORDER = 62;
-		exports.EE_UNKNOWN_PROTOCOL_OPTION = 63;
-		exports.EE_FAILED_TO_LOCATE_SERVER_PUBLIC_KEY = 64;
-		exports.EE_PUBLIC_KEY_NOT_IN_PEM_FORMAT = 65;
-		exports.EE_DEBUG_INFO = 66;
-		exports.EE_UNKNOWN_VARIABLE = 67;
-		exports.EE_UNKNOWN_OPTION = 68;
-		exports.EE_UNKNOWN_SHORT_OPTION = 69;
-		exports.EE_OPTION_WITHOUT_ARGUMENT = 70;
-		exports.EE_OPTION_REQUIRES_ARGUMENT = 71;
-		exports.EE_SHORT_OPTION_REQUIRES_ARGUMENT = 72;
-		exports.EE_OPTION_IGNORED_DUE_TO_INVALID_VALUE = 73;
-		exports.EE_OPTION_WITH_EMPTY_VALUE = 74;
-		exports.EE_FAILED_TO_ASSIGN_MAX_VALUE_TO_OPTION = 75;
-		exports.EE_INCORRECT_BOOLEAN_VALUE_FOR_OPTION = 76;
-		exports.EE_FAILED_TO_SET_OPTION_VALUE = 77;
-		exports.EE_INCORRECT_INT_VALUE_FOR_OPTION = 78;
-		exports.EE_INCORRECT_UINT_VALUE_FOR_OPTION = 79;
-		exports.EE_ADJUSTED_SIGNED_VALUE_FOR_OPTION = 80;
-		exports.EE_ADJUSTED_UNSIGNED_VALUE_FOR_OPTION = 81;
-		exports.EE_ADJUSTED_ULONGLONG_VALUE_FOR_OPTION = 82;
-		exports.EE_ADJUSTED_DOUBLE_VALUE_FOR_OPTION = 83;
-		exports.EE_INVALID_DECIMAL_VALUE_FOR_OPTION = 84;
-		exports.EE_COLLATION_PARSER_ERROR = 85;
-		exports.EE_FAILED_TO_RESET_BEFORE_PRIMARY_IGNORABLE_CHAR = 86;
-		exports.EE_FAILED_TO_RESET_BEFORE_TERTIARY_IGNORABLE_CHAR = 87;
-		exports.EE_SHIFT_CHAR_OUT_OF_RANGE = 88;
-		exports.EE_RESET_CHAR_OUT_OF_RANGE = 89;
-		exports.EE_UNKNOWN_LDML_TAG = 90;
-		exports.EE_FAILED_TO_RESET_BEFORE_SECONDARY_IGNORABLE_CHAR = 91;
-		exports.EE_FAILED_PROCESSING_DIRECTIVE = 92;
-		exports.EE_PTHREAD_KILL_FAILED = 93;
-		exports.HA_ERR_KEY_NOT_FOUND = 120;
-		exports.HA_ERR_FOUND_DUPP_KEY = 121;
-		exports.HA_ERR_INTERNAL_ERROR = 122;
-		exports.HA_ERR_RECORD_CHANGED = 123;
-		exports.HA_ERR_WRONG_INDEX = 124;
-		exports.HA_ERR_ROLLED_BACK = 125;
-		exports.HA_ERR_CRASHED = 126;
-		exports.HA_ERR_WRONG_IN_RECORD = 127;
-		exports.HA_ERR_OUT_OF_MEM = 128;
-		exports.HA_ERR_NOT_A_TABLE = 130;
-		exports.HA_ERR_WRONG_COMMAND = 131;
-		exports.HA_ERR_OLD_FILE = 132;
-		exports.HA_ERR_NO_ACTIVE_RECORD = 133;
-		exports.HA_ERR_RECORD_DELETED = 134;
-		exports.HA_ERR_RECORD_FILE_FULL = 135;
-		exports.HA_ERR_INDEX_FILE_FULL = 136;
-		exports.HA_ERR_END_OF_FILE = 137;
-		exports.HA_ERR_UNSUPPORTED = 138;
-		exports.HA_ERR_TOO_BIG_ROW = 139;
-		exports.HA_WRONG_CREATE_OPTION = 140;
-		exports.HA_ERR_FOUND_DUPP_UNIQUE = 141;
-		exports.HA_ERR_UNKNOWN_CHARSET = 142;
-		exports.HA_ERR_WRONG_MRG_TABLE_DEF = 143;
-		exports.HA_ERR_CRASHED_ON_REPAIR = 144;
-		exports.HA_ERR_CRASHED_ON_USAGE = 145;
-		exports.HA_ERR_LOCK_WAIT_TIMEOUT = 146;
-		exports.HA_ERR_LOCK_TABLE_FULL = 147;
-		exports.HA_ERR_READ_ONLY_TRANSACTION = 148;
-		exports.HA_ERR_LOCK_DEADLOCK = 149;
-		exports.HA_ERR_CANNOT_ADD_FOREIGN = 150;
-		exports.HA_ERR_NO_REFERENCED_ROW = 151;
-		exports.HA_ERR_ROW_IS_REFERENCED = 152;
-		exports.HA_ERR_NO_SAVEPOINT = 153;
-		exports.HA_ERR_NON_UNIQUE_BLOCK_SIZE = 154;
-		exports.HA_ERR_NO_SUCH_TABLE = 155;
-		exports.HA_ERR_TABLE_EXIST = 156;
-		exports.HA_ERR_NO_CONNECTION = 157;
-		exports.HA_ERR_NULL_IN_SPATIAL = 158;
-		exports.HA_ERR_TABLE_DEF_CHANGED = 159;
-		exports.HA_ERR_NO_PARTITION_FOUND = 160;
-		exports.HA_ERR_RBR_LOGGING_FAILED = 161;
-		exports.HA_ERR_DROP_INDEX_FK = 162;
-		exports.HA_ERR_FOREIGN_DUPLICATE_KEY = 163;
-		exports.HA_ERR_TABLE_NEEDS_UPGRADE = 164;
-		exports.HA_ERR_TABLE_READONLY = 165;
-		exports.HA_ERR_AUTOINC_READ_FAILED = 166;
-		exports.HA_ERR_AUTOINC_ERANGE = 167;
-		exports.HA_ERR_GENERIC = 168;
-		exports.HA_ERR_RECORD_IS_THE_SAME = 169;
-		exports.HA_ERR_LOGGING_IMPOSSIBLE = 170;
-		exports.HA_ERR_CORRUPT_EVENT = 171;
-		exports.HA_ERR_NEW_FILE = 172;
-		exports.HA_ERR_ROWS_EVENT_APPLY = 173;
-		exports.HA_ERR_INITIALIZATION = 174;
-		exports.HA_ERR_FILE_TOO_SHORT = 175;
-		exports.HA_ERR_WRONG_CRC = 176;
-		exports.HA_ERR_TOO_MANY_CONCURRENT_TRXS = 177;
-		exports.HA_ERR_NOT_IN_LOCK_PARTITIONS = 178;
-		exports.HA_ERR_INDEX_COL_TOO_LONG = 179;
-		exports.HA_ERR_INDEX_CORRUPT = 180;
-		exports.HA_ERR_UNDO_REC_TOO_BIG = 181;
-		exports.HA_FTS_INVALID_DOCID = 182;
-		exports.HA_ERR_TABLE_IN_FK_CHECK = 183;
-		exports.HA_ERR_TABLESPACE_EXISTS = 184;
-		exports.HA_ERR_TOO_MANY_FIELDS = 185;
-		exports.HA_ERR_ROW_IN_WRONG_PARTITION = 186;
-		exports.HA_ERR_INNODB_READ_ONLY = 187;
-		exports.HA_ERR_FTS_EXCEED_RESULT_CACHE_LIMIT = 188;
-		exports.HA_ERR_TEMP_FILE_WRITE_FAILURE = 189;
-		exports.HA_ERR_INNODB_FORCED_RECOVERY = 190;
-		exports.HA_ERR_FTS_TOO_MANY_WORDS_IN_PHRASE = 191;
-		exports.HA_ERR_FK_DEPTH_EXCEEDED = 192;
-		exports.HA_MISSING_CREATE_OPTION = 193;
-		exports.HA_ERR_SE_OUT_OF_MEMORY = 194;
-		exports.HA_ERR_TABLE_CORRUPT = 195;
-		exports.HA_ERR_QUERY_INTERRUPTED = 196;
-		exports.HA_ERR_TABLESPACE_MISSING = 197;
-		exports.HA_ERR_TABLESPACE_IS_NOT_EMPTY = 198;
-		exports.HA_ERR_WRONG_FILE_NAME = 199;
-		exports.HA_ERR_NOT_ALLOWED_COMMAND = 200;
-		exports.HA_ERR_COMPUTE_FAILED = 201;
-		exports.HA_ERR_ROW_FORMAT_CHANGED = 202;
-		exports.HA_ERR_NO_WAIT_LOCK = 203;
-		exports.HA_ERR_DISK_FULL_NOWAIT = 204;
-		exports.HA_ERR_NO_SESSION_TEMP = 205;
-		exports.HA_ERR_WRONG_TABLE_NAME = 206;
-		exports.HA_ERR_TOO_LONG_PATH = 207;
-		exports.HA_ERR_SAMPLING_INIT_FAILED = 208;
-		exports.HA_ERR_FTS_TOO_MANY_NESTED_EXP = 209;
-		exports.ER_HASHCHK = 1000;
-		exports.ER_NISAMCHK = 1001;
-		exports.ER_NO = 1002;
-		exports.ER_YES = 1003;
-		exports.ER_CANT_CREATE_FILE = 1004;
-		exports.ER_CANT_CREATE_TABLE = 1005;
-		exports.ER_CANT_CREATE_DB = 1006;
-		exports.ER_DB_CREATE_EXISTS = 1007;
-		exports.ER_DB_DROP_EXISTS = 1008;
-		exports.ER_DB_DROP_DELETE = 1009;
-		exports.ER_DB_DROP_RMDIR = 1010;
-		exports.ER_CANT_DELETE_FILE = 1011;
-		exports.ER_CANT_FIND_SYSTEM_REC = 1012;
-		exports.ER_CANT_GET_STAT = 1013;
-		exports.ER_CANT_GET_WD = 1014;
-		exports.ER_CANT_LOCK = 1015;
-		exports.ER_CANT_OPEN_FILE = 1016;
-		exports.ER_FILE_NOT_FOUND = 1017;
-		exports.ER_CANT_READ_DIR = 1018;
-		exports.ER_CANT_SET_WD = 1019;
-		exports.ER_CHECKREAD = 1020;
-		exports.ER_DISK_FULL = 1021;
-		exports.ER_DUP_KEY = 1022;
-		exports.ER_ERROR_ON_CLOSE = 1023;
-		exports.ER_ERROR_ON_READ = 1024;
-		exports.ER_ERROR_ON_RENAME = 1025;
-		exports.ER_ERROR_ON_WRITE = 1026;
-		exports.ER_FILE_USED = 1027;
-		exports.ER_FILSORT_ABORT = 1028;
-		exports.ER_FORM_NOT_FOUND = 1029;
-		exports.ER_GET_ERRNO = 1030;
-		exports.ER_ILLEGAL_HA = 1031;
-		exports.ER_KEY_NOT_FOUND = 1032;
-		exports.ER_NOT_FORM_FILE = 1033;
-		exports.ER_NOT_KEYFILE = 1034;
-		exports.ER_OLD_KEYFILE = 1035;
-		exports.ER_OPEN_AS_READONLY = 1036;
-		exports.ER_OUTOFMEMORY = 1037;
-		exports.ER_OUT_OF_SORTMEMORY = 1038;
-		exports.ER_UNEXPECTED_EOF = 1039;
-		exports.ER_CON_COUNT_ERROR = 1040;
-		exports.ER_OUT_OF_RESOURCES = 1041;
-		exports.ER_BAD_HOST_ERROR = 1042;
-		exports.ER_HANDSHAKE_ERROR = 1043;
-		exports.ER_DBACCESS_DENIED_ERROR = 1044;
-		exports.ER_ACCESS_DENIED_ERROR = 1045;
-		exports.ER_NO_DB_ERROR = 1046;
-		exports.ER_UNKNOWN_COM_ERROR = 1047;
-		exports.ER_BAD_NULL_ERROR = 1048;
-		exports.ER_BAD_DB_ERROR = 1049;
-		exports.ER_TABLE_EXISTS_ERROR = 1050;
-		exports.ER_BAD_TABLE_ERROR = 1051;
-		exports.ER_NON_UNIQ_ERROR = 1052;
-		exports.ER_SERVER_SHUTDOWN = 1053;
-		exports.ER_BAD_FIELD_ERROR = 1054;
-		exports.ER_WRONG_FIELD_WITH_GROUP = 1055;
-		exports.ER_WRONG_GROUP_FIELD = 1056;
-		exports.ER_WRONG_SUM_SELECT = 1057;
-		exports.ER_WRONG_VALUE_COUNT = 1058;
-		exports.ER_TOO_LONG_IDENT = 1059;
-		exports.ER_DUP_FIELDNAME = 1060;
-		exports.ER_DUP_KEYNAME = 1061;
-		exports.ER_DUP_ENTRY = 1062;
-		exports.ER_WRONG_FIELD_SPEC = 1063;
-		exports.ER_PARSE_ERROR = 1064;
-		exports.ER_EMPTY_QUERY = 1065;
-		exports.ER_NONUNIQ_TABLE = 1066;
-		exports.ER_INVALID_DEFAULT = 1067;
-		exports.ER_MULTIPLE_PRI_KEY = 1068;
-		exports.ER_TOO_MANY_KEYS = 1069;
-		exports.ER_TOO_MANY_KEY_PARTS = 1070;
-		exports.ER_TOO_LONG_KEY = 1071;
-		exports.ER_KEY_COLUMN_DOES_NOT_EXITS = 1072;
-		exports.ER_BLOB_USED_AS_KEY = 1073;
-		exports.ER_TOO_BIG_FIELDLENGTH = 1074;
-		exports.ER_WRONG_AUTO_KEY = 1075;
-		exports.ER_READY = 1076;
-		exports.ER_NORMAL_SHUTDOWN = 1077;
-		exports.ER_GOT_SIGNAL = 1078;
-		exports.ER_SHUTDOWN_COMPLETE = 1079;
-		exports.ER_FORCING_CLOSE = 1080;
-		exports.ER_IPSOCK_ERROR = 1081;
-		exports.ER_NO_SUCH_INDEX = 1082;
-		exports.ER_WRONG_FIELD_TERMINATORS = 1083;
-		exports.ER_BLOBS_AND_NO_TERMINATED = 1084;
-		exports.ER_TEXTFILE_NOT_READABLE = 1085;
-		exports.ER_FILE_EXISTS_ERROR = 1086;
-		exports.ER_LOAD_INFO = 1087;
-		exports.ER_ALTER_INFO = 1088;
-		exports.ER_WRONG_SUB_KEY = 1089;
-		exports.ER_CANT_REMOVE_ALL_FIELDS = 1090;
-		exports.ER_CANT_DROP_FIELD_OR_KEY = 1091;
-		exports.ER_INSERT_INFO = 1092;
-		exports.ER_UPDATE_TABLE_USED = 1093;
-		exports.ER_NO_SUCH_THREAD = 1094;
-		exports.ER_KILL_DENIED_ERROR = 1095;
-		exports.ER_NO_TABLES_USED = 1096;
-		exports.ER_TOO_BIG_SET = 1097;
-		exports.ER_NO_UNIQUE_LOGFILE = 1098;
-		exports.ER_TABLE_NOT_LOCKED_FOR_WRITE = 1099;
-		exports.ER_TABLE_NOT_LOCKED = 1100;
-		exports.ER_BLOB_CANT_HAVE_DEFAULT = 1101;
-		exports.ER_WRONG_DB_NAME = 1102;
-		exports.ER_WRONG_TABLE_NAME = 1103;
-		exports.ER_TOO_BIG_SELECT = 1104;
-		exports.ER_UNKNOWN_ERROR = 1105;
-		exports.ER_UNKNOWN_PROCEDURE = 1106;
-		exports.ER_WRONG_PARAMCOUNT_TO_PROCEDURE = 1107;
-		exports.ER_WRONG_PARAMETERS_TO_PROCEDURE = 1108;
-		exports.ER_UNKNOWN_TABLE = 1109;
-		exports.ER_FIELD_SPECIFIED_TWICE = 1110;
-		exports.ER_INVALID_GROUP_FUNC_USE = 1111;
-		exports.ER_UNSUPPORTED_EXTENSION = 1112;
-		exports.ER_TABLE_MUST_HAVE_COLUMNS = 1113;
-		exports.ER_RECORD_FILE_FULL = 1114;
-		exports.ER_UNKNOWN_CHARACTER_SET = 1115;
-		exports.ER_TOO_MANY_TABLES = 1116;
-		exports.ER_TOO_MANY_FIELDS = 1117;
-		exports.ER_TOO_BIG_ROWSIZE = 1118;
-		exports.ER_STACK_OVERRUN = 1119;
-		exports.ER_WRONG_OUTER_JOIN = 1120;
-		exports.ER_NULL_COLUMN_IN_INDEX = 1121;
-		exports.ER_CANT_FIND_UDF = 1122;
-		exports.ER_CANT_INITIALIZE_UDF = 1123;
-		exports.ER_UDF_NO_PATHS = 1124;
-		exports.ER_UDF_EXISTS = 1125;
-		exports.ER_CANT_OPEN_LIBRARY = 1126;
-		exports.ER_CANT_FIND_DL_ENTRY = 1127;
-		exports.ER_FUNCTION_NOT_DEFINED = 1128;
-		exports.ER_HOST_IS_BLOCKED = 1129;
-		exports.ER_HOST_NOT_PRIVILEGED = 1130;
-		exports.ER_PASSWORD_ANONYMOUS_USER = 1131;
-		exports.ER_PASSWORD_NOT_ALLOWED = 1132;
-		exports.ER_PASSWORD_NO_MATCH = 1133;
-		exports.ER_UPDATE_INFO = 1134;
-		exports.ER_CANT_CREATE_THREAD = 1135;
-		exports.ER_WRONG_VALUE_COUNT_ON_ROW = 1136;
-		exports.ER_CANT_REOPEN_TABLE = 1137;
-		exports.ER_INVALID_USE_OF_NULL = 1138;
-		exports.ER_REGEXP_ERROR = 1139;
-		exports.ER_MIX_OF_GROUP_FUNC_AND_FIELDS = 1140;
-		exports.ER_NONEXISTING_GRANT = 1141;
-		exports.ER_TABLEACCESS_DENIED_ERROR = 1142;
-		exports.ER_COLUMNACCESS_DENIED_ERROR = 1143;
-		exports.ER_ILLEGAL_GRANT_FOR_TABLE = 1144;
-		exports.ER_GRANT_WRONG_HOST_OR_USER = 1145;
-		exports.ER_NO_SUCH_TABLE = 1146;
-		exports.ER_NONEXISTING_TABLE_GRANT = 1147;
-		exports.ER_NOT_ALLOWED_COMMAND = 1148;
-		exports.ER_SYNTAX_ERROR = 1149;
-		exports.ER_UNUSED1 = 1150;
-		exports.ER_UNUSED2 = 1151;
-		exports.ER_ABORTING_CONNECTION = 1152;
-		exports.ER_NET_PACKET_TOO_LARGE = 1153;
-		exports.ER_NET_READ_ERROR_FROM_PIPE = 1154;
-		exports.ER_NET_FCNTL_ERROR = 1155;
-		exports.ER_NET_PACKETS_OUT_OF_ORDER = 1156;
-		exports.ER_NET_UNCOMPRESS_ERROR = 1157;
-		exports.ER_NET_READ_ERROR = 1158;
-		exports.ER_NET_READ_INTERRUPTED = 1159;
-		exports.ER_NET_ERROR_ON_WRITE = 1160;
-		exports.ER_NET_WRITE_INTERRUPTED = 1161;
-		exports.ER_TOO_LONG_STRING = 1162;
-		exports.ER_TABLE_CANT_HANDLE_BLOB = 1163;
-		exports.ER_TABLE_CANT_HANDLE_AUTO_INCREMENT = 1164;
-		exports.ER_UNUSED3 = 1165;
-		exports.ER_WRONG_COLUMN_NAME = 1166;
-		exports.ER_WRONG_KEY_COLUMN = 1167;
-		exports.ER_WRONG_MRG_TABLE = 1168;
-		exports.ER_DUP_UNIQUE = 1169;
-		exports.ER_BLOB_KEY_WITHOUT_LENGTH = 1170;
-		exports.ER_PRIMARY_CANT_HAVE_NULL = 1171;
-		exports.ER_TOO_MANY_ROWS = 1172;
-		exports.ER_REQUIRES_PRIMARY_KEY = 1173;
-		exports.ER_NO_RAID_COMPILED = 1174;
-		exports.ER_UPDATE_WITHOUT_KEY_IN_SAFE_MODE = 1175;
-		exports.ER_KEY_DOES_NOT_EXITS = 1176;
-		exports.ER_CHECK_NO_SUCH_TABLE = 1177;
-		exports.ER_CHECK_NOT_IMPLEMENTED = 1178;
-		exports.ER_CANT_DO_THIS_DURING_AN_TRANSACTION = 1179;
-		exports.ER_ERROR_DURING_COMMIT = 1180;
-		exports.ER_ERROR_DURING_ROLLBACK = 1181;
-		exports.ER_ERROR_DURING_FLUSH_LOGS = 1182;
-		exports.ER_ERROR_DURING_CHECKPOINT = 1183;
-		exports.ER_NEW_ABORTING_CONNECTION = 1184;
-		exports.ER_DUMP_NOT_IMPLEMENTED = 1185;
-		exports.ER_FLUSH_MASTER_BINLOG_CLOSED = 1186;
-		exports.ER_INDEX_REBUILD = 1187;
-		exports.ER_SOURCE = 1188;
-		exports.ER_SOURCE_NET_READ = 1189;
-		exports.ER_SOURCE_NET_WRITE = 1190;
-		exports.ER_FT_MATCHING_KEY_NOT_FOUND = 1191;
-		exports.ER_LOCK_OR_ACTIVE_TRANSACTION = 1192;
-		exports.ER_UNKNOWN_SYSTEM_VARIABLE = 1193;
-		exports.ER_CRASHED_ON_USAGE = 1194;
-		exports.ER_CRASHED_ON_REPAIR = 1195;
-		exports.ER_WARNING_NOT_COMPLETE_ROLLBACK = 1196;
-		exports.ER_TRANS_CACHE_FULL = 1197;
-		exports.ER_SLAVE_MUST_STOP = 1198;
-		exports.ER_REPLICA_NOT_RUNNING = 1199;
-		exports.ER_BAD_REPLICA = 1200;
-		exports.ER_CONNECTION_METADATA = 1201;
-		exports.ER_REPLICA_THREAD = 1202;
-		exports.ER_TOO_MANY_USER_CONNECTIONS = 1203;
-		exports.ER_SET_CONSTANTS_ONLY = 1204;
-		exports.ER_LOCK_WAIT_TIMEOUT = 1205;
-		exports.ER_LOCK_TABLE_FULL = 1206;
-		exports.ER_READ_ONLY_TRANSACTION = 1207;
-		exports.ER_DROP_DB_WITH_READ_LOCK = 1208;
-		exports.ER_CREATE_DB_WITH_READ_LOCK = 1209;
-		exports.ER_WRONG_ARGUMENTS = 1210;
-		exports.ER_NO_PERMISSION_TO_CREATE_USER = 1211;
-		exports.ER_UNION_TABLES_IN_DIFFERENT_DIR = 1212;
-		exports.ER_LOCK_DEADLOCK = 1213;
-		exports.ER_TABLE_CANT_HANDLE_FT = 1214;
-		exports.ER_CANNOT_ADD_FOREIGN = 1215;
-		exports.ER_NO_REFERENCED_ROW = 1216;
-		exports.ER_ROW_IS_REFERENCED = 1217;
-		exports.ER_CONNECT_TO_SOURCE = 1218;
-		exports.ER_QUERY_ON_MASTER = 1219;
-		exports.ER_ERROR_WHEN_EXECUTING_COMMAND = 1220;
-		exports.ER_WRONG_USAGE = 1221;
-		exports.ER_WRONG_NUMBER_OF_COLUMNS_IN_SELECT = 1222;
-		exports.ER_CANT_UPDATE_WITH_READLOCK = 1223;
-		exports.ER_MIXING_NOT_ALLOWED = 1224;
-		exports.ER_DUP_ARGUMENT = 1225;
-		exports.ER_USER_LIMIT_REACHED = 1226;
-		exports.ER_SPECIFIC_ACCESS_DENIED_ERROR = 1227;
-		exports.ER_LOCAL_VARIABLE = 1228;
-		exports.ER_GLOBAL_VARIABLE = 1229;
-		exports.ER_NO_DEFAULT = 1230;
-		exports.ER_WRONG_VALUE_FOR_VAR = 1231;
-		exports.ER_WRONG_TYPE_FOR_VAR = 1232;
-		exports.ER_VAR_CANT_BE_READ = 1233;
-		exports.ER_CANT_USE_OPTION_HERE = 1234;
-		exports.ER_NOT_SUPPORTED_YET = 1235;
-		exports.ER_SOURCE_FATAL_ERROR_READING_BINLOG = 1236;
-		exports.ER_REPLICA_IGNORED_TABLE = 1237;
-		exports.ER_INCORRECT_GLOBAL_LOCAL_VAR = 1238;
-		exports.ER_WRONG_FK_DEF = 1239;
-		exports.ER_KEY_REF_DO_NOT_MATCH_TABLE_REF = 1240;
-		exports.ER_OPERAND_COLUMNS = 1241;
-		exports.ER_SUBQUERY_NO_1_ROW = 1242;
-		exports.ER_UNKNOWN_STMT_HANDLER = 1243;
-		exports.ER_CORRUPT_HELP_DB = 1244;
-		exports.ER_CYCLIC_REFERENCE = 1245;
-		exports.ER_AUTO_CONVERT = 1246;
-		exports.ER_ILLEGAL_REFERENCE = 1247;
-		exports.ER_DERIVED_MUST_HAVE_ALIAS = 1248;
-		exports.ER_SELECT_REDUCED = 1249;
-		exports.ER_TABLENAME_NOT_ALLOWED_HERE = 1250;
-		exports.ER_NOT_SUPPORTED_AUTH_MODE = 1251;
-		exports.ER_SPATIAL_CANT_HAVE_NULL = 1252;
-		exports.ER_COLLATION_CHARSET_MISMATCH = 1253;
-		exports.ER_SLAVE_WAS_RUNNING = 1254;
-		exports.ER_SLAVE_WAS_NOT_RUNNING = 1255;
-		exports.ER_TOO_BIG_FOR_UNCOMPRESS = 1256;
-		exports.ER_ZLIB_Z_MEM_ERROR = 1257;
-		exports.ER_ZLIB_Z_BUF_ERROR = 1258;
-		exports.ER_ZLIB_Z_DATA_ERROR = 1259;
-		exports.ER_CUT_VALUE_GROUP_CONCAT = 1260;
-		exports.ER_WARN_TOO_FEW_RECORDS = 1261;
-		exports.ER_WARN_TOO_MANY_RECORDS = 1262;
-		exports.ER_WARN_NULL_TO_NOTNULL = 1263;
-		exports.ER_WARN_DATA_OUT_OF_RANGE = 1264;
-		exports.WARN_DATA_TRUNCATED = 1265;
-		exports.ER_WARN_USING_OTHER_HANDLER = 1266;
-		exports.ER_CANT_AGGREGATE_2COLLATIONS = 1267;
-		exports.ER_DROP_USER = 1268;
-		exports.ER_REVOKE_GRANTS = 1269;
-		exports.ER_CANT_AGGREGATE_3COLLATIONS = 1270;
-		exports.ER_CANT_AGGREGATE_NCOLLATIONS = 1271;
-		exports.ER_VARIABLE_IS_NOT_STRUCT = 1272;
-		exports.ER_UNKNOWN_COLLATION = 1273;
-		exports.ER_REPLICA_IGNORED_SSL_PARAMS = 1274;
-		exports.ER_SERVER_IS_IN_SECURE_AUTH_MODE = 1275;
-		exports.ER_WARN_FIELD_RESOLVED = 1276;
-		exports.ER_BAD_REPLICA_UNTIL_COND = 1277;
-		exports.ER_MISSING_SKIP_REPLICA = 1278;
-		exports.ER_UNTIL_COND_IGNORED = 1279;
-		exports.ER_WRONG_NAME_FOR_INDEX = 1280;
-		exports.ER_WRONG_NAME_FOR_CATALOG = 1281;
-		exports.ER_WARN_QC_RESIZE = 1282;
-		exports.ER_BAD_FT_COLUMN = 1283;
-		exports.ER_UNKNOWN_KEY_CACHE = 1284;
-		exports.ER_WARN_HOSTNAME_WONT_WORK = 1285;
-		exports.ER_UNKNOWN_STORAGE_ENGINE = 1286;
-		exports.ER_WARN_DEPRECATED_SYNTAX = 1287;
-		exports.ER_NON_UPDATABLE_TABLE = 1288;
-		exports.ER_FEATURE_DISABLED = 1289;
-		exports.ER_OPTION_PREVENTS_STATEMENT = 1290;
-		exports.ER_DUPLICATED_VALUE_IN_TYPE = 1291;
-		exports.ER_TRUNCATED_WRONG_VALUE = 1292;
-		exports.ER_TOO_MUCH_AUTO_TIMESTAMP_COLS = 1293;
-		exports.ER_INVALID_ON_UPDATE = 1294;
-		exports.ER_UNSUPPORTED_PS = 1295;
-		exports.ER_GET_ERRMSG = 1296;
-		exports.ER_GET_TEMPORARY_ERRMSG = 1297;
-		exports.ER_UNKNOWN_TIME_ZONE = 1298;
-		exports.ER_WARN_INVALID_TIMESTAMP = 1299;
-		exports.ER_INVALID_CHARACTER_STRING = 1300;
-		exports.ER_WARN_ALLOWED_PACKET_OVERFLOWED = 1301;
-		exports.ER_CONFLICTING_DECLARATIONS = 1302;
-		exports.ER_SP_NO_RECURSIVE_CREATE = 1303;
-		exports.ER_SP_ALREADY_EXISTS = 1304;
-		exports.ER_SP_DOES_NOT_EXIST = 1305;
-		exports.ER_SP_DROP_FAILED = 1306;
-		exports.ER_SP_STORE_FAILED = 1307;
-		exports.ER_SP_LILABEL_MISMATCH = 1308;
-		exports.ER_SP_LABEL_REDEFINE = 1309;
-		exports.ER_SP_LABEL_MISMATCH = 1310;
-		exports.ER_SP_UNINIT_VAR = 1311;
-		exports.ER_SP_BADSELECT = 1312;
-		exports.ER_SP_BADRETURN = 1313;
-		exports.ER_SP_BADSTATEMENT = 1314;
-		exports.ER_UPDATE_LOG_DEPRECATED_IGNORED = 1315;
-		exports.ER_UPDATE_LOG_DEPRECATED_TRANSLATED = 1316;
-		exports.ER_QUERY_INTERRUPTED = 1317;
-		exports.ER_SP_WRONG_NO_OF_ARGS = 1318;
-		exports.ER_SP_COND_MISMATCH = 1319;
-		exports.ER_SP_NORETURN = 1320;
-		exports.ER_SP_NORETURNEND = 1321;
-		exports.ER_SP_BAD_CURSOR_QUERY = 1322;
-		exports.ER_SP_BAD_CURSOR_SELECT = 1323;
-		exports.ER_SP_CURSOR_MISMATCH = 1324;
-		exports.ER_SP_CURSOR_ALREADY_OPEN = 1325;
-		exports.ER_SP_CURSOR_NOT_OPEN = 1326;
-		exports.ER_SP_UNDECLARED_VAR = 1327;
-		exports.ER_SP_WRONG_NO_OF_FETCH_ARGS = 1328;
-		exports.ER_SP_FETCH_NO_DATA = 1329;
-		exports.ER_SP_DUP_PARAM = 1330;
-		exports.ER_SP_DUP_VAR = 1331;
-		exports.ER_SP_DUP_COND = 1332;
-		exports.ER_SP_DUP_CURS = 1333;
-		exports.ER_SP_CANT_ALTER = 1334;
-		exports.ER_SP_SUBSELECT_NYI = 1335;
-		exports.ER_STMT_NOT_ALLOWED_IN_SF_OR_TRG = 1336;
-		exports.ER_SP_VARCOND_AFTER_CURSHNDLR = 1337;
-		exports.ER_SP_CURSOR_AFTER_HANDLER = 1338;
-		exports.ER_SP_CASE_NOT_FOUND = 1339;
-		exports.ER_FPARSER_TOO_BIG_FILE = 1340;
-		exports.ER_FPARSER_BAD_HEADER = 1341;
-		exports.ER_FPARSER_EOF_IN_COMMENT = 1342;
-		exports.ER_FPARSER_ERROR_IN_PARAMETER = 1343;
-		exports.ER_FPARSER_EOF_IN_UNKNOWN_PARAMETER = 1344;
-		exports.ER_VIEW_NO_EXPLAIN = 1345;
-		exports.ER_FRM_UNKNOWN_TYPE = 1346;
-		exports.ER_WRONG_OBJECT = 1347;
-		exports.ER_NONUPDATEABLE_COLUMN = 1348;
-		exports.ER_VIEW_SELECT_DERIVED = 1349;
-		exports.ER_VIEW_SELECT_CLAUSE = 1350;
-		exports.ER_VIEW_SELECT_VARIABLE = 1351;
-		exports.ER_VIEW_SELECT_TMPTABLE = 1352;
-		exports.ER_VIEW_WRONG_LIST = 1353;
-		exports.ER_WARN_VIEW_MERGE = 1354;
-		exports.ER_WARN_VIEW_WITHOUT_KEY = 1355;
-		exports.ER_VIEW_INVALID = 1356;
-		exports.ER_SP_NO_DROP_SP = 1357;
-		exports.ER_SP_GOTO_IN_HNDLR = 1358;
-		exports.ER_TRG_ALREADY_EXISTS = 1359;
-		exports.ER_TRG_DOES_NOT_EXIST = 1360;
-		exports.ER_TRG_ON_VIEW_OR_TEMP_TABLE = 1361;
-		exports.ER_TRG_CANT_CHANGE_ROW = 1362;
-		exports.ER_TRG_NO_SUCH_ROW_IN_TRG = 1363;
-		exports.ER_NO_DEFAULT_FOR_FIELD = 1364;
-		exports.ER_DIVISION_BY_ZERO = 1365;
-		exports.ER_TRUNCATED_WRONG_VALUE_FOR_FIELD = 1366;
-		exports.ER_ILLEGAL_VALUE_FOR_TYPE = 1367;
-		exports.ER_VIEW_NONUPD_CHECK = 1368;
-		exports.ER_VIEW_CHECK_FAILED = 1369;
-		exports.ER_PROCACCESS_DENIED_ERROR = 1370;
-		exports.ER_RELAY_LOG_FAIL = 1371;
-		exports.ER_PASSWD_LENGTH = 1372;
-		exports.ER_UNKNOWN_TARGET_BINLOG = 1373;
-		exports.ER_IO_ERR_LOG_INDEX_READ = 1374;
-		exports.ER_BINLOG_PURGE_PROHIBITED = 1375;
-		exports.ER_FSEEK_FAIL = 1376;
-		exports.ER_BINLOG_PURGE_FATAL_ERR = 1377;
-		exports.ER_LOG_IN_USE = 1378;
-		exports.ER_LOG_PURGE_UNKNOWN_ERR = 1379;
-		exports.ER_RELAY_LOG_INIT = 1380;
-		exports.ER_NO_BINARY_LOGGING = 1381;
-		exports.ER_RESERVED_SYNTAX = 1382;
-		exports.ER_WSAS_FAILED = 1383;
-		exports.ER_DIFF_GROUPS_PROC = 1384;
-		exports.ER_NO_GROUP_FOR_PROC = 1385;
-		exports.ER_ORDER_WITH_PROC = 1386;
-		exports.ER_LOGGING_PROHIBIT_CHANGING_OF = 1387;
-		exports.ER_NO_FILE_MAPPING = 1388;
-		exports.ER_WRONG_MAGIC = 1389;
-		exports.ER_PS_MANY_PARAM = 1390;
-		exports.ER_KEY_PART_0 = 1391;
-		exports.ER_VIEW_CHECKSUM = 1392;
-		exports.ER_VIEW_MULTIUPDATE = 1393;
-		exports.ER_VIEW_NO_INSERT_FIELD_LIST = 1394;
-		exports.ER_VIEW_DELETE_MERGE_VIEW = 1395;
-		exports.ER_CANNOT_USER = 1396;
-		exports.ER_XAER_NOTA = 1397;
-		exports.ER_XAER_INVAL = 1398;
-		exports.ER_XAER_RMFAIL = 1399;
-		exports.ER_XAER_OUTSIDE = 1400;
-		exports.ER_XAER_RMERR = 1401;
-		exports.ER_XA_RBROLLBACK = 1402;
-		exports.ER_NONEXISTING_PROC_GRANT = 1403;
-		exports.ER_PROC_AUTO_GRANT_FAIL = 1404;
-		exports.ER_PROC_AUTO_REVOKE_FAIL = 1405;
-		exports.ER_DATA_TOO_LONG = 1406;
-		exports.ER_SP_BAD_SQLSTATE = 1407;
-		exports.ER_STARTUP = 1408;
-		exports.ER_LOAD_FROM_FIXED_SIZE_ROWS_TO_VAR = 1409;
-		exports.ER_CANT_CREATE_USER_WITH_GRANT = 1410;
-		exports.ER_WRONG_VALUE_FOR_TYPE = 1411;
-		exports.ER_TABLE_DEF_CHANGED = 1412;
-		exports.ER_SP_DUP_HANDLER = 1413;
-		exports.ER_SP_NOT_VAR_ARG = 1414;
-		exports.ER_SP_NO_RETSET = 1415;
-		exports.ER_CANT_CREATE_GEOMETRY_OBJECT = 1416;
-		exports.ER_FAILED_ROUTINE_BREAK_BINLOG = 1417;
-		exports.ER_BINLOG_UNSAFE_ROUTINE = 1418;
-		exports.ER_BINLOG_CREATE_ROUTINE_NEED_SUPER = 1419;
-		exports.ER_EXEC_STMT_WITH_OPEN_CURSOR = 1420;
-		exports.ER_STMT_HAS_NO_OPEN_CURSOR = 1421;
-		exports.ER_COMMIT_NOT_ALLOWED_IN_SF_OR_TRG = 1422;
-		exports.ER_NO_DEFAULT_FOR_VIEW_FIELD = 1423;
-		exports.ER_SP_NO_RECURSION = 1424;
-		exports.ER_TOO_BIG_SCALE = 1425;
-		exports.ER_TOO_BIG_PRECISION = 1426;
-		exports.ER_M_BIGGER_THAN_D = 1427;
-		exports.ER_WRONG_LOCK_OF_SYSTEM_TABLE = 1428;
-		exports.ER_CONNECT_TO_FOREIGN_DATA_SOURCE = 1429;
-		exports.ER_QUERY_ON_FOREIGN_DATA_SOURCE = 1430;
-		exports.ER_FOREIGN_DATA_SOURCE_DOESNT_EXIST = 1431;
-		exports.ER_FOREIGN_DATA_STRING_INVALID_CANT_CREATE = 1432;
-		exports.ER_FOREIGN_DATA_STRING_INVALID = 1433;
-		exports.ER_CANT_CREATE_FEDERATED_TABLE = 1434;
-		exports.ER_TRG_IN_WRONG_SCHEMA = 1435;
-		exports.ER_STACK_OVERRUN_NEED_MORE = 1436;
-		exports.ER_TOO_LONG_BODY = 1437;
-		exports.ER_WARN_CANT_DROP_DEFAULT_KEYCACHE = 1438;
-		exports.ER_TOO_BIG_DISPLAYWIDTH = 1439;
-		exports.ER_XAER_DUPID = 1440;
-		exports.ER_DATETIME_FUNCTION_OVERFLOW = 1441;
-		exports.ER_CANT_UPDATE_USED_TABLE_IN_SF_OR_TRG = 1442;
-		exports.ER_VIEW_PREVENT_UPDATE = 1443;
-		exports.ER_PS_NO_RECURSION = 1444;
-		exports.ER_SP_CANT_SET_AUTOCOMMIT = 1445;
-		exports.ER_MALFORMED_DEFINER = 1446;
-		exports.ER_VIEW_FRM_NO_USER = 1447;
-		exports.ER_VIEW_OTHER_USER = 1448;
-		exports.ER_NO_SUCH_USER = 1449;
-		exports.ER_FORBID_SCHEMA_CHANGE = 1450;
-		exports.ER_ROW_IS_REFERENCED_2 = 1451;
-		exports.ER_NO_REFERENCED_ROW_2 = 1452;
-		exports.ER_SP_BAD_VAR_SHADOW = 1453;
-		exports.ER_TRG_NO_DEFINER = 1454;
-		exports.ER_OLD_FILE_FORMAT = 1455;
-		exports.ER_SP_RECURSION_LIMIT = 1456;
-		exports.ER_SP_PROC_TABLE_CORRUPT = 1457;
-		exports.ER_SP_WRONG_NAME = 1458;
-		exports.ER_TABLE_NEEDS_UPGRADE = 1459;
-		exports.ER_SP_NO_AGGREGATE = 1460;
-		exports.ER_MAX_PREPARED_STMT_COUNT_REACHED = 1461;
-		exports.ER_VIEW_RECURSIVE = 1462;
-		exports.ER_NON_GROUPING_FIELD_USED = 1463;
-		exports.ER_TABLE_CANT_HANDLE_SPKEYS = 1464;
-		exports.ER_NO_TRIGGERS_ON_SYSTEM_SCHEMA = 1465;
-		exports.ER_REMOVED_SPACES = 1466;
-		exports.ER_AUTOINC_READ_FAILED = 1467;
-		exports.ER_USERNAME = 1468;
-		exports.ER_HOSTNAME = 1469;
-		exports.ER_WRONG_STRING_LENGTH = 1470;
-		exports.ER_NON_INSERTABLE_TABLE = 1471;
-		exports.ER_ADMIN_WRONG_MRG_TABLE = 1472;
-		exports.ER_TOO_HIGH_LEVEL_OF_NESTING_FOR_SELECT = 1473;
-		exports.ER_NAME_BECOMES_EMPTY = 1474;
-		exports.ER_AMBIGUOUS_FIELD_TERM = 1475;
-		exports.ER_FOREIGN_SERVER_EXISTS = 1476;
-		exports.ER_FOREIGN_SERVER_DOESNT_EXIST = 1477;
-		exports.ER_ILLEGAL_HA_CREATE_OPTION = 1478;
-		exports.ER_PARTITION_REQUIRES_VALUES_ERROR = 1479;
-		exports.ER_PARTITION_WRONG_VALUES_ERROR = 1480;
-		exports.ER_PARTITION_MAXVALUE_ERROR = 1481;
-		exports.ER_PARTITION_SUBPARTITION_ERROR = 1482;
-		exports.ER_PARTITION_SUBPART_MIX_ERROR = 1483;
-		exports.ER_PARTITION_WRONG_NO_PART_ERROR = 1484;
-		exports.ER_PARTITION_WRONG_NO_SUBPART_ERROR = 1485;
-		exports.ER_WRONG_EXPR_IN_PARTITION_FUNC_ERROR = 1486;
-		exports.ER_NO_CONST_EXPR_IN_RANGE_OR_LIST_ERROR = 1487;
-		exports.ER_FIELD_NOT_FOUND_PART_ERROR = 1488;
-		exports.ER_LIST_OF_FIELDS_ONLY_IN_HASH_ERROR = 1489;
-		exports.ER_INCONSISTENT_PARTITION_INFO_ERROR = 1490;
-		exports.ER_PARTITION_FUNC_NOT_ALLOWED_ERROR = 1491;
-		exports.ER_PARTITIONS_MUST_BE_DEFINED_ERROR = 1492;
-		exports.ER_RANGE_NOT_INCREASING_ERROR = 1493;
-		exports.ER_INCONSISTENT_TYPE_OF_FUNCTIONS_ERROR = 1494;
-		exports.ER_MULTIPLE_DEF_CONST_IN_LIST_PART_ERROR = 1495;
-		exports.ER_PARTITION_ENTRY_ERROR = 1496;
-		exports.ER_MIX_HANDLER_ERROR = 1497;
-		exports.ER_PARTITION_NOT_DEFINED_ERROR = 1498;
-		exports.ER_TOO_MANY_PARTITIONS_ERROR = 1499;
-		exports.ER_SUBPARTITION_ERROR = 1500;
-		exports.ER_CANT_CREATE_HANDLER_FILE = 1501;
-		exports.ER_BLOB_FIELD_IN_PART_FUNC_ERROR = 1502;
-		exports.ER_UNIQUE_KEY_NEED_ALL_FIELDS_IN_PF = 1503;
-		exports.ER_NO_PARTS_ERROR = 1504;
-		exports.ER_PARTITION_MGMT_ON_NONPARTITIONED = 1505;
-		exports.ER_FOREIGN_KEY_ON_PARTITIONED = 1506;
-		exports.ER_DROP_PARTITION_NON_EXISTENT = 1507;
-		exports.ER_DROP_LAST_PARTITION = 1508;
-		exports.ER_COALESCE_ONLY_ON_HASH_PARTITION = 1509;
-		exports.ER_REORG_HASH_ONLY_ON_SAME_NO = 1510;
-		exports.ER_REORG_NO_PARAM_ERROR = 1511;
-		exports.ER_ONLY_ON_RANGE_LIST_PARTITION = 1512;
-		exports.ER_ADD_PARTITION_SUBPART_ERROR = 1513;
-		exports.ER_ADD_PARTITION_NO_NEW_PARTITION = 1514;
-		exports.ER_COALESCE_PARTITION_NO_PARTITION = 1515;
-		exports.ER_REORG_PARTITION_NOT_EXIST = 1516;
-		exports.ER_SAME_NAME_PARTITION = 1517;
-		exports.ER_NO_BINLOG_ERROR = 1518;
-		exports.ER_CONSECUTIVE_REORG_PARTITIONS = 1519;
-		exports.ER_REORG_OUTSIDE_RANGE = 1520;
-		exports.ER_PARTITION_FUNCTION_FAILURE = 1521;
-		exports.ER_PART_STATE_ERROR = 1522;
-		exports.ER_LIMITED_PART_RANGE = 1523;
-		exports.ER_PLUGIN_IS_NOT_LOADED = 1524;
-		exports.ER_WRONG_VALUE = 1525;
-		exports.ER_NO_PARTITION_FOR_GIVEN_VALUE = 1526;
-		exports.ER_FILEGROUP_OPTION_ONLY_ONCE = 1527;
-		exports.ER_CREATE_FILEGROUP_FAILED = 1528;
-		exports.ER_DROP_FILEGROUP_FAILED = 1529;
-		exports.ER_TABLESPACE_AUTO_EXTEND_ERROR = 1530;
-		exports.ER_WRONG_SIZE_NUMBER = 1531;
-		exports.ER_SIZE_OVERFLOW_ERROR = 1532;
-		exports.ER_ALTER_FILEGROUP_FAILED = 1533;
-		exports.ER_BINLOG_ROW_LOGGING_FAILED = 1534;
-		exports.ER_BINLOG_ROW_WRONG_TABLE_DEF = 1535;
-		exports.ER_BINLOG_ROW_RBR_TO_SBR = 1536;
-		exports.ER_EVENT_ALREADY_EXISTS = 1537;
-		exports.ER_EVENT_STORE_FAILED = 1538;
-		exports.ER_EVENT_DOES_NOT_EXIST = 1539;
-		exports.ER_EVENT_CANT_ALTER = 1540;
-		exports.ER_EVENT_DROP_FAILED = 1541;
-		exports.ER_EVENT_INTERVAL_NOT_POSITIVE_OR_TOO_BIG = 1542;
-		exports.ER_EVENT_ENDS_BEFORE_STARTS = 1543;
-		exports.ER_EVENT_EXEC_TIME_IN_THE_PAST = 1544;
-		exports.ER_EVENT_OPEN_TABLE_FAILED = 1545;
-		exports.ER_EVENT_NEITHER_M_EXPR_NOR_M_AT = 1546;
-		exports.ER_COL_COUNT_DOESNT_MATCH_CORRUPTED = 1547;
-		exports.ER_CANNOT_LOAD_FROM_TABLE = 1548;
-		exports.ER_EVENT_CANNOT_DELETE = 1549;
-		exports.ER_EVENT_COMPILE_ERROR = 1550;
-		exports.ER_EVENT_SAME_NAME = 1551;
-		exports.ER_EVENT_DATA_TOO_LONG = 1552;
-		exports.ER_DROP_INDEX_FK = 1553;
-		exports.ER_WARN_DEPRECATED_SYNTAX_WITH_VER = 1554;
-		exports.ER_CANT_WRITE_LOCK_LOG_TABLE = 1555;
-		exports.ER_CANT_LOCK_LOG_TABLE = 1556;
-		exports.ER_FOREIGN_DUPLICATE_KEY = 1557;
-		exports.ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE = 1558;
-		exports.ER_TEMP_TABLE_PREVENTS_SWITCH_OUT_OF_RBR = 1559;
-		exports.ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_FORMAT = 1560;
-		exports.ER_NDB_CANT_SWITCH_BINLOG_FORMAT = 1561;
-		exports.ER_PARTITION_NO_TEMPORARY = 1562;
-		exports.ER_PARTITION_CONST_DOMAIN_ERROR = 1563;
-		exports.ER_PARTITION_FUNCTION_IS_NOT_ALLOWED = 1564;
-		exports.ER_DDL_LOG_ERROR = 1565;
-		exports.ER_NULL_IN_VALUES_LESS_THAN = 1566;
-		exports.ER_WRONG_PARTITION_NAME = 1567;
-		exports.ER_CANT_CHANGE_TX_CHARACTERISTICS = 1568;
-		exports.ER_DUP_ENTRY_AUTOINCREMENT_CASE = 1569;
-		exports.ER_EVENT_MODIFY_QUEUE_ERROR = 1570;
-		exports.ER_EVENT_SET_VAR_ERROR = 1571;
-		exports.ER_PARTITION_MERGE_ERROR = 1572;
-		exports.ER_CANT_ACTIVATE_LOG = 1573;
-		exports.ER_RBR_NOT_AVAILABLE = 1574;
-		exports.ER_BASE64_DECODE_ERROR = 1575;
-		exports.ER_EVENT_RECURSION_FORBIDDEN = 1576;
-		exports.ER_EVENTS_DB_ERROR = 1577;
-		exports.ER_ONLY_INTEGERS_ALLOWED = 1578;
-		exports.ER_UNSUPORTED_LOG_ENGINE = 1579;
-		exports.ER_BAD_LOG_STATEMENT = 1580;
-		exports.ER_CANT_RENAME_LOG_TABLE = 1581;
-		exports.ER_WRONG_PARAMCOUNT_TO_NATIVE_FCT = 1582;
-		exports.ER_WRONG_PARAMETERS_TO_NATIVE_FCT = 1583;
-		exports.ER_WRONG_PARAMETERS_TO_STORED_FCT = 1584;
-		exports.ER_NATIVE_FCT_NAME_COLLISION = 1585;
-		exports.ER_DUP_ENTRY_WITH_KEY_NAME = 1586;
-		exports.ER_BINLOG_PURGE_EMFILE = 1587;
-		exports.ER_EVENT_CANNOT_CREATE_IN_THE_PAST = 1588;
-		exports.ER_EVENT_CANNOT_ALTER_IN_THE_PAST = 1589;
-		exports.ER_SLAVE_INCIDENT = 1590;
-		exports.ER_NO_PARTITION_FOR_GIVEN_VALUE_SILENT = 1591;
-		exports.ER_BINLOG_UNSAFE_STATEMENT = 1592;
-		exports.ER_BINLOG_FATAL_ERROR = 1593;
-		exports.ER_SLAVE_RELAY_LOG_READ_FAILURE = 1594;
-		exports.ER_SLAVE_RELAY_LOG_WRITE_FAILURE = 1595;
-		exports.ER_SLAVE_CREATE_EVENT_FAILURE = 1596;
-		exports.ER_SLAVE_MASTER_COM_FAILURE = 1597;
-		exports.ER_BINLOG_LOGGING_IMPOSSIBLE = 1598;
-		exports.ER_VIEW_NO_CREATION_CTX = 1599;
-		exports.ER_VIEW_INVALID_CREATION_CTX = 1600;
-		exports.ER_SR_INVALID_CREATION_CTX = 1601;
-		exports.ER_TRG_CORRUPTED_FILE = 1602;
-		exports.ER_TRG_NO_CREATION_CTX = 1603;
-		exports.ER_TRG_INVALID_CREATION_CTX = 1604;
-		exports.ER_EVENT_INVALID_CREATION_CTX = 1605;
-		exports.ER_TRG_CANT_OPEN_TABLE = 1606;
-		exports.ER_CANT_CREATE_SROUTINE = 1607;
-		exports.ER_NEVER_USED = 1608;
-		exports.ER_NO_FORMAT_DESCRIPTION_EVENT_BEFORE_BINLOG_STATEMENT = 1609;
-		exports.ER_REPLICA_CORRUPT_EVENT = 1610;
-		exports.ER_LOAD_DATA_INVALID_COLUMN = 1611;
-		exports.ER_LOG_PURGE_NO_FILE = 1612;
-		exports.ER_XA_RBTIMEOUT = 1613;
-		exports.ER_XA_RBDEADLOCK = 1614;
-		exports.ER_NEED_REPREPARE = 1615;
-		exports.ER_DELAYED_NOT_SUPPORTED = 1616;
-		exports.WARN_NO_CONNECTION_METADATA = 1617;
-		exports.WARN_OPTION_IGNORED = 1618;
-		exports.ER_PLUGIN_DELETE_BUILTIN = 1619;
-		exports.WARN_PLUGIN_BUSY = 1620;
-		exports.ER_VARIABLE_IS_READONLY = 1621;
-		exports.ER_WARN_ENGINE_TRANSACTION_ROLLBACK = 1622;
-		exports.ER_SLAVE_HEARTBEAT_FAILURE = 1623;
-		exports.ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE = 1624;
-		exports.ER_NDB_REPLICATION_SCHEMA_ERROR = 1625;
-		exports.ER_CONFLICT_FN_PARSE_ERROR = 1626;
-		exports.ER_EXCEPTIONS_WRITE_ERROR = 1627;
-		exports.ER_TOO_LONG_TABLE_COMMENT = 1628;
-		exports.ER_TOO_LONG_FIELD_COMMENT = 1629;
-		exports.ER_FUNC_INEXISTENT_NAME_COLLISION = 1630;
-		exports.ER_DATABASE_NAME = 1631;
-		exports.ER_TABLE_NAME = 1632;
-		exports.ER_PARTITION_NAME = 1633;
-		exports.ER_SUBPARTITION_NAME = 1634;
-		exports.ER_TEMPORARY_NAME = 1635;
-		exports.ER_RENAMED_NAME = 1636;
-		exports.ER_TOO_MANY_CONCURRENT_TRXS = 1637;
-		exports.WARN_NON_ASCII_SEPARATOR_NOT_IMPLEMENTED = 1638;
-		exports.ER_DEBUG_SYNC_TIMEOUT = 1639;
-		exports.ER_DEBUG_SYNC_HIT_LIMIT = 1640;
-		exports.ER_DUP_SIGNAL_SET = 1641;
-		exports.ER_SIGNAL_WARN = 1642;
-		exports.ER_SIGNAL_NOT_FOUND = 1643;
-		exports.ER_SIGNAL_EXCEPTION = 1644;
-		exports.ER_RESIGNAL_WITHOUT_ACTIVE_HANDLER = 1645;
-		exports.ER_SIGNAL_BAD_CONDITION_TYPE = 1646;
-		exports.WARN_COND_ITEM_TRUNCATED = 1647;
-		exports.ER_COND_ITEM_TOO_LONG = 1648;
-		exports.ER_UNKNOWN_LOCALE = 1649;
-		exports.ER_REPLICA_IGNORE_SERVER_IDS = 1650;
-		exports.ER_QUERY_CACHE_DISABLED = 1651;
-		exports.ER_SAME_NAME_PARTITION_FIELD = 1652;
-		exports.ER_PARTITION_COLUMN_LIST_ERROR = 1653;
-		exports.ER_WRONG_TYPE_COLUMN_VALUE_ERROR = 1654;
-		exports.ER_TOO_MANY_PARTITION_FUNC_FIELDS_ERROR = 1655;
-		exports.ER_MAXVALUE_IN_VALUES_IN = 1656;
-		exports.ER_TOO_MANY_VALUES_ERROR = 1657;
-		exports.ER_ROW_SINGLE_PARTITION_FIELD_ERROR = 1658;
-		exports.ER_FIELD_TYPE_NOT_ALLOWED_AS_PARTITION_FIELD = 1659;
-		exports.ER_PARTITION_FIELDS_TOO_LONG = 1660;
-		exports.ER_BINLOG_ROW_ENGINE_AND_STMT_ENGINE = 1661;
-		exports.ER_BINLOG_ROW_MODE_AND_STMT_ENGINE = 1662;
-		exports.ER_BINLOG_UNSAFE_AND_STMT_ENGINE = 1663;
-		exports.ER_BINLOG_ROW_INJECTION_AND_STMT_ENGINE = 1664;
-		exports.ER_BINLOG_STMT_MODE_AND_ROW_ENGINE = 1665;
-		exports.ER_BINLOG_ROW_INJECTION_AND_STMT_MODE = 1666;
-		exports.ER_BINLOG_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE = 1667;
-		exports.ER_BINLOG_UNSAFE_LIMIT = 1668;
-		exports.ER_UNUSED4 = 1669;
-		exports.ER_BINLOG_UNSAFE_SYSTEM_TABLE = 1670;
-		exports.ER_BINLOG_UNSAFE_AUTOINC_COLUMNS = 1671;
-		exports.ER_BINLOG_UNSAFE_UDF = 1672;
-		exports.ER_BINLOG_UNSAFE_SYSTEM_VARIABLE = 1673;
-		exports.ER_BINLOG_UNSAFE_SYSTEM_FUNCTION = 1674;
-		exports.ER_BINLOG_UNSAFE_NONTRANS_AFTER_TRANS = 1675;
-		exports.ER_MESSAGE_AND_STATEMENT = 1676;
-		exports.ER_SLAVE_CONVERSION_FAILED = 1677;
-		exports.ER_REPLICA_CANT_CREATE_CONVERSION = 1678;
-		exports.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_FORMAT = 1679;
-		exports.ER_PATH_LENGTH = 1680;
-		exports.ER_WARN_DEPRECATED_SYNTAX_NO_REPLACEMENT = 1681;
-		exports.ER_WRONG_NATIVE_TABLE_STRUCTURE = 1682;
-		exports.ER_WRONG_PERFSCHEMA_USAGE = 1683;
-		exports.ER_WARN_I_S_SKIPPED_TABLE = 1684;
-		exports.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_DIRECT = 1685;
-		exports.ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_DIRECT = 1686;
-		exports.ER_SPATIAL_MUST_HAVE_GEOM_COL = 1687;
-		exports.ER_TOO_LONG_INDEX_COMMENT = 1688;
-		exports.ER_LOCK_ABORTED = 1689;
-		exports.ER_DATA_OUT_OF_RANGE = 1690;
-		exports.ER_WRONG_SPVAR_TYPE_IN_LIMIT = 1691;
-		exports.ER_BINLOG_UNSAFE_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE = 1692;
-		exports.ER_BINLOG_UNSAFE_MIXED_STATEMENT = 1693;
-		exports.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_SQL_LOG_BIN = 1694;
-		exports.ER_STORED_FUNCTION_PREVENTS_SWITCH_SQL_LOG_BIN = 1695;
-		exports.ER_FAILED_READ_FROM_PAR_FILE = 1696;
-		exports.ER_VALUES_IS_NOT_INT_TYPE_ERROR = 1697;
-		exports.ER_ACCESS_DENIED_NO_PASSWORD_ERROR = 1698;
-		exports.ER_SET_PASSWORD_AUTH_PLUGIN = 1699;
-		exports.ER_GRANT_PLUGIN_USER_EXISTS = 1700;
-		exports.ER_TRUNCATE_ILLEGAL_FK = 1701;
-		exports.ER_PLUGIN_IS_PERMANENT = 1702;
-		exports.ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE_MIN = 1703;
-		exports.ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE_MAX = 1704;
-		exports.ER_STMT_CACHE_FULL = 1705;
-		exports.ER_MULTI_UPDATE_KEY_CONFLICT = 1706;
-		exports.ER_TABLE_NEEDS_REBUILD = 1707;
-		exports.WARN_OPTION_BELOW_LIMIT = 1708;
-		exports.ER_INDEX_COLUMN_TOO_LONG = 1709;
-		exports.ER_ERROR_IN_TRIGGER_BODY = 1710;
-		exports.ER_ERROR_IN_UNKNOWN_TRIGGER_BODY = 1711;
-		exports.ER_INDEX_CORRUPT = 1712;
-		exports.ER_UNDO_RECORD_TOO_BIG = 1713;
-		exports.ER_BINLOG_UNSAFE_INSERT_IGNORE_SELECT = 1714;
-		exports.ER_BINLOG_UNSAFE_INSERT_SELECT_UPDATE = 1715;
-		exports.ER_BINLOG_UNSAFE_REPLACE_SELECT = 1716;
-		exports.ER_BINLOG_UNSAFE_CREATE_IGNORE_SELECT = 1717;
-		exports.ER_BINLOG_UNSAFE_CREATE_REPLACE_SELECT = 1718;
-		exports.ER_BINLOG_UNSAFE_UPDATE_IGNORE = 1719;
-		exports.ER_PLUGIN_NO_UNINSTALL = 1720;
-		exports.ER_PLUGIN_NO_INSTALL = 1721;
-		exports.ER_BINLOG_UNSAFE_WRITE_AUTOINC_SELECT = 1722;
-		exports.ER_BINLOG_UNSAFE_CREATE_SELECT_AUTOINC = 1723;
-		exports.ER_BINLOG_UNSAFE_INSERT_TWO_KEYS = 1724;
-		exports.ER_TABLE_IN_FK_CHECK = 1725;
-		exports.ER_UNSUPPORTED_ENGINE = 1726;
-		exports.ER_BINLOG_UNSAFE_AUTOINC_NOT_FIRST = 1727;
-		exports.ER_CANNOT_LOAD_FROM_TABLE_V2 = 1728;
-		exports.ER_SOURCE_DELAY_VALUE_OUT_OF_RANGE = 1729;
-		exports.ER_ONLY_FD_AND_RBR_EVENTS_ALLOWED_IN_BINLOG_STATEMENT = 1730;
-		exports.ER_PARTITION_EXCHANGE_DIFFERENT_OPTION = 1731;
-		exports.ER_PARTITION_EXCHANGE_PART_TABLE = 1732;
-		exports.ER_PARTITION_EXCHANGE_TEMP_TABLE = 1733;
-		exports.ER_PARTITION_INSTEAD_OF_SUBPARTITION = 1734;
-		exports.ER_UNKNOWN_PARTITION = 1735;
-		exports.ER_TABLES_DIFFERENT_METADATA = 1736;
-		exports.ER_ROW_DOES_NOT_MATCH_PARTITION = 1737;
-		exports.ER_BINLOG_CACHE_SIZE_GREATER_THAN_MAX = 1738;
-		exports.ER_WARN_INDEX_NOT_APPLICABLE = 1739;
-		exports.ER_PARTITION_EXCHANGE_FOREIGN_KEY = 1740;
-		exports.ER_NO_SUCH_KEY_VALUE = 1741;
-		exports.ER_RPL_INFO_DATA_TOO_LONG = 1742;
-		exports.ER_NETWORK_READ_EVENT_CHECKSUM_FAILURE = 1743;
-		exports.ER_BINLOG_READ_EVENT_CHECKSUM_FAILURE = 1744;
-		exports.ER_BINLOG_STMT_CACHE_SIZE_GREATER_THAN_MAX = 1745;
-		exports.ER_CANT_UPDATE_TABLE_IN_CREATE_TABLE_SELECT = 1746;
-		exports.ER_PARTITION_CLAUSE_ON_NONPARTITIONED = 1747;
-		exports.ER_ROW_DOES_NOT_MATCH_GIVEN_PARTITION_SET = 1748;
-		exports.ER_NO_SUCH_PARTITION = 1749;
-		exports.ER_CHANGE_RPL_INFO_REPOSITORY_FAILURE = 1750;
-		exports.ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_CREATED_TEMP_TABLE = 1751;
-		exports.ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_DROPPED_TEMP_TABLE = 1752;
-		exports.ER_MTA_FEATURE_IS_NOT_SUPPORTED = 1753;
-		exports.ER_MTA_UPDATED_DBS_GREATER_MAX = 1754;
-		exports.ER_MTA_CANT_PARALLEL = 1755;
-		exports.ER_MTA_INCONSISTENT_DATA = 1756;
-		exports.ER_FULLTEXT_NOT_SUPPORTED_WITH_PARTITIONING = 1757;
-		exports.ER_DA_INVALID_CONDITION_NUMBER = 1758;
-		exports.ER_INSECURE_PLAIN_TEXT = 1759;
-		exports.ER_INSECURE_CHANGE_SOURCE = 1760;
-		exports.ER_FOREIGN_DUPLICATE_KEY_WITH_CHILD_INFO = 1761;
-		exports.ER_FOREIGN_DUPLICATE_KEY_WITHOUT_CHILD_INFO = 1762;
-		exports.ER_SQLTHREAD_WITH_SECURE_REPLICA = 1763;
-		exports.ER_TABLE_HAS_NO_FT = 1764;
-		exports.ER_VARIABLE_NOT_SETTABLE_IN_SF_OR_TRIGGER = 1765;
-		exports.ER_VARIABLE_NOT_SETTABLE_IN_TRANSACTION = 1766;
-		exports.ER_GTID_NEXT_IS_NOT_IN_GTID_NEXT_LIST = 1767;
-		exports.ER_CANT_CHANGE_GTID_NEXT_IN_TRANSACTION = 1768;
-		exports.ER_SET_STATEMENT_CANNOT_INVOKE_FUNCTION = 1769;
-		exports.ER_GTID_NEXT_CANT_BE_AUTOMATIC_IF_GTID_NEXT_LIST_IS_NON_NULL = 1770;
-		exports.ER_SKIPPING_LOGGED_TRANSACTION = 1771;
-		exports.ER_MALFORMED_GTID_SET_SPECIFICATION = 1772;
-		exports.ER_MALFORMED_GTID_SET_ENCODING = 1773;
-		exports.ER_MALFORMED_GTID_SPECIFICATION = 1774;
-		exports.ER_GNO_EXHAUSTED = 1775;
-		exports.ER_BAD_REPLICA_AUTO_POSITION = 1776;
-		exports.ER_AUTO_POSITION_REQUIRES_GTID_MODE_NOT_OFF = 1777;
-		exports.ER_CANT_DO_IMPLICIT_COMMIT_IN_TRX_WHEN_GTID_NEXT_IS_SET = 1778;
-		exports.ER_GTID_MODE_ON_REQUIRES_ENFORCE_GTID_CONSISTENCY_ON = 1779;
-		exports.ER_GTID_MODE_REQUIRES_BINLOG = 1780;
-		exports.ER_CANT_SET_GTID_NEXT_TO_GTID_WHEN_GTID_MODE_IS_OFF = 1781;
-		exports.ER_CANT_SET_GTID_NEXT_TO_ANONYMOUS_WHEN_GTID_MODE_IS_ON = 1782;
-		exports.ER_CANT_SET_GTID_NEXT_LIST_TO_NON_NULL_WHEN_GTID_MODE_IS_OFF = 1783;
-		exports.ER_FOUND_GTID_EVENT_WHEN_GTID_MODE_IS_OFF = 1784;
-		exports.ER_GTID_UNSAFE_NON_TRANSACTIONAL_TABLE = 1785;
-		exports.ER_GTID_UNSAFE_CREATE_SELECT = 1786;
-		exports.ER_GTID_UNSAFE_CREATE_DROP_TEMP_TABLE_IN_TRANSACTION = 1787;
-		exports.ER_GTID_MODE_CAN_ONLY_CHANGE_ONE_STEP_AT_A_TIME = 1788;
-		exports.ER_SOURCE_HAS_PURGED_REQUIRED_GTIDS = 1789;
-		exports.ER_CANT_SET_GTID_NEXT_WHEN_OWNING_GTID = 1790;
-		exports.ER_UNKNOWN_EXPLAIN_FORMAT = 1791;
-		exports.ER_CANT_EXECUTE_IN_READ_ONLY_TRANSACTION = 1792;
-		exports.ER_TOO_LONG_TABLE_PARTITION_COMMENT = 1793;
-		exports.ER_REPLICA_CONFIGURATION = 1794;
-		exports.ER_INNODB_FT_LIMIT = 1795;
-		exports.ER_INNODB_NO_FT_TEMP_TABLE = 1796;
-		exports.ER_INNODB_FT_WRONG_DOCID_COLUMN = 1797;
-		exports.ER_INNODB_FT_WRONG_DOCID_INDEX = 1798;
-		exports.ER_INNODB_ONLINE_LOG_TOO_BIG = 1799;
-		exports.ER_UNKNOWN_ALTER_ALGORITHM = 1800;
-		exports.ER_UNKNOWN_ALTER_LOCK = 1801;
-		exports.ER_MTA_CHANGE_SOURCE_CANT_RUN_WITH_GAPS = 1802;
-		exports.ER_MTA_RECOVERY_FAILURE = 1803;
-		exports.ER_MTA_RESET_WORKERS = 1804;
-		exports.ER_COL_COUNT_DOESNT_MATCH_CORRUPTED_V2 = 1805;
-		exports.ER_REPLICA_SILENT_RETRY_TRANSACTION = 1806;
-		exports.ER_DISCARD_FK_CHECKS_RUNNING = 1807;
-		exports.ER_TABLE_SCHEMA_MISMATCH = 1808;
-		exports.ER_TABLE_IN_SYSTEM_TABLESPACE = 1809;
-		exports.ER_IO_READ_ERROR = 1810;
-		exports.ER_IO_WRITE_ERROR = 1811;
-		exports.ER_TABLESPACE_MISSING = 1812;
-		exports.ER_TABLESPACE_EXISTS = 1813;
-		exports.ER_TABLESPACE_DISCARDED = 1814;
-		exports.ER_INTERNAL_ERROR = 1815;
-		exports.ER_INNODB_IMPORT_ERROR = 1816;
-		exports.ER_INNODB_INDEX_CORRUPT = 1817;
-		exports.ER_INVALID_YEAR_COLUMN_LENGTH = 1818;
-		exports.ER_NOT_VALID_PASSWORD = 1819;
-		exports.ER_MUST_CHANGE_PASSWORD = 1820;
-		exports.ER_FK_NO_INDEX_CHILD = 1821;
-		exports.ER_FK_NO_INDEX_PARENT = 1822;
-		exports.ER_FK_FAIL_ADD_SYSTEM = 1823;
-		exports.ER_FK_CANNOT_OPEN_PARENT = 1824;
-		exports.ER_FK_INCORRECT_OPTION = 1825;
-		exports.ER_FK_DUP_NAME = 1826;
-		exports.ER_PASSWORD_FORMAT = 1827;
-		exports.ER_FK_COLUMN_CANNOT_DROP = 1828;
-		exports.ER_FK_COLUMN_CANNOT_DROP_CHILD = 1829;
-		exports.ER_FK_COLUMN_NOT_NULL = 1830;
-		exports.ER_DUP_INDEX = 1831;
-		exports.ER_FK_COLUMN_CANNOT_CHANGE = 1832;
-		exports.ER_FK_COLUMN_CANNOT_CHANGE_CHILD = 1833;
-		exports.ER_UNUSED5 = 1834;
-		exports.ER_MALFORMED_PACKET = 1835;
-		exports.ER_READ_ONLY_MODE = 1836;
-		exports.ER_GTID_NEXT_TYPE_UNDEFINED_GTID = 1837;
-		exports.ER_VARIABLE_NOT_SETTABLE_IN_SP = 1838;
-		exports.ER_CANT_SET_GTID_PURGED_WHEN_GTID_MODE_IS_OFF = 1839;
-		exports.ER_CANT_SET_GTID_PURGED_WHEN_GTID_EXECUTED_IS_NOT_EMPTY = 1840;
-		exports.ER_CANT_SET_GTID_PURGED_WHEN_OWNED_GTIDS_IS_NOT_EMPTY = 1841;
-		exports.ER_GTID_PURGED_WAS_CHANGED = 1842;
-		exports.ER_GTID_EXECUTED_WAS_CHANGED = 1843;
-		exports.ER_BINLOG_STMT_MODE_AND_NO_REPL_TABLES = 1844;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED = 1845;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON = 1846;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COPY = 1847;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_PARTITION = 1848;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_RENAME = 1849;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE = 1850;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_CHECK = 1851;
-		exports.ER_UNUSED6 = 1852;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOPK = 1853;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_AUTOINC = 1854;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_HIDDEN_FTS = 1855;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_CHANGE_FTS = 1856;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FTS = 1857;
-		exports.ER_SQL_REPLICA_SKIP_COUNTER_NOT_SETTABLE_IN_GTID_MODE = 1858;
-		exports.ER_DUP_UNKNOWN_IN_INDEX = 1859;
-		exports.ER_IDENT_CAUSES_TOO_LONG_PATH = 1860;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOT_NULL = 1861;
-		exports.ER_MUST_CHANGE_PASSWORD_LOGIN = 1862;
-		exports.ER_ROW_IN_WRONG_PARTITION = 1863;
-		exports.ER_MTA_EVENT_BIGGER_PENDING_JOBS_SIZE_MAX = 1864;
-		exports.ER_INNODB_NO_FT_USES_PARSER = 1865;
-		exports.ER_BINLOG_LOGICAL_CORRUPTION = 1866;
-		exports.ER_WARN_PURGE_LOG_IN_USE = 1867;
-		exports.ER_WARN_PURGE_LOG_IS_ACTIVE = 1868;
-		exports.ER_AUTO_INCREMENT_CONFLICT = 1869;
-		exports.WARN_ON_BLOCKHOLE_IN_RBR = 1870;
-		exports.ER_REPLICA_CM_INIT_REPOSITORY = 1871;
-		exports.ER_REPLICA_AM_INIT_REPOSITORY = 1872;
-		exports.ER_ACCESS_DENIED_CHANGE_USER_ERROR = 1873;
-		exports.ER_INNODB_READ_ONLY = 1874;
-		exports.ER_STOP_REPLICA_SQL_THREAD_TIMEOUT = 1875;
-		exports.ER_STOP_REPLICA_IO_THREAD_TIMEOUT = 1876;
-		exports.ER_TABLE_CORRUPT = 1877;
-		exports.ER_TEMP_FILE_WRITE_FAILURE = 1878;
-		exports.ER_INNODB_FT_AUX_NOT_HEX_ID = 1879;
-		exports.ER_OLD_TEMPORALS_UPGRADED = 1880;
-		exports.ER_INNODB_FORCED_RECOVERY = 1881;
-		exports.ER_AES_INVALID_IV = 1882;
-		exports.ER_PLUGIN_CANNOT_BE_UNINSTALLED = 1883;
-		exports.ER_GTID_UNSAFE_BINLOG_SPLITTABLE_STATEMENT_AND_ASSIGNED_GTID = 1884;
-		exports.ER_REPLICA_HAS_MORE_GTIDS_THAN_SOURCE = 1885;
-		exports.ER_MISSING_KEY = 1886;
-		exports.WARN_NAMED_PIPE_ACCESS_EVERYONE = 1887;
-		exports.ER_FILE_CORRUPT = 3000;
-		exports.ER_ERROR_ON_SOURCE = 3001;
-		exports.ER_INCONSISTENT_ERROR = 3002;
-		exports.ER_STORAGE_ENGINE_NOT_LOADED = 3003;
-		exports.ER_GET_STACKED_DA_WITHOUT_ACTIVE_HANDLER = 3004;
-		exports.ER_WARN_LEGACY_SYNTAX_CONVERTED = 3005;
-		exports.ER_BINLOG_UNSAFE_FULLTEXT_PLUGIN = 3006;
-		exports.ER_CANNOT_DISCARD_TEMPORARY_TABLE = 3007;
-		exports.ER_FK_DEPTH_EXCEEDED = 3008;
-		exports.ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE_V2 = 3009;
-		exports.ER_WARN_TRIGGER_DOESNT_HAVE_CREATED = 3010;
-		exports.ER_REFERENCED_TRG_DOES_NOT_EXIST = 3011;
-		exports.ER_EXPLAIN_NOT_SUPPORTED = 3012;
-		exports.ER_INVALID_FIELD_SIZE = 3013;
-		exports.ER_MISSING_HA_CREATE_OPTION = 3014;
-		exports.ER_ENGINE_OUT_OF_MEMORY = 3015;
-		exports.ER_PASSWORD_EXPIRE_ANONYMOUS_USER = 3016;
-		exports.ER_REPLICA_SQL_THREAD_MUST_STOP = 3017;
-		exports.ER_NO_FT_MATERIALIZED_SUBQUERY = 3018;
-		exports.ER_INNODB_UNDO_LOG_FULL = 3019;
-		exports.ER_INVALID_ARGUMENT_FOR_LOGARITHM = 3020;
-		exports.ER_REPLICA_CHANNEL_IO_THREAD_MUST_STOP = 3021;
-		exports.ER_WARN_OPEN_TEMP_TABLES_MUST_BE_ZERO = 3022;
-		exports.ER_WARN_ONLY_SOURCE_LOG_FILE_NO_POS = 3023;
-		exports.ER_QUERY_TIMEOUT = 3024;
-		exports.ER_NON_RO_SELECT_DISABLE_TIMER = 3025;
-		exports.ER_DUP_LIST_ENTRY = 3026;
-		exports.ER_SQL_MODE_NO_EFFECT = 3027;
-		exports.ER_AGGREGATE_ORDER_FOR_UNION = 3028;
-		exports.ER_AGGREGATE_ORDER_NON_AGG_QUERY = 3029;
-		exports.ER_REPLICA_WORKER_STOPPED_PREVIOUS_THD_ERROR = 3030;
-		exports.ER_DONT_SUPPORT_REPLICA_PRESERVE_COMMIT_ORDER = 3031;
-		exports.ER_SERVER_OFFLINE_MODE = 3032;
-		exports.ER_GIS_DIFFERENT_SRIDS = 3033;
-		exports.ER_GIS_UNSUPPORTED_ARGUMENT = 3034;
-		exports.ER_GIS_UNKNOWN_ERROR = 3035;
-		exports.ER_GIS_UNKNOWN_EXCEPTION = 3036;
-		exports.ER_GIS_INVALID_DATA = 3037;
-		exports.ER_BOOST_GEOMETRY_EMPTY_INPUT_EXCEPTION = 3038;
-		exports.ER_BOOST_GEOMETRY_CENTROID_EXCEPTION = 3039;
-		exports.ER_BOOST_GEOMETRY_OVERLAY_INVALID_INPUT_EXCEPTION = 3040;
-		exports.ER_BOOST_GEOMETRY_TURN_INFO_EXCEPTION = 3041;
-		exports.ER_BOOST_GEOMETRY_SELF_INTERSECTION_POINT_EXCEPTION = 3042;
-		exports.ER_BOOST_GEOMETRY_UNKNOWN_EXCEPTION = 3043;
-		exports.ER_STD_BAD_ALLOC_ERROR = 3044;
-		exports.ER_STD_DOMAIN_ERROR = 3045;
-		exports.ER_STD_LENGTH_ERROR = 3046;
-		exports.ER_STD_INVALID_ARGUMENT = 3047;
-		exports.ER_STD_OUT_OF_RANGE_ERROR = 3048;
-		exports.ER_STD_OVERFLOW_ERROR = 3049;
-		exports.ER_STD_RANGE_ERROR = 3050;
-		exports.ER_STD_UNDERFLOW_ERROR = 3051;
-		exports.ER_STD_LOGIC_ERROR = 3052;
-		exports.ER_STD_RUNTIME_ERROR = 3053;
-		exports.ER_STD_UNKNOWN_EXCEPTION = 3054;
-		exports.ER_GIS_DATA_WRONG_ENDIANESS = 3055;
-		exports.ER_CHANGE_SOURCE_PASSWORD_LENGTH = 3056;
-		exports.ER_USER_LOCK_WRONG_NAME = 3057;
-		exports.ER_USER_LOCK_DEADLOCK = 3058;
-		exports.ER_REPLACE_INACCESSIBLE_ROWS = 3059;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_GIS = 3060;
-		exports.ER_ILLEGAL_USER_VAR = 3061;
-		exports.ER_GTID_MODE_OFF = 3062;
-		exports.ER_UNSUPPORTED_BY_REPLICATION_THREAD = 3063;
-		exports.ER_INCORRECT_TYPE = 3064;
-		exports.ER_FIELD_IN_ORDER_NOT_SELECT = 3065;
-		exports.ER_AGGREGATE_IN_ORDER_NOT_SELECT = 3066;
-		exports.ER_INVALID_RPL_WILD_TABLE_FILTER_PATTERN = 3067;
-		exports.ER_NET_OK_PACKET_TOO_LARGE = 3068;
-		exports.ER_INVALID_JSON_DATA = 3069;
-		exports.ER_INVALID_GEOJSON_MISSING_MEMBER = 3070;
-		exports.ER_INVALID_GEOJSON_WRONG_TYPE = 3071;
-		exports.ER_INVALID_GEOJSON_UNSPECIFIED = 3072;
-		exports.ER_DIMENSION_UNSUPPORTED = 3073;
-		exports.ER_REPLICA_CHANNEL_DOES_NOT_EXIST = 3074;
-		exports.ER_SLAVE_MULTIPLE_CHANNELS_HOST_PORT = 3075;
-		exports.ER_REPLICA_CHANNEL_NAME_INVALID_OR_TOO_LONG = 3076;
-		exports.ER_REPLICA_NEW_CHANNEL_WRONG_REPOSITORY = 3077;
-		exports.ER_SLAVE_CHANNEL_DELETE = 3078;
-		exports.ER_REPLICA_MULTIPLE_CHANNELS_CMD = 3079;
-		exports.ER_REPLICA_MAX_CHANNELS_EXCEEDED = 3080;
-		exports.ER_REPLICA_CHANNEL_MUST_STOP = 3081;
-		exports.ER_REPLICA_CHANNEL_NOT_RUNNING = 3082;
-		exports.ER_REPLICA_CHANNEL_WAS_RUNNING = 3083;
-		exports.ER_REPLICA_CHANNEL_WAS_NOT_RUNNING = 3084;
-		exports.ER_REPLICA_CHANNEL_SQL_THREAD_MUST_STOP = 3085;
-		exports.ER_REPLICA_CHANNEL_SQL_SKIP_COUNTER = 3086;
-		exports.ER_WRONG_FIELD_WITH_GROUP_V2 = 3087;
-		exports.ER_MIX_OF_GROUP_FUNC_AND_FIELDS_V2 = 3088;
-		exports.ER_WARN_DEPRECATED_SYSVAR_UPDATE = 3089;
-		exports.ER_WARN_DEPRECATED_SQLMODE = 3090;
-		exports.ER_CANNOT_LOG_PARTIAL_DROP_DATABASE_WITH_GTID = 3091;
-		exports.ER_GROUP_REPLICATION_CONFIGURATION = 3092;
-		exports.ER_GROUP_REPLICATION_RUNNING = 3093;
-		exports.ER_GROUP_REPLICATION_APPLIER_INIT_ERROR = 3094;
-		exports.ER_GROUP_REPLICATION_STOP_APPLIER_THREAD_TIMEOUT = 3095;
-		exports.ER_GROUP_REPLICATION_COMMUNICATION_LAYER_SESSION_ERROR = 3096;
-		exports.ER_GROUP_REPLICATION_COMMUNICATION_LAYER_JOIN_ERROR = 3097;
-		exports.ER_BEFORE_DML_VALIDATION_ERROR = 3098;
-		exports.ER_PREVENTS_VARIABLE_WITHOUT_RBR = 3099;
-		exports.ER_RUN_HOOK_ERROR = 3100;
-		exports.ER_TRANSACTION_ROLLBACK_DURING_COMMIT = 3101;
-		exports.ER_GENERATED_COLUMN_FUNCTION_IS_NOT_ALLOWED = 3102;
-		exports.ER_UNSUPPORTED_ALTER_INPLACE_ON_VIRTUAL_COLUMN = 3103;
-		exports.ER_WRONG_FK_OPTION_FOR_GENERATED_COLUMN = 3104;
-		exports.ER_NON_DEFAULT_VALUE_FOR_GENERATED_COLUMN = 3105;
-		exports.ER_UNSUPPORTED_ACTION_ON_GENERATED_COLUMN = 3106;
-		exports.ER_GENERATED_COLUMN_NON_PRIOR = 3107;
-		exports.ER_DEPENDENT_BY_GENERATED_COLUMN = 3108;
-		exports.ER_GENERATED_COLUMN_REF_AUTO_INC = 3109;
-		exports.ER_FEATURE_NOT_AVAILABLE = 3110;
-		exports.ER_CANT_SET_GTID_MODE = 3111;
-		exports.ER_CANT_USE_AUTO_POSITION_WITH_GTID_MODE_OFF = 3112;
-		exports.ER_CANT_REPLICATE_ANONYMOUS_WITH_AUTO_POSITION = 3113;
-		exports.ER_CANT_REPLICATE_ANONYMOUS_WITH_GTID_MODE_ON = 3114;
-		exports.ER_CANT_REPLICATE_GTID_WITH_GTID_MODE_OFF = 3115;
-		exports.ER_CANT_ENFORCE_GTID_CONSISTENCY_WITH_ONGOING_GTID_VIOLATING_TX = 3116;
-		exports.ER_ENFORCE_GTID_CONSISTENCY_WARN_WITH_ONGOING_GTID_VIOLATING_TX = 3117;
-		exports.ER_ACCOUNT_HAS_BEEN_LOCKED = 3118;
-		exports.ER_WRONG_TABLESPACE_NAME = 3119;
-		exports.ER_TABLESPACE_IS_NOT_EMPTY = 3120;
-		exports.ER_WRONG_FILE_NAME = 3121;
-		exports.ER_BOOST_GEOMETRY_INCONSISTENT_TURNS_EXCEPTION = 3122;
-		exports.ER_WARN_OPTIMIZER_HINT_SYNTAX_ERROR = 3123;
-		exports.ER_WARN_BAD_MAX_EXECUTION_TIME = 3124;
-		exports.ER_WARN_UNSUPPORTED_MAX_EXECUTION_TIME = 3125;
-		exports.ER_WARN_CONFLICTING_HINT = 3126;
-		exports.ER_WARN_UNKNOWN_QB_NAME = 3127;
-		exports.ER_UNRESOLVED_HINT_NAME = 3128;
-		exports.ER_WARN_ON_MODIFYING_GTID_EXECUTED_TABLE = 3129;
-		exports.ER_PLUGGABLE_PROTOCOL_COMMAND_NOT_SUPPORTED = 3130;
-		exports.ER_LOCKING_SERVICE_WRONG_NAME = 3131;
-		exports.ER_LOCKING_SERVICE_DEADLOCK = 3132;
-		exports.ER_LOCKING_SERVICE_TIMEOUT = 3133;
-		exports.ER_GIS_MAX_POINTS_IN_GEOMETRY_OVERFLOWED = 3134;
-		exports.ER_SQL_MODE_MERGED = 3135;
-		exports.ER_VTOKEN_PLUGIN_TOKEN_MISMATCH = 3136;
-		exports.ER_VTOKEN_PLUGIN_TOKEN_NOT_FOUND = 3137;
-		exports.ER_CANT_SET_VARIABLE_WHEN_OWNING_GTID = 3138;
-		exports.ER_REPLICA_CHANNEL_OPERATION_NOT_ALLOWED = 3139;
-		exports.ER_INVALID_JSON_TEXT = 3140;
-		exports.ER_INVALID_JSON_TEXT_IN_PARAM = 3141;
-		exports.ER_INVALID_JSON_BINARY_DATA = 3142;
-		exports.ER_INVALID_JSON_PATH = 3143;
-		exports.ER_INVALID_JSON_CHARSET = 3144;
-		exports.ER_INVALID_JSON_CHARSET_IN_FUNCTION = 3145;
-		exports.ER_INVALID_TYPE_FOR_JSON = 3146;
-		exports.ER_INVALID_CAST_TO_JSON = 3147;
-		exports.ER_INVALID_JSON_PATH_CHARSET = 3148;
-		exports.ER_INVALID_JSON_PATH_WILDCARD = 3149;
-		exports.ER_JSON_VALUE_TOO_BIG = 3150;
-		exports.ER_JSON_KEY_TOO_BIG = 3151;
-		exports.ER_JSON_USED_AS_KEY = 3152;
-		exports.ER_JSON_VACUOUS_PATH = 3153;
-		exports.ER_JSON_BAD_ONE_OR_ALL_ARG = 3154;
-		exports.ER_NUMERIC_JSON_VALUE_OUT_OF_RANGE = 3155;
-		exports.ER_INVALID_JSON_VALUE_FOR_CAST = 3156;
-		exports.ER_JSON_DOCUMENT_TOO_DEEP = 3157;
-		exports.ER_JSON_DOCUMENT_NULL_KEY = 3158;
-		exports.ER_SECURE_TRANSPORT_REQUIRED = 3159;
-		exports.ER_NO_SECURE_TRANSPORTS_CONFIGURED = 3160;
-		exports.ER_DISABLED_STORAGE_ENGINE = 3161;
-		exports.ER_USER_DOES_NOT_EXIST = 3162;
-		exports.ER_USER_ALREADY_EXISTS = 3163;
-		exports.ER_AUDIT_API_ABORT = 3164;
-		exports.ER_INVALID_JSON_PATH_ARRAY_CELL = 3165;
-		exports.ER_BUFPOOL_RESIZE_INPROGRESS = 3166;
-		exports.ER_FEATURE_DISABLED_SEE_DOC = 3167;
-		exports.ER_SERVER_ISNT_AVAILABLE = 3168;
-		exports.ER_SESSION_WAS_KILLED = 3169;
-		exports.ER_CAPACITY_EXCEEDED = 3170;
-		exports.ER_CAPACITY_EXCEEDED_IN_RANGE_OPTIMIZER = 3171;
-		exports.ER_TABLE_NEEDS_UPG_PART = 3172;
-		exports.ER_CANT_WAIT_FOR_EXECUTED_GTID_SET_WHILE_OWNING_A_GTID = 3173;
-		exports.ER_CANNOT_ADD_FOREIGN_BASE_COL_VIRTUAL = 3174;
-		exports.ER_CANNOT_CREATE_VIRTUAL_INDEX_CONSTRAINT = 3175;
-		exports.ER_ERROR_ON_MODIFYING_GTID_EXECUTED_TABLE = 3176;
-		exports.ER_LOCK_REFUSED_BY_ENGINE = 3177;
-		exports.ER_UNSUPPORTED_ALTER_ONLINE_ON_VIRTUAL_COLUMN = 3178;
-		exports.ER_MASTER_KEY_ROTATION_NOT_SUPPORTED_BY_SE = 3179;
-		exports.ER_MASTER_KEY_ROTATION_ERROR_BY_SE = 3180;
-		exports.ER_MASTER_KEY_ROTATION_BINLOG_FAILED = 3181;
-		exports.ER_MASTER_KEY_ROTATION_SE_UNAVAILABLE = 3182;
-		exports.ER_TABLESPACE_CANNOT_ENCRYPT = 3183;
-		exports.ER_INVALID_ENCRYPTION_OPTION = 3184;
-		exports.ER_CANNOT_FIND_KEY_IN_KEYRING = 3185;
-		exports.ER_CAPACITY_EXCEEDED_IN_PARSER = 3186;
-		exports.ER_UNSUPPORTED_ALTER_ENCRYPTION_INPLACE = 3187;
-		exports.ER_KEYRING_UDF_KEYRING_SERVICE_ERROR = 3188;
-		exports.ER_USER_COLUMN_OLD_LENGTH = 3189;
-		exports.ER_CANT_RESET_SOURCE = 3190;
-		exports.ER_GROUP_REPLICATION_MAX_GROUP_SIZE = 3191;
-		exports.ER_CANNOT_ADD_FOREIGN_BASE_COL_STORED = 3192;
-		exports.ER_TABLE_REFERENCED = 3193;
-		exports.ER_PARTITION_ENGINE_DEPRECATED_FOR_TABLE = 3194;
-		exports.ER_WARN_USING_GEOMFROMWKB_TO_SET_SRID_ZERO = 3195;
-		exports.ER_WARN_USING_GEOMFROMWKB_TO_SET_SRID = 3196;
-		exports.ER_XA_RETRY = 3197;
-		exports.ER_KEYRING_AWS_UDF_AWS_KMS_ERROR = 3198;
-		exports.ER_BINLOG_UNSAFE_XA = 3199;
-		exports.ER_UDF_ERROR = 3200;
-		exports.ER_KEYRING_MIGRATION_FAILURE = 3201;
-		exports.ER_KEYRING_ACCESS_DENIED_ERROR = 3202;
-		exports.ER_KEYRING_MIGRATION_STATUS = 3203;
-		exports.ER_PLUGIN_FAILED_TO_OPEN_TABLES = 3204;
-		exports.ER_PLUGIN_FAILED_TO_OPEN_TABLE = 3205;
-		exports.ER_AUDIT_LOG_NO_KEYRING_PLUGIN_INSTALLED = 3206;
-		exports.ER_AUDIT_LOG_ENCRYPTION_PASSWORD_HAS_NOT_BEEN_SET = 3207;
-		exports.ER_AUDIT_LOG_COULD_NOT_CREATE_AES_KEY = 3208;
-		exports.ER_AUDIT_LOG_ENCRYPTION_PASSWORD_CANNOT_BE_FETCHED = 3209;
-		exports.ER_AUDIT_LOG_JSON_FILTERING_NOT_ENABLED = 3210;
-		exports.ER_AUDIT_LOG_UDF_INSUFFICIENT_PRIVILEGE = 3211;
-		exports.ER_AUDIT_LOG_SUPER_PRIVILEGE_REQUIRED = 3212;
-		exports.ER_COULD_NOT_REINITIALIZE_AUDIT_LOG_FILTERS = 3213;
-		exports.ER_AUDIT_LOG_UDF_INVALID_ARGUMENT_TYPE = 3214;
-		exports.ER_AUDIT_LOG_UDF_INVALID_ARGUMENT_COUNT = 3215;
-		exports.ER_AUDIT_LOG_HAS_NOT_BEEN_INSTALLED = 3216;
-		exports.ER_AUDIT_LOG_UDF_READ_INVALID_MAX_ARRAY_LENGTH_ARG_TYPE = 3217;
-		exports.ER_AUDIT_LOG_UDF_READ_INVALID_MAX_ARRAY_LENGTH_ARG_VALUE = 3218;
-		exports.ER_AUDIT_LOG_JSON_FILTER_PARSING_ERROR = 3219;
-		exports.ER_AUDIT_LOG_JSON_FILTER_NAME_CANNOT_BE_EMPTY = 3220;
-		exports.ER_AUDIT_LOG_JSON_USER_NAME_CANNOT_BE_EMPTY = 3221;
-		exports.ER_AUDIT_LOG_JSON_FILTER_DOES_NOT_EXISTS = 3222;
-		exports.ER_AUDIT_LOG_USER_FIRST_CHARACTER_MUST_BE_ALPHANUMERIC = 3223;
-		exports.ER_AUDIT_LOG_USER_NAME_INVALID_CHARACTER = 3224;
-		exports.ER_AUDIT_LOG_HOST_NAME_INVALID_CHARACTER = 3225;
-		exports.WARN_DEPRECATED_MAXDB_SQL_MODE_FOR_TIMESTAMP = 3226;
-		exports.ER_XA_REPLICATION_FILTERS = 3227;
-		exports.ER_CANT_OPEN_ERROR_LOG = 3228;
-		exports.ER_GROUPING_ON_TIMESTAMP_IN_DST = 3229;
-		exports.ER_CANT_START_SERVER_NAMED_PIPE = 3230;
-		exports.ER_WRITE_SET_EXCEEDS_LIMIT = 3231;
-		exports.ER_DEPRECATED_TLS_VERSION_SESSION_57 = 3232;
-		exports.ER_WARN_DEPRECATED_TLS_VERSION_57 = 3233;
-		exports.ER_WARN_WRONG_NATIVE_TABLE_STRUCTURE = 3234;
-		exports.ER_AES_INVALID_KDF_NAME = 3235;
-		exports.ER_AES_INVALID_KDF_ITERATIONS = 3236;
-		exports.WARN_AES_KEY_SIZE = 3237;
-		exports.ER_AES_INVALID_KDF_OPTION_SIZE = 3238;
-		exports.ER_UNSUPPORT_COMPRESSED_TEMPORARY_TABLE = 3500;
-		exports.ER_ACL_OPERATION_FAILED = 3501;
-		exports.ER_UNSUPPORTED_INDEX_ALGORITHM = 3502;
-		exports.ER_NO_SUCH_DB = 3503;
-		exports.ER_TOO_BIG_ENUM = 3504;
-		exports.ER_TOO_LONG_SET_ENUM_VALUE = 3505;
-		exports.ER_INVALID_DD_OBJECT = 3506;
-		exports.ER_UPDATING_DD_TABLE = 3507;
-		exports.ER_INVALID_DD_OBJECT_ID = 3508;
-		exports.ER_INVALID_DD_OBJECT_NAME = 3509;
-		exports.ER_TABLESPACE_MISSING_WITH_NAME = 3510;
-		exports.ER_TOO_LONG_ROUTINE_COMMENT = 3511;
-		exports.ER_SP_LOAD_FAILED = 3512;
-		exports.ER_INVALID_BITWISE_OPERANDS_SIZE = 3513;
-		exports.ER_INVALID_BITWISE_AGGREGATE_OPERANDS_SIZE = 3514;
-		exports.ER_WARN_UNSUPPORTED_HINT = 3515;
-		exports.ER_UNEXPECTED_GEOMETRY_TYPE = 3516;
-		exports.ER_SRS_PARSE_ERROR = 3517;
-		exports.ER_SRS_PROJ_PARAMETER_MISSING = 3518;
-		exports.ER_WARN_SRS_NOT_FOUND = 3519;
-		exports.ER_SRS_NOT_CARTESIAN = 3520;
-		exports.ER_SRS_NOT_CARTESIAN_UNDEFINED = 3521;
-		exports.ER_PK_INDEX_CANT_BE_INVISIBLE = 3522;
-		exports.ER_UNKNOWN_AUTHID = 3523;
-		exports.ER_FAILED_ROLE_GRANT = 3524;
-		exports.ER_OPEN_ROLE_TABLES = 3525;
-		exports.ER_FAILED_DEFAULT_ROLES = 3526;
-		exports.ER_COMPONENTS_NO_SCHEME = 3527;
-		exports.ER_COMPONENTS_NO_SCHEME_SERVICE = 3528;
-		exports.ER_COMPONENTS_CANT_LOAD = 3529;
-		exports.ER_ROLE_NOT_GRANTED = 3530;
-		exports.ER_FAILED_REVOKE_ROLE = 3531;
-		exports.ER_RENAME_ROLE = 3532;
-		exports.ER_COMPONENTS_CANT_ACQUIRE_SERVICE_IMPLEMENTATION = 3533;
-		exports.ER_COMPONENTS_CANT_SATISFY_DEPENDENCY = 3534;
-		exports.ER_COMPONENTS_LOAD_CANT_REGISTER_SERVICE_IMPLEMENTATION = 3535;
-		exports.ER_COMPONENTS_LOAD_CANT_INITIALIZE = 3536;
-		exports.ER_COMPONENTS_UNLOAD_NOT_LOADED = 3537;
-		exports.ER_COMPONENTS_UNLOAD_CANT_DEINITIALIZE = 3538;
-		exports.ER_COMPONENTS_CANT_RELEASE_SERVICE = 3539;
-		exports.ER_COMPONENTS_UNLOAD_CANT_UNREGISTER_SERVICE = 3540;
-		exports.ER_COMPONENTS_CANT_UNLOAD = 3541;
-		exports.ER_WARN_UNLOAD_THE_NOT_PERSISTED = 3542;
-		exports.ER_COMPONENT_TABLE_INCORRECT = 3543;
-		exports.ER_COMPONENT_MANIPULATE_ROW_FAILED = 3544;
-		exports.ER_COMPONENTS_UNLOAD_DUPLICATE_IN_GROUP = 3545;
-		exports.ER_CANT_SET_GTID_PURGED_DUE_SETS_CONSTRAINTS = 3546;
-		exports.ER_CANNOT_LOCK_USER_MANAGEMENT_CACHES = 3547;
-		exports.ER_SRS_NOT_FOUND = 3548;
-		exports.ER_VARIABLE_NOT_PERSISTED = 3549;
-		exports.ER_IS_QUERY_INVALID_CLAUSE = 3550;
-		exports.ER_UNABLE_TO_STORE_STATISTICS = 3551;
-		exports.ER_NO_SYSTEM_SCHEMA_ACCESS = 3552;
-		exports.ER_NO_SYSTEM_TABLESPACE_ACCESS = 3553;
-		exports.ER_NO_SYSTEM_TABLE_ACCESS = 3554;
-		exports.ER_NO_SYSTEM_TABLE_ACCESS_FOR_DICTIONARY_TABLE = 3555;
-		exports.ER_NO_SYSTEM_TABLE_ACCESS_FOR_SYSTEM_TABLE = 3556;
-		exports.ER_NO_SYSTEM_TABLE_ACCESS_FOR_TABLE = 3557;
-		exports.ER_INVALID_OPTION_KEY = 3558;
-		exports.ER_INVALID_OPTION_VALUE = 3559;
-		exports.ER_INVALID_OPTION_KEY_VALUE_PAIR = 3560;
-		exports.ER_INVALID_OPTION_START_CHARACTER = 3561;
-		exports.ER_INVALID_OPTION_END_CHARACTER = 3562;
-		exports.ER_INVALID_OPTION_CHARACTERS = 3563;
-		exports.ER_DUPLICATE_OPTION_KEY = 3564;
-		exports.ER_WARN_SRS_NOT_FOUND_AXIS_ORDER = 3565;
-		exports.ER_NO_ACCESS_TO_NATIVE_FCT = 3566;
-		exports.ER_RESET_SOURCE_TO_VALUE_OUT_OF_RANGE = 3567;
-		exports.ER_UNRESOLVED_TABLE_LOCK = 3568;
-		exports.ER_DUPLICATE_TABLE_LOCK = 3569;
-		exports.ER_BINLOG_UNSAFE_SKIP_LOCKED = 3570;
-		exports.ER_BINLOG_UNSAFE_NOWAIT = 3571;
-		exports.ER_LOCK_NOWAIT = 3572;
-		exports.ER_CTE_RECURSIVE_REQUIRES_UNION = 3573;
-		exports.ER_CTE_RECURSIVE_REQUIRES_NONRECURSIVE_FIRST = 3574;
-		exports.ER_CTE_RECURSIVE_FORBIDS_AGGREGATION = 3575;
-		exports.ER_CTE_RECURSIVE_FORBIDDEN_JOIN_ORDER = 3576;
-		exports.ER_CTE_RECURSIVE_REQUIRES_SINGLE_REFERENCE = 3577;
-		exports.ER_SWITCH_TMP_ENGINE = 3578;
-		exports.ER_WINDOW_NO_SUCH_WINDOW = 3579;
-		exports.ER_WINDOW_CIRCULARITY_IN_WINDOW_GRAPH = 3580;
-		exports.ER_WINDOW_NO_CHILD_PARTITIONING = 3581;
-		exports.ER_WINDOW_NO_INHERIT_FRAME = 3582;
-		exports.ER_WINDOW_NO_REDEFINE_ORDER_BY = 3583;
-		exports.ER_WINDOW_FRAME_START_ILLEGAL = 3584;
-		exports.ER_WINDOW_FRAME_END_ILLEGAL = 3585;
-		exports.ER_WINDOW_FRAME_ILLEGAL = 3586;
-		exports.ER_WINDOW_RANGE_FRAME_ORDER_TYPE = 3587;
-		exports.ER_WINDOW_RANGE_FRAME_TEMPORAL_TYPE = 3588;
-		exports.ER_WINDOW_RANGE_FRAME_NUMERIC_TYPE = 3589;
-		exports.ER_WINDOW_RANGE_BOUND_NOT_CONSTANT = 3590;
-		exports.ER_WINDOW_DUPLICATE_NAME = 3591;
-		exports.ER_WINDOW_ILLEGAL_ORDER_BY = 3592;
-		exports.ER_WINDOW_INVALID_WINDOW_FUNC_USE = 3593;
-		exports.ER_WINDOW_INVALID_WINDOW_FUNC_ALIAS_USE = 3594;
-		exports.ER_WINDOW_NESTED_WINDOW_FUNC_USE_IN_WINDOW_SPEC = 3595;
-		exports.ER_WINDOW_ROWS_INTERVAL_USE = 3596;
-		exports.ER_WINDOW_NO_GROUP_ORDER = 3597;
-		exports.ER_WINDOW_EXPLAIN_JSON = 3598;
-		exports.ER_WINDOW_FUNCTION_IGNORES_FRAME = 3599;
-		exports.ER_WL9236_NOW = 3600;
-		exports.ER_INVALID_NO_OF_ARGS = 3601;
-		exports.ER_FIELD_IN_GROUPING_NOT_GROUP_BY = 3602;
-		exports.ER_TOO_LONG_TABLESPACE_COMMENT = 3603;
-		exports.ER_ENGINE_CANT_DROP_TABLE = 3604;
-		exports.ER_ENGINE_CANT_DROP_MISSING_TABLE = 3605;
-		exports.ER_TABLESPACE_DUP_FILENAME = 3606;
-		exports.ER_DB_DROP_RMDIR2 = 3607;
-		exports.ER_IMP_NO_FILES_MATCHED = 3608;
-		exports.ER_IMP_SCHEMA_DOES_NOT_EXIST = 3609;
-		exports.ER_IMP_TABLE_ALREADY_EXISTS = 3610;
-		exports.ER_IMP_INCOMPATIBLE_MYSQLD_VERSION = 3611;
-		exports.ER_IMP_INCOMPATIBLE_DD_VERSION = 3612;
-		exports.ER_IMP_INCOMPATIBLE_SDI_VERSION = 3613;
-		exports.ER_WARN_INVALID_HINT = 3614;
-		exports.ER_VAR_DOES_NOT_EXIST = 3615;
-		exports.ER_LONGITUDE_OUT_OF_RANGE = 3616;
-		exports.ER_LATITUDE_OUT_OF_RANGE = 3617;
-		exports.ER_NOT_IMPLEMENTED_FOR_GEOGRAPHIC_SRS = 3618;
-		exports.ER_ILLEGAL_PRIVILEGE_LEVEL = 3619;
-		exports.ER_NO_SYSTEM_VIEW_ACCESS = 3620;
-		exports.ER_COMPONENT_FILTER_FLABBERGASTED = 3621;
-		exports.ER_PART_EXPR_TOO_LONG = 3622;
-		exports.ER_UDF_DROP_DYNAMICALLY_REGISTERED = 3623;
-		exports.ER_UNABLE_TO_STORE_COLUMN_STATISTICS = 3624;
-		exports.ER_UNABLE_TO_UPDATE_COLUMN_STATISTICS = 3625;
-		exports.ER_UNABLE_TO_DROP_COLUMN_STATISTICS = 3626;
-		exports.ER_UNABLE_TO_BUILD_HISTOGRAM = 3627;
-		exports.ER_MANDATORY_ROLE = 3628;
-		exports.ER_MISSING_TABLESPACE_FILE = 3629;
-		exports.ER_PERSIST_ONLY_ACCESS_DENIED_ERROR = 3630;
-		exports.ER_CMD_NEED_SUPER = 3631;
-		exports.ER_PATH_IN_DATADIR = 3632;
-		exports.ER_CLONE_DDL_IN_PROGRESS = 3633;
-		exports.ER_CLONE_TOO_MANY_CONCURRENT_CLONES = 3634;
-		exports.ER_APPLIER_LOG_EVENT_VALIDATION_ERROR = 3635;
-		exports.ER_CTE_MAX_RECURSION_DEPTH = 3636;
-		exports.ER_NOT_HINT_UPDATABLE_VARIABLE = 3637;
-		exports.ER_CREDENTIALS_CONTRADICT_TO_HISTORY = 3638;
-		exports.ER_WARNING_PASSWORD_HISTORY_CLAUSES_VOID = 3639;
-		exports.ER_CLIENT_DOES_NOT_SUPPORT = 3640;
-		exports.ER_I_S_SKIPPED_TABLESPACE = 3641;
-		exports.ER_TABLESPACE_ENGINE_MISMATCH = 3642;
-		exports.ER_WRONG_SRID_FOR_COLUMN = 3643;
-		exports.ER_CANNOT_ALTER_SRID_DUE_TO_INDEX = 3644;
-		exports.ER_WARN_BINLOG_PARTIAL_UPDATES_DISABLED = 3645;
-		exports.ER_WARN_BINLOG_V1_ROW_EVENTS_DISABLED = 3646;
-		exports.ER_WARN_BINLOG_PARTIAL_UPDATES_SUGGESTS_PARTIAL_IMAGES = 3647;
-		exports.ER_COULD_NOT_APPLY_JSON_DIFF = 3648;
-		exports.ER_CORRUPTED_JSON_DIFF = 3649;
-		exports.ER_RESOURCE_GROUP_EXISTS = 3650;
-		exports.ER_RESOURCE_GROUP_NOT_EXISTS = 3651;
-		exports.ER_INVALID_VCPU_ID = 3652;
-		exports.ER_INVALID_VCPU_RANGE = 3653;
-		exports.ER_INVALID_THREAD_PRIORITY = 3654;
-		exports.ER_DISALLOWED_OPERATION = 3655;
-		exports.ER_RESOURCE_GROUP_BUSY = 3656;
-		exports.ER_RESOURCE_GROUP_DISABLED = 3657;
-		exports.ER_FEATURE_UNSUPPORTED = 3658;
-		exports.ER_ATTRIBUTE_IGNORED = 3659;
-		exports.ER_INVALID_THREAD_ID = 3660;
-		exports.ER_RESOURCE_GROUP_BIND_FAILED = 3661;
-		exports.ER_INVALID_USE_OF_FORCE_OPTION = 3662;
-		exports.ER_GROUP_REPLICATION_COMMAND_FAILURE = 3663;
-		exports.ER_SDI_OPERATION_FAILED = 3664;
-		exports.ER_MISSING_JSON_TABLE_VALUE = 3665;
-		exports.ER_WRONG_JSON_TABLE_VALUE = 3666;
-		exports.ER_TF_MUST_HAVE_ALIAS = 3667;
-		exports.ER_TF_FORBIDDEN_JOIN_TYPE = 3668;
-		exports.ER_JT_VALUE_OUT_OF_RANGE = 3669;
-		exports.ER_JT_MAX_NESTED_PATH = 3670;
-		exports.ER_PASSWORD_EXPIRATION_NOT_SUPPORTED_BY_AUTH_METHOD = 3671;
-		exports.ER_INVALID_GEOJSON_CRS_NOT_TOP_LEVEL = 3672;
-		exports.ER_BAD_NULL_ERROR_NOT_IGNORED = 3673;
-		exports.WARN_USELESS_SPATIAL_INDEX = 3674;
-		exports.ER_DISK_FULL_NOWAIT = 3675;
-		exports.ER_PARSE_ERROR_IN_DIGEST_FN = 3676;
-		exports.ER_UNDISCLOSED_PARSE_ERROR_IN_DIGEST_FN = 3677;
-		exports.ER_SCHEMA_DIR_EXISTS = 3678;
-		exports.ER_SCHEMA_DIR_MISSING = 3679;
-		exports.ER_SCHEMA_DIR_CREATE_FAILED = 3680;
-		exports.ER_SCHEMA_DIR_UNKNOWN = 3681;
-		exports.ER_ONLY_IMPLEMENTED_FOR_SRID_0_AND_4326 = 3682;
-		exports.ER_BINLOG_EXPIRE_LOG_DAYS_AND_SECS_USED_TOGETHER = 3683;
-		exports.ER_REGEXP_BUFFER_OVERFLOW = 3684;
-		exports.ER_REGEXP_ILLEGAL_ARGUMENT = 3685;
-		exports.ER_REGEXP_INDEX_OUTOFBOUNDS_ERROR = 3686;
-		exports.ER_REGEXP_INTERNAL_ERROR = 3687;
-		exports.ER_REGEXP_RULE_SYNTAX = 3688;
-		exports.ER_REGEXP_BAD_ESCAPE_SEQUENCE = 3689;
-		exports.ER_REGEXP_UNIMPLEMENTED = 3690;
-		exports.ER_REGEXP_MISMATCHED_PAREN = 3691;
-		exports.ER_REGEXP_BAD_INTERVAL = 3692;
-		exports.ER_REGEXP_MAX_LT_MIN = 3693;
-		exports.ER_REGEXP_INVALID_BACK_REF = 3694;
-		exports.ER_REGEXP_LOOK_BEHIND_LIMIT = 3695;
-		exports.ER_REGEXP_MISSING_CLOSE_BRACKET = 3696;
-		exports.ER_REGEXP_INVALID_RANGE = 3697;
-		exports.ER_REGEXP_STACK_OVERFLOW = 3698;
-		exports.ER_REGEXP_TIME_OUT = 3699;
-		exports.ER_REGEXP_PATTERN_TOO_BIG = 3700;
-		exports.ER_CANT_SET_ERROR_LOG_SERVICE = 3701;
-		exports.ER_EMPTY_PIPELINE_FOR_ERROR_LOG_SERVICE = 3702;
-		exports.ER_COMPONENT_FILTER_DIAGNOSTICS = 3703;
-		exports.ER_NOT_IMPLEMENTED_FOR_CARTESIAN_SRS = 3704;
-		exports.ER_NOT_IMPLEMENTED_FOR_PROJECTED_SRS = 3705;
-		exports.ER_NONPOSITIVE_RADIUS = 3706;
-		exports.ER_RESTART_SERVER_FAILED = 3707;
-		exports.ER_SRS_MISSING_MANDATORY_ATTRIBUTE = 3708;
-		exports.ER_SRS_MULTIPLE_ATTRIBUTE_DEFINITIONS = 3709;
-		exports.ER_SRS_NAME_CANT_BE_EMPTY_OR_WHITESPACE = 3710;
-		exports.ER_SRS_ORGANIZATION_CANT_BE_EMPTY_OR_WHITESPACE = 3711;
-		exports.ER_SRS_ID_ALREADY_EXISTS = 3712;
-		exports.ER_WARN_SRS_ID_ALREADY_EXISTS = 3713;
-		exports.ER_CANT_MODIFY_SRID_0 = 3714;
-		exports.ER_WARN_RESERVED_SRID_RANGE = 3715;
-		exports.ER_CANT_MODIFY_SRS_USED_BY_COLUMN = 3716;
-		exports.ER_SRS_INVALID_CHARACTER_IN_ATTRIBUTE = 3717;
-		exports.ER_SRS_ATTRIBUTE_STRING_TOO_LONG = 3718;
-		exports.ER_DEPRECATED_UTF8_ALIAS = 3719;
-		exports.ER_DEPRECATED_NATIONAL = 3720;
-		exports.ER_INVALID_DEFAULT_UTF8MB4_COLLATION = 3721;
-		exports.ER_UNABLE_TO_COLLECT_LOG_STATUS = 3722;
-		exports.ER_RESERVED_TABLESPACE_NAME = 3723;
-		exports.ER_UNABLE_TO_SET_OPTION = 3724;
-		exports.ER_REPLICA_POSSIBLY_DIVERGED_AFTER_DDL = 3725;
-		exports.ER_SRS_NOT_GEOGRAPHIC = 3726;
-		exports.ER_POLYGON_TOO_LARGE = 3727;
-		exports.ER_SPATIAL_UNIQUE_INDEX = 3728;
-		exports.ER_INDEX_TYPE_NOT_SUPPORTED_FOR_SPATIAL_INDEX = 3729;
-		exports.ER_FK_CANNOT_DROP_PARENT = 3730;
-		exports.ER_GEOMETRY_PARAM_LONGITUDE_OUT_OF_RANGE = 3731;
-		exports.ER_GEOMETRY_PARAM_LATITUDE_OUT_OF_RANGE = 3732;
-		exports.ER_FK_CANNOT_USE_VIRTUAL_COLUMN = 3733;
-		exports.ER_FK_NO_COLUMN_PARENT = 3734;
-		exports.ER_CANT_SET_ERROR_SUPPRESSION_LIST = 3735;
-		exports.ER_SRS_GEOGCS_INVALID_AXES = 3736;
-		exports.ER_SRS_INVALID_SEMI_MAJOR_AXIS = 3737;
-		exports.ER_SRS_INVALID_INVERSE_FLATTENING = 3738;
-		exports.ER_SRS_INVALID_ANGULAR_UNIT = 3739;
-		exports.ER_SRS_INVALID_PRIME_MERIDIAN = 3740;
-		exports.ER_TRANSFORM_SOURCE_SRS_NOT_SUPPORTED = 3741;
-		exports.ER_TRANSFORM_TARGET_SRS_NOT_SUPPORTED = 3742;
-		exports.ER_TRANSFORM_SOURCE_SRS_MISSING_TOWGS84 = 3743;
-		exports.ER_TRANSFORM_TARGET_SRS_MISSING_TOWGS84 = 3744;
-		exports.ER_TEMP_TABLE_PREVENTS_SWITCH_SESSION_BINLOG_FORMAT = 3745;
-		exports.ER_TEMP_TABLE_PREVENTS_SWITCH_GLOBAL_BINLOG_FORMAT = 3746;
-		exports.ER_RUNNING_APPLIER_PREVENTS_SWITCH_GLOBAL_BINLOG_FORMAT = 3747;
-		exports.ER_CLIENT_GTID_UNSAFE_CREATE_DROP_TEMP_TABLE_IN_TRX_IN_SBR = 3748;
-		exports.ER_XA_CANT_CREATE_MDL_BACKUP = 3749;
-		exports.ER_TABLE_WITHOUT_PK = 3750;
-		exports.ER_WARN_DATA_TRUNCATED_FUNCTIONAL_INDEX = 3751;
-		exports.ER_WARN_DATA_OUT_OF_RANGE_FUNCTIONAL_INDEX = 3752;
-		exports.ER_FUNCTIONAL_INDEX_ON_JSON_OR_GEOMETRY_FUNCTION = 3753;
-		exports.ER_FUNCTIONAL_INDEX_REF_AUTO_INCREMENT = 3754;
-		exports.ER_CANNOT_DROP_COLUMN_FUNCTIONAL_INDEX = 3755;
-		exports.ER_FUNCTIONAL_INDEX_PRIMARY_KEY = 3756;
-		exports.ER_FUNCTIONAL_INDEX_ON_LOB = 3757;
-		exports.ER_FUNCTIONAL_INDEX_FUNCTION_IS_NOT_ALLOWED = 3758;
-		exports.ER_FULLTEXT_FUNCTIONAL_INDEX = 3759;
-		exports.ER_SPATIAL_FUNCTIONAL_INDEX = 3760;
-		exports.ER_WRONG_KEY_COLUMN_FUNCTIONAL_INDEX = 3761;
-		exports.ER_FUNCTIONAL_INDEX_ON_FIELD = 3762;
-		exports.ER_GENERATED_COLUMN_NAMED_FUNCTION_IS_NOT_ALLOWED = 3763;
-		exports.ER_GENERATED_COLUMN_ROW_VALUE = 3764;
-		exports.ER_GENERATED_COLUMN_VARIABLES = 3765;
-		exports.ER_DEPENDENT_BY_DEFAULT_GENERATED_VALUE = 3766;
-		exports.ER_DEFAULT_VAL_GENERATED_NON_PRIOR = 3767;
-		exports.ER_DEFAULT_VAL_GENERATED_REF_AUTO_INC = 3768;
-		exports.ER_DEFAULT_VAL_GENERATED_FUNCTION_IS_NOT_ALLOWED = 3769;
-		exports.ER_DEFAULT_VAL_GENERATED_NAMED_FUNCTION_IS_NOT_ALLOWED = 3770;
-		exports.ER_DEFAULT_VAL_GENERATED_ROW_VALUE = 3771;
-		exports.ER_DEFAULT_VAL_GENERATED_VARIABLES = 3772;
-		exports.ER_DEFAULT_AS_VAL_GENERATED = 3773;
-		exports.ER_UNSUPPORTED_ACTION_ON_DEFAULT_VAL_GENERATED = 3774;
-		exports.ER_GTID_UNSAFE_ALTER_ADD_COL_WITH_DEFAULT_EXPRESSION = 3775;
-		exports.ER_FK_CANNOT_CHANGE_ENGINE = 3776;
-		exports.ER_WARN_DEPRECATED_USER_SET_EXPR = 3777;
-		exports.ER_WARN_DEPRECATED_UTF8MB3_COLLATION = 3778;
-		exports.ER_WARN_DEPRECATED_NESTED_COMMENT_SYNTAX = 3779;
-		exports.ER_FK_INCOMPATIBLE_COLUMNS = 3780;
-		exports.ER_GR_HOLD_WAIT_TIMEOUT = 3781;
-		exports.ER_GR_HOLD_KILLED = 3782;
-		exports.ER_GR_HOLD_MEMBER_STATUS_ERROR = 3783;
-		exports.ER_RPL_ENCRYPTION_FAILED_TO_FETCH_KEY = 3784;
-		exports.ER_RPL_ENCRYPTION_KEY_NOT_FOUND = 3785;
-		exports.ER_RPL_ENCRYPTION_KEYRING_INVALID_KEY = 3786;
-		exports.ER_RPL_ENCRYPTION_HEADER_ERROR = 3787;
-		exports.ER_RPL_ENCRYPTION_FAILED_TO_ROTATE_LOGS = 3788;
-		exports.ER_RPL_ENCRYPTION_KEY_EXISTS_UNEXPECTED = 3789;
-		exports.ER_RPL_ENCRYPTION_FAILED_TO_GENERATE_KEY = 3790;
-		exports.ER_RPL_ENCRYPTION_FAILED_TO_STORE_KEY = 3791;
-		exports.ER_RPL_ENCRYPTION_FAILED_TO_REMOVE_KEY = 3792;
-		exports.ER_RPL_ENCRYPTION_UNABLE_TO_CHANGE_OPTION = 3793;
-		exports.ER_RPL_ENCRYPTION_MASTER_KEY_RECOVERY_FAILED = 3794;
-		exports.ER_SLOW_LOG_MODE_IGNORED_WHEN_NOT_LOGGING_TO_FILE = 3795;
-		exports.ER_GRP_TRX_CONSISTENCY_NOT_ALLOWED = 3796;
-		exports.ER_GRP_TRX_CONSISTENCY_BEFORE = 3797;
-		exports.ER_GRP_TRX_CONSISTENCY_AFTER_ON_TRX_BEGIN = 3798;
-		exports.ER_GRP_TRX_CONSISTENCY_BEGIN_NOT_ALLOWED = 3799;
-		exports.ER_FUNCTIONAL_INDEX_ROW_VALUE_IS_NOT_ALLOWED = 3800;
-		exports.ER_RPL_ENCRYPTION_FAILED_TO_ENCRYPT = 3801;
-		exports.ER_PAGE_TRACKING_NOT_STARTED = 3802;
-		exports.ER_PAGE_TRACKING_RANGE_NOT_TRACKED = 3803;
-		exports.ER_PAGE_TRACKING_CANNOT_PURGE = 3804;
-		exports.ER_RPL_ENCRYPTION_CANNOT_ROTATE_BINLOG_MASTER_KEY = 3805;
-		exports.ER_BINLOG_MASTER_KEY_RECOVERY_OUT_OF_COMBINATION = 3806;
-		exports.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_OPERATE_KEY = 3807;
-		exports.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_ROTATE_LOGS = 3808;
-		exports.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_REENCRYPT_LOG = 3809;
-		exports.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_CLEANUP_UNUSED_KEYS = 3810;
-		exports.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_CLEANUP_AUX_KEY = 3811;
-		exports.ER_NON_BOOLEAN_EXPR_FOR_CHECK_CONSTRAINT = 3812;
-		exports.ER_COLUMN_CHECK_CONSTRAINT_REFERENCES_OTHER_COLUMN = 3813;
-		exports.ER_CHECK_CONSTRAINT_NAMED_FUNCTION_IS_NOT_ALLOWED = 3814;
-		exports.ER_CHECK_CONSTRAINT_FUNCTION_IS_NOT_ALLOWED = 3815;
-		exports.ER_CHECK_CONSTRAINT_VARIABLES = 3816;
-		exports.ER_CHECK_CONSTRAINT_ROW_VALUE = 3817;
-		exports.ER_CHECK_CONSTRAINT_REFERS_AUTO_INCREMENT_COLUMN = 3818;
-		exports.ER_CHECK_CONSTRAINT_VIOLATED = 3819;
-		exports.ER_CHECK_CONSTRAINT_REFERS_UNKNOWN_COLUMN = 3820;
-		exports.ER_CHECK_CONSTRAINT_NOT_FOUND = 3821;
-		exports.ER_CHECK_CONSTRAINT_DUP_NAME = 3822;
-		exports.ER_CHECK_CONSTRAINT_CLAUSE_USING_FK_REFER_ACTION_COLUMN = 3823;
-		exports.WARN_UNENCRYPTED_TABLE_IN_ENCRYPTED_DB = 3824;
-		exports.ER_INVALID_ENCRYPTION_REQUEST = 3825;
-		exports.ER_CANNOT_SET_TABLE_ENCRYPTION = 3826;
-		exports.ER_CANNOT_SET_DATABASE_ENCRYPTION = 3827;
-		exports.ER_CANNOT_SET_TABLESPACE_ENCRYPTION = 3828;
-		exports.ER_TABLESPACE_CANNOT_BE_ENCRYPTED = 3829;
-		exports.ER_TABLESPACE_CANNOT_BE_DECRYPTED = 3830;
-		exports.ER_TABLESPACE_TYPE_UNKNOWN = 3831;
-		exports.ER_TARGET_TABLESPACE_UNENCRYPTED = 3832;
-		exports.ER_CANNOT_USE_ENCRYPTION_CLAUSE = 3833;
-		exports.ER_INVALID_MULTIPLE_CLAUSES = 3834;
-		exports.ER_UNSUPPORTED_USE_OF_GRANT_AS = 3835;
-		exports.ER_UKNOWN_AUTH_ID_OR_ACCESS_DENIED_FOR_GRANT_AS = 3836;
-		exports.ER_DEPENDENT_BY_FUNCTIONAL_INDEX = 3837;
-		exports.ER_PLUGIN_NOT_EARLY = 3838;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_START_SUBDIR_PATH = 3839;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_START_TIMEOUT = 3840;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_DIRS_INVALID = 3841;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_LABEL_NOT_FOUND = 3842;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_DIR_EMPTY = 3843;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_NO_SUCH_DIR = 3844;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_DIR_CLASH = 3845;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_DIR_PERMISSIONS = 3846;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_FILE_CREATE = 3847;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_ACTIVE = 3848;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_INACTIVE = 3849;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_FAILED = 3850;
-		exports.ER_INNODB_REDO_LOG_ARCHIVE_SESSION = 3851;
-		exports.ER_STD_REGEX_ERROR = 3852;
-		exports.ER_INVALID_JSON_TYPE = 3853;
-		exports.ER_CANNOT_CONVERT_STRING = 3854;
-		exports.ER_DEPENDENT_BY_PARTITION_FUNC = 3855;
-		exports.ER_WARN_DEPRECATED_FLOAT_AUTO_INCREMENT = 3856;
-		exports.ER_RPL_CANT_STOP_REPLICA_WHILE_LOCKED_BACKUP = 3857;
-		exports.ER_WARN_DEPRECATED_FLOAT_DIGITS = 3858;
-		exports.ER_WARN_DEPRECATED_FLOAT_UNSIGNED = 3859;
-		exports.ER_WARN_DEPRECATED_INTEGER_DISPLAY_WIDTH = 3860;
-		exports.ER_WARN_DEPRECATED_ZEROFILL = 3861;
-		exports.ER_CLONE_DONOR = 3862;
-		exports.ER_CLONE_PROTOCOL = 3863;
-		exports.ER_CLONE_DONOR_VERSION = 3864;
-		exports.ER_CLONE_OS = 3865;
-		exports.ER_CLONE_PLATFORM = 3866;
-		exports.ER_CLONE_CHARSET = 3867;
-		exports.ER_CLONE_CONFIG = 3868;
-		exports.ER_CLONE_SYS_CONFIG = 3869;
-		exports.ER_CLONE_PLUGIN_MATCH = 3870;
-		exports.ER_CLONE_LOOPBACK = 3871;
-		exports.ER_CLONE_ENCRYPTION = 3872;
-		exports.ER_CLONE_DISK_SPACE = 3873;
-		exports.ER_CLONE_IN_PROGRESS = 3874;
-		exports.ER_CLONE_DISALLOWED = 3875;
-		exports.ER_CANNOT_GRANT_ROLES_TO_ANONYMOUS_USER = 3876;
-		exports.ER_SECONDARY_ENGINE_PLUGIN = 3877;
-		exports.ER_SECOND_PASSWORD_CANNOT_BE_EMPTY = 3878;
-		exports.ER_DB_ACCESS_DENIED = 3879;
-		exports.ER_DA_AUTH_ID_WITH_SYSTEM_USER_PRIV_IN_MANDATORY_ROLES = 3880;
-		exports.ER_DA_RPL_GTID_TABLE_CANNOT_OPEN = 3881;
-		exports.ER_GEOMETRY_IN_UNKNOWN_LENGTH_UNIT = 3882;
-		exports.ER_DA_PLUGIN_INSTALL_ERROR = 3883;
-		exports.ER_NO_SESSION_TEMP = 3884;
-		exports.ER_DA_UNKNOWN_ERROR_NUMBER = 3885;
-		exports.ER_COLUMN_CHANGE_SIZE = 3886;
-		exports.ER_REGEXP_INVALID_CAPTURE_GROUP_NAME = 3887;
-		exports.ER_DA_SSL_LIBRARY_ERROR = 3888;
-		exports.ER_SECONDARY_ENGINE = 3889;
-		exports.ER_SECONDARY_ENGINE_DDL = 3890;
-		exports.ER_INCORRECT_CURRENT_PASSWORD = 3891;
-		exports.ER_MISSING_CURRENT_PASSWORD = 3892;
-		exports.ER_CURRENT_PASSWORD_NOT_REQUIRED = 3893;
-		exports.ER_PASSWORD_CANNOT_BE_RETAINED_ON_PLUGIN_CHANGE = 3894;
-		exports.ER_CURRENT_PASSWORD_CANNOT_BE_RETAINED = 3895;
-		exports.ER_PARTIAL_REVOKES_EXIST = 3896;
-		exports.ER_CANNOT_GRANT_SYSTEM_PRIV_TO_MANDATORY_ROLE = 3897;
-		exports.ER_XA_REPLICATION_FILTERS = 3898;
-		exports.ER_UNSUPPORTED_SQL_MODE = 3899;
-		exports.ER_REGEXP_INVALID_FLAG = 3900;
-		exports.ER_PARTIAL_REVOKE_AND_DB_GRANT_BOTH_EXISTS = 3901;
-		exports.ER_UNIT_NOT_FOUND = 3902;
-		exports.ER_INVALID_JSON_VALUE_FOR_FUNC_INDEX = 3903;
-		exports.ER_JSON_VALUE_OUT_OF_RANGE_FOR_FUNC_INDEX = 3904;
-		exports.ER_EXCEEDED_MV_KEYS_NUM = 3905;
-		exports.ER_EXCEEDED_MV_KEYS_SPACE = 3906;
-		exports.ER_FUNCTIONAL_INDEX_DATA_IS_TOO_LONG = 3907;
-		exports.ER_WRONG_MVI_VALUE = 3908;
-		exports.ER_WARN_FUNC_INDEX_NOT_APPLICABLE = 3909;
-		exports.ER_GRP_RPL_UDF_ERROR = 3910;
-		exports.ER_UPDATE_GTID_PURGED_WITH_GR = 3911;
-		exports.ER_GROUPING_ON_TIMESTAMP_IN_DST = 3912;
-		exports.ER_TABLE_NAME_CAUSES_TOO_LONG_PATH = 3913;
-		exports.ER_AUDIT_LOG_INSUFFICIENT_PRIVILEGE = 3914;
-		exports.ER_AUDIT_LOG_PASSWORD_HAS_BEEN_COPIED = 3915;
-		exports.ER_DA_GRP_RPL_STARTED_AUTO_REJOIN = 3916;
-		exports.ER_SYSVAR_CHANGE_DURING_QUERY = 3917;
-		exports.ER_GLOBSTAT_CHANGE_DURING_QUERY = 3918;
-		exports.ER_GRP_RPL_MESSAGE_SERVICE_INIT_FAILURE = 3919;
-		exports.ER_CHANGE_SOURCE_WRONG_COMPRESSION_ALGORITHM_CLIENT = 3920;
-		exports.ER_CHANGE_SOURCE_WRONG_COMPRESSION_LEVEL_CLIENT = 3921;
-		exports.ER_WRONG_COMPRESSION_ALGORITHM_CLIENT = 3922;
-		exports.ER_WRONG_COMPRESSION_LEVEL_CLIENT = 3923;
-		exports.ER_CHANGE_SOURCE_WRONG_COMPRESSION_ALGORITHM_LIST_CLIENT = 3924;
-		exports.ER_CLIENT_PRIVILEGE_CHECKS_USER_CANNOT_BE_ANONYMOUS = 3925;
-		exports.ER_CLIENT_PRIVILEGE_CHECKS_USER_DOES_NOT_EXIST = 3926;
-		exports.ER_CLIENT_PRIVILEGE_CHECKS_USER_CORRUPT = 3927;
-		exports.ER_CLIENT_PRIVILEGE_CHECKS_USER_NEEDS_RPL_APPLIER_PRIV = 3928;
-		exports.ER_WARN_DA_PRIVILEGE_NOT_REGISTERED = 3929;
-		exports.ER_CLIENT_KEYRING_UDF_KEY_INVALID = 3930;
-		exports.ER_CLIENT_KEYRING_UDF_KEY_TYPE_INVALID = 3931;
-		exports.ER_CLIENT_KEYRING_UDF_KEY_TOO_LONG = 3932;
-		exports.ER_CLIENT_KEYRING_UDF_KEY_TYPE_TOO_LONG = 3933;
-		exports.ER_JSON_SCHEMA_VALIDATION_ERROR_WITH_DETAILED_REPORT = 3934;
-		exports.ER_DA_UDF_INVALID_CHARSET_SPECIFIED = 3935;
-		exports.ER_DA_UDF_INVALID_CHARSET = 3936;
-		exports.ER_DA_UDF_INVALID_COLLATION = 3937;
-		exports.ER_DA_UDF_INVALID_EXTENSION_ARGUMENT_TYPE = 3938;
-		exports.ER_MULTIPLE_CONSTRAINTS_WITH_SAME_NAME = 3939;
-		exports.ER_CONSTRAINT_NOT_FOUND = 3940;
-		exports.ER_ALTER_CONSTRAINT_ENFORCEMENT_NOT_SUPPORTED = 3941;
-		exports.ER_TABLE_VALUE_CONSTRUCTOR_MUST_HAVE_COLUMNS = 3942;
-		exports.ER_TABLE_VALUE_CONSTRUCTOR_CANNOT_HAVE_DEFAULT = 3943;
-		exports.ER_CLIENT_QUERY_FAILURE_INVALID_NON_ROW_FORMAT = 3944;
-		exports.ER_REQUIRE_ROW_FORMAT_INVALID_VALUE = 3945;
-		exports.ER_FAILED_TO_DETERMINE_IF_ROLE_IS_MANDATORY = 3946;
-		exports.ER_FAILED_TO_FETCH_MANDATORY_ROLE_LIST = 3947;
-		exports.ER_CLIENT_LOCAL_FILES_DISABLED = 3948;
-		exports.ER_IMP_INCOMPATIBLE_CFG_VERSION = 3949;
-		exports.ER_DA_OOM = 3950;
-		exports.ER_DA_UDF_INVALID_ARGUMENT_TO_SET_CHARSET = 3951;
-		exports.ER_DA_UDF_INVALID_RETURN_TYPE_TO_SET_CHARSET = 3952;
-		exports.ER_MULTIPLE_INTO_CLAUSES = 3953;
-		exports.ER_MISPLACED_INTO = 3954;
-		exports.ER_USER_ACCESS_DENIED_FOR_USER_ACCOUNT_BLOCKED_BY_PASSWORD_LOCK = 3955;
-		exports.ER_WARN_DEPRECATED_YEAR_UNSIGNED = 3956;
-		exports.ER_CLONE_NETWORK_PACKET = 3957;
-		exports.ER_SDI_OPERATION_FAILED_MISSING_RECORD = 3958;
-		exports.ER_DEPENDENT_BY_CHECK_CONSTRAINT = 3959;
-		exports.ER_GRP_OPERATION_NOT_ALLOWED_GR_MUST_STOP = 3960;
-		exports.ER_WARN_DEPRECATED_JSON_TABLE_ON_ERROR_ON_EMPTY = 3961;
-		exports.ER_WARN_DEPRECATED_INNER_INTO = 3962;
-		exports.ER_WARN_DEPRECATED_VALUES_FUNCTION_ALWAYS_NULL = 3963;
-		exports.ER_WARN_DEPRECATED_SQL_CALC_FOUND_ROWS = 3964;
-		exports.ER_WARN_DEPRECATED_FOUND_ROWS = 3965;
-		exports.ER_MISSING_JSON_VALUE = 3966;
-		exports.ER_MULTIPLE_JSON_VALUES = 3967;
-		exports.ER_HOSTNAME_TOO_LONG = 3968;
-		exports.ER_WARN_CLIENT_DEPRECATED_PARTITION_PREFIX_KEY = 3969;
-		exports.ER_GROUP_REPLICATION_USER_EMPTY_MSG = 3970;
-		exports.ER_GROUP_REPLICATION_USER_MANDATORY_MSG = 3971;
-		exports.ER_GROUP_REPLICATION_PASSWORD_LENGTH = 3972;
-		exports.ER_SUBQUERY_TRANSFORM_REJECTED = 3973;
-		exports.ER_DA_GRP_RPL_RECOVERY_ENDPOINT_FORMAT = 3974;
-		exports.ER_DA_GRP_RPL_RECOVERY_ENDPOINT_INVALID = 3975;
-		exports.ER_WRONG_VALUE_FOR_VAR_PLUS_ACTIONABLE_PART = 3976;
-		exports.ER_STATEMENT_NOT_ALLOWED_AFTER_START_TRANSACTION = 3977;
-		exports.ER_FOREIGN_KEY_WITH_ATOMIC_CREATE_SELECT = 3978;
-		exports.ER_NOT_ALLOWED_WITH_START_TRANSACTION = 3979;
-		exports.ER_INVALID_JSON_ATTRIBUTE = 3980;
-		exports.ER_ENGINE_ATTRIBUTE_NOT_SUPPORTED = 3981;
-		exports.ER_INVALID_USER_ATTRIBUTE_JSON = 3982;
-		exports.ER_INNODB_REDO_DISABLED = 3983;
-		exports.ER_INNODB_REDO_ARCHIVING_ENABLED = 3984;
-		exports.ER_MDL_OUT_OF_RESOURCES = 3985;
-		exports.ER_IMPLICIT_COMPARISON_FOR_JSON = 3986;
-		exports.ER_FUNCTION_DOES_NOT_SUPPORT_CHARACTER_SET = 3987;
-		exports.ER_IMPOSSIBLE_STRING_CONVERSION = 3988;
-		exports.ER_SCHEMA_READ_ONLY = 3989;
-		exports.ER_RPL_ASYNC_RECONNECT_GTID_MODE_OFF = 3990;
-		exports.ER_RPL_ASYNC_RECONNECT_AUTO_POSITION_OFF = 3991;
-		exports.ER_DISABLE_GTID_MODE_REQUIRES_ASYNC_RECONNECT_OFF = 3992;
-		exports.ER_DISABLE_AUTO_POSITION_REQUIRES_ASYNC_RECONNECT_OFF = 3993;
-		exports.ER_INVALID_PARAMETER_USE = 3994;
-		exports.ER_CHARACTER_SET_MISMATCH = 3995;
-		exports.ER_WARN_VAR_VALUE_CHANGE_NOT_SUPPORTED = 3996;
-		exports.ER_INVALID_TIME_ZONE_INTERVAL = 3997;
-		exports.ER_INVALID_CAST = 3998;
-		exports.ER_HYPERGRAPH_NOT_SUPPORTED_YET = 3999;
-		exports.ER_WARN_HYPERGRAPH_EXPERIMENTAL = 4000;
-		exports.ER_DA_NO_ERROR_LOG_PARSER_CONFIGURED = 4001;
-		exports.ER_DA_ERROR_LOG_TABLE_DISABLED = 4002;
-		exports.ER_DA_ERROR_LOG_MULTIPLE_FILTERS = 4003;
-		exports.ER_DA_CANT_OPEN_ERROR_LOG = 4004;
-		exports.ER_USER_REFERENCED_AS_DEFINER = 4005;
-		exports.ER_CANNOT_USER_REFERENCED_AS_DEFINER = 4006;
-		exports.ER_REGEX_NUMBER_TOO_BIG = 4007;
-		exports.ER_SPVAR_NONINTEGER_TYPE = 4008;
-		exports.WARN_UNSUPPORTED_ACL_TABLES_READ = 4009;
-		exports.ER_BINLOG_UNSAFE_ACL_TABLE_READ_IN_DML_DDL = 4010;
-		exports.ER_STOP_REPLICA_MONITOR_IO_THREAD_TIMEOUT = 4011;
-		exports.ER_STARTING_REPLICA_MONITOR_IO_THREAD = 4012;
-		exports.ER_CANT_USE_ANONYMOUS_TO_GTID_WITH_GTID_MODE_NOT_ON = 4013;
-		exports.ER_CANT_COMBINE_ANONYMOUS_TO_GTID_AND_AUTOPOSITION = 4014;
-		exports.ER_ASSIGN_GTIDS_TO_ANONYMOUS_TRANSACTIONS_REQUIRES_GTID_MODE_ON = 4015;
-		exports.ER_SQL_REPLICA_SKIP_COUNTER_USED_WITH_GTID_MODE_ON = 4016;
-		exports.ER_USING_ASSIGN_GTIDS_TO_ANONYMOUS_TRANSACTIONS_AS_LOCAL_OR_UUID = 4017;
-		exports.ER_CANT_SET_ANONYMOUS_TO_GTID_AND_WAIT_UNTIL_SQL_THD_AFTER_GTIDS = 4018;
-		exports.ER_CANT_SET_SQL_AFTER_OR_BEFORE_GTIDS_WITH_ANONYMOUS_TO_GTID = 4019;
-		exports.ER_ANONYMOUS_TO_GTID_UUID_SAME_AS_GROUP_NAME = 4020;
-		exports.ER_CANT_USE_SAME_UUID_AS_GROUP_NAME = 4021;
-		exports.ER_GRP_RPL_RECOVERY_CHANNEL_STILL_RUNNING = 4022;
-		exports.ER_INNODB_INVALID_AUTOEXTEND_SIZE_VALUE = 4023;
-		exports.ER_INNODB_INCOMPATIBLE_WITH_TABLESPACE = 4024;
-		exports.ER_INNODB_AUTOEXTEND_SIZE_OUT_OF_RANGE = 4025;
-		exports.ER_CANNOT_USE_AUTOEXTEND_SIZE_CLAUSE = 4026;
-		exports.ER_ROLE_GRANTED_TO_ITSELF = 4027;
-		exports.ER_TABLE_MUST_HAVE_A_VISIBLE_COLUMN = 4028;
-		exports.ER_INNODB_COMPRESSION_FAILURE = 4029;
-		exports.ER_WARN_ASYNC_CONN_FAILOVER_NETWORK_NAMESPACE = 4030;
-		exports.ER_CLIENT_INTERACTION_TIMEOUT = 4031;
-		exports.ER_INVALID_CAST_TO_GEOMETRY = 4032;
-		exports.ER_INVALID_CAST_POLYGON_RING_DIRECTION = 4033;
-		exports.ER_GIS_DIFFERENT_SRIDS_AGGREGATION = 4034;
-		exports.ER_RELOAD_KEYRING_FAILURE = 4035;
-		exports.ER_SDI_GET_KEYS_INVALID_TABLESPACE = 4036;
-		exports.ER_CHANGE_RPL_SRC_WRONG_COMPRESSION_ALGORITHM_SIZE = 4037;
-		exports.ER_WARN_DEPRECATED_TLS_VERSION_FOR_CHANNEL_CLI = 4038;
-		exports.ER_CANT_USE_SAME_UUID_AS_VIEW_CHANGE_UUID = 4039;
-		exports.ER_ANONYMOUS_TO_GTID_UUID_SAME_AS_VIEW_CHANGE_UUID = 4040;
-		exports.ER_GRP_RPL_VIEW_CHANGE_UUID_FAIL_GET_VARIABLE = 4041;
-		exports.ER_WARN_ADUIT_LOG_MAX_SIZE_AND_PRUNE_SECONDS = 4042;
-		exports.ER_WARN_ADUIT_LOG_MAX_SIZE_CLOSE_TO_ROTATE_ON_SIZE = 4043;
-		exports.ER_KERBEROS_CREATE_USER = 4044;
-		exports.ER_INSTALL_PLUGIN_CONFLICT_CLIENT = 4045;
-		exports.ER_DA_ERROR_LOG_COMPONENT_FLUSH_FAILED = 4046;
-		exports.ER_WARN_SQL_AFTER_MTS_GAPS_GAP_NOT_CALCULATED = 4047;
-		exports.ER_INVALID_ASSIGNMENT_TARGET = 4048;
-		exports.ER_OPERATION_NOT_ALLOWED_ON_GR_SECONDARY = 4049;
-		exports.ER_GRP_RPL_FAILOVER_CHANNEL_STATUS_PROPAGATION = 4050;
-		exports.ER_WARN_AUDIT_LOG_FORMAT_UNIX_TIMESTAMP_ONLY_WHEN_JSON = 4051;
-		exports.ER_INVALID_MFA_PLUGIN_SPECIFIED = 4052;
-		exports.ER_IDENTIFIED_BY_UNSUPPORTED = 4053;
-		exports.ER_INVALID_PLUGIN_FOR_REGISTRATION = 4054;
-		exports.ER_PLUGIN_REQUIRES_REGISTRATION = 4055;
-		exports.ER_MFA_METHOD_EXISTS = 4056;
-		exports.ER_MFA_METHOD_NOT_EXISTS = 4057;
-		exports.ER_AUTHENTICATION_POLICY_MISMATCH = 4058;
-		exports.ER_PLUGIN_REGISTRATION_DONE = 4059;
-		exports.ER_INVALID_USER_FOR_REGISTRATION = 4060;
-		exports.ER_USER_REGISTRATION_FAILED = 4061;
-		exports.ER_MFA_METHODS_INVALID_ORDER = 4062;
-		exports.ER_MFA_METHODS_IDENTICAL = 4063;
-		exports.ER_INVALID_MFA_OPERATIONS_FOR_PASSWORDLESS_USER = 4064;
-		exports.ER_CHANGE_REPLICATION_SOURCE_NO_OPTIONS_FOR_GTID_ONLY = 4065;
-		exports.ER_CHANGE_REP_SOURCE_CANT_DISABLE_REQ_ROW_FORMAT_WITH_GTID_ONLY = 4066;
-		exports.ER_CHANGE_REP_SOURCE_CANT_DISABLE_AUTO_POSITION_WITH_GTID_ONLY = 4067;
-		exports.ER_CHANGE_REP_SOURCE_CANT_DISABLE_GTID_ONLY_WITHOUT_POSITIONS = 4068;
-		exports.ER_CHANGE_REP_SOURCE_CANT_DISABLE_AUTO_POS_WITHOUT_POSITIONS = 4069;
-		exports.ER_CHANGE_REP_SOURCE_GR_CHANNEL_WITH_GTID_MODE_NOT_ON = 4070;
-		exports.ER_CANT_USE_GTID_ONLY_WITH_GTID_MODE_NOT_ON = 4071;
-		exports.ER_WARN_C_DISABLE_GTID_ONLY_WITH_SOURCE_AUTO_POS_INVALID_POS = 4072;
-		exports.ER_DA_SSL_FIPS_MODE_ERROR = 4073;
-		exports.ER_VALUE_OUT_OF_RANGE = 4074;
-		exports.ER_FULLTEXT_WITH_ROLLUP = 4075;
-		exports.ER_REGEXP_MISSING_RESOURCE = 4076;
-		exports.ER_WARN_REGEXP_USING_DEFAULT = 4077;
-		exports.ER_REGEXP_MISSING_FILE = 4078;
-		exports.ER_WARN_DEPRECATED_COLLATION = 4079;
-		exports.ER_CONCURRENT_PROCEDURE_USAGE = 4080;
-		exports.ER_DA_GLOBAL_CONN_LIMIT = 4081;
-		exports.ER_DA_CONN_LIMIT = 4082;
-		exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE_INSTANT = 4083;
-		exports.ER_WARN_SF_UDF_NAME_COLLISION = 4084;
-		exports.ER_CANNOT_PURGE_BINLOG_WITH_BACKUP_LOCK = 4085;
-		exports.ER_TOO_MANY_WINDOWS = 4086;
-		exports.ER_MYSQLBACKUP_CLIENT_MSG = 4087;
-		exports.ER_COMMENT_CONTAINS_INVALID_STRING = 4088;
-		exports.ER_DEFINITION_CONTAINS_INVALID_STRING = 4089;
-		exports.ER_CANT_EXECUTE_COMMAND_WITH_ASSIGNED_GTID_NEXT = 4090;
-		exports.ER_XA_TEMP_TABLE = 4091;
-		exports.ER_INNODB_MAX_ROW_VERSION = 4092;
-		exports.ER_INNODB_INSTANT_ADD_NOT_SUPPORTED_MAX_SIZE = 4093;
-		exports.ER_OPERATION_NOT_ALLOWED_WHILE_PRIMARY_CHANGE_IS_RUNNING = 4094;
-		exports.ER_WARN_DEPRECATED_DATETIME_DELIMITER = 4095;
-		exports.ER_WARN_DEPRECATED_SUPERFLUOUS_DELIMITER = 4096;
-		exports.ER_CANNOT_PERSIST_SENSITIVE_VARIABLES = 4097;
-		exports.ER_WARN_CANNOT_SECURELY_PERSIST_SENSITIVE_VARIABLES = 4098;
-		exports.ER_WARN_TRG_ALREADY_EXISTS = 4099;
-		exports.ER_IF_NOT_EXISTS_UNSUPPORTED_TRG_EXISTS_ON_DIFFERENT_TABLE = 4100;
-		exports.ER_IF_NOT_EXISTS_UNSUPPORTED_UDF_NATIVE_FCT_NAME_COLLISION = 4101;
-		exports.ER_SET_PASSWORD_AUTH_PLUGIN_ERROR = 4102;
-		exports.ER_REDUCED_DBLWR_FILE_CORRUPTED = 4103;
-		exports.ER_REDUCED_DBLWR_PAGE_FOUND = 4104;
-		exports.ER_SRS_INVALID_LATITUDE_OF_ORIGIN = 4105;
-		exports.ER_SRS_INVALID_LONGITUDE_OF_ORIGIN = 4106;
-		exports.ER_SRS_UNUSED_PROJ_PARAMETER_PRESENT = 4107;
-		exports.ER_GIPK_COLUMN_EXISTS = 4108;
-		exports.ER_GIPK_FAILED_AUTOINC_COLUMN_EXISTS = 4109;
-		exports.ER_GIPK_COLUMN_ALTER_NOT_ALLOWED = 4110;
-		exports.ER_DROP_PK_COLUMN_TO_DROP_GIPK = 4111;
-		exports.ER_CREATE_SELECT_WITH_GIPK_DISALLOWED_IN_SBR = 4112;
-		exports.ER_DA_EXPIRE_LOGS_DAYS_IGNORED = 4113;
-		exports.ER_CTE_RECURSIVE_NOT_UNION = 4114;
-		exports.ER_COMMAND_BACKEND_FAILED_TO_FETCH_SECURITY_CTX = 4115;
-		exports.ER_COMMAND_SERVICE_BACKEND_FAILED = 4116;
-		exports.ER_CLIENT_FILE_PRIVILEGE_FOR_REPLICATION_CHECKS = 4117;
-		exports.ER_GROUP_REPLICATION_FORCE_MEMBERS_COMMAND_FAILURE = 4118;
-		exports.ER_WARN_DEPRECATED_IDENT = 4119;
-		exports.ER_INTERSECT_ALL_MAX_DUPLICATES_EXCEEDED = 4120;
-		exports.ER_TP_QUERY_THRS_PER_GRP_EXCEEDS_TXN_THR_LIMIT = 4121;
-		exports.ER_BAD_TIMESTAMP_FORMAT = 4122;
-		exports.ER_SHAPE_PRIDICTION_UDF = 4123;
-		exports.ER_SRS_INVALID_HEIGHT = 4124;
-		exports.ER_SRS_INVALID_SCALING = 4125;
-		exports.ER_SRS_INVALID_ZONE_WIDTH = 4126;
-		exports.ER_SRS_INVALID_LATITUDE_POLAR_STERE_VAR_A = 4127;
-		exports.ER_WARN_DEPRECATED_CLIENT_NO_SCHEMA_OPTION = 4128;
-		exports.ER_TABLE_NOT_EMPTY = 4129;
-		exports.ER_TABLE_NO_PRIMARY_KEY = 4130;
-		exports.ER_TABLE_IN_SHARED_TABLESPACE = 4131;
-		exports.ER_INDEX_OTHER_THAN_PK = 4132;
-		exports.ER_LOAD_BULK_DATA_UNSORTED = 4133;
-		exports.ER_BULK_EXECUTOR_ERROR = 4134;
-		exports.ER_BULK_READER_LIBCURL_INIT_FAILED = 4135;
-		exports.ER_BULK_READER_LIBCURL_ERROR = 4136;
-		exports.ER_BULK_READER_SERVER_ERROR = 4137;
-		exports.ER_BULK_READER_COMMUNICATION_ERROR = 4138;
-		exports.ER_BULK_LOAD_DATA_FAILED = 4139;
-		exports.ER_BULK_LOADER_COLUMN_TOO_BIG_FOR_LEFTOVER_BUFFER = 4140;
-		exports.ER_BULK_LOADER_COMPONENT_ERROR = 4141;
-		exports.ER_BULK_LOADER_FILE_CONTAINS_LESS_LINES_THAN_IGNORE_CLAUSE = 4142;
-		exports.ER_BULK_PARSER_MISSING_ENCLOSED_BY = 4143;
-		exports.ER_BULK_PARSER_ROW_BUFFER_MAX_TOTAL_COLS_EXCEEDED = 4144;
-		exports.ER_BULK_PARSER_COPY_BUFFER_SIZE_EXCEEDED = 4145;
-		exports.ER_BULK_PARSER_UNEXPECTED_END_OF_INPUT = 4146;
-		exports.ER_BULK_PARSER_UNEXPECTED_ROW_TERMINATOR = 4147;
-		exports.ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_ENDING_ENCLOSED_BY = 4148;
-		exports.ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_NULL_ESCAPE = 4149;
-		exports.ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_COLUMN_TERMINATOR = 4150;
-		exports.ER_BULK_PARSER_INCOMPLETE_ESCAPE_SEQUENCE = 4151;
-		exports.ER_LOAD_BULK_DATA_FAILED = 4152;
-		exports.ER_LOAD_BULK_DATA_WRONG_VALUE_FOR_FIELD = 4153;
-		exports.ER_LOAD_BULK_DATA_WARN_NULL_TO_NOTNULL = 4154;
-		exports.ER_REQUIRE_TABLE_PRIMARY_KEY_CHECK_GENERATE_WITH_GR = 4155;
-		exports.ER_CANT_CHANGE_SYS_VAR_IN_READ_ONLY_MODE = 4156;
-		exports.ER_INNODB_INSTANT_ADD_DROP_NOT_SUPPORTED_MAX_SIZE = 4157;
-		exports.ER_INNODB_INSTANT_ADD_NOT_SUPPORTED_MAX_FIELDS = 4158;
-		exports.ER_CANT_SET_PERSISTED = 4159;
-		exports.ER_INSTALL_COMPONENT_SET_NULL_VALUE = 4160;
-		exports.ER_INSTALL_COMPONENT_SET_UNUSED_VALUE = 4161;
-		exports.ER_WARN_DEPRECATED_USER_DEFINED_COLLATIONS = 4162;
+		exports$1.EE_CANTCREATEFILE = 1;
+		exports$1.EE_READ = 2;
+		exports$1.EE_WRITE = 3;
+		exports$1.EE_BADCLOSE = 4;
+		exports$1.EE_OUTOFMEMORY = 5;
+		exports$1.EE_DELETE = 6;
+		exports$1.EE_LINK = 7;
+		exports$1.EE_EOFERR = 9;
+		exports$1.EE_CANTLOCK = 10;
+		exports$1.EE_CANTUNLOCK = 11;
+		exports$1.EE_DIR = 12;
+		exports$1.EE_STAT = 13;
+		exports$1.EE_CANT_CHSIZE = 14;
+		exports$1.EE_CANT_OPEN_STREAM = 15;
+		exports$1.EE_GETWD = 16;
+		exports$1.EE_SETWD = 17;
+		exports$1.EE_LINK_WARNING = 18;
+		exports$1.EE_OPEN_WARNING = 19;
+		exports$1.EE_DISK_FULL = 20;
+		exports$1.EE_CANT_MKDIR = 21;
+		exports$1.EE_UNKNOWN_CHARSET = 22;
+		exports$1.EE_OUT_OF_FILERESOURCES = 23;
+		exports$1.EE_CANT_READLINK = 24;
+		exports$1.EE_CANT_SYMLINK = 25;
+		exports$1.EE_REALPATH = 26;
+		exports$1.EE_SYNC = 27;
+		exports$1.EE_UNKNOWN_COLLATION = 28;
+		exports$1.EE_FILENOTFOUND = 29;
+		exports$1.EE_FILE_NOT_CLOSED = 30;
+		exports$1.EE_CHANGE_OWNERSHIP = 31;
+		exports$1.EE_CHANGE_PERMISSIONS = 32;
+		exports$1.EE_CANT_SEEK = 33;
+		exports$1.EE_CAPACITY_EXCEEDED = 34;
+		exports$1.EE_DISK_FULL_WITH_RETRY_MSG = 35;
+		exports$1.EE_FAILED_TO_CREATE_TIMER = 36;
+		exports$1.EE_FAILED_TO_DELETE_TIMER = 37;
+		exports$1.EE_FAILED_TO_CREATE_TIMER_QUEUE = 38;
+		exports$1.EE_FAILED_TO_START_TIMER_NOTIFY_THREAD = 39;
+		exports$1.EE_FAILED_TO_CREATE_TIMER_NOTIFY_THREAD_INTERRUPT_EVENT = 40;
+		exports$1.EE_EXITING_TIMER_NOTIFY_THREAD = 41;
+		exports$1.EE_WIN_LIBRARY_LOAD_FAILED = 42;
+		exports$1.EE_WIN_RUN_TIME_ERROR_CHECK = 43;
+		exports$1.EE_FAILED_TO_DETERMINE_LARGE_PAGE_SIZE = 44;
+		exports$1.EE_FAILED_TO_KILL_ALL_THREADS = 45;
+		exports$1.EE_FAILED_TO_CREATE_IO_COMPLETION_PORT = 46;
+		exports$1.EE_FAILED_TO_OPEN_DEFAULTS_FILE = 47;
+		exports$1.EE_FAILED_TO_HANDLE_DEFAULTS_FILE = 48;
+		exports$1.EE_WRONG_DIRECTIVE_IN_CONFIG_FILE = 49;
+		exports$1.EE_SKIPPING_DIRECTIVE_DUE_TO_MAX_INCLUDE_RECURSION = 50;
+		exports$1.EE_INCORRECT_GRP_DEFINITION_IN_CONFIG_FILE = 51;
+		exports$1.EE_OPTION_WITHOUT_GRP_IN_CONFIG_FILE = 52;
+		exports$1.EE_CONFIG_FILE_PERMISSION_ERROR = 53;
+		exports$1.EE_IGNORE_WORLD_WRITABLE_CONFIG_FILE = 54;
+		exports$1.EE_USING_DISABLED_OPTION = 55;
+		exports$1.EE_USING_DISABLED_SHORT_OPTION = 56;
+		exports$1.EE_USING_PASSWORD_ON_CLI_IS_INSECURE = 57;
+		exports$1.EE_UNKNOWN_SUFFIX_FOR_VARIABLE = 58;
+		exports$1.EE_SSL_ERROR_FROM_FILE = 59;
+		exports$1.EE_SSL_ERROR = 60;
+		exports$1.EE_NET_SEND_ERROR_IN_BOOTSTRAP = 61;
+		exports$1.EE_PACKETS_OUT_OF_ORDER = 62;
+		exports$1.EE_UNKNOWN_PROTOCOL_OPTION = 63;
+		exports$1.EE_FAILED_TO_LOCATE_SERVER_PUBLIC_KEY = 64;
+		exports$1.EE_PUBLIC_KEY_NOT_IN_PEM_FORMAT = 65;
+		exports$1.EE_DEBUG_INFO = 66;
+		exports$1.EE_UNKNOWN_VARIABLE = 67;
+		exports$1.EE_UNKNOWN_OPTION = 68;
+		exports$1.EE_UNKNOWN_SHORT_OPTION = 69;
+		exports$1.EE_OPTION_WITHOUT_ARGUMENT = 70;
+		exports$1.EE_OPTION_REQUIRES_ARGUMENT = 71;
+		exports$1.EE_SHORT_OPTION_REQUIRES_ARGUMENT = 72;
+		exports$1.EE_OPTION_IGNORED_DUE_TO_INVALID_VALUE = 73;
+		exports$1.EE_OPTION_WITH_EMPTY_VALUE = 74;
+		exports$1.EE_FAILED_TO_ASSIGN_MAX_VALUE_TO_OPTION = 75;
+		exports$1.EE_INCORRECT_BOOLEAN_VALUE_FOR_OPTION = 76;
+		exports$1.EE_FAILED_TO_SET_OPTION_VALUE = 77;
+		exports$1.EE_INCORRECT_INT_VALUE_FOR_OPTION = 78;
+		exports$1.EE_INCORRECT_UINT_VALUE_FOR_OPTION = 79;
+		exports$1.EE_ADJUSTED_SIGNED_VALUE_FOR_OPTION = 80;
+		exports$1.EE_ADJUSTED_UNSIGNED_VALUE_FOR_OPTION = 81;
+		exports$1.EE_ADJUSTED_ULONGLONG_VALUE_FOR_OPTION = 82;
+		exports$1.EE_ADJUSTED_DOUBLE_VALUE_FOR_OPTION = 83;
+		exports$1.EE_INVALID_DECIMAL_VALUE_FOR_OPTION = 84;
+		exports$1.EE_COLLATION_PARSER_ERROR = 85;
+		exports$1.EE_FAILED_TO_RESET_BEFORE_PRIMARY_IGNORABLE_CHAR = 86;
+		exports$1.EE_FAILED_TO_RESET_BEFORE_TERTIARY_IGNORABLE_CHAR = 87;
+		exports$1.EE_SHIFT_CHAR_OUT_OF_RANGE = 88;
+		exports$1.EE_RESET_CHAR_OUT_OF_RANGE = 89;
+		exports$1.EE_UNKNOWN_LDML_TAG = 90;
+		exports$1.EE_FAILED_TO_RESET_BEFORE_SECONDARY_IGNORABLE_CHAR = 91;
+		exports$1.EE_FAILED_PROCESSING_DIRECTIVE = 92;
+		exports$1.EE_PTHREAD_KILL_FAILED = 93;
+		exports$1.HA_ERR_KEY_NOT_FOUND = 120;
+		exports$1.HA_ERR_FOUND_DUPP_KEY = 121;
+		exports$1.HA_ERR_INTERNAL_ERROR = 122;
+		exports$1.HA_ERR_RECORD_CHANGED = 123;
+		exports$1.HA_ERR_WRONG_INDEX = 124;
+		exports$1.HA_ERR_ROLLED_BACK = 125;
+		exports$1.HA_ERR_CRASHED = 126;
+		exports$1.HA_ERR_WRONG_IN_RECORD = 127;
+		exports$1.HA_ERR_OUT_OF_MEM = 128;
+		exports$1.HA_ERR_NOT_A_TABLE = 130;
+		exports$1.HA_ERR_WRONG_COMMAND = 131;
+		exports$1.HA_ERR_OLD_FILE = 132;
+		exports$1.HA_ERR_NO_ACTIVE_RECORD = 133;
+		exports$1.HA_ERR_RECORD_DELETED = 134;
+		exports$1.HA_ERR_RECORD_FILE_FULL = 135;
+		exports$1.HA_ERR_INDEX_FILE_FULL = 136;
+		exports$1.HA_ERR_END_OF_FILE = 137;
+		exports$1.HA_ERR_UNSUPPORTED = 138;
+		exports$1.HA_ERR_TOO_BIG_ROW = 139;
+		exports$1.HA_WRONG_CREATE_OPTION = 140;
+		exports$1.HA_ERR_FOUND_DUPP_UNIQUE = 141;
+		exports$1.HA_ERR_UNKNOWN_CHARSET = 142;
+		exports$1.HA_ERR_WRONG_MRG_TABLE_DEF = 143;
+		exports$1.HA_ERR_CRASHED_ON_REPAIR = 144;
+		exports$1.HA_ERR_CRASHED_ON_USAGE = 145;
+		exports$1.HA_ERR_LOCK_WAIT_TIMEOUT = 146;
+		exports$1.HA_ERR_LOCK_TABLE_FULL = 147;
+		exports$1.HA_ERR_READ_ONLY_TRANSACTION = 148;
+		exports$1.HA_ERR_LOCK_DEADLOCK = 149;
+		exports$1.HA_ERR_CANNOT_ADD_FOREIGN = 150;
+		exports$1.HA_ERR_NO_REFERENCED_ROW = 151;
+		exports$1.HA_ERR_ROW_IS_REFERENCED = 152;
+		exports$1.HA_ERR_NO_SAVEPOINT = 153;
+		exports$1.HA_ERR_NON_UNIQUE_BLOCK_SIZE = 154;
+		exports$1.HA_ERR_NO_SUCH_TABLE = 155;
+		exports$1.HA_ERR_TABLE_EXIST = 156;
+		exports$1.HA_ERR_NO_CONNECTION = 157;
+		exports$1.HA_ERR_NULL_IN_SPATIAL = 158;
+		exports$1.HA_ERR_TABLE_DEF_CHANGED = 159;
+		exports$1.HA_ERR_NO_PARTITION_FOUND = 160;
+		exports$1.HA_ERR_RBR_LOGGING_FAILED = 161;
+		exports$1.HA_ERR_DROP_INDEX_FK = 162;
+		exports$1.HA_ERR_FOREIGN_DUPLICATE_KEY = 163;
+		exports$1.HA_ERR_TABLE_NEEDS_UPGRADE = 164;
+		exports$1.HA_ERR_TABLE_READONLY = 165;
+		exports$1.HA_ERR_AUTOINC_READ_FAILED = 166;
+		exports$1.HA_ERR_AUTOINC_ERANGE = 167;
+		exports$1.HA_ERR_GENERIC = 168;
+		exports$1.HA_ERR_RECORD_IS_THE_SAME = 169;
+		exports$1.HA_ERR_LOGGING_IMPOSSIBLE = 170;
+		exports$1.HA_ERR_CORRUPT_EVENT = 171;
+		exports$1.HA_ERR_NEW_FILE = 172;
+		exports$1.HA_ERR_ROWS_EVENT_APPLY = 173;
+		exports$1.HA_ERR_INITIALIZATION = 174;
+		exports$1.HA_ERR_FILE_TOO_SHORT = 175;
+		exports$1.HA_ERR_WRONG_CRC = 176;
+		exports$1.HA_ERR_TOO_MANY_CONCURRENT_TRXS = 177;
+		exports$1.HA_ERR_NOT_IN_LOCK_PARTITIONS = 178;
+		exports$1.HA_ERR_INDEX_COL_TOO_LONG = 179;
+		exports$1.HA_ERR_INDEX_CORRUPT = 180;
+		exports$1.HA_ERR_UNDO_REC_TOO_BIG = 181;
+		exports$1.HA_FTS_INVALID_DOCID = 182;
+		exports$1.HA_ERR_TABLE_IN_FK_CHECK = 183;
+		exports$1.HA_ERR_TABLESPACE_EXISTS = 184;
+		exports$1.HA_ERR_TOO_MANY_FIELDS = 185;
+		exports$1.HA_ERR_ROW_IN_WRONG_PARTITION = 186;
+		exports$1.HA_ERR_INNODB_READ_ONLY = 187;
+		exports$1.HA_ERR_FTS_EXCEED_RESULT_CACHE_LIMIT = 188;
+		exports$1.HA_ERR_TEMP_FILE_WRITE_FAILURE = 189;
+		exports$1.HA_ERR_INNODB_FORCED_RECOVERY = 190;
+		exports$1.HA_ERR_FTS_TOO_MANY_WORDS_IN_PHRASE = 191;
+		exports$1.HA_ERR_FK_DEPTH_EXCEEDED = 192;
+		exports$1.HA_MISSING_CREATE_OPTION = 193;
+		exports$1.HA_ERR_SE_OUT_OF_MEMORY = 194;
+		exports$1.HA_ERR_TABLE_CORRUPT = 195;
+		exports$1.HA_ERR_QUERY_INTERRUPTED = 196;
+		exports$1.HA_ERR_TABLESPACE_MISSING = 197;
+		exports$1.HA_ERR_TABLESPACE_IS_NOT_EMPTY = 198;
+		exports$1.HA_ERR_WRONG_FILE_NAME = 199;
+		exports$1.HA_ERR_NOT_ALLOWED_COMMAND = 200;
+		exports$1.HA_ERR_COMPUTE_FAILED = 201;
+		exports$1.HA_ERR_ROW_FORMAT_CHANGED = 202;
+		exports$1.HA_ERR_NO_WAIT_LOCK = 203;
+		exports$1.HA_ERR_DISK_FULL_NOWAIT = 204;
+		exports$1.HA_ERR_NO_SESSION_TEMP = 205;
+		exports$1.HA_ERR_WRONG_TABLE_NAME = 206;
+		exports$1.HA_ERR_TOO_LONG_PATH = 207;
+		exports$1.HA_ERR_SAMPLING_INIT_FAILED = 208;
+		exports$1.HA_ERR_FTS_TOO_MANY_NESTED_EXP = 209;
+		exports$1.ER_HASHCHK = 1000;
+		exports$1.ER_NISAMCHK = 1001;
+		exports$1.ER_NO = 1002;
+		exports$1.ER_YES = 1003;
+		exports$1.ER_CANT_CREATE_FILE = 1004;
+		exports$1.ER_CANT_CREATE_TABLE = 1005;
+		exports$1.ER_CANT_CREATE_DB = 1006;
+		exports$1.ER_DB_CREATE_EXISTS = 1007;
+		exports$1.ER_DB_DROP_EXISTS = 1008;
+		exports$1.ER_DB_DROP_DELETE = 1009;
+		exports$1.ER_DB_DROP_RMDIR = 1010;
+		exports$1.ER_CANT_DELETE_FILE = 1011;
+		exports$1.ER_CANT_FIND_SYSTEM_REC = 1012;
+		exports$1.ER_CANT_GET_STAT = 1013;
+		exports$1.ER_CANT_GET_WD = 1014;
+		exports$1.ER_CANT_LOCK = 1015;
+		exports$1.ER_CANT_OPEN_FILE = 1016;
+		exports$1.ER_FILE_NOT_FOUND = 1017;
+		exports$1.ER_CANT_READ_DIR = 1018;
+		exports$1.ER_CANT_SET_WD = 1019;
+		exports$1.ER_CHECKREAD = 1020;
+		exports$1.ER_DISK_FULL = 1021;
+		exports$1.ER_DUP_KEY = 1022;
+		exports$1.ER_ERROR_ON_CLOSE = 1023;
+		exports$1.ER_ERROR_ON_READ = 1024;
+		exports$1.ER_ERROR_ON_RENAME = 1025;
+		exports$1.ER_ERROR_ON_WRITE = 1026;
+		exports$1.ER_FILE_USED = 1027;
+		exports$1.ER_FILSORT_ABORT = 1028;
+		exports$1.ER_FORM_NOT_FOUND = 1029;
+		exports$1.ER_GET_ERRNO = 1030;
+		exports$1.ER_ILLEGAL_HA = 1031;
+		exports$1.ER_KEY_NOT_FOUND = 1032;
+		exports$1.ER_NOT_FORM_FILE = 1033;
+		exports$1.ER_NOT_KEYFILE = 1034;
+		exports$1.ER_OLD_KEYFILE = 1035;
+		exports$1.ER_OPEN_AS_READONLY = 1036;
+		exports$1.ER_OUTOFMEMORY = 1037;
+		exports$1.ER_OUT_OF_SORTMEMORY = 1038;
+		exports$1.ER_UNEXPECTED_EOF = 1039;
+		exports$1.ER_CON_COUNT_ERROR = 1040;
+		exports$1.ER_OUT_OF_RESOURCES = 1041;
+		exports$1.ER_BAD_HOST_ERROR = 1042;
+		exports$1.ER_HANDSHAKE_ERROR = 1043;
+		exports$1.ER_DBACCESS_DENIED_ERROR = 1044;
+		exports$1.ER_ACCESS_DENIED_ERROR = 1045;
+		exports$1.ER_NO_DB_ERROR = 1046;
+		exports$1.ER_UNKNOWN_COM_ERROR = 1047;
+		exports$1.ER_BAD_NULL_ERROR = 1048;
+		exports$1.ER_BAD_DB_ERROR = 1049;
+		exports$1.ER_TABLE_EXISTS_ERROR = 1050;
+		exports$1.ER_BAD_TABLE_ERROR = 1051;
+		exports$1.ER_NON_UNIQ_ERROR = 1052;
+		exports$1.ER_SERVER_SHUTDOWN = 1053;
+		exports$1.ER_BAD_FIELD_ERROR = 1054;
+		exports$1.ER_WRONG_FIELD_WITH_GROUP = 1055;
+		exports$1.ER_WRONG_GROUP_FIELD = 1056;
+		exports$1.ER_WRONG_SUM_SELECT = 1057;
+		exports$1.ER_WRONG_VALUE_COUNT = 1058;
+		exports$1.ER_TOO_LONG_IDENT = 1059;
+		exports$1.ER_DUP_FIELDNAME = 1060;
+		exports$1.ER_DUP_KEYNAME = 1061;
+		exports$1.ER_DUP_ENTRY = 1062;
+		exports$1.ER_WRONG_FIELD_SPEC = 1063;
+		exports$1.ER_PARSE_ERROR = 1064;
+		exports$1.ER_EMPTY_QUERY = 1065;
+		exports$1.ER_NONUNIQ_TABLE = 1066;
+		exports$1.ER_INVALID_DEFAULT = 1067;
+		exports$1.ER_MULTIPLE_PRI_KEY = 1068;
+		exports$1.ER_TOO_MANY_KEYS = 1069;
+		exports$1.ER_TOO_MANY_KEY_PARTS = 1070;
+		exports$1.ER_TOO_LONG_KEY = 1071;
+		exports$1.ER_KEY_COLUMN_DOES_NOT_EXITS = 1072;
+		exports$1.ER_BLOB_USED_AS_KEY = 1073;
+		exports$1.ER_TOO_BIG_FIELDLENGTH = 1074;
+		exports$1.ER_WRONG_AUTO_KEY = 1075;
+		exports$1.ER_READY = 1076;
+		exports$1.ER_NORMAL_SHUTDOWN = 1077;
+		exports$1.ER_GOT_SIGNAL = 1078;
+		exports$1.ER_SHUTDOWN_COMPLETE = 1079;
+		exports$1.ER_FORCING_CLOSE = 1080;
+		exports$1.ER_IPSOCK_ERROR = 1081;
+		exports$1.ER_NO_SUCH_INDEX = 1082;
+		exports$1.ER_WRONG_FIELD_TERMINATORS = 1083;
+		exports$1.ER_BLOBS_AND_NO_TERMINATED = 1084;
+		exports$1.ER_TEXTFILE_NOT_READABLE = 1085;
+		exports$1.ER_FILE_EXISTS_ERROR = 1086;
+		exports$1.ER_LOAD_INFO = 1087;
+		exports$1.ER_ALTER_INFO = 1088;
+		exports$1.ER_WRONG_SUB_KEY = 1089;
+		exports$1.ER_CANT_REMOVE_ALL_FIELDS = 1090;
+		exports$1.ER_CANT_DROP_FIELD_OR_KEY = 1091;
+		exports$1.ER_INSERT_INFO = 1092;
+		exports$1.ER_UPDATE_TABLE_USED = 1093;
+		exports$1.ER_NO_SUCH_THREAD = 1094;
+		exports$1.ER_KILL_DENIED_ERROR = 1095;
+		exports$1.ER_NO_TABLES_USED = 1096;
+		exports$1.ER_TOO_BIG_SET = 1097;
+		exports$1.ER_NO_UNIQUE_LOGFILE = 1098;
+		exports$1.ER_TABLE_NOT_LOCKED_FOR_WRITE = 1099;
+		exports$1.ER_TABLE_NOT_LOCKED = 1100;
+		exports$1.ER_BLOB_CANT_HAVE_DEFAULT = 1101;
+		exports$1.ER_WRONG_DB_NAME = 1102;
+		exports$1.ER_WRONG_TABLE_NAME = 1103;
+		exports$1.ER_TOO_BIG_SELECT = 1104;
+		exports$1.ER_UNKNOWN_ERROR = 1105;
+		exports$1.ER_UNKNOWN_PROCEDURE = 1106;
+		exports$1.ER_WRONG_PARAMCOUNT_TO_PROCEDURE = 1107;
+		exports$1.ER_WRONG_PARAMETERS_TO_PROCEDURE = 1108;
+		exports$1.ER_UNKNOWN_TABLE = 1109;
+		exports$1.ER_FIELD_SPECIFIED_TWICE = 1110;
+		exports$1.ER_INVALID_GROUP_FUNC_USE = 1111;
+		exports$1.ER_UNSUPPORTED_EXTENSION = 1112;
+		exports$1.ER_TABLE_MUST_HAVE_COLUMNS = 1113;
+		exports$1.ER_RECORD_FILE_FULL = 1114;
+		exports$1.ER_UNKNOWN_CHARACTER_SET = 1115;
+		exports$1.ER_TOO_MANY_TABLES = 1116;
+		exports$1.ER_TOO_MANY_FIELDS = 1117;
+		exports$1.ER_TOO_BIG_ROWSIZE = 1118;
+		exports$1.ER_STACK_OVERRUN = 1119;
+		exports$1.ER_WRONG_OUTER_JOIN = 1120;
+		exports$1.ER_NULL_COLUMN_IN_INDEX = 1121;
+		exports$1.ER_CANT_FIND_UDF = 1122;
+		exports$1.ER_CANT_INITIALIZE_UDF = 1123;
+		exports$1.ER_UDF_NO_PATHS = 1124;
+		exports$1.ER_UDF_EXISTS = 1125;
+		exports$1.ER_CANT_OPEN_LIBRARY = 1126;
+		exports$1.ER_CANT_FIND_DL_ENTRY = 1127;
+		exports$1.ER_FUNCTION_NOT_DEFINED = 1128;
+		exports$1.ER_HOST_IS_BLOCKED = 1129;
+		exports$1.ER_HOST_NOT_PRIVILEGED = 1130;
+		exports$1.ER_PASSWORD_ANONYMOUS_USER = 1131;
+		exports$1.ER_PASSWORD_NOT_ALLOWED = 1132;
+		exports$1.ER_PASSWORD_NO_MATCH = 1133;
+		exports$1.ER_UPDATE_INFO = 1134;
+		exports$1.ER_CANT_CREATE_THREAD = 1135;
+		exports$1.ER_WRONG_VALUE_COUNT_ON_ROW = 1136;
+		exports$1.ER_CANT_REOPEN_TABLE = 1137;
+		exports$1.ER_INVALID_USE_OF_NULL = 1138;
+		exports$1.ER_REGEXP_ERROR = 1139;
+		exports$1.ER_MIX_OF_GROUP_FUNC_AND_FIELDS = 1140;
+		exports$1.ER_NONEXISTING_GRANT = 1141;
+		exports$1.ER_TABLEACCESS_DENIED_ERROR = 1142;
+		exports$1.ER_COLUMNACCESS_DENIED_ERROR = 1143;
+		exports$1.ER_ILLEGAL_GRANT_FOR_TABLE = 1144;
+		exports$1.ER_GRANT_WRONG_HOST_OR_USER = 1145;
+		exports$1.ER_NO_SUCH_TABLE = 1146;
+		exports$1.ER_NONEXISTING_TABLE_GRANT = 1147;
+		exports$1.ER_NOT_ALLOWED_COMMAND = 1148;
+		exports$1.ER_SYNTAX_ERROR = 1149;
+		exports$1.ER_UNUSED1 = 1150;
+		exports$1.ER_UNUSED2 = 1151;
+		exports$1.ER_ABORTING_CONNECTION = 1152;
+		exports$1.ER_NET_PACKET_TOO_LARGE = 1153;
+		exports$1.ER_NET_READ_ERROR_FROM_PIPE = 1154;
+		exports$1.ER_NET_FCNTL_ERROR = 1155;
+		exports$1.ER_NET_PACKETS_OUT_OF_ORDER = 1156;
+		exports$1.ER_NET_UNCOMPRESS_ERROR = 1157;
+		exports$1.ER_NET_READ_ERROR = 1158;
+		exports$1.ER_NET_READ_INTERRUPTED = 1159;
+		exports$1.ER_NET_ERROR_ON_WRITE = 1160;
+		exports$1.ER_NET_WRITE_INTERRUPTED = 1161;
+		exports$1.ER_TOO_LONG_STRING = 1162;
+		exports$1.ER_TABLE_CANT_HANDLE_BLOB = 1163;
+		exports$1.ER_TABLE_CANT_HANDLE_AUTO_INCREMENT = 1164;
+		exports$1.ER_UNUSED3 = 1165;
+		exports$1.ER_WRONG_COLUMN_NAME = 1166;
+		exports$1.ER_WRONG_KEY_COLUMN = 1167;
+		exports$1.ER_WRONG_MRG_TABLE = 1168;
+		exports$1.ER_DUP_UNIQUE = 1169;
+		exports$1.ER_BLOB_KEY_WITHOUT_LENGTH = 1170;
+		exports$1.ER_PRIMARY_CANT_HAVE_NULL = 1171;
+		exports$1.ER_TOO_MANY_ROWS = 1172;
+		exports$1.ER_REQUIRES_PRIMARY_KEY = 1173;
+		exports$1.ER_NO_RAID_COMPILED = 1174;
+		exports$1.ER_UPDATE_WITHOUT_KEY_IN_SAFE_MODE = 1175;
+		exports$1.ER_KEY_DOES_NOT_EXITS = 1176;
+		exports$1.ER_CHECK_NO_SUCH_TABLE = 1177;
+		exports$1.ER_CHECK_NOT_IMPLEMENTED = 1178;
+		exports$1.ER_CANT_DO_THIS_DURING_AN_TRANSACTION = 1179;
+		exports$1.ER_ERROR_DURING_COMMIT = 1180;
+		exports$1.ER_ERROR_DURING_ROLLBACK = 1181;
+		exports$1.ER_ERROR_DURING_FLUSH_LOGS = 1182;
+		exports$1.ER_ERROR_DURING_CHECKPOINT = 1183;
+		exports$1.ER_NEW_ABORTING_CONNECTION = 1184;
+		exports$1.ER_DUMP_NOT_IMPLEMENTED = 1185;
+		exports$1.ER_FLUSH_MASTER_BINLOG_CLOSED = 1186;
+		exports$1.ER_INDEX_REBUILD = 1187;
+		exports$1.ER_SOURCE = 1188;
+		exports$1.ER_SOURCE_NET_READ = 1189;
+		exports$1.ER_SOURCE_NET_WRITE = 1190;
+		exports$1.ER_FT_MATCHING_KEY_NOT_FOUND = 1191;
+		exports$1.ER_LOCK_OR_ACTIVE_TRANSACTION = 1192;
+		exports$1.ER_UNKNOWN_SYSTEM_VARIABLE = 1193;
+		exports$1.ER_CRASHED_ON_USAGE = 1194;
+		exports$1.ER_CRASHED_ON_REPAIR = 1195;
+		exports$1.ER_WARNING_NOT_COMPLETE_ROLLBACK = 1196;
+		exports$1.ER_TRANS_CACHE_FULL = 1197;
+		exports$1.ER_SLAVE_MUST_STOP = 1198;
+		exports$1.ER_REPLICA_NOT_RUNNING = 1199;
+		exports$1.ER_BAD_REPLICA = 1200;
+		exports$1.ER_CONNECTION_METADATA = 1201;
+		exports$1.ER_REPLICA_THREAD = 1202;
+		exports$1.ER_TOO_MANY_USER_CONNECTIONS = 1203;
+		exports$1.ER_SET_CONSTANTS_ONLY = 1204;
+		exports$1.ER_LOCK_WAIT_TIMEOUT = 1205;
+		exports$1.ER_LOCK_TABLE_FULL = 1206;
+		exports$1.ER_READ_ONLY_TRANSACTION = 1207;
+		exports$1.ER_DROP_DB_WITH_READ_LOCK = 1208;
+		exports$1.ER_CREATE_DB_WITH_READ_LOCK = 1209;
+		exports$1.ER_WRONG_ARGUMENTS = 1210;
+		exports$1.ER_NO_PERMISSION_TO_CREATE_USER = 1211;
+		exports$1.ER_UNION_TABLES_IN_DIFFERENT_DIR = 1212;
+		exports$1.ER_LOCK_DEADLOCK = 1213;
+		exports$1.ER_TABLE_CANT_HANDLE_FT = 1214;
+		exports$1.ER_CANNOT_ADD_FOREIGN = 1215;
+		exports$1.ER_NO_REFERENCED_ROW = 1216;
+		exports$1.ER_ROW_IS_REFERENCED = 1217;
+		exports$1.ER_CONNECT_TO_SOURCE = 1218;
+		exports$1.ER_QUERY_ON_MASTER = 1219;
+		exports$1.ER_ERROR_WHEN_EXECUTING_COMMAND = 1220;
+		exports$1.ER_WRONG_USAGE = 1221;
+		exports$1.ER_WRONG_NUMBER_OF_COLUMNS_IN_SELECT = 1222;
+		exports$1.ER_CANT_UPDATE_WITH_READLOCK = 1223;
+		exports$1.ER_MIXING_NOT_ALLOWED = 1224;
+		exports$1.ER_DUP_ARGUMENT = 1225;
+		exports$1.ER_USER_LIMIT_REACHED = 1226;
+		exports$1.ER_SPECIFIC_ACCESS_DENIED_ERROR = 1227;
+		exports$1.ER_LOCAL_VARIABLE = 1228;
+		exports$1.ER_GLOBAL_VARIABLE = 1229;
+		exports$1.ER_NO_DEFAULT = 1230;
+		exports$1.ER_WRONG_VALUE_FOR_VAR = 1231;
+		exports$1.ER_WRONG_TYPE_FOR_VAR = 1232;
+		exports$1.ER_VAR_CANT_BE_READ = 1233;
+		exports$1.ER_CANT_USE_OPTION_HERE = 1234;
+		exports$1.ER_NOT_SUPPORTED_YET = 1235;
+		exports$1.ER_SOURCE_FATAL_ERROR_READING_BINLOG = 1236;
+		exports$1.ER_REPLICA_IGNORED_TABLE = 1237;
+		exports$1.ER_INCORRECT_GLOBAL_LOCAL_VAR = 1238;
+		exports$1.ER_WRONG_FK_DEF = 1239;
+		exports$1.ER_KEY_REF_DO_NOT_MATCH_TABLE_REF = 1240;
+		exports$1.ER_OPERAND_COLUMNS = 1241;
+		exports$1.ER_SUBQUERY_NO_1_ROW = 1242;
+		exports$1.ER_UNKNOWN_STMT_HANDLER = 1243;
+		exports$1.ER_CORRUPT_HELP_DB = 1244;
+		exports$1.ER_CYCLIC_REFERENCE = 1245;
+		exports$1.ER_AUTO_CONVERT = 1246;
+		exports$1.ER_ILLEGAL_REFERENCE = 1247;
+		exports$1.ER_DERIVED_MUST_HAVE_ALIAS = 1248;
+		exports$1.ER_SELECT_REDUCED = 1249;
+		exports$1.ER_TABLENAME_NOT_ALLOWED_HERE = 1250;
+		exports$1.ER_NOT_SUPPORTED_AUTH_MODE = 1251;
+		exports$1.ER_SPATIAL_CANT_HAVE_NULL = 1252;
+		exports$1.ER_COLLATION_CHARSET_MISMATCH = 1253;
+		exports$1.ER_SLAVE_WAS_RUNNING = 1254;
+		exports$1.ER_SLAVE_WAS_NOT_RUNNING = 1255;
+		exports$1.ER_TOO_BIG_FOR_UNCOMPRESS = 1256;
+		exports$1.ER_ZLIB_Z_MEM_ERROR = 1257;
+		exports$1.ER_ZLIB_Z_BUF_ERROR = 1258;
+		exports$1.ER_ZLIB_Z_DATA_ERROR = 1259;
+		exports$1.ER_CUT_VALUE_GROUP_CONCAT = 1260;
+		exports$1.ER_WARN_TOO_FEW_RECORDS = 1261;
+		exports$1.ER_WARN_TOO_MANY_RECORDS = 1262;
+		exports$1.ER_WARN_NULL_TO_NOTNULL = 1263;
+		exports$1.ER_WARN_DATA_OUT_OF_RANGE = 1264;
+		exports$1.WARN_DATA_TRUNCATED = 1265;
+		exports$1.ER_WARN_USING_OTHER_HANDLER = 1266;
+		exports$1.ER_CANT_AGGREGATE_2COLLATIONS = 1267;
+		exports$1.ER_DROP_USER = 1268;
+		exports$1.ER_REVOKE_GRANTS = 1269;
+		exports$1.ER_CANT_AGGREGATE_3COLLATIONS = 1270;
+		exports$1.ER_CANT_AGGREGATE_NCOLLATIONS = 1271;
+		exports$1.ER_VARIABLE_IS_NOT_STRUCT = 1272;
+		exports$1.ER_UNKNOWN_COLLATION = 1273;
+		exports$1.ER_REPLICA_IGNORED_SSL_PARAMS = 1274;
+		exports$1.ER_SERVER_IS_IN_SECURE_AUTH_MODE = 1275;
+		exports$1.ER_WARN_FIELD_RESOLVED = 1276;
+		exports$1.ER_BAD_REPLICA_UNTIL_COND = 1277;
+		exports$1.ER_MISSING_SKIP_REPLICA = 1278;
+		exports$1.ER_UNTIL_COND_IGNORED = 1279;
+		exports$1.ER_WRONG_NAME_FOR_INDEX = 1280;
+		exports$1.ER_WRONG_NAME_FOR_CATALOG = 1281;
+		exports$1.ER_WARN_QC_RESIZE = 1282;
+		exports$1.ER_BAD_FT_COLUMN = 1283;
+		exports$1.ER_UNKNOWN_KEY_CACHE = 1284;
+		exports$1.ER_WARN_HOSTNAME_WONT_WORK = 1285;
+		exports$1.ER_UNKNOWN_STORAGE_ENGINE = 1286;
+		exports$1.ER_WARN_DEPRECATED_SYNTAX = 1287;
+		exports$1.ER_NON_UPDATABLE_TABLE = 1288;
+		exports$1.ER_FEATURE_DISABLED = 1289;
+		exports$1.ER_OPTION_PREVENTS_STATEMENT = 1290;
+		exports$1.ER_DUPLICATED_VALUE_IN_TYPE = 1291;
+		exports$1.ER_TRUNCATED_WRONG_VALUE = 1292;
+		exports$1.ER_TOO_MUCH_AUTO_TIMESTAMP_COLS = 1293;
+		exports$1.ER_INVALID_ON_UPDATE = 1294;
+		exports$1.ER_UNSUPPORTED_PS = 1295;
+		exports$1.ER_GET_ERRMSG = 1296;
+		exports$1.ER_GET_TEMPORARY_ERRMSG = 1297;
+		exports$1.ER_UNKNOWN_TIME_ZONE = 1298;
+		exports$1.ER_WARN_INVALID_TIMESTAMP = 1299;
+		exports$1.ER_INVALID_CHARACTER_STRING = 1300;
+		exports$1.ER_WARN_ALLOWED_PACKET_OVERFLOWED = 1301;
+		exports$1.ER_CONFLICTING_DECLARATIONS = 1302;
+		exports$1.ER_SP_NO_RECURSIVE_CREATE = 1303;
+		exports$1.ER_SP_ALREADY_EXISTS = 1304;
+		exports$1.ER_SP_DOES_NOT_EXIST = 1305;
+		exports$1.ER_SP_DROP_FAILED = 1306;
+		exports$1.ER_SP_STORE_FAILED = 1307;
+		exports$1.ER_SP_LILABEL_MISMATCH = 1308;
+		exports$1.ER_SP_LABEL_REDEFINE = 1309;
+		exports$1.ER_SP_LABEL_MISMATCH = 1310;
+		exports$1.ER_SP_UNINIT_VAR = 1311;
+		exports$1.ER_SP_BADSELECT = 1312;
+		exports$1.ER_SP_BADRETURN = 1313;
+		exports$1.ER_SP_BADSTATEMENT = 1314;
+		exports$1.ER_UPDATE_LOG_DEPRECATED_IGNORED = 1315;
+		exports$1.ER_UPDATE_LOG_DEPRECATED_TRANSLATED = 1316;
+		exports$1.ER_QUERY_INTERRUPTED = 1317;
+		exports$1.ER_SP_WRONG_NO_OF_ARGS = 1318;
+		exports$1.ER_SP_COND_MISMATCH = 1319;
+		exports$1.ER_SP_NORETURN = 1320;
+		exports$1.ER_SP_NORETURNEND = 1321;
+		exports$1.ER_SP_BAD_CURSOR_QUERY = 1322;
+		exports$1.ER_SP_BAD_CURSOR_SELECT = 1323;
+		exports$1.ER_SP_CURSOR_MISMATCH = 1324;
+		exports$1.ER_SP_CURSOR_ALREADY_OPEN = 1325;
+		exports$1.ER_SP_CURSOR_NOT_OPEN = 1326;
+		exports$1.ER_SP_UNDECLARED_VAR = 1327;
+		exports$1.ER_SP_WRONG_NO_OF_FETCH_ARGS = 1328;
+		exports$1.ER_SP_FETCH_NO_DATA = 1329;
+		exports$1.ER_SP_DUP_PARAM = 1330;
+		exports$1.ER_SP_DUP_VAR = 1331;
+		exports$1.ER_SP_DUP_COND = 1332;
+		exports$1.ER_SP_DUP_CURS = 1333;
+		exports$1.ER_SP_CANT_ALTER = 1334;
+		exports$1.ER_SP_SUBSELECT_NYI = 1335;
+		exports$1.ER_STMT_NOT_ALLOWED_IN_SF_OR_TRG = 1336;
+		exports$1.ER_SP_VARCOND_AFTER_CURSHNDLR = 1337;
+		exports$1.ER_SP_CURSOR_AFTER_HANDLER = 1338;
+		exports$1.ER_SP_CASE_NOT_FOUND = 1339;
+		exports$1.ER_FPARSER_TOO_BIG_FILE = 1340;
+		exports$1.ER_FPARSER_BAD_HEADER = 1341;
+		exports$1.ER_FPARSER_EOF_IN_COMMENT = 1342;
+		exports$1.ER_FPARSER_ERROR_IN_PARAMETER = 1343;
+		exports$1.ER_FPARSER_EOF_IN_UNKNOWN_PARAMETER = 1344;
+		exports$1.ER_VIEW_NO_EXPLAIN = 1345;
+		exports$1.ER_FRM_UNKNOWN_TYPE = 1346;
+		exports$1.ER_WRONG_OBJECT = 1347;
+		exports$1.ER_NONUPDATEABLE_COLUMN = 1348;
+		exports$1.ER_VIEW_SELECT_DERIVED = 1349;
+		exports$1.ER_VIEW_SELECT_CLAUSE = 1350;
+		exports$1.ER_VIEW_SELECT_VARIABLE = 1351;
+		exports$1.ER_VIEW_SELECT_TMPTABLE = 1352;
+		exports$1.ER_VIEW_WRONG_LIST = 1353;
+		exports$1.ER_WARN_VIEW_MERGE = 1354;
+		exports$1.ER_WARN_VIEW_WITHOUT_KEY = 1355;
+		exports$1.ER_VIEW_INVALID = 1356;
+		exports$1.ER_SP_NO_DROP_SP = 1357;
+		exports$1.ER_SP_GOTO_IN_HNDLR = 1358;
+		exports$1.ER_TRG_ALREADY_EXISTS = 1359;
+		exports$1.ER_TRG_DOES_NOT_EXIST = 1360;
+		exports$1.ER_TRG_ON_VIEW_OR_TEMP_TABLE = 1361;
+		exports$1.ER_TRG_CANT_CHANGE_ROW = 1362;
+		exports$1.ER_TRG_NO_SUCH_ROW_IN_TRG = 1363;
+		exports$1.ER_NO_DEFAULT_FOR_FIELD = 1364;
+		exports$1.ER_DIVISION_BY_ZERO = 1365;
+		exports$1.ER_TRUNCATED_WRONG_VALUE_FOR_FIELD = 1366;
+		exports$1.ER_ILLEGAL_VALUE_FOR_TYPE = 1367;
+		exports$1.ER_VIEW_NONUPD_CHECK = 1368;
+		exports$1.ER_VIEW_CHECK_FAILED = 1369;
+		exports$1.ER_PROCACCESS_DENIED_ERROR = 1370;
+		exports$1.ER_RELAY_LOG_FAIL = 1371;
+		exports$1.ER_PASSWD_LENGTH = 1372;
+		exports$1.ER_UNKNOWN_TARGET_BINLOG = 1373;
+		exports$1.ER_IO_ERR_LOG_INDEX_READ = 1374;
+		exports$1.ER_BINLOG_PURGE_PROHIBITED = 1375;
+		exports$1.ER_FSEEK_FAIL = 1376;
+		exports$1.ER_BINLOG_PURGE_FATAL_ERR = 1377;
+		exports$1.ER_LOG_IN_USE = 1378;
+		exports$1.ER_LOG_PURGE_UNKNOWN_ERR = 1379;
+		exports$1.ER_RELAY_LOG_INIT = 1380;
+		exports$1.ER_NO_BINARY_LOGGING = 1381;
+		exports$1.ER_RESERVED_SYNTAX = 1382;
+		exports$1.ER_WSAS_FAILED = 1383;
+		exports$1.ER_DIFF_GROUPS_PROC = 1384;
+		exports$1.ER_NO_GROUP_FOR_PROC = 1385;
+		exports$1.ER_ORDER_WITH_PROC = 1386;
+		exports$1.ER_LOGGING_PROHIBIT_CHANGING_OF = 1387;
+		exports$1.ER_NO_FILE_MAPPING = 1388;
+		exports$1.ER_WRONG_MAGIC = 1389;
+		exports$1.ER_PS_MANY_PARAM = 1390;
+		exports$1.ER_KEY_PART_0 = 1391;
+		exports$1.ER_VIEW_CHECKSUM = 1392;
+		exports$1.ER_VIEW_MULTIUPDATE = 1393;
+		exports$1.ER_VIEW_NO_INSERT_FIELD_LIST = 1394;
+		exports$1.ER_VIEW_DELETE_MERGE_VIEW = 1395;
+		exports$1.ER_CANNOT_USER = 1396;
+		exports$1.ER_XAER_NOTA = 1397;
+		exports$1.ER_XAER_INVAL = 1398;
+		exports$1.ER_XAER_RMFAIL = 1399;
+		exports$1.ER_XAER_OUTSIDE = 1400;
+		exports$1.ER_XAER_RMERR = 1401;
+		exports$1.ER_XA_RBROLLBACK = 1402;
+		exports$1.ER_NONEXISTING_PROC_GRANT = 1403;
+		exports$1.ER_PROC_AUTO_GRANT_FAIL = 1404;
+		exports$1.ER_PROC_AUTO_REVOKE_FAIL = 1405;
+		exports$1.ER_DATA_TOO_LONG = 1406;
+		exports$1.ER_SP_BAD_SQLSTATE = 1407;
+		exports$1.ER_STARTUP = 1408;
+		exports$1.ER_LOAD_FROM_FIXED_SIZE_ROWS_TO_VAR = 1409;
+		exports$1.ER_CANT_CREATE_USER_WITH_GRANT = 1410;
+		exports$1.ER_WRONG_VALUE_FOR_TYPE = 1411;
+		exports$1.ER_TABLE_DEF_CHANGED = 1412;
+		exports$1.ER_SP_DUP_HANDLER = 1413;
+		exports$1.ER_SP_NOT_VAR_ARG = 1414;
+		exports$1.ER_SP_NO_RETSET = 1415;
+		exports$1.ER_CANT_CREATE_GEOMETRY_OBJECT = 1416;
+		exports$1.ER_FAILED_ROUTINE_BREAK_BINLOG = 1417;
+		exports$1.ER_BINLOG_UNSAFE_ROUTINE = 1418;
+		exports$1.ER_BINLOG_CREATE_ROUTINE_NEED_SUPER = 1419;
+		exports$1.ER_EXEC_STMT_WITH_OPEN_CURSOR = 1420;
+		exports$1.ER_STMT_HAS_NO_OPEN_CURSOR = 1421;
+		exports$1.ER_COMMIT_NOT_ALLOWED_IN_SF_OR_TRG = 1422;
+		exports$1.ER_NO_DEFAULT_FOR_VIEW_FIELD = 1423;
+		exports$1.ER_SP_NO_RECURSION = 1424;
+		exports$1.ER_TOO_BIG_SCALE = 1425;
+		exports$1.ER_TOO_BIG_PRECISION = 1426;
+		exports$1.ER_M_BIGGER_THAN_D = 1427;
+		exports$1.ER_WRONG_LOCK_OF_SYSTEM_TABLE = 1428;
+		exports$1.ER_CONNECT_TO_FOREIGN_DATA_SOURCE = 1429;
+		exports$1.ER_QUERY_ON_FOREIGN_DATA_SOURCE = 1430;
+		exports$1.ER_FOREIGN_DATA_SOURCE_DOESNT_EXIST = 1431;
+		exports$1.ER_FOREIGN_DATA_STRING_INVALID_CANT_CREATE = 1432;
+		exports$1.ER_FOREIGN_DATA_STRING_INVALID = 1433;
+		exports$1.ER_CANT_CREATE_FEDERATED_TABLE = 1434;
+		exports$1.ER_TRG_IN_WRONG_SCHEMA = 1435;
+		exports$1.ER_STACK_OVERRUN_NEED_MORE = 1436;
+		exports$1.ER_TOO_LONG_BODY = 1437;
+		exports$1.ER_WARN_CANT_DROP_DEFAULT_KEYCACHE = 1438;
+		exports$1.ER_TOO_BIG_DISPLAYWIDTH = 1439;
+		exports$1.ER_XAER_DUPID = 1440;
+		exports$1.ER_DATETIME_FUNCTION_OVERFLOW = 1441;
+		exports$1.ER_CANT_UPDATE_USED_TABLE_IN_SF_OR_TRG = 1442;
+		exports$1.ER_VIEW_PREVENT_UPDATE = 1443;
+		exports$1.ER_PS_NO_RECURSION = 1444;
+		exports$1.ER_SP_CANT_SET_AUTOCOMMIT = 1445;
+		exports$1.ER_MALFORMED_DEFINER = 1446;
+		exports$1.ER_VIEW_FRM_NO_USER = 1447;
+		exports$1.ER_VIEW_OTHER_USER = 1448;
+		exports$1.ER_NO_SUCH_USER = 1449;
+		exports$1.ER_FORBID_SCHEMA_CHANGE = 1450;
+		exports$1.ER_ROW_IS_REFERENCED_2 = 1451;
+		exports$1.ER_NO_REFERENCED_ROW_2 = 1452;
+		exports$1.ER_SP_BAD_VAR_SHADOW = 1453;
+		exports$1.ER_TRG_NO_DEFINER = 1454;
+		exports$1.ER_OLD_FILE_FORMAT = 1455;
+		exports$1.ER_SP_RECURSION_LIMIT = 1456;
+		exports$1.ER_SP_PROC_TABLE_CORRUPT = 1457;
+		exports$1.ER_SP_WRONG_NAME = 1458;
+		exports$1.ER_TABLE_NEEDS_UPGRADE = 1459;
+		exports$1.ER_SP_NO_AGGREGATE = 1460;
+		exports$1.ER_MAX_PREPARED_STMT_COUNT_REACHED = 1461;
+		exports$1.ER_VIEW_RECURSIVE = 1462;
+		exports$1.ER_NON_GROUPING_FIELD_USED = 1463;
+		exports$1.ER_TABLE_CANT_HANDLE_SPKEYS = 1464;
+		exports$1.ER_NO_TRIGGERS_ON_SYSTEM_SCHEMA = 1465;
+		exports$1.ER_REMOVED_SPACES = 1466;
+		exports$1.ER_AUTOINC_READ_FAILED = 1467;
+		exports$1.ER_USERNAME = 1468;
+		exports$1.ER_HOSTNAME = 1469;
+		exports$1.ER_WRONG_STRING_LENGTH = 1470;
+		exports$1.ER_NON_INSERTABLE_TABLE = 1471;
+		exports$1.ER_ADMIN_WRONG_MRG_TABLE = 1472;
+		exports$1.ER_TOO_HIGH_LEVEL_OF_NESTING_FOR_SELECT = 1473;
+		exports$1.ER_NAME_BECOMES_EMPTY = 1474;
+		exports$1.ER_AMBIGUOUS_FIELD_TERM = 1475;
+		exports$1.ER_FOREIGN_SERVER_EXISTS = 1476;
+		exports$1.ER_FOREIGN_SERVER_DOESNT_EXIST = 1477;
+		exports$1.ER_ILLEGAL_HA_CREATE_OPTION = 1478;
+		exports$1.ER_PARTITION_REQUIRES_VALUES_ERROR = 1479;
+		exports$1.ER_PARTITION_WRONG_VALUES_ERROR = 1480;
+		exports$1.ER_PARTITION_MAXVALUE_ERROR = 1481;
+		exports$1.ER_PARTITION_SUBPARTITION_ERROR = 1482;
+		exports$1.ER_PARTITION_SUBPART_MIX_ERROR = 1483;
+		exports$1.ER_PARTITION_WRONG_NO_PART_ERROR = 1484;
+		exports$1.ER_PARTITION_WRONG_NO_SUBPART_ERROR = 1485;
+		exports$1.ER_WRONG_EXPR_IN_PARTITION_FUNC_ERROR = 1486;
+		exports$1.ER_NO_CONST_EXPR_IN_RANGE_OR_LIST_ERROR = 1487;
+		exports$1.ER_FIELD_NOT_FOUND_PART_ERROR = 1488;
+		exports$1.ER_LIST_OF_FIELDS_ONLY_IN_HASH_ERROR = 1489;
+		exports$1.ER_INCONSISTENT_PARTITION_INFO_ERROR = 1490;
+		exports$1.ER_PARTITION_FUNC_NOT_ALLOWED_ERROR = 1491;
+		exports$1.ER_PARTITIONS_MUST_BE_DEFINED_ERROR = 1492;
+		exports$1.ER_RANGE_NOT_INCREASING_ERROR = 1493;
+		exports$1.ER_INCONSISTENT_TYPE_OF_FUNCTIONS_ERROR = 1494;
+		exports$1.ER_MULTIPLE_DEF_CONST_IN_LIST_PART_ERROR = 1495;
+		exports$1.ER_PARTITION_ENTRY_ERROR = 1496;
+		exports$1.ER_MIX_HANDLER_ERROR = 1497;
+		exports$1.ER_PARTITION_NOT_DEFINED_ERROR = 1498;
+		exports$1.ER_TOO_MANY_PARTITIONS_ERROR = 1499;
+		exports$1.ER_SUBPARTITION_ERROR = 1500;
+		exports$1.ER_CANT_CREATE_HANDLER_FILE = 1501;
+		exports$1.ER_BLOB_FIELD_IN_PART_FUNC_ERROR = 1502;
+		exports$1.ER_UNIQUE_KEY_NEED_ALL_FIELDS_IN_PF = 1503;
+		exports$1.ER_NO_PARTS_ERROR = 1504;
+		exports$1.ER_PARTITION_MGMT_ON_NONPARTITIONED = 1505;
+		exports$1.ER_FOREIGN_KEY_ON_PARTITIONED = 1506;
+		exports$1.ER_DROP_PARTITION_NON_EXISTENT = 1507;
+		exports$1.ER_DROP_LAST_PARTITION = 1508;
+		exports$1.ER_COALESCE_ONLY_ON_HASH_PARTITION = 1509;
+		exports$1.ER_REORG_HASH_ONLY_ON_SAME_NO = 1510;
+		exports$1.ER_REORG_NO_PARAM_ERROR = 1511;
+		exports$1.ER_ONLY_ON_RANGE_LIST_PARTITION = 1512;
+		exports$1.ER_ADD_PARTITION_SUBPART_ERROR = 1513;
+		exports$1.ER_ADD_PARTITION_NO_NEW_PARTITION = 1514;
+		exports$1.ER_COALESCE_PARTITION_NO_PARTITION = 1515;
+		exports$1.ER_REORG_PARTITION_NOT_EXIST = 1516;
+		exports$1.ER_SAME_NAME_PARTITION = 1517;
+		exports$1.ER_NO_BINLOG_ERROR = 1518;
+		exports$1.ER_CONSECUTIVE_REORG_PARTITIONS = 1519;
+		exports$1.ER_REORG_OUTSIDE_RANGE = 1520;
+		exports$1.ER_PARTITION_FUNCTION_FAILURE = 1521;
+		exports$1.ER_PART_STATE_ERROR = 1522;
+		exports$1.ER_LIMITED_PART_RANGE = 1523;
+		exports$1.ER_PLUGIN_IS_NOT_LOADED = 1524;
+		exports$1.ER_WRONG_VALUE = 1525;
+		exports$1.ER_NO_PARTITION_FOR_GIVEN_VALUE = 1526;
+		exports$1.ER_FILEGROUP_OPTION_ONLY_ONCE = 1527;
+		exports$1.ER_CREATE_FILEGROUP_FAILED = 1528;
+		exports$1.ER_DROP_FILEGROUP_FAILED = 1529;
+		exports$1.ER_TABLESPACE_AUTO_EXTEND_ERROR = 1530;
+		exports$1.ER_WRONG_SIZE_NUMBER = 1531;
+		exports$1.ER_SIZE_OVERFLOW_ERROR = 1532;
+		exports$1.ER_ALTER_FILEGROUP_FAILED = 1533;
+		exports$1.ER_BINLOG_ROW_LOGGING_FAILED = 1534;
+		exports$1.ER_BINLOG_ROW_WRONG_TABLE_DEF = 1535;
+		exports$1.ER_BINLOG_ROW_RBR_TO_SBR = 1536;
+		exports$1.ER_EVENT_ALREADY_EXISTS = 1537;
+		exports$1.ER_EVENT_STORE_FAILED = 1538;
+		exports$1.ER_EVENT_DOES_NOT_EXIST = 1539;
+		exports$1.ER_EVENT_CANT_ALTER = 1540;
+		exports$1.ER_EVENT_DROP_FAILED = 1541;
+		exports$1.ER_EVENT_INTERVAL_NOT_POSITIVE_OR_TOO_BIG = 1542;
+		exports$1.ER_EVENT_ENDS_BEFORE_STARTS = 1543;
+		exports$1.ER_EVENT_EXEC_TIME_IN_THE_PAST = 1544;
+		exports$1.ER_EVENT_OPEN_TABLE_FAILED = 1545;
+		exports$1.ER_EVENT_NEITHER_M_EXPR_NOR_M_AT = 1546;
+		exports$1.ER_COL_COUNT_DOESNT_MATCH_CORRUPTED = 1547;
+		exports$1.ER_CANNOT_LOAD_FROM_TABLE = 1548;
+		exports$1.ER_EVENT_CANNOT_DELETE = 1549;
+		exports$1.ER_EVENT_COMPILE_ERROR = 1550;
+		exports$1.ER_EVENT_SAME_NAME = 1551;
+		exports$1.ER_EVENT_DATA_TOO_LONG = 1552;
+		exports$1.ER_DROP_INDEX_FK = 1553;
+		exports$1.ER_WARN_DEPRECATED_SYNTAX_WITH_VER = 1554;
+		exports$1.ER_CANT_WRITE_LOCK_LOG_TABLE = 1555;
+		exports$1.ER_CANT_LOCK_LOG_TABLE = 1556;
+		exports$1.ER_FOREIGN_DUPLICATE_KEY = 1557;
+		exports$1.ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE = 1558;
+		exports$1.ER_TEMP_TABLE_PREVENTS_SWITCH_OUT_OF_RBR = 1559;
+		exports$1.ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_FORMAT = 1560;
+		exports$1.ER_NDB_CANT_SWITCH_BINLOG_FORMAT = 1561;
+		exports$1.ER_PARTITION_NO_TEMPORARY = 1562;
+		exports$1.ER_PARTITION_CONST_DOMAIN_ERROR = 1563;
+		exports$1.ER_PARTITION_FUNCTION_IS_NOT_ALLOWED = 1564;
+		exports$1.ER_DDL_LOG_ERROR = 1565;
+		exports$1.ER_NULL_IN_VALUES_LESS_THAN = 1566;
+		exports$1.ER_WRONG_PARTITION_NAME = 1567;
+		exports$1.ER_CANT_CHANGE_TX_CHARACTERISTICS = 1568;
+		exports$1.ER_DUP_ENTRY_AUTOINCREMENT_CASE = 1569;
+		exports$1.ER_EVENT_MODIFY_QUEUE_ERROR = 1570;
+		exports$1.ER_EVENT_SET_VAR_ERROR = 1571;
+		exports$1.ER_PARTITION_MERGE_ERROR = 1572;
+		exports$1.ER_CANT_ACTIVATE_LOG = 1573;
+		exports$1.ER_RBR_NOT_AVAILABLE = 1574;
+		exports$1.ER_BASE64_DECODE_ERROR = 1575;
+		exports$1.ER_EVENT_RECURSION_FORBIDDEN = 1576;
+		exports$1.ER_EVENTS_DB_ERROR = 1577;
+		exports$1.ER_ONLY_INTEGERS_ALLOWED = 1578;
+		exports$1.ER_UNSUPORTED_LOG_ENGINE = 1579;
+		exports$1.ER_BAD_LOG_STATEMENT = 1580;
+		exports$1.ER_CANT_RENAME_LOG_TABLE = 1581;
+		exports$1.ER_WRONG_PARAMCOUNT_TO_NATIVE_FCT = 1582;
+		exports$1.ER_WRONG_PARAMETERS_TO_NATIVE_FCT = 1583;
+		exports$1.ER_WRONG_PARAMETERS_TO_STORED_FCT = 1584;
+		exports$1.ER_NATIVE_FCT_NAME_COLLISION = 1585;
+		exports$1.ER_DUP_ENTRY_WITH_KEY_NAME = 1586;
+		exports$1.ER_BINLOG_PURGE_EMFILE = 1587;
+		exports$1.ER_EVENT_CANNOT_CREATE_IN_THE_PAST = 1588;
+		exports$1.ER_EVENT_CANNOT_ALTER_IN_THE_PAST = 1589;
+		exports$1.ER_SLAVE_INCIDENT = 1590;
+		exports$1.ER_NO_PARTITION_FOR_GIVEN_VALUE_SILENT = 1591;
+		exports$1.ER_BINLOG_UNSAFE_STATEMENT = 1592;
+		exports$1.ER_BINLOG_FATAL_ERROR = 1593;
+		exports$1.ER_SLAVE_RELAY_LOG_READ_FAILURE = 1594;
+		exports$1.ER_SLAVE_RELAY_LOG_WRITE_FAILURE = 1595;
+		exports$1.ER_SLAVE_CREATE_EVENT_FAILURE = 1596;
+		exports$1.ER_SLAVE_MASTER_COM_FAILURE = 1597;
+		exports$1.ER_BINLOG_LOGGING_IMPOSSIBLE = 1598;
+		exports$1.ER_VIEW_NO_CREATION_CTX = 1599;
+		exports$1.ER_VIEW_INVALID_CREATION_CTX = 1600;
+		exports$1.ER_SR_INVALID_CREATION_CTX = 1601;
+		exports$1.ER_TRG_CORRUPTED_FILE = 1602;
+		exports$1.ER_TRG_NO_CREATION_CTX = 1603;
+		exports$1.ER_TRG_INVALID_CREATION_CTX = 1604;
+		exports$1.ER_EVENT_INVALID_CREATION_CTX = 1605;
+		exports$1.ER_TRG_CANT_OPEN_TABLE = 1606;
+		exports$1.ER_CANT_CREATE_SROUTINE = 1607;
+		exports$1.ER_NEVER_USED = 1608;
+		exports$1.ER_NO_FORMAT_DESCRIPTION_EVENT_BEFORE_BINLOG_STATEMENT = 1609;
+		exports$1.ER_REPLICA_CORRUPT_EVENT = 1610;
+		exports$1.ER_LOAD_DATA_INVALID_COLUMN = 1611;
+		exports$1.ER_LOG_PURGE_NO_FILE = 1612;
+		exports$1.ER_XA_RBTIMEOUT = 1613;
+		exports$1.ER_XA_RBDEADLOCK = 1614;
+		exports$1.ER_NEED_REPREPARE = 1615;
+		exports$1.ER_DELAYED_NOT_SUPPORTED = 1616;
+		exports$1.WARN_NO_CONNECTION_METADATA = 1617;
+		exports$1.WARN_OPTION_IGNORED = 1618;
+		exports$1.ER_PLUGIN_DELETE_BUILTIN = 1619;
+		exports$1.WARN_PLUGIN_BUSY = 1620;
+		exports$1.ER_VARIABLE_IS_READONLY = 1621;
+		exports$1.ER_WARN_ENGINE_TRANSACTION_ROLLBACK = 1622;
+		exports$1.ER_SLAVE_HEARTBEAT_FAILURE = 1623;
+		exports$1.ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE = 1624;
+		exports$1.ER_NDB_REPLICATION_SCHEMA_ERROR = 1625;
+		exports$1.ER_CONFLICT_FN_PARSE_ERROR = 1626;
+		exports$1.ER_EXCEPTIONS_WRITE_ERROR = 1627;
+		exports$1.ER_TOO_LONG_TABLE_COMMENT = 1628;
+		exports$1.ER_TOO_LONG_FIELD_COMMENT = 1629;
+		exports$1.ER_FUNC_INEXISTENT_NAME_COLLISION = 1630;
+		exports$1.ER_DATABASE_NAME = 1631;
+		exports$1.ER_TABLE_NAME = 1632;
+		exports$1.ER_PARTITION_NAME = 1633;
+		exports$1.ER_SUBPARTITION_NAME = 1634;
+		exports$1.ER_TEMPORARY_NAME = 1635;
+		exports$1.ER_RENAMED_NAME = 1636;
+		exports$1.ER_TOO_MANY_CONCURRENT_TRXS = 1637;
+		exports$1.WARN_NON_ASCII_SEPARATOR_NOT_IMPLEMENTED = 1638;
+		exports$1.ER_DEBUG_SYNC_TIMEOUT = 1639;
+		exports$1.ER_DEBUG_SYNC_HIT_LIMIT = 1640;
+		exports$1.ER_DUP_SIGNAL_SET = 1641;
+		exports$1.ER_SIGNAL_WARN = 1642;
+		exports$1.ER_SIGNAL_NOT_FOUND = 1643;
+		exports$1.ER_SIGNAL_EXCEPTION = 1644;
+		exports$1.ER_RESIGNAL_WITHOUT_ACTIVE_HANDLER = 1645;
+		exports$1.ER_SIGNAL_BAD_CONDITION_TYPE = 1646;
+		exports$1.WARN_COND_ITEM_TRUNCATED = 1647;
+		exports$1.ER_COND_ITEM_TOO_LONG = 1648;
+		exports$1.ER_UNKNOWN_LOCALE = 1649;
+		exports$1.ER_REPLICA_IGNORE_SERVER_IDS = 1650;
+		exports$1.ER_QUERY_CACHE_DISABLED = 1651;
+		exports$1.ER_SAME_NAME_PARTITION_FIELD = 1652;
+		exports$1.ER_PARTITION_COLUMN_LIST_ERROR = 1653;
+		exports$1.ER_WRONG_TYPE_COLUMN_VALUE_ERROR = 1654;
+		exports$1.ER_TOO_MANY_PARTITION_FUNC_FIELDS_ERROR = 1655;
+		exports$1.ER_MAXVALUE_IN_VALUES_IN = 1656;
+		exports$1.ER_TOO_MANY_VALUES_ERROR = 1657;
+		exports$1.ER_ROW_SINGLE_PARTITION_FIELD_ERROR = 1658;
+		exports$1.ER_FIELD_TYPE_NOT_ALLOWED_AS_PARTITION_FIELD = 1659;
+		exports$1.ER_PARTITION_FIELDS_TOO_LONG = 1660;
+		exports$1.ER_BINLOG_ROW_ENGINE_AND_STMT_ENGINE = 1661;
+		exports$1.ER_BINLOG_ROW_MODE_AND_STMT_ENGINE = 1662;
+		exports$1.ER_BINLOG_UNSAFE_AND_STMT_ENGINE = 1663;
+		exports$1.ER_BINLOG_ROW_INJECTION_AND_STMT_ENGINE = 1664;
+		exports$1.ER_BINLOG_STMT_MODE_AND_ROW_ENGINE = 1665;
+		exports$1.ER_BINLOG_ROW_INJECTION_AND_STMT_MODE = 1666;
+		exports$1.ER_BINLOG_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE = 1667;
+		exports$1.ER_BINLOG_UNSAFE_LIMIT = 1668;
+		exports$1.ER_UNUSED4 = 1669;
+		exports$1.ER_BINLOG_UNSAFE_SYSTEM_TABLE = 1670;
+		exports$1.ER_BINLOG_UNSAFE_AUTOINC_COLUMNS = 1671;
+		exports$1.ER_BINLOG_UNSAFE_UDF = 1672;
+		exports$1.ER_BINLOG_UNSAFE_SYSTEM_VARIABLE = 1673;
+		exports$1.ER_BINLOG_UNSAFE_SYSTEM_FUNCTION = 1674;
+		exports$1.ER_BINLOG_UNSAFE_NONTRANS_AFTER_TRANS = 1675;
+		exports$1.ER_MESSAGE_AND_STATEMENT = 1676;
+		exports$1.ER_SLAVE_CONVERSION_FAILED = 1677;
+		exports$1.ER_REPLICA_CANT_CREATE_CONVERSION = 1678;
+		exports$1.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_FORMAT = 1679;
+		exports$1.ER_PATH_LENGTH = 1680;
+		exports$1.ER_WARN_DEPRECATED_SYNTAX_NO_REPLACEMENT = 1681;
+		exports$1.ER_WRONG_NATIVE_TABLE_STRUCTURE = 1682;
+		exports$1.ER_WRONG_PERFSCHEMA_USAGE = 1683;
+		exports$1.ER_WARN_I_S_SKIPPED_TABLE = 1684;
+		exports$1.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_DIRECT = 1685;
+		exports$1.ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_DIRECT = 1686;
+		exports$1.ER_SPATIAL_MUST_HAVE_GEOM_COL = 1687;
+		exports$1.ER_TOO_LONG_INDEX_COMMENT = 1688;
+		exports$1.ER_LOCK_ABORTED = 1689;
+		exports$1.ER_DATA_OUT_OF_RANGE = 1690;
+		exports$1.ER_WRONG_SPVAR_TYPE_IN_LIMIT = 1691;
+		exports$1.ER_BINLOG_UNSAFE_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE = 1692;
+		exports$1.ER_BINLOG_UNSAFE_MIXED_STATEMENT = 1693;
+		exports$1.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_SQL_LOG_BIN = 1694;
+		exports$1.ER_STORED_FUNCTION_PREVENTS_SWITCH_SQL_LOG_BIN = 1695;
+		exports$1.ER_FAILED_READ_FROM_PAR_FILE = 1696;
+		exports$1.ER_VALUES_IS_NOT_INT_TYPE_ERROR = 1697;
+		exports$1.ER_ACCESS_DENIED_NO_PASSWORD_ERROR = 1698;
+		exports$1.ER_SET_PASSWORD_AUTH_PLUGIN = 1699;
+		exports$1.ER_GRANT_PLUGIN_USER_EXISTS = 1700;
+		exports$1.ER_TRUNCATE_ILLEGAL_FK = 1701;
+		exports$1.ER_PLUGIN_IS_PERMANENT = 1702;
+		exports$1.ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE_MIN = 1703;
+		exports$1.ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE_MAX = 1704;
+		exports$1.ER_STMT_CACHE_FULL = 1705;
+		exports$1.ER_MULTI_UPDATE_KEY_CONFLICT = 1706;
+		exports$1.ER_TABLE_NEEDS_REBUILD = 1707;
+		exports$1.WARN_OPTION_BELOW_LIMIT = 1708;
+		exports$1.ER_INDEX_COLUMN_TOO_LONG = 1709;
+		exports$1.ER_ERROR_IN_TRIGGER_BODY = 1710;
+		exports$1.ER_ERROR_IN_UNKNOWN_TRIGGER_BODY = 1711;
+		exports$1.ER_INDEX_CORRUPT = 1712;
+		exports$1.ER_UNDO_RECORD_TOO_BIG = 1713;
+		exports$1.ER_BINLOG_UNSAFE_INSERT_IGNORE_SELECT = 1714;
+		exports$1.ER_BINLOG_UNSAFE_INSERT_SELECT_UPDATE = 1715;
+		exports$1.ER_BINLOG_UNSAFE_REPLACE_SELECT = 1716;
+		exports$1.ER_BINLOG_UNSAFE_CREATE_IGNORE_SELECT = 1717;
+		exports$1.ER_BINLOG_UNSAFE_CREATE_REPLACE_SELECT = 1718;
+		exports$1.ER_BINLOG_UNSAFE_UPDATE_IGNORE = 1719;
+		exports$1.ER_PLUGIN_NO_UNINSTALL = 1720;
+		exports$1.ER_PLUGIN_NO_INSTALL = 1721;
+		exports$1.ER_BINLOG_UNSAFE_WRITE_AUTOINC_SELECT = 1722;
+		exports$1.ER_BINLOG_UNSAFE_CREATE_SELECT_AUTOINC = 1723;
+		exports$1.ER_BINLOG_UNSAFE_INSERT_TWO_KEYS = 1724;
+		exports$1.ER_TABLE_IN_FK_CHECK = 1725;
+		exports$1.ER_UNSUPPORTED_ENGINE = 1726;
+		exports$1.ER_BINLOG_UNSAFE_AUTOINC_NOT_FIRST = 1727;
+		exports$1.ER_CANNOT_LOAD_FROM_TABLE_V2 = 1728;
+		exports$1.ER_SOURCE_DELAY_VALUE_OUT_OF_RANGE = 1729;
+		exports$1.ER_ONLY_FD_AND_RBR_EVENTS_ALLOWED_IN_BINLOG_STATEMENT = 1730;
+		exports$1.ER_PARTITION_EXCHANGE_DIFFERENT_OPTION = 1731;
+		exports$1.ER_PARTITION_EXCHANGE_PART_TABLE = 1732;
+		exports$1.ER_PARTITION_EXCHANGE_TEMP_TABLE = 1733;
+		exports$1.ER_PARTITION_INSTEAD_OF_SUBPARTITION = 1734;
+		exports$1.ER_UNKNOWN_PARTITION = 1735;
+		exports$1.ER_TABLES_DIFFERENT_METADATA = 1736;
+		exports$1.ER_ROW_DOES_NOT_MATCH_PARTITION = 1737;
+		exports$1.ER_BINLOG_CACHE_SIZE_GREATER_THAN_MAX = 1738;
+		exports$1.ER_WARN_INDEX_NOT_APPLICABLE = 1739;
+		exports$1.ER_PARTITION_EXCHANGE_FOREIGN_KEY = 1740;
+		exports$1.ER_NO_SUCH_KEY_VALUE = 1741;
+		exports$1.ER_RPL_INFO_DATA_TOO_LONG = 1742;
+		exports$1.ER_NETWORK_READ_EVENT_CHECKSUM_FAILURE = 1743;
+		exports$1.ER_BINLOG_READ_EVENT_CHECKSUM_FAILURE = 1744;
+		exports$1.ER_BINLOG_STMT_CACHE_SIZE_GREATER_THAN_MAX = 1745;
+		exports$1.ER_CANT_UPDATE_TABLE_IN_CREATE_TABLE_SELECT = 1746;
+		exports$1.ER_PARTITION_CLAUSE_ON_NONPARTITIONED = 1747;
+		exports$1.ER_ROW_DOES_NOT_MATCH_GIVEN_PARTITION_SET = 1748;
+		exports$1.ER_NO_SUCH_PARTITION = 1749;
+		exports$1.ER_CHANGE_RPL_INFO_REPOSITORY_FAILURE = 1750;
+		exports$1.ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_CREATED_TEMP_TABLE = 1751;
+		exports$1.ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_DROPPED_TEMP_TABLE = 1752;
+		exports$1.ER_MTA_FEATURE_IS_NOT_SUPPORTED = 1753;
+		exports$1.ER_MTA_UPDATED_DBS_GREATER_MAX = 1754;
+		exports$1.ER_MTA_CANT_PARALLEL = 1755;
+		exports$1.ER_MTA_INCONSISTENT_DATA = 1756;
+		exports$1.ER_FULLTEXT_NOT_SUPPORTED_WITH_PARTITIONING = 1757;
+		exports$1.ER_DA_INVALID_CONDITION_NUMBER = 1758;
+		exports$1.ER_INSECURE_PLAIN_TEXT = 1759;
+		exports$1.ER_INSECURE_CHANGE_SOURCE = 1760;
+		exports$1.ER_FOREIGN_DUPLICATE_KEY_WITH_CHILD_INFO = 1761;
+		exports$1.ER_FOREIGN_DUPLICATE_KEY_WITHOUT_CHILD_INFO = 1762;
+		exports$1.ER_SQLTHREAD_WITH_SECURE_REPLICA = 1763;
+		exports$1.ER_TABLE_HAS_NO_FT = 1764;
+		exports$1.ER_VARIABLE_NOT_SETTABLE_IN_SF_OR_TRIGGER = 1765;
+		exports$1.ER_VARIABLE_NOT_SETTABLE_IN_TRANSACTION = 1766;
+		exports$1.ER_GTID_NEXT_IS_NOT_IN_GTID_NEXT_LIST = 1767;
+		exports$1.ER_CANT_CHANGE_GTID_NEXT_IN_TRANSACTION = 1768;
+		exports$1.ER_SET_STATEMENT_CANNOT_INVOKE_FUNCTION = 1769;
+		exports$1.ER_GTID_NEXT_CANT_BE_AUTOMATIC_IF_GTID_NEXT_LIST_IS_NON_NULL = 1770;
+		exports$1.ER_SKIPPING_LOGGED_TRANSACTION = 1771;
+		exports$1.ER_MALFORMED_GTID_SET_SPECIFICATION = 1772;
+		exports$1.ER_MALFORMED_GTID_SET_ENCODING = 1773;
+		exports$1.ER_MALFORMED_GTID_SPECIFICATION = 1774;
+		exports$1.ER_GNO_EXHAUSTED = 1775;
+		exports$1.ER_BAD_REPLICA_AUTO_POSITION = 1776;
+		exports$1.ER_AUTO_POSITION_REQUIRES_GTID_MODE_NOT_OFF = 1777;
+		exports$1.ER_CANT_DO_IMPLICIT_COMMIT_IN_TRX_WHEN_GTID_NEXT_IS_SET = 1778;
+		exports$1.ER_GTID_MODE_ON_REQUIRES_ENFORCE_GTID_CONSISTENCY_ON = 1779;
+		exports$1.ER_GTID_MODE_REQUIRES_BINLOG = 1780;
+		exports$1.ER_CANT_SET_GTID_NEXT_TO_GTID_WHEN_GTID_MODE_IS_OFF = 1781;
+		exports$1.ER_CANT_SET_GTID_NEXT_TO_ANONYMOUS_WHEN_GTID_MODE_IS_ON = 1782;
+		exports$1.ER_CANT_SET_GTID_NEXT_LIST_TO_NON_NULL_WHEN_GTID_MODE_IS_OFF = 1783;
+		exports$1.ER_FOUND_GTID_EVENT_WHEN_GTID_MODE_IS_OFF = 1784;
+		exports$1.ER_GTID_UNSAFE_NON_TRANSACTIONAL_TABLE = 1785;
+		exports$1.ER_GTID_UNSAFE_CREATE_SELECT = 1786;
+		exports$1.ER_GTID_UNSAFE_CREATE_DROP_TEMP_TABLE_IN_TRANSACTION = 1787;
+		exports$1.ER_GTID_MODE_CAN_ONLY_CHANGE_ONE_STEP_AT_A_TIME = 1788;
+		exports$1.ER_SOURCE_HAS_PURGED_REQUIRED_GTIDS = 1789;
+		exports$1.ER_CANT_SET_GTID_NEXT_WHEN_OWNING_GTID = 1790;
+		exports$1.ER_UNKNOWN_EXPLAIN_FORMAT = 1791;
+		exports$1.ER_CANT_EXECUTE_IN_READ_ONLY_TRANSACTION = 1792;
+		exports$1.ER_TOO_LONG_TABLE_PARTITION_COMMENT = 1793;
+		exports$1.ER_REPLICA_CONFIGURATION = 1794;
+		exports$1.ER_INNODB_FT_LIMIT = 1795;
+		exports$1.ER_INNODB_NO_FT_TEMP_TABLE = 1796;
+		exports$1.ER_INNODB_FT_WRONG_DOCID_COLUMN = 1797;
+		exports$1.ER_INNODB_FT_WRONG_DOCID_INDEX = 1798;
+		exports$1.ER_INNODB_ONLINE_LOG_TOO_BIG = 1799;
+		exports$1.ER_UNKNOWN_ALTER_ALGORITHM = 1800;
+		exports$1.ER_UNKNOWN_ALTER_LOCK = 1801;
+		exports$1.ER_MTA_CHANGE_SOURCE_CANT_RUN_WITH_GAPS = 1802;
+		exports$1.ER_MTA_RECOVERY_FAILURE = 1803;
+		exports$1.ER_MTA_RESET_WORKERS = 1804;
+		exports$1.ER_COL_COUNT_DOESNT_MATCH_CORRUPTED_V2 = 1805;
+		exports$1.ER_REPLICA_SILENT_RETRY_TRANSACTION = 1806;
+		exports$1.ER_DISCARD_FK_CHECKS_RUNNING = 1807;
+		exports$1.ER_TABLE_SCHEMA_MISMATCH = 1808;
+		exports$1.ER_TABLE_IN_SYSTEM_TABLESPACE = 1809;
+		exports$1.ER_IO_READ_ERROR = 1810;
+		exports$1.ER_IO_WRITE_ERROR = 1811;
+		exports$1.ER_TABLESPACE_MISSING = 1812;
+		exports$1.ER_TABLESPACE_EXISTS = 1813;
+		exports$1.ER_TABLESPACE_DISCARDED = 1814;
+		exports$1.ER_INTERNAL_ERROR = 1815;
+		exports$1.ER_INNODB_IMPORT_ERROR = 1816;
+		exports$1.ER_INNODB_INDEX_CORRUPT = 1817;
+		exports$1.ER_INVALID_YEAR_COLUMN_LENGTH = 1818;
+		exports$1.ER_NOT_VALID_PASSWORD = 1819;
+		exports$1.ER_MUST_CHANGE_PASSWORD = 1820;
+		exports$1.ER_FK_NO_INDEX_CHILD = 1821;
+		exports$1.ER_FK_NO_INDEX_PARENT = 1822;
+		exports$1.ER_FK_FAIL_ADD_SYSTEM = 1823;
+		exports$1.ER_FK_CANNOT_OPEN_PARENT = 1824;
+		exports$1.ER_FK_INCORRECT_OPTION = 1825;
+		exports$1.ER_FK_DUP_NAME = 1826;
+		exports$1.ER_PASSWORD_FORMAT = 1827;
+		exports$1.ER_FK_COLUMN_CANNOT_DROP = 1828;
+		exports$1.ER_FK_COLUMN_CANNOT_DROP_CHILD = 1829;
+		exports$1.ER_FK_COLUMN_NOT_NULL = 1830;
+		exports$1.ER_DUP_INDEX = 1831;
+		exports$1.ER_FK_COLUMN_CANNOT_CHANGE = 1832;
+		exports$1.ER_FK_COLUMN_CANNOT_CHANGE_CHILD = 1833;
+		exports$1.ER_UNUSED5 = 1834;
+		exports$1.ER_MALFORMED_PACKET = 1835;
+		exports$1.ER_READ_ONLY_MODE = 1836;
+		exports$1.ER_GTID_NEXT_TYPE_UNDEFINED_GTID = 1837;
+		exports$1.ER_VARIABLE_NOT_SETTABLE_IN_SP = 1838;
+		exports$1.ER_CANT_SET_GTID_PURGED_WHEN_GTID_MODE_IS_OFF = 1839;
+		exports$1.ER_CANT_SET_GTID_PURGED_WHEN_GTID_EXECUTED_IS_NOT_EMPTY = 1840;
+		exports$1.ER_CANT_SET_GTID_PURGED_WHEN_OWNED_GTIDS_IS_NOT_EMPTY = 1841;
+		exports$1.ER_GTID_PURGED_WAS_CHANGED = 1842;
+		exports$1.ER_GTID_EXECUTED_WAS_CHANGED = 1843;
+		exports$1.ER_BINLOG_STMT_MODE_AND_NO_REPL_TABLES = 1844;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED = 1845;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON = 1846;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COPY = 1847;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_PARTITION = 1848;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_RENAME = 1849;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE = 1850;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_CHECK = 1851;
+		exports$1.ER_UNUSED6 = 1852;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOPK = 1853;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_AUTOINC = 1854;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_HIDDEN_FTS = 1855;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_CHANGE_FTS = 1856;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FTS = 1857;
+		exports$1.ER_SQL_REPLICA_SKIP_COUNTER_NOT_SETTABLE_IN_GTID_MODE = 1858;
+		exports$1.ER_DUP_UNKNOWN_IN_INDEX = 1859;
+		exports$1.ER_IDENT_CAUSES_TOO_LONG_PATH = 1860;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOT_NULL = 1861;
+		exports$1.ER_MUST_CHANGE_PASSWORD_LOGIN = 1862;
+		exports$1.ER_ROW_IN_WRONG_PARTITION = 1863;
+		exports$1.ER_MTA_EVENT_BIGGER_PENDING_JOBS_SIZE_MAX = 1864;
+		exports$1.ER_INNODB_NO_FT_USES_PARSER = 1865;
+		exports$1.ER_BINLOG_LOGICAL_CORRUPTION = 1866;
+		exports$1.ER_WARN_PURGE_LOG_IN_USE = 1867;
+		exports$1.ER_WARN_PURGE_LOG_IS_ACTIVE = 1868;
+		exports$1.ER_AUTO_INCREMENT_CONFLICT = 1869;
+		exports$1.WARN_ON_BLOCKHOLE_IN_RBR = 1870;
+		exports$1.ER_REPLICA_CM_INIT_REPOSITORY = 1871;
+		exports$1.ER_REPLICA_AM_INIT_REPOSITORY = 1872;
+		exports$1.ER_ACCESS_DENIED_CHANGE_USER_ERROR = 1873;
+		exports$1.ER_INNODB_READ_ONLY = 1874;
+		exports$1.ER_STOP_REPLICA_SQL_THREAD_TIMEOUT = 1875;
+		exports$1.ER_STOP_REPLICA_IO_THREAD_TIMEOUT = 1876;
+		exports$1.ER_TABLE_CORRUPT = 1877;
+		exports$1.ER_TEMP_FILE_WRITE_FAILURE = 1878;
+		exports$1.ER_INNODB_FT_AUX_NOT_HEX_ID = 1879;
+		exports$1.ER_OLD_TEMPORALS_UPGRADED = 1880;
+		exports$1.ER_INNODB_FORCED_RECOVERY = 1881;
+		exports$1.ER_AES_INVALID_IV = 1882;
+		exports$1.ER_PLUGIN_CANNOT_BE_UNINSTALLED = 1883;
+		exports$1.ER_GTID_UNSAFE_BINLOG_SPLITTABLE_STATEMENT_AND_ASSIGNED_GTID = 1884;
+		exports$1.ER_REPLICA_HAS_MORE_GTIDS_THAN_SOURCE = 1885;
+		exports$1.ER_MISSING_KEY = 1886;
+		exports$1.WARN_NAMED_PIPE_ACCESS_EVERYONE = 1887;
+		exports$1.ER_FILE_CORRUPT = 3000;
+		exports$1.ER_ERROR_ON_SOURCE = 3001;
+		exports$1.ER_INCONSISTENT_ERROR = 3002;
+		exports$1.ER_STORAGE_ENGINE_NOT_LOADED = 3003;
+		exports$1.ER_GET_STACKED_DA_WITHOUT_ACTIVE_HANDLER = 3004;
+		exports$1.ER_WARN_LEGACY_SYNTAX_CONVERTED = 3005;
+		exports$1.ER_BINLOG_UNSAFE_FULLTEXT_PLUGIN = 3006;
+		exports$1.ER_CANNOT_DISCARD_TEMPORARY_TABLE = 3007;
+		exports$1.ER_FK_DEPTH_EXCEEDED = 3008;
+		exports$1.ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE_V2 = 3009;
+		exports$1.ER_WARN_TRIGGER_DOESNT_HAVE_CREATED = 3010;
+		exports$1.ER_REFERENCED_TRG_DOES_NOT_EXIST = 3011;
+		exports$1.ER_EXPLAIN_NOT_SUPPORTED = 3012;
+		exports$1.ER_INVALID_FIELD_SIZE = 3013;
+		exports$1.ER_MISSING_HA_CREATE_OPTION = 3014;
+		exports$1.ER_ENGINE_OUT_OF_MEMORY = 3015;
+		exports$1.ER_PASSWORD_EXPIRE_ANONYMOUS_USER = 3016;
+		exports$1.ER_REPLICA_SQL_THREAD_MUST_STOP = 3017;
+		exports$1.ER_NO_FT_MATERIALIZED_SUBQUERY = 3018;
+		exports$1.ER_INNODB_UNDO_LOG_FULL = 3019;
+		exports$1.ER_INVALID_ARGUMENT_FOR_LOGARITHM = 3020;
+		exports$1.ER_REPLICA_CHANNEL_IO_THREAD_MUST_STOP = 3021;
+		exports$1.ER_WARN_OPEN_TEMP_TABLES_MUST_BE_ZERO = 3022;
+		exports$1.ER_WARN_ONLY_SOURCE_LOG_FILE_NO_POS = 3023;
+		exports$1.ER_QUERY_TIMEOUT = 3024;
+		exports$1.ER_NON_RO_SELECT_DISABLE_TIMER = 3025;
+		exports$1.ER_DUP_LIST_ENTRY = 3026;
+		exports$1.ER_SQL_MODE_NO_EFFECT = 3027;
+		exports$1.ER_AGGREGATE_ORDER_FOR_UNION = 3028;
+		exports$1.ER_AGGREGATE_ORDER_NON_AGG_QUERY = 3029;
+		exports$1.ER_REPLICA_WORKER_STOPPED_PREVIOUS_THD_ERROR = 3030;
+		exports$1.ER_DONT_SUPPORT_REPLICA_PRESERVE_COMMIT_ORDER = 3031;
+		exports$1.ER_SERVER_OFFLINE_MODE = 3032;
+		exports$1.ER_GIS_DIFFERENT_SRIDS = 3033;
+		exports$1.ER_GIS_UNSUPPORTED_ARGUMENT = 3034;
+		exports$1.ER_GIS_UNKNOWN_ERROR = 3035;
+		exports$1.ER_GIS_UNKNOWN_EXCEPTION = 3036;
+		exports$1.ER_GIS_INVALID_DATA = 3037;
+		exports$1.ER_BOOST_GEOMETRY_EMPTY_INPUT_EXCEPTION = 3038;
+		exports$1.ER_BOOST_GEOMETRY_CENTROID_EXCEPTION = 3039;
+		exports$1.ER_BOOST_GEOMETRY_OVERLAY_INVALID_INPUT_EXCEPTION = 3040;
+		exports$1.ER_BOOST_GEOMETRY_TURN_INFO_EXCEPTION = 3041;
+		exports$1.ER_BOOST_GEOMETRY_SELF_INTERSECTION_POINT_EXCEPTION = 3042;
+		exports$1.ER_BOOST_GEOMETRY_UNKNOWN_EXCEPTION = 3043;
+		exports$1.ER_STD_BAD_ALLOC_ERROR = 3044;
+		exports$1.ER_STD_DOMAIN_ERROR = 3045;
+		exports$1.ER_STD_LENGTH_ERROR = 3046;
+		exports$1.ER_STD_INVALID_ARGUMENT = 3047;
+		exports$1.ER_STD_OUT_OF_RANGE_ERROR = 3048;
+		exports$1.ER_STD_OVERFLOW_ERROR = 3049;
+		exports$1.ER_STD_RANGE_ERROR = 3050;
+		exports$1.ER_STD_UNDERFLOW_ERROR = 3051;
+		exports$1.ER_STD_LOGIC_ERROR = 3052;
+		exports$1.ER_STD_RUNTIME_ERROR = 3053;
+		exports$1.ER_STD_UNKNOWN_EXCEPTION = 3054;
+		exports$1.ER_GIS_DATA_WRONG_ENDIANESS = 3055;
+		exports$1.ER_CHANGE_SOURCE_PASSWORD_LENGTH = 3056;
+		exports$1.ER_USER_LOCK_WRONG_NAME = 3057;
+		exports$1.ER_USER_LOCK_DEADLOCK = 3058;
+		exports$1.ER_REPLACE_INACCESSIBLE_ROWS = 3059;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_GIS = 3060;
+		exports$1.ER_ILLEGAL_USER_VAR = 3061;
+		exports$1.ER_GTID_MODE_OFF = 3062;
+		exports$1.ER_UNSUPPORTED_BY_REPLICATION_THREAD = 3063;
+		exports$1.ER_INCORRECT_TYPE = 3064;
+		exports$1.ER_FIELD_IN_ORDER_NOT_SELECT = 3065;
+		exports$1.ER_AGGREGATE_IN_ORDER_NOT_SELECT = 3066;
+		exports$1.ER_INVALID_RPL_WILD_TABLE_FILTER_PATTERN = 3067;
+		exports$1.ER_NET_OK_PACKET_TOO_LARGE = 3068;
+		exports$1.ER_INVALID_JSON_DATA = 3069;
+		exports$1.ER_INVALID_GEOJSON_MISSING_MEMBER = 3070;
+		exports$1.ER_INVALID_GEOJSON_WRONG_TYPE = 3071;
+		exports$1.ER_INVALID_GEOJSON_UNSPECIFIED = 3072;
+		exports$1.ER_DIMENSION_UNSUPPORTED = 3073;
+		exports$1.ER_REPLICA_CHANNEL_DOES_NOT_EXIST = 3074;
+		exports$1.ER_SLAVE_MULTIPLE_CHANNELS_HOST_PORT = 3075;
+		exports$1.ER_REPLICA_CHANNEL_NAME_INVALID_OR_TOO_LONG = 3076;
+		exports$1.ER_REPLICA_NEW_CHANNEL_WRONG_REPOSITORY = 3077;
+		exports$1.ER_SLAVE_CHANNEL_DELETE = 3078;
+		exports$1.ER_REPLICA_MULTIPLE_CHANNELS_CMD = 3079;
+		exports$1.ER_REPLICA_MAX_CHANNELS_EXCEEDED = 3080;
+		exports$1.ER_REPLICA_CHANNEL_MUST_STOP = 3081;
+		exports$1.ER_REPLICA_CHANNEL_NOT_RUNNING = 3082;
+		exports$1.ER_REPLICA_CHANNEL_WAS_RUNNING = 3083;
+		exports$1.ER_REPLICA_CHANNEL_WAS_NOT_RUNNING = 3084;
+		exports$1.ER_REPLICA_CHANNEL_SQL_THREAD_MUST_STOP = 3085;
+		exports$1.ER_REPLICA_CHANNEL_SQL_SKIP_COUNTER = 3086;
+		exports$1.ER_WRONG_FIELD_WITH_GROUP_V2 = 3087;
+		exports$1.ER_MIX_OF_GROUP_FUNC_AND_FIELDS_V2 = 3088;
+		exports$1.ER_WARN_DEPRECATED_SYSVAR_UPDATE = 3089;
+		exports$1.ER_WARN_DEPRECATED_SQLMODE = 3090;
+		exports$1.ER_CANNOT_LOG_PARTIAL_DROP_DATABASE_WITH_GTID = 3091;
+		exports$1.ER_GROUP_REPLICATION_CONFIGURATION = 3092;
+		exports$1.ER_GROUP_REPLICATION_RUNNING = 3093;
+		exports$1.ER_GROUP_REPLICATION_APPLIER_INIT_ERROR = 3094;
+		exports$1.ER_GROUP_REPLICATION_STOP_APPLIER_THREAD_TIMEOUT = 3095;
+		exports$1.ER_GROUP_REPLICATION_COMMUNICATION_LAYER_SESSION_ERROR = 3096;
+		exports$1.ER_GROUP_REPLICATION_COMMUNICATION_LAYER_JOIN_ERROR = 3097;
+		exports$1.ER_BEFORE_DML_VALIDATION_ERROR = 3098;
+		exports$1.ER_PREVENTS_VARIABLE_WITHOUT_RBR = 3099;
+		exports$1.ER_RUN_HOOK_ERROR = 3100;
+		exports$1.ER_TRANSACTION_ROLLBACK_DURING_COMMIT = 3101;
+		exports$1.ER_GENERATED_COLUMN_FUNCTION_IS_NOT_ALLOWED = 3102;
+		exports$1.ER_UNSUPPORTED_ALTER_INPLACE_ON_VIRTUAL_COLUMN = 3103;
+		exports$1.ER_WRONG_FK_OPTION_FOR_GENERATED_COLUMN = 3104;
+		exports$1.ER_NON_DEFAULT_VALUE_FOR_GENERATED_COLUMN = 3105;
+		exports$1.ER_UNSUPPORTED_ACTION_ON_GENERATED_COLUMN = 3106;
+		exports$1.ER_GENERATED_COLUMN_NON_PRIOR = 3107;
+		exports$1.ER_DEPENDENT_BY_GENERATED_COLUMN = 3108;
+		exports$1.ER_GENERATED_COLUMN_REF_AUTO_INC = 3109;
+		exports$1.ER_FEATURE_NOT_AVAILABLE = 3110;
+		exports$1.ER_CANT_SET_GTID_MODE = 3111;
+		exports$1.ER_CANT_USE_AUTO_POSITION_WITH_GTID_MODE_OFF = 3112;
+		exports$1.ER_CANT_REPLICATE_ANONYMOUS_WITH_AUTO_POSITION = 3113;
+		exports$1.ER_CANT_REPLICATE_ANONYMOUS_WITH_GTID_MODE_ON = 3114;
+		exports$1.ER_CANT_REPLICATE_GTID_WITH_GTID_MODE_OFF = 3115;
+		exports$1.ER_CANT_ENFORCE_GTID_CONSISTENCY_WITH_ONGOING_GTID_VIOLATING_TX = 3116;
+		exports$1.ER_ENFORCE_GTID_CONSISTENCY_WARN_WITH_ONGOING_GTID_VIOLATING_TX = 3117;
+		exports$1.ER_ACCOUNT_HAS_BEEN_LOCKED = 3118;
+		exports$1.ER_WRONG_TABLESPACE_NAME = 3119;
+		exports$1.ER_TABLESPACE_IS_NOT_EMPTY = 3120;
+		exports$1.ER_WRONG_FILE_NAME = 3121;
+		exports$1.ER_BOOST_GEOMETRY_INCONSISTENT_TURNS_EXCEPTION = 3122;
+		exports$1.ER_WARN_OPTIMIZER_HINT_SYNTAX_ERROR = 3123;
+		exports$1.ER_WARN_BAD_MAX_EXECUTION_TIME = 3124;
+		exports$1.ER_WARN_UNSUPPORTED_MAX_EXECUTION_TIME = 3125;
+		exports$1.ER_WARN_CONFLICTING_HINT = 3126;
+		exports$1.ER_WARN_UNKNOWN_QB_NAME = 3127;
+		exports$1.ER_UNRESOLVED_HINT_NAME = 3128;
+		exports$1.ER_WARN_ON_MODIFYING_GTID_EXECUTED_TABLE = 3129;
+		exports$1.ER_PLUGGABLE_PROTOCOL_COMMAND_NOT_SUPPORTED = 3130;
+		exports$1.ER_LOCKING_SERVICE_WRONG_NAME = 3131;
+		exports$1.ER_LOCKING_SERVICE_DEADLOCK = 3132;
+		exports$1.ER_LOCKING_SERVICE_TIMEOUT = 3133;
+		exports$1.ER_GIS_MAX_POINTS_IN_GEOMETRY_OVERFLOWED = 3134;
+		exports$1.ER_SQL_MODE_MERGED = 3135;
+		exports$1.ER_VTOKEN_PLUGIN_TOKEN_MISMATCH = 3136;
+		exports$1.ER_VTOKEN_PLUGIN_TOKEN_NOT_FOUND = 3137;
+		exports$1.ER_CANT_SET_VARIABLE_WHEN_OWNING_GTID = 3138;
+		exports$1.ER_REPLICA_CHANNEL_OPERATION_NOT_ALLOWED = 3139;
+		exports$1.ER_INVALID_JSON_TEXT = 3140;
+		exports$1.ER_INVALID_JSON_TEXT_IN_PARAM = 3141;
+		exports$1.ER_INVALID_JSON_BINARY_DATA = 3142;
+		exports$1.ER_INVALID_JSON_PATH = 3143;
+		exports$1.ER_INVALID_JSON_CHARSET = 3144;
+		exports$1.ER_INVALID_JSON_CHARSET_IN_FUNCTION = 3145;
+		exports$1.ER_INVALID_TYPE_FOR_JSON = 3146;
+		exports$1.ER_INVALID_CAST_TO_JSON = 3147;
+		exports$1.ER_INVALID_JSON_PATH_CHARSET = 3148;
+		exports$1.ER_INVALID_JSON_PATH_WILDCARD = 3149;
+		exports$1.ER_JSON_VALUE_TOO_BIG = 3150;
+		exports$1.ER_JSON_KEY_TOO_BIG = 3151;
+		exports$1.ER_JSON_USED_AS_KEY = 3152;
+		exports$1.ER_JSON_VACUOUS_PATH = 3153;
+		exports$1.ER_JSON_BAD_ONE_OR_ALL_ARG = 3154;
+		exports$1.ER_NUMERIC_JSON_VALUE_OUT_OF_RANGE = 3155;
+		exports$1.ER_INVALID_JSON_VALUE_FOR_CAST = 3156;
+		exports$1.ER_JSON_DOCUMENT_TOO_DEEP = 3157;
+		exports$1.ER_JSON_DOCUMENT_NULL_KEY = 3158;
+		exports$1.ER_SECURE_TRANSPORT_REQUIRED = 3159;
+		exports$1.ER_NO_SECURE_TRANSPORTS_CONFIGURED = 3160;
+		exports$1.ER_DISABLED_STORAGE_ENGINE = 3161;
+		exports$1.ER_USER_DOES_NOT_EXIST = 3162;
+		exports$1.ER_USER_ALREADY_EXISTS = 3163;
+		exports$1.ER_AUDIT_API_ABORT = 3164;
+		exports$1.ER_INVALID_JSON_PATH_ARRAY_CELL = 3165;
+		exports$1.ER_BUFPOOL_RESIZE_INPROGRESS = 3166;
+		exports$1.ER_FEATURE_DISABLED_SEE_DOC = 3167;
+		exports$1.ER_SERVER_ISNT_AVAILABLE = 3168;
+		exports$1.ER_SESSION_WAS_KILLED = 3169;
+		exports$1.ER_CAPACITY_EXCEEDED = 3170;
+		exports$1.ER_CAPACITY_EXCEEDED_IN_RANGE_OPTIMIZER = 3171;
+		exports$1.ER_TABLE_NEEDS_UPG_PART = 3172;
+		exports$1.ER_CANT_WAIT_FOR_EXECUTED_GTID_SET_WHILE_OWNING_A_GTID = 3173;
+		exports$1.ER_CANNOT_ADD_FOREIGN_BASE_COL_VIRTUAL = 3174;
+		exports$1.ER_CANNOT_CREATE_VIRTUAL_INDEX_CONSTRAINT = 3175;
+		exports$1.ER_ERROR_ON_MODIFYING_GTID_EXECUTED_TABLE = 3176;
+		exports$1.ER_LOCK_REFUSED_BY_ENGINE = 3177;
+		exports$1.ER_UNSUPPORTED_ALTER_ONLINE_ON_VIRTUAL_COLUMN = 3178;
+		exports$1.ER_MASTER_KEY_ROTATION_NOT_SUPPORTED_BY_SE = 3179;
+		exports$1.ER_MASTER_KEY_ROTATION_ERROR_BY_SE = 3180;
+		exports$1.ER_MASTER_KEY_ROTATION_BINLOG_FAILED = 3181;
+		exports$1.ER_MASTER_KEY_ROTATION_SE_UNAVAILABLE = 3182;
+		exports$1.ER_TABLESPACE_CANNOT_ENCRYPT = 3183;
+		exports$1.ER_INVALID_ENCRYPTION_OPTION = 3184;
+		exports$1.ER_CANNOT_FIND_KEY_IN_KEYRING = 3185;
+		exports$1.ER_CAPACITY_EXCEEDED_IN_PARSER = 3186;
+		exports$1.ER_UNSUPPORTED_ALTER_ENCRYPTION_INPLACE = 3187;
+		exports$1.ER_KEYRING_UDF_KEYRING_SERVICE_ERROR = 3188;
+		exports$1.ER_USER_COLUMN_OLD_LENGTH = 3189;
+		exports$1.ER_CANT_RESET_SOURCE = 3190;
+		exports$1.ER_GROUP_REPLICATION_MAX_GROUP_SIZE = 3191;
+		exports$1.ER_CANNOT_ADD_FOREIGN_BASE_COL_STORED = 3192;
+		exports$1.ER_TABLE_REFERENCED = 3193;
+		exports$1.ER_PARTITION_ENGINE_DEPRECATED_FOR_TABLE = 3194;
+		exports$1.ER_WARN_USING_GEOMFROMWKB_TO_SET_SRID_ZERO = 3195;
+		exports$1.ER_WARN_USING_GEOMFROMWKB_TO_SET_SRID = 3196;
+		exports$1.ER_XA_RETRY = 3197;
+		exports$1.ER_KEYRING_AWS_UDF_AWS_KMS_ERROR = 3198;
+		exports$1.ER_BINLOG_UNSAFE_XA = 3199;
+		exports$1.ER_UDF_ERROR = 3200;
+		exports$1.ER_KEYRING_MIGRATION_FAILURE = 3201;
+		exports$1.ER_KEYRING_ACCESS_DENIED_ERROR = 3202;
+		exports$1.ER_KEYRING_MIGRATION_STATUS = 3203;
+		exports$1.ER_PLUGIN_FAILED_TO_OPEN_TABLES = 3204;
+		exports$1.ER_PLUGIN_FAILED_TO_OPEN_TABLE = 3205;
+		exports$1.ER_AUDIT_LOG_NO_KEYRING_PLUGIN_INSTALLED = 3206;
+		exports$1.ER_AUDIT_LOG_ENCRYPTION_PASSWORD_HAS_NOT_BEEN_SET = 3207;
+		exports$1.ER_AUDIT_LOG_COULD_NOT_CREATE_AES_KEY = 3208;
+		exports$1.ER_AUDIT_LOG_ENCRYPTION_PASSWORD_CANNOT_BE_FETCHED = 3209;
+		exports$1.ER_AUDIT_LOG_JSON_FILTERING_NOT_ENABLED = 3210;
+		exports$1.ER_AUDIT_LOG_UDF_INSUFFICIENT_PRIVILEGE = 3211;
+		exports$1.ER_AUDIT_LOG_SUPER_PRIVILEGE_REQUIRED = 3212;
+		exports$1.ER_COULD_NOT_REINITIALIZE_AUDIT_LOG_FILTERS = 3213;
+		exports$1.ER_AUDIT_LOG_UDF_INVALID_ARGUMENT_TYPE = 3214;
+		exports$1.ER_AUDIT_LOG_UDF_INVALID_ARGUMENT_COUNT = 3215;
+		exports$1.ER_AUDIT_LOG_HAS_NOT_BEEN_INSTALLED = 3216;
+		exports$1.ER_AUDIT_LOG_UDF_READ_INVALID_MAX_ARRAY_LENGTH_ARG_TYPE = 3217;
+		exports$1.ER_AUDIT_LOG_UDF_READ_INVALID_MAX_ARRAY_LENGTH_ARG_VALUE = 3218;
+		exports$1.ER_AUDIT_LOG_JSON_FILTER_PARSING_ERROR = 3219;
+		exports$1.ER_AUDIT_LOG_JSON_FILTER_NAME_CANNOT_BE_EMPTY = 3220;
+		exports$1.ER_AUDIT_LOG_JSON_USER_NAME_CANNOT_BE_EMPTY = 3221;
+		exports$1.ER_AUDIT_LOG_JSON_FILTER_DOES_NOT_EXISTS = 3222;
+		exports$1.ER_AUDIT_LOG_USER_FIRST_CHARACTER_MUST_BE_ALPHANUMERIC = 3223;
+		exports$1.ER_AUDIT_LOG_USER_NAME_INVALID_CHARACTER = 3224;
+		exports$1.ER_AUDIT_LOG_HOST_NAME_INVALID_CHARACTER = 3225;
+		exports$1.WARN_DEPRECATED_MAXDB_SQL_MODE_FOR_TIMESTAMP = 3226;
+		exports$1.ER_XA_REPLICATION_FILTERS = 3227;
+		exports$1.ER_CANT_OPEN_ERROR_LOG = 3228;
+		exports$1.ER_GROUPING_ON_TIMESTAMP_IN_DST = 3229;
+		exports$1.ER_CANT_START_SERVER_NAMED_PIPE = 3230;
+		exports$1.ER_WRITE_SET_EXCEEDS_LIMIT = 3231;
+		exports$1.ER_DEPRECATED_TLS_VERSION_SESSION_57 = 3232;
+		exports$1.ER_WARN_DEPRECATED_TLS_VERSION_57 = 3233;
+		exports$1.ER_WARN_WRONG_NATIVE_TABLE_STRUCTURE = 3234;
+		exports$1.ER_AES_INVALID_KDF_NAME = 3235;
+		exports$1.ER_AES_INVALID_KDF_ITERATIONS = 3236;
+		exports$1.WARN_AES_KEY_SIZE = 3237;
+		exports$1.ER_AES_INVALID_KDF_OPTION_SIZE = 3238;
+		exports$1.ER_UNSUPPORT_COMPRESSED_TEMPORARY_TABLE = 3500;
+		exports$1.ER_ACL_OPERATION_FAILED = 3501;
+		exports$1.ER_UNSUPPORTED_INDEX_ALGORITHM = 3502;
+		exports$1.ER_NO_SUCH_DB = 3503;
+		exports$1.ER_TOO_BIG_ENUM = 3504;
+		exports$1.ER_TOO_LONG_SET_ENUM_VALUE = 3505;
+		exports$1.ER_INVALID_DD_OBJECT = 3506;
+		exports$1.ER_UPDATING_DD_TABLE = 3507;
+		exports$1.ER_INVALID_DD_OBJECT_ID = 3508;
+		exports$1.ER_INVALID_DD_OBJECT_NAME = 3509;
+		exports$1.ER_TABLESPACE_MISSING_WITH_NAME = 3510;
+		exports$1.ER_TOO_LONG_ROUTINE_COMMENT = 3511;
+		exports$1.ER_SP_LOAD_FAILED = 3512;
+		exports$1.ER_INVALID_BITWISE_OPERANDS_SIZE = 3513;
+		exports$1.ER_INVALID_BITWISE_AGGREGATE_OPERANDS_SIZE = 3514;
+		exports$1.ER_WARN_UNSUPPORTED_HINT = 3515;
+		exports$1.ER_UNEXPECTED_GEOMETRY_TYPE = 3516;
+		exports$1.ER_SRS_PARSE_ERROR = 3517;
+		exports$1.ER_SRS_PROJ_PARAMETER_MISSING = 3518;
+		exports$1.ER_WARN_SRS_NOT_FOUND = 3519;
+		exports$1.ER_SRS_NOT_CARTESIAN = 3520;
+		exports$1.ER_SRS_NOT_CARTESIAN_UNDEFINED = 3521;
+		exports$1.ER_PK_INDEX_CANT_BE_INVISIBLE = 3522;
+		exports$1.ER_UNKNOWN_AUTHID = 3523;
+		exports$1.ER_FAILED_ROLE_GRANT = 3524;
+		exports$1.ER_OPEN_ROLE_TABLES = 3525;
+		exports$1.ER_FAILED_DEFAULT_ROLES = 3526;
+		exports$1.ER_COMPONENTS_NO_SCHEME = 3527;
+		exports$1.ER_COMPONENTS_NO_SCHEME_SERVICE = 3528;
+		exports$1.ER_COMPONENTS_CANT_LOAD = 3529;
+		exports$1.ER_ROLE_NOT_GRANTED = 3530;
+		exports$1.ER_FAILED_REVOKE_ROLE = 3531;
+		exports$1.ER_RENAME_ROLE = 3532;
+		exports$1.ER_COMPONENTS_CANT_ACQUIRE_SERVICE_IMPLEMENTATION = 3533;
+		exports$1.ER_COMPONENTS_CANT_SATISFY_DEPENDENCY = 3534;
+		exports$1.ER_COMPONENTS_LOAD_CANT_REGISTER_SERVICE_IMPLEMENTATION = 3535;
+		exports$1.ER_COMPONENTS_LOAD_CANT_INITIALIZE = 3536;
+		exports$1.ER_COMPONENTS_UNLOAD_NOT_LOADED = 3537;
+		exports$1.ER_COMPONENTS_UNLOAD_CANT_DEINITIALIZE = 3538;
+		exports$1.ER_COMPONENTS_CANT_RELEASE_SERVICE = 3539;
+		exports$1.ER_COMPONENTS_UNLOAD_CANT_UNREGISTER_SERVICE = 3540;
+		exports$1.ER_COMPONENTS_CANT_UNLOAD = 3541;
+		exports$1.ER_WARN_UNLOAD_THE_NOT_PERSISTED = 3542;
+		exports$1.ER_COMPONENT_TABLE_INCORRECT = 3543;
+		exports$1.ER_COMPONENT_MANIPULATE_ROW_FAILED = 3544;
+		exports$1.ER_COMPONENTS_UNLOAD_DUPLICATE_IN_GROUP = 3545;
+		exports$1.ER_CANT_SET_GTID_PURGED_DUE_SETS_CONSTRAINTS = 3546;
+		exports$1.ER_CANNOT_LOCK_USER_MANAGEMENT_CACHES = 3547;
+		exports$1.ER_SRS_NOT_FOUND = 3548;
+		exports$1.ER_VARIABLE_NOT_PERSISTED = 3549;
+		exports$1.ER_IS_QUERY_INVALID_CLAUSE = 3550;
+		exports$1.ER_UNABLE_TO_STORE_STATISTICS = 3551;
+		exports$1.ER_NO_SYSTEM_SCHEMA_ACCESS = 3552;
+		exports$1.ER_NO_SYSTEM_TABLESPACE_ACCESS = 3553;
+		exports$1.ER_NO_SYSTEM_TABLE_ACCESS = 3554;
+		exports$1.ER_NO_SYSTEM_TABLE_ACCESS_FOR_DICTIONARY_TABLE = 3555;
+		exports$1.ER_NO_SYSTEM_TABLE_ACCESS_FOR_SYSTEM_TABLE = 3556;
+		exports$1.ER_NO_SYSTEM_TABLE_ACCESS_FOR_TABLE = 3557;
+		exports$1.ER_INVALID_OPTION_KEY = 3558;
+		exports$1.ER_INVALID_OPTION_VALUE = 3559;
+		exports$1.ER_INVALID_OPTION_KEY_VALUE_PAIR = 3560;
+		exports$1.ER_INVALID_OPTION_START_CHARACTER = 3561;
+		exports$1.ER_INVALID_OPTION_END_CHARACTER = 3562;
+		exports$1.ER_INVALID_OPTION_CHARACTERS = 3563;
+		exports$1.ER_DUPLICATE_OPTION_KEY = 3564;
+		exports$1.ER_WARN_SRS_NOT_FOUND_AXIS_ORDER = 3565;
+		exports$1.ER_NO_ACCESS_TO_NATIVE_FCT = 3566;
+		exports$1.ER_RESET_SOURCE_TO_VALUE_OUT_OF_RANGE = 3567;
+		exports$1.ER_UNRESOLVED_TABLE_LOCK = 3568;
+		exports$1.ER_DUPLICATE_TABLE_LOCK = 3569;
+		exports$1.ER_BINLOG_UNSAFE_SKIP_LOCKED = 3570;
+		exports$1.ER_BINLOG_UNSAFE_NOWAIT = 3571;
+		exports$1.ER_LOCK_NOWAIT = 3572;
+		exports$1.ER_CTE_RECURSIVE_REQUIRES_UNION = 3573;
+		exports$1.ER_CTE_RECURSIVE_REQUIRES_NONRECURSIVE_FIRST = 3574;
+		exports$1.ER_CTE_RECURSIVE_FORBIDS_AGGREGATION = 3575;
+		exports$1.ER_CTE_RECURSIVE_FORBIDDEN_JOIN_ORDER = 3576;
+		exports$1.ER_CTE_RECURSIVE_REQUIRES_SINGLE_REFERENCE = 3577;
+		exports$1.ER_SWITCH_TMP_ENGINE = 3578;
+		exports$1.ER_WINDOW_NO_SUCH_WINDOW = 3579;
+		exports$1.ER_WINDOW_CIRCULARITY_IN_WINDOW_GRAPH = 3580;
+		exports$1.ER_WINDOW_NO_CHILD_PARTITIONING = 3581;
+		exports$1.ER_WINDOW_NO_INHERIT_FRAME = 3582;
+		exports$1.ER_WINDOW_NO_REDEFINE_ORDER_BY = 3583;
+		exports$1.ER_WINDOW_FRAME_START_ILLEGAL = 3584;
+		exports$1.ER_WINDOW_FRAME_END_ILLEGAL = 3585;
+		exports$1.ER_WINDOW_FRAME_ILLEGAL = 3586;
+		exports$1.ER_WINDOW_RANGE_FRAME_ORDER_TYPE = 3587;
+		exports$1.ER_WINDOW_RANGE_FRAME_TEMPORAL_TYPE = 3588;
+		exports$1.ER_WINDOW_RANGE_FRAME_NUMERIC_TYPE = 3589;
+		exports$1.ER_WINDOW_RANGE_BOUND_NOT_CONSTANT = 3590;
+		exports$1.ER_WINDOW_DUPLICATE_NAME = 3591;
+		exports$1.ER_WINDOW_ILLEGAL_ORDER_BY = 3592;
+		exports$1.ER_WINDOW_INVALID_WINDOW_FUNC_USE = 3593;
+		exports$1.ER_WINDOW_INVALID_WINDOW_FUNC_ALIAS_USE = 3594;
+		exports$1.ER_WINDOW_NESTED_WINDOW_FUNC_USE_IN_WINDOW_SPEC = 3595;
+		exports$1.ER_WINDOW_ROWS_INTERVAL_USE = 3596;
+		exports$1.ER_WINDOW_NO_GROUP_ORDER = 3597;
+		exports$1.ER_WINDOW_EXPLAIN_JSON = 3598;
+		exports$1.ER_WINDOW_FUNCTION_IGNORES_FRAME = 3599;
+		exports$1.ER_WL9236_NOW = 3600;
+		exports$1.ER_INVALID_NO_OF_ARGS = 3601;
+		exports$1.ER_FIELD_IN_GROUPING_NOT_GROUP_BY = 3602;
+		exports$1.ER_TOO_LONG_TABLESPACE_COMMENT = 3603;
+		exports$1.ER_ENGINE_CANT_DROP_TABLE = 3604;
+		exports$1.ER_ENGINE_CANT_DROP_MISSING_TABLE = 3605;
+		exports$1.ER_TABLESPACE_DUP_FILENAME = 3606;
+		exports$1.ER_DB_DROP_RMDIR2 = 3607;
+		exports$1.ER_IMP_NO_FILES_MATCHED = 3608;
+		exports$1.ER_IMP_SCHEMA_DOES_NOT_EXIST = 3609;
+		exports$1.ER_IMP_TABLE_ALREADY_EXISTS = 3610;
+		exports$1.ER_IMP_INCOMPATIBLE_MYSQLD_VERSION = 3611;
+		exports$1.ER_IMP_INCOMPATIBLE_DD_VERSION = 3612;
+		exports$1.ER_IMP_INCOMPATIBLE_SDI_VERSION = 3613;
+		exports$1.ER_WARN_INVALID_HINT = 3614;
+		exports$1.ER_VAR_DOES_NOT_EXIST = 3615;
+		exports$1.ER_LONGITUDE_OUT_OF_RANGE = 3616;
+		exports$1.ER_LATITUDE_OUT_OF_RANGE = 3617;
+		exports$1.ER_NOT_IMPLEMENTED_FOR_GEOGRAPHIC_SRS = 3618;
+		exports$1.ER_ILLEGAL_PRIVILEGE_LEVEL = 3619;
+		exports$1.ER_NO_SYSTEM_VIEW_ACCESS = 3620;
+		exports$1.ER_COMPONENT_FILTER_FLABBERGASTED = 3621;
+		exports$1.ER_PART_EXPR_TOO_LONG = 3622;
+		exports$1.ER_UDF_DROP_DYNAMICALLY_REGISTERED = 3623;
+		exports$1.ER_UNABLE_TO_STORE_COLUMN_STATISTICS = 3624;
+		exports$1.ER_UNABLE_TO_UPDATE_COLUMN_STATISTICS = 3625;
+		exports$1.ER_UNABLE_TO_DROP_COLUMN_STATISTICS = 3626;
+		exports$1.ER_UNABLE_TO_BUILD_HISTOGRAM = 3627;
+		exports$1.ER_MANDATORY_ROLE = 3628;
+		exports$1.ER_MISSING_TABLESPACE_FILE = 3629;
+		exports$1.ER_PERSIST_ONLY_ACCESS_DENIED_ERROR = 3630;
+		exports$1.ER_CMD_NEED_SUPER = 3631;
+		exports$1.ER_PATH_IN_DATADIR = 3632;
+		exports$1.ER_CLONE_DDL_IN_PROGRESS = 3633;
+		exports$1.ER_CLONE_TOO_MANY_CONCURRENT_CLONES = 3634;
+		exports$1.ER_APPLIER_LOG_EVENT_VALIDATION_ERROR = 3635;
+		exports$1.ER_CTE_MAX_RECURSION_DEPTH = 3636;
+		exports$1.ER_NOT_HINT_UPDATABLE_VARIABLE = 3637;
+		exports$1.ER_CREDENTIALS_CONTRADICT_TO_HISTORY = 3638;
+		exports$1.ER_WARNING_PASSWORD_HISTORY_CLAUSES_VOID = 3639;
+		exports$1.ER_CLIENT_DOES_NOT_SUPPORT = 3640;
+		exports$1.ER_I_S_SKIPPED_TABLESPACE = 3641;
+		exports$1.ER_TABLESPACE_ENGINE_MISMATCH = 3642;
+		exports$1.ER_WRONG_SRID_FOR_COLUMN = 3643;
+		exports$1.ER_CANNOT_ALTER_SRID_DUE_TO_INDEX = 3644;
+		exports$1.ER_WARN_BINLOG_PARTIAL_UPDATES_DISABLED = 3645;
+		exports$1.ER_WARN_BINLOG_V1_ROW_EVENTS_DISABLED = 3646;
+		exports$1.ER_WARN_BINLOG_PARTIAL_UPDATES_SUGGESTS_PARTIAL_IMAGES = 3647;
+		exports$1.ER_COULD_NOT_APPLY_JSON_DIFF = 3648;
+		exports$1.ER_CORRUPTED_JSON_DIFF = 3649;
+		exports$1.ER_RESOURCE_GROUP_EXISTS = 3650;
+		exports$1.ER_RESOURCE_GROUP_NOT_EXISTS = 3651;
+		exports$1.ER_INVALID_VCPU_ID = 3652;
+		exports$1.ER_INVALID_VCPU_RANGE = 3653;
+		exports$1.ER_INVALID_THREAD_PRIORITY = 3654;
+		exports$1.ER_DISALLOWED_OPERATION = 3655;
+		exports$1.ER_RESOURCE_GROUP_BUSY = 3656;
+		exports$1.ER_RESOURCE_GROUP_DISABLED = 3657;
+		exports$1.ER_FEATURE_UNSUPPORTED = 3658;
+		exports$1.ER_ATTRIBUTE_IGNORED = 3659;
+		exports$1.ER_INVALID_THREAD_ID = 3660;
+		exports$1.ER_RESOURCE_GROUP_BIND_FAILED = 3661;
+		exports$1.ER_INVALID_USE_OF_FORCE_OPTION = 3662;
+		exports$1.ER_GROUP_REPLICATION_COMMAND_FAILURE = 3663;
+		exports$1.ER_SDI_OPERATION_FAILED = 3664;
+		exports$1.ER_MISSING_JSON_TABLE_VALUE = 3665;
+		exports$1.ER_WRONG_JSON_TABLE_VALUE = 3666;
+		exports$1.ER_TF_MUST_HAVE_ALIAS = 3667;
+		exports$1.ER_TF_FORBIDDEN_JOIN_TYPE = 3668;
+		exports$1.ER_JT_VALUE_OUT_OF_RANGE = 3669;
+		exports$1.ER_JT_MAX_NESTED_PATH = 3670;
+		exports$1.ER_PASSWORD_EXPIRATION_NOT_SUPPORTED_BY_AUTH_METHOD = 3671;
+		exports$1.ER_INVALID_GEOJSON_CRS_NOT_TOP_LEVEL = 3672;
+		exports$1.ER_BAD_NULL_ERROR_NOT_IGNORED = 3673;
+		exports$1.WARN_USELESS_SPATIAL_INDEX = 3674;
+		exports$1.ER_DISK_FULL_NOWAIT = 3675;
+		exports$1.ER_PARSE_ERROR_IN_DIGEST_FN = 3676;
+		exports$1.ER_UNDISCLOSED_PARSE_ERROR_IN_DIGEST_FN = 3677;
+		exports$1.ER_SCHEMA_DIR_EXISTS = 3678;
+		exports$1.ER_SCHEMA_DIR_MISSING = 3679;
+		exports$1.ER_SCHEMA_DIR_CREATE_FAILED = 3680;
+		exports$1.ER_SCHEMA_DIR_UNKNOWN = 3681;
+		exports$1.ER_ONLY_IMPLEMENTED_FOR_SRID_0_AND_4326 = 3682;
+		exports$1.ER_BINLOG_EXPIRE_LOG_DAYS_AND_SECS_USED_TOGETHER = 3683;
+		exports$1.ER_REGEXP_BUFFER_OVERFLOW = 3684;
+		exports$1.ER_REGEXP_ILLEGAL_ARGUMENT = 3685;
+		exports$1.ER_REGEXP_INDEX_OUTOFBOUNDS_ERROR = 3686;
+		exports$1.ER_REGEXP_INTERNAL_ERROR = 3687;
+		exports$1.ER_REGEXP_RULE_SYNTAX = 3688;
+		exports$1.ER_REGEXP_BAD_ESCAPE_SEQUENCE = 3689;
+		exports$1.ER_REGEXP_UNIMPLEMENTED = 3690;
+		exports$1.ER_REGEXP_MISMATCHED_PAREN = 3691;
+		exports$1.ER_REGEXP_BAD_INTERVAL = 3692;
+		exports$1.ER_REGEXP_MAX_LT_MIN = 3693;
+		exports$1.ER_REGEXP_INVALID_BACK_REF = 3694;
+		exports$1.ER_REGEXP_LOOK_BEHIND_LIMIT = 3695;
+		exports$1.ER_REGEXP_MISSING_CLOSE_BRACKET = 3696;
+		exports$1.ER_REGEXP_INVALID_RANGE = 3697;
+		exports$1.ER_REGEXP_STACK_OVERFLOW = 3698;
+		exports$1.ER_REGEXP_TIME_OUT = 3699;
+		exports$1.ER_REGEXP_PATTERN_TOO_BIG = 3700;
+		exports$1.ER_CANT_SET_ERROR_LOG_SERVICE = 3701;
+		exports$1.ER_EMPTY_PIPELINE_FOR_ERROR_LOG_SERVICE = 3702;
+		exports$1.ER_COMPONENT_FILTER_DIAGNOSTICS = 3703;
+		exports$1.ER_NOT_IMPLEMENTED_FOR_CARTESIAN_SRS = 3704;
+		exports$1.ER_NOT_IMPLEMENTED_FOR_PROJECTED_SRS = 3705;
+		exports$1.ER_NONPOSITIVE_RADIUS = 3706;
+		exports$1.ER_RESTART_SERVER_FAILED = 3707;
+		exports$1.ER_SRS_MISSING_MANDATORY_ATTRIBUTE = 3708;
+		exports$1.ER_SRS_MULTIPLE_ATTRIBUTE_DEFINITIONS = 3709;
+		exports$1.ER_SRS_NAME_CANT_BE_EMPTY_OR_WHITESPACE = 3710;
+		exports$1.ER_SRS_ORGANIZATION_CANT_BE_EMPTY_OR_WHITESPACE = 3711;
+		exports$1.ER_SRS_ID_ALREADY_EXISTS = 3712;
+		exports$1.ER_WARN_SRS_ID_ALREADY_EXISTS = 3713;
+		exports$1.ER_CANT_MODIFY_SRID_0 = 3714;
+		exports$1.ER_WARN_RESERVED_SRID_RANGE = 3715;
+		exports$1.ER_CANT_MODIFY_SRS_USED_BY_COLUMN = 3716;
+		exports$1.ER_SRS_INVALID_CHARACTER_IN_ATTRIBUTE = 3717;
+		exports$1.ER_SRS_ATTRIBUTE_STRING_TOO_LONG = 3718;
+		exports$1.ER_DEPRECATED_UTF8_ALIAS = 3719;
+		exports$1.ER_DEPRECATED_NATIONAL = 3720;
+		exports$1.ER_INVALID_DEFAULT_UTF8MB4_COLLATION = 3721;
+		exports$1.ER_UNABLE_TO_COLLECT_LOG_STATUS = 3722;
+		exports$1.ER_RESERVED_TABLESPACE_NAME = 3723;
+		exports$1.ER_UNABLE_TO_SET_OPTION = 3724;
+		exports$1.ER_REPLICA_POSSIBLY_DIVERGED_AFTER_DDL = 3725;
+		exports$1.ER_SRS_NOT_GEOGRAPHIC = 3726;
+		exports$1.ER_POLYGON_TOO_LARGE = 3727;
+		exports$1.ER_SPATIAL_UNIQUE_INDEX = 3728;
+		exports$1.ER_INDEX_TYPE_NOT_SUPPORTED_FOR_SPATIAL_INDEX = 3729;
+		exports$1.ER_FK_CANNOT_DROP_PARENT = 3730;
+		exports$1.ER_GEOMETRY_PARAM_LONGITUDE_OUT_OF_RANGE = 3731;
+		exports$1.ER_GEOMETRY_PARAM_LATITUDE_OUT_OF_RANGE = 3732;
+		exports$1.ER_FK_CANNOT_USE_VIRTUAL_COLUMN = 3733;
+		exports$1.ER_FK_NO_COLUMN_PARENT = 3734;
+		exports$1.ER_CANT_SET_ERROR_SUPPRESSION_LIST = 3735;
+		exports$1.ER_SRS_GEOGCS_INVALID_AXES = 3736;
+		exports$1.ER_SRS_INVALID_SEMI_MAJOR_AXIS = 3737;
+		exports$1.ER_SRS_INVALID_INVERSE_FLATTENING = 3738;
+		exports$1.ER_SRS_INVALID_ANGULAR_UNIT = 3739;
+		exports$1.ER_SRS_INVALID_PRIME_MERIDIAN = 3740;
+		exports$1.ER_TRANSFORM_SOURCE_SRS_NOT_SUPPORTED = 3741;
+		exports$1.ER_TRANSFORM_TARGET_SRS_NOT_SUPPORTED = 3742;
+		exports$1.ER_TRANSFORM_SOURCE_SRS_MISSING_TOWGS84 = 3743;
+		exports$1.ER_TRANSFORM_TARGET_SRS_MISSING_TOWGS84 = 3744;
+		exports$1.ER_TEMP_TABLE_PREVENTS_SWITCH_SESSION_BINLOG_FORMAT = 3745;
+		exports$1.ER_TEMP_TABLE_PREVENTS_SWITCH_GLOBAL_BINLOG_FORMAT = 3746;
+		exports$1.ER_RUNNING_APPLIER_PREVENTS_SWITCH_GLOBAL_BINLOG_FORMAT = 3747;
+		exports$1.ER_CLIENT_GTID_UNSAFE_CREATE_DROP_TEMP_TABLE_IN_TRX_IN_SBR = 3748;
+		exports$1.ER_XA_CANT_CREATE_MDL_BACKUP = 3749;
+		exports$1.ER_TABLE_WITHOUT_PK = 3750;
+		exports$1.ER_WARN_DATA_TRUNCATED_FUNCTIONAL_INDEX = 3751;
+		exports$1.ER_WARN_DATA_OUT_OF_RANGE_FUNCTIONAL_INDEX = 3752;
+		exports$1.ER_FUNCTIONAL_INDEX_ON_JSON_OR_GEOMETRY_FUNCTION = 3753;
+		exports$1.ER_FUNCTIONAL_INDEX_REF_AUTO_INCREMENT = 3754;
+		exports$1.ER_CANNOT_DROP_COLUMN_FUNCTIONAL_INDEX = 3755;
+		exports$1.ER_FUNCTIONAL_INDEX_PRIMARY_KEY = 3756;
+		exports$1.ER_FUNCTIONAL_INDEX_ON_LOB = 3757;
+		exports$1.ER_FUNCTIONAL_INDEX_FUNCTION_IS_NOT_ALLOWED = 3758;
+		exports$1.ER_FULLTEXT_FUNCTIONAL_INDEX = 3759;
+		exports$1.ER_SPATIAL_FUNCTIONAL_INDEX = 3760;
+		exports$1.ER_WRONG_KEY_COLUMN_FUNCTIONAL_INDEX = 3761;
+		exports$1.ER_FUNCTIONAL_INDEX_ON_FIELD = 3762;
+		exports$1.ER_GENERATED_COLUMN_NAMED_FUNCTION_IS_NOT_ALLOWED = 3763;
+		exports$1.ER_GENERATED_COLUMN_ROW_VALUE = 3764;
+		exports$1.ER_GENERATED_COLUMN_VARIABLES = 3765;
+		exports$1.ER_DEPENDENT_BY_DEFAULT_GENERATED_VALUE = 3766;
+		exports$1.ER_DEFAULT_VAL_GENERATED_NON_PRIOR = 3767;
+		exports$1.ER_DEFAULT_VAL_GENERATED_REF_AUTO_INC = 3768;
+		exports$1.ER_DEFAULT_VAL_GENERATED_FUNCTION_IS_NOT_ALLOWED = 3769;
+		exports$1.ER_DEFAULT_VAL_GENERATED_NAMED_FUNCTION_IS_NOT_ALLOWED = 3770;
+		exports$1.ER_DEFAULT_VAL_GENERATED_ROW_VALUE = 3771;
+		exports$1.ER_DEFAULT_VAL_GENERATED_VARIABLES = 3772;
+		exports$1.ER_DEFAULT_AS_VAL_GENERATED = 3773;
+		exports$1.ER_UNSUPPORTED_ACTION_ON_DEFAULT_VAL_GENERATED = 3774;
+		exports$1.ER_GTID_UNSAFE_ALTER_ADD_COL_WITH_DEFAULT_EXPRESSION = 3775;
+		exports$1.ER_FK_CANNOT_CHANGE_ENGINE = 3776;
+		exports$1.ER_WARN_DEPRECATED_USER_SET_EXPR = 3777;
+		exports$1.ER_WARN_DEPRECATED_UTF8MB3_COLLATION = 3778;
+		exports$1.ER_WARN_DEPRECATED_NESTED_COMMENT_SYNTAX = 3779;
+		exports$1.ER_FK_INCOMPATIBLE_COLUMNS = 3780;
+		exports$1.ER_GR_HOLD_WAIT_TIMEOUT = 3781;
+		exports$1.ER_GR_HOLD_KILLED = 3782;
+		exports$1.ER_GR_HOLD_MEMBER_STATUS_ERROR = 3783;
+		exports$1.ER_RPL_ENCRYPTION_FAILED_TO_FETCH_KEY = 3784;
+		exports$1.ER_RPL_ENCRYPTION_KEY_NOT_FOUND = 3785;
+		exports$1.ER_RPL_ENCRYPTION_KEYRING_INVALID_KEY = 3786;
+		exports$1.ER_RPL_ENCRYPTION_HEADER_ERROR = 3787;
+		exports$1.ER_RPL_ENCRYPTION_FAILED_TO_ROTATE_LOGS = 3788;
+		exports$1.ER_RPL_ENCRYPTION_KEY_EXISTS_UNEXPECTED = 3789;
+		exports$1.ER_RPL_ENCRYPTION_FAILED_TO_GENERATE_KEY = 3790;
+		exports$1.ER_RPL_ENCRYPTION_FAILED_TO_STORE_KEY = 3791;
+		exports$1.ER_RPL_ENCRYPTION_FAILED_TO_REMOVE_KEY = 3792;
+		exports$1.ER_RPL_ENCRYPTION_UNABLE_TO_CHANGE_OPTION = 3793;
+		exports$1.ER_RPL_ENCRYPTION_MASTER_KEY_RECOVERY_FAILED = 3794;
+		exports$1.ER_SLOW_LOG_MODE_IGNORED_WHEN_NOT_LOGGING_TO_FILE = 3795;
+		exports$1.ER_GRP_TRX_CONSISTENCY_NOT_ALLOWED = 3796;
+		exports$1.ER_GRP_TRX_CONSISTENCY_BEFORE = 3797;
+		exports$1.ER_GRP_TRX_CONSISTENCY_AFTER_ON_TRX_BEGIN = 3798;
+		exports$1.ER_GRP_TRX_CONSISTENCY_BEGIN_NOT_ALLOWED = 3799;
+		exports$1.ER_FUNCTIONAL_INDEX_ROW_VALUE_IS_NOT_ALLOWED = 3800;
+		exports$1.ER_RPL_ENCRYPTION_FAILED_TO_ENCRYPT = 3801;
+		exports$1.ER_PAGE_TRACKING_NOT_STARTED = 3802;
+		exports$1.ER_PAGE_TRACKING_RANGE_NOT_TRACKED = 3803;
+		exports$1.ER_PAGE_TRACKING_CANNOT_PURGE = 3804;
+		exports$1.ER_RPL_ENCRYPTION_CANNOT_ROTATE_BINLOG_MASTER_KEY = 3805;
+		exports$1.ER_BINLOG_MASTER_KEY_RECOVERY_OUT_OF_COMBINATION = 3806;
+		exports$1.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_OPERATE_KEY = 3807;
+		exports$1.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_ROTATE_LOGS = 3808;
+		exports$1.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_REENCRYPT_LOG = 3809;
+		exports$1.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_CLEANUP_UNUSED_KEYS = 3810;
+		exports$1.ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_CLEANUP_AUX_KEY = 3811;
+		exports$1.ER_NON_BOOLEAN_EXPR_FOR_CHECK_CONSTRAINT = 3812;
+		exports$1.ER_COLUMN_CHECK_CONSTRAINT_REFERENCES_OTHER_COLUMN = 3813;
+		exports$1.ER_CHECK_CONSTRAINT_NAMED_FUNCTION_IS_NOT_ALLOWED = 3814;
+		exports$1.ER_CHECK_CONSTRAINT_FUNCTION_IS_NOT_ALLOWED = 3815;
+		exports$1.ER_CHECK_CONSTRAINT_VARIABLES = 3816;
+		exports$1.ER_CHECK_CONSTRAINT_ROW_VALUE = 3817;
+		exports$1.ER_CHECK_CONSTRAINT_REFERS_AUTO_INCREMENT_COLUMN = 3818;
+		exports$1.ER_CHECK_CONSTRAINT_VIOLATED = 3819;
+		exports$1.ER_CHECK_CONSTRAINT_REFERS_UNKNOWN_COLUMN = 3820;
+		exports$1.ER_CHECK_CONSTRAINT_NOT_FOUND = 3821;
+		exports$1.ER_CHECK_CONSTRAINT_DUP_NAME = 3822;
+		exports$1.ER_CHECK_CONSTRAINT_CLAUSE_USING_FK_REFER_ACTION_COLUMN = 3823;
+		exports$1.WARN_UNENCRYPTED_TABLE_IN_ENCRYPTED_DB = 3824;
+		exports$1.ER_INVALID_ENCRYPTION_REQUEST = 3825;
+		exports$1.ER_CANNOT_SET_TABLE_ENCRYPTION = 3826;
+		exports$1.ER_CANNOT_SET_DATABASE_ENCRYPTION = 3827;
+		exports$1.ER_CANNOT_SET_TABLESPACE_ENCRYPTION = 3828;
+		exports$1.ER_TABLESPACE_CANNOT_BE_ENCRYPTED = 3829;
+		exports$1.ER_TABLESPACE_CANNOT_BE_DECRYPTED = 3830;
+		exports$1.ER_TABLESPACE_TYPE_UNKNOWN = 3831;
+		exports$1.ER_TARGET_TABLESPACE_UNENCRYPTED = 3832;
+		exports$1.ER_CANNOT_USE_ENCRYPTION_CLAUSE = 3833;
+		exports$1.ER_INVALID_MULTIPLE_CLAUSES = 3834;
+		exports$1.ER_UNSUPPORTED_USE_OF_GRANT_AS = 3835;
+		exports$1.ER_UKNOWN_AUTH_ID_OR_ACCESS_DENIED_FOR_GRANT_AS = 3836;
+		exports$1.ER_DEPENDENT_BY_FUNCTIONAL_INDEX = 3837;
+		exports$1.ER_PLUGIN_NOT_EARLY = 3838;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_START_SUBDIR_PATH = 3839;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_START_TIMEOUT = 3840;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_DIRS_INVALID = 3841;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_LABEL_NOT_FOUND = 3842;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_DIR_EMPTY = 3843;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_NO_SUCH_DIR = 3844;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_DIR_CLASH = 3845;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_DIR_PERMISSIONS = 3846;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_FILE_CREATE = 3847;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_ACTIVE = 3848;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_INACTIVE = 3849;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_FAILED = 3850;
+		exports$1.ER_INNODB_REDO_LOG_ARCHIVE_SESSION = 3851;
+		exports$1.ER_STD_REGEX_ERROR = 3852;
+		exports$1.ER_INVALID_JSON_TYPE = 3853;
+		exports$1.ER_CANNOT_CONVERT_STRING = 3854;
+		exports$1.ER_DEPENDENT_BY_PARTITION_FUNC = 3855;
+		exports$1.ER_WARN_DEPRECATED_FLOAT_AUTO_INCREMENT = 3856;
+		exports$1.ER_RPL_CANT_STOP_REPLICA_WHILE_LOCKED_BACKUP = 3857;
+		exports$1.ER_WARN_DEPRECATED_FLOAT_DIGITS = 3858;
+		exports$1.ER_WARN_DEPRECATED_FLOAT_UNSIGNED = 3859;
+		exports$1.ER_WARN_DEPRECATED_INTEGER_DISPLAY_WIDTH = 3860;
+		exports$1.ER_WARN_DEPRECATED_ZEROFILL = 3861;
+		exports$1.ER_CLONE_DONOR = 3862;
+		exports$1.ER_CLONE_PROTOCOL = 3863;
+		exports$1.ER_CLONE_DONOR_VERSION = 3864;
+		exports$1.ER_CLONE_OS = 3865;
+		exports$1.ER_CLONE_PLATFORM = 3866;
+		exports$1.ER_CLONE_CHARSET = 3867;
+		exports$1.ER_CLONE_CONFIG = 3868;
+		exports$1.ER_CLONE_SYS_CONFIG = 3869;
+		exports$1.ER_CLONE_PLUGIN_MATCH = 3870;
+		exports$1.ER_CLONE_LOOPBACK = 3871;
+		exports$1.ER_CLONE_ENCRYPTION = 3872;
+		exports$1.ER_CLONE_DISK_SPACE = 3873;
+		exports$1.ER_CLONE_IN_PROGRESS = 3874;
+		exports$1.ER_CLONE_DISALLOWED = 3875;
+		exports$1.ER_CANNOT_GRANT_ROLES_TO_ANONYMOUS_USER = 3876;
+		exports$1.ER_SECONDARY_ENGINE_PLUGIN = 3877;
+		exports$1.ER_SECOND_PASSWORD_CANNOT_BE_EMPTY = 3878;
+		exports$1.ER_DB_ACCESS_DENIED = 3879;
+		exports$1.ER_DA_AUTH_ID_WITH_SYSTEM_USER_PRIV_IN_MANDATORY_ROLES = 3880;
+		exports$1.ER_DA_RPL_GTID_TABLE_CANNOT_OPEN = 3881;
+		exports$1.ER_GEOMETRY_IN_UNKNOWN_LENGTH_UNIT = 3882;
+		exports$1.ER_DA_PLUGIN_INSTALL_ERROR = 3883;
+		exports$1.ER_NO_SESSION_TEMP = 3884;
+		exports$1.ER_DA_UNKNOWN_ERROR_NUMBER = 3885;
+		exports$1.ER_COLUMN_CHANGE_SIZE = 3886;
+		exports$1.ER_REGEXP_INVALID_CAPTURE_GROUP_NAME = 3887;
+		exports$1.ER_DA_SSL_LIBRARY_ERROR = 3888;
+		exports$1.ER_SECONDARY_ENGINE = 3889;
+		exports$1.ER_SECONDARY_ENGINE_DDL = 3890;
+		exports$1.ER_INCORRECT_CURRENT_PASSWORD = 3891;
+		exports$1.ER_MISSING_CURRENT_PASSWORD = 3892;
+		exports$1.ER_CURRENT_PASSWORD_NOT_REQUIRED = 3893;
+		exports$1.ER_PASSWORD_CANNOT_BE_RETAINED_ON_PLUGIN_CHANGE = 3894;
+		exports$1.ER_CURRENT_PASSWORD_CANNOT_BE_RETAINED = 3895;
+		exports$1.ER_PARTIAL_REVOKES_EXIST = 3896;
+		exports$1.ER_CANNOT_GRANT_SYSTEM_PRIV_TO_MANDATORY_ROLE = 3897;
+		exports$1.ER_XA_REPLICATION_FILTERS = 3898;
+		exports$1.ER_UNSUPPORTED_SQL_MODE = 3899;
+		exports$1.ER_REGEXP_INVALID_FLAG = 3900;
+		exports$1.ER_PARTIAL_REVOKE_AND_DB_GRANT_BOTH_EXISTS = 3901;
+		exports$1.ER_UNIT_NOT_FOUND = 3902;
+		exports$1.ER_INVALID_JSON_VALUE_FOR_FUNC_INDEX = 3903;
+		exports$1.ER_JSON_VALUE_OUT_OF_RANGE_FOR_FUNC_INDEX = 3904;
+		exports$1.ER_EXCEEDED_MV_KEYS_NUM = 3905;
+		exports$1.ER_EXCEEDED_MV_KEYS_SPACE = 3906;
+		exports$1.ER_FUNCTIONAL_INDEX_DATA_IS_TOO_LONG = 3907;
+		exports$1.ER_WRONG_MVI_VALUE = 3908;
+		exports$1.ER_WARN_FUNC_INDEX_NOT_APPLICABLE = 3909;
+		exports$1.ER_GRP_RPL_UDF_ERROR = 3910;
+		exports$1.ER_UPDATE_GTID_PURGED_WITH_GR = 3911;
+		exports$1.ER_GROUPING_ON_TIMESTAMP_IN_DST = 3912;
+		exports$1.ER_TABLE_NAME_CAUSES_TOO_LONG_PATH = 3913;
+		exports$1.ER_AUDIT_LOG_INSUFFICIENT_PRIVILEGE = 3914;
+		exports$1.ER_AUDIT_LOG_PASSWORD_HAS_BEEN_COPIED = 3915;
+		exports$1.ER_DA_GRP_RPL_STARTED_AUTO_REJOIN = 3916;
+		exports$1.ER_SYSVAR_CHANGE_DURING_QUERY = 3917;
+		exports$1.ER_GLOBSTAT_CHANGE_DURING_QUERY = 3918;
+		exports$1.ER_GRP_RPL_MESSAGE_SERVICE_INIT_FAILURE = 3919;
+		exports$1.ER_CHANGE_SOURCE_WRONG_COMPRESSION_ALGORITHM_CLIENT = 3920;
+		exports$1.ER_CHANGE_SOURCE_WRONG_COMPRESSION_LEVEL_CLIENT = 3921;
+		exports$1.ER_WRONG_COMPRESSION_ALGORITHM_CLIENT = 3922;
+		exports$1.ER_WRONG_COMPRESSION_LEVEL_CLIENT = 3923;
+		exports$1.ER_CHANGE_SOURCE_WRONG_COMPRESSION_ALGORITHM_LIST_CLIENT = 3924;
+		exports$1.ER_CLIENT_PRIVILEGE_CHECKS_USER_CANNOT_BE_ANONYMOUS = 3925;
+		exports$1.ER_CLIENT_PRIVILEGE_CHECKS_USER_DOES_NOT_EXIST = 3926;
+		exports$1.ER_CLIENT_PRIVILEGE_CHECKS_USER_CORRUPT = 3927;
+		exports$1.ER_CLIENT_PRIVILEGE_CHECKS_USER_NEEDS_RPL_APPLIER_PRIV = 3928;
+		exports$1.ER_WARN_DA_PRIVILEGE_NOT_REGISTERED = 3929;
+		exports$1.ER_CLIENT_KEYRING_UDF_KEY_INVALID = 3930;
+		exports$1.ER_CLIENT_KEYRING_UDF_KEY_TYPE_INVALID = 3931;
+		exports$1.ER_CLIENT_KEYRING_UDF_KEY_TOO_LONG = 3932;
+		exports$1.ER_CLIENT_KEYRING_UDF_KEY_TYPE_TOO_LONG = 3933;
+		exports$1.ER_JSON_SCHEMA_VALIDATION_ERROR_WITH_DETAILED_REPORT = 3934;
+		exports$1.ER_DA_UDF_INVALID_CHARSET_SPECIFIED = 3935;
+		exports$1.ER_DA_UDF_INVALID_CHARSET = 3936;
+		exports$1.ER_DA_UDF_INVALID_COLLATION = 3937;
+		exports$1.ER_DA_UDF_INVALID_EXTENSION_ARGUMENT_TYPE = 3938;
+		exports$1.ER_MULTIPLE_CONSTRAINTS_WITH_SAME_NAME = 3939;
+		exports$1.ER_CONSTRAINT_NOT_FOUND = 3940;
+		exports$1.ER_ALTER_CONSTRAINT_ENFORCEMENT_NOT_SUPPORTED = 3941;
+		exports$1.ER_TABLE_VALUE_CONSTRUCTOR_MUST_HAVE_COLUMNS = 3942;
+		exports$1.ER_TABLE_VALUE_CONSTRUCTOR_CANNOT_HAVE_DEFAULT = 3943;
+		exports$1.ER_CLIENT_QUERY_FAILURE_INVALID_NON_ROW_FORMAT = 3944;
+		exports$1.ER_REQUIRE_ROW_FORMAT_INVALID_VALUE = 3945;
+		exports$1.ER_FAILED_TO_DETERMINE_IF_ROLE_IS_MANDATORY = 3946;
+		exports$1.ER_FAILED_TO_FETCH_MANDATORY_ROLE_LIST = 3947;
+		exports$1.ER_CLIENT_LOCAL_FILES_DISABLED = 3948;
+		exports$1.ER_IMP_INCOMPATIBLE_CFG_VERSION = 3949;
+		exports$1.ER_DA_OOM = 3950;
+		exports$1.ER_DA_UDF_INVALID_ARGUMENT_TO_SET_CHARSET = 3951;
+		exports$1.ER_DA_UDF_INVALID_RETURN_TYPE_TO_SET_CHARSET = 3952;
+		exports$1.ER_MULTIPLE_INTO_CLAUSES = 3953;
+		exports$1.ER_MISPLACED_INTO = 3954;
+		exports$1.ER_USER_ACCESS_DENIED_FOR_USER_ACCOUNT_BLOCKED_BY_PASSWORD_LOCK = 3955;
+		exports$1.ER_WARN_DEPRECATED_YEAR_UNSIGNED = 3956;
+		exports$1.ER_CLONE_NETWORK_PACKET = 3957;
+		exports$1.ER_SDI_OPERATION_FAILED_MISSING_RECORD = 3958;
+		exports$1.ER_DEPENDENT_BY_CHECK_CONSTRAINT = 3959;
+		exports$1.ER_GRP_OPERATION_NOT_ALLOWED_GR_MUST_STOP = 3960;
+		exports$1.ER_WARN_DEPRECATED_JSON_TABLE_ON_ERROR_ON_EMPTY = 3961;
+		exports$1.ER_WARN_DEPRECATED_INNER_INTO = 3962;
+		exports$1.ER_WARN_DEPRECATED_VALUES_FUNCTION_ALWAYS_NULL = 3963;
+		exports$1.ER_WARN_DEPRECATED_SQL_CALC_FOUND_ROWS = 3964;
+		exports$1.ER_WARN_DEPRECATED_FOUND_ROWS = 3965;
+		exports$1.ER_MISSING_JSON_VALUE = 3966;
+		exports$1.ER_MULTIPLE_JSON_VALUES = 3967;
+		exports$1.ER_HOSTNAME_TOO_LONG = 3968;
+		exports$1.ER_WARN_CLIENT_DEPRECATED_PARTITION_PREFIX_KEY = 3969;
+		exports$1.ER_GROUP_REPLICATION_USER_EMPTY_MSG = 3970;
+		exports$1.ER_GROUP_REPLICATION_USER_MANDATORY_MSG = 3971;
+		exports$1.ER_GROUP_REPLICATION_PASSWORD_LENGTH = 3972;
+		exports$1.ER_SUBQUERY_TRANSFORM_REJECTED = 3973;
+		exports$1.ER_DA_GRP_RPL_RECOVERY_ENDPOINT_FORMAT = 3974;
+		exports$1.ER_DA_GRP_RPL_RECOVERY_ENDPOINT_INVALID = 3975;
+		exports$1.ER_WRONG_VALUE_FOR_VAR_PLUS_ACTIONABLE_PART = 3976;
+		exports$1.ER_STATEMENT_NOT_ALLOWED_AFTER_START_TRANSACTION = 3977;
+		exports$1.ER_FOREIGN_KEY_WITH_ATOMIC_CREATE_SELECT = 3978;
+		exports$1.ER_NOT_ALLOWED_WITH_START_TRANSACTION = 3979;
+		exports$1.ER_INVALID_JSON_ATTRIBUTE = 3980;
+		exports$1.ER_ENGINE_ATTRIBUTE_NOT_SUPPORTED = 3981;
+		exports$1.ER_INVALID_USER_ATTRIBUTE_JSON = 3982;
+		exports$1.ER_INNODB_REDO_DISABLED = 3983;
+		exports$1.ER_INNODB_REDO_ARCHIVING_ENABLED = 3984;
+		exports$1.ER_MDL_OUT_OF_RESOURCES = 3985;
+		exports$1.ER_IMPLICIT_COMPARISON_FOR_JSON = 3986;
+		exports$1.ER_FUNCTION_DOES_NOT_SUPPORT_CHARACTER_SET = 3987;
+		exports$1.ER_IMPOSSIBLE_STRING_CONVERSION = 3988;
+		exports$1.ER_SCHEMA_READ_ONLY = 3989;
+		exports$1.ER_RPL_ASYNC_RECONNECT_GTID_MODE_OFF = 3990;
+		exports$1.ER_RPL_ASYNC_RECONNECT_AUTO_POSITION_OFF = 3991;
+		exports$1.ER_DISABLE_GTID_MODE_REQUIRES_ASYNC_RECONNECT_OFF = 3992;
+		exports$1.ER_DISABLE_AUTO_POSITION_REQUIRES_ASYNC_RECONNECT_OFF = 3993;
+		exports$1.ER_INVALID_PARAMETER_USE = 3994;
+		exports$1.ER_CHARACTER_SET_MISMATCH = 3995;
+		exports$1.ER_WARN_VAR_VALUE_CHANGE_NOT_SUPPORTED = 3996;
+		exports$1.ER_INVALID_TIME_ZONE_INTERVAL = 3997;
+		exports$1.ER_INVALID_CAST = 3998;
+		exports$1.ER_HYPERGRAPH_NOT_SUPPORTED_YET = 3999;
+		exports$1.ER_WARN_HYPERGRAPH_EXPERIMENTAL = 4000;
+		exports$1.ER_DA_NO_ERROR_LOG_PARSER_CONFIGURED = 4001;
+		exports$1.ER_DA_ERROR_LOG_TABLE_DISABLED = 4002;
+		exports$1.ER_DA_ERROR_LOG_MULTIPLE_FILTERS = 4003;
+		exports$1.ER_DA_CANT_OPEN_ERROR_LOG = 4004;
+		exports$1.ER_USER_REFERENCED_AS_DEFINER = 4005;
+		exports$1.ER_CANNOT_USER_REFERENCED_AS_DEFINER = 4006;
+		exports$1.ER_REGEX_NUMBER_TOO_BIG = 4007;
+		exports$1.ER_SPVAR_NONINTEGER_TYPE = 4008;
+		exports$1.WARN_UNSUPPORTED_ACL_TABLES_READ = 4009;
+		exports$1.ER_BINLOG_UNSAFE_ACL_TABLE_READ_IN_DML_DDL = 4010;
+		exports$1.ER_STOP_REPLICA_MONITOR_IO_THREAD_TIMEOUT = 4011;
+		exports$1.ER_STARTING_REPLICA_MONITOR_IO_THREAD = 4012;
+		exports$1.ER_CANT_USE_ANONYMOUS_TO_GTID_WITH_GTID_MODE_NOT_ON = 4013;
+		exports$1.ER_CANT_COMBINE_ANONYMOUS_TO_GTID_AND_AUTOPOSITION = 4014;
+		exports$1.ER_ASSIGN_GTIDS_TO_ANONYMOUS_TRANSACTIONS_REQUIRES_GTID_MODE_ON = 4015;
+		exports$1.ER_SQL_REPLICA_SKIP_COUNTER_USED_WITH_GTID_MODE_ON = 4016;
+		exports$1.ER_USING_ASSIGN_GTIDS_TO_ANONYMOUS_TRANSACTIONS_AS_LOCAL_OR_UUID = 4017;
+		exports$1.ER_CANT_SET_ANONYMOUS_TO_GTID_AND_WAIT_UNTIL_SQL_THD_AFTER_GTIDS = 4018;
+		exports$1.ER_CANT_SET_SQL_AFTER_OR_BEFORE_GTIDS_WITH_ANONYMOUS_TO_GTID = 4019;
+		exports$1.ER_ANONYMOUS_TO_GTID_UUID_SAME_AS_GROUP_NAME = 4020;
+		exports$1.ER_CANT_USE_SAME_UUID_AS_GROUP_NAME = 4021;
+		exports$1.ER_GRP_RPL_RECOVERY_CHANNEL_STILL_RUNNING = 4022;
+		exports$1.ER_INNODB_INVALID_AUTOEXTEND_SIZE_VALUE = 4023;
+		exports$1.ER_INNODB_INCOMPATIBLE_WITH_TABLESPACE = 4024;
+		exports$1.ER_INNODB_AUTOEXTEND_SIZE_OUT_OF_RANGE = 4025;
+		exports$1.ER_CANNOT_USE_AUTOEXTEND_SIZE_CLAUSE = 4026;
+		exports$1.ER_ROLE_GRANTED_TO_ITSELF = 4027;
+		exports$1.ER_TABLE_MUST_HAVE_A_VISIBLE_COLUMN = 4028;
+		exports$1.ER_INNODB_COMPRESSION_FAILURE = 4029;
+		exports$1.ER_WARN_ASYNC_CONN_FAILOVER_NETWORK_NAMESPACE = 4030;
+		exports$1.ER_CLIENT_INTERACTION_TIMEOUT = 4031;
+		exports$1.ER_INVALID_CAST_TO_GEOMETRY = 4032;
+		exports$1.ER_INVALID_CAST_POLYGON_RING_DIRECTION = 4033;
+		exports$1.ER_GIS_DIFFERENT_SRIDS_AGGREGATION = 4034;
+		exports$1.ER_RELOAD_KEYRING_FAILURE = 4035;
+		exports$1.ER_SDI_GET_KEYS_INVALID_TABLESPACE = 4036;
+		exports$1.ER_CHANGE_RPL_SRC_WRONG_COMPRESSION_ALGORITHM_SIZE = 4037;
+		exports$1.ER_WARN_DEPRECATED_TLS_VERSION_FOR_CHANNEL_CLI = 4038;
+		exports$1.ER_CANT_USE_SAME_UUID_AS_VIEW_CHANGE_UUID = 4039;
+		exports$1.ER_ANONYMOUS_TO_GTID_UUID_SAME_AS_VIEW_CHANGE_UUID = 4040;
+		exports$1.ER_GRP_RPL_VIEW_CHANGE_UUID_FAIL_GET_VARIABLE = 4041;
+		exports$1.ER_WARN_ADUIT_LOG_MAX_SIZE_AND_PRUNE_SECONDS = 4042;
+		exports$1.ER_WARN_ADUIT_LOG_MAX_SIZE_CLOSE_TO_ROTATE_ON_SIZE = 4043;
+		exports$1.ER_KERBEROS_CREATE_USER = 4044;
+		exports$1.ER_INSTALL_PLUGIN_CONFLICT_CLIENT = 4045;
+		exports$1.ER_DA_ERROR_LOG_COMPONENT_FLUSH_FAILED = 4046;
+		exports$1.ER_WARN_SQL_AFTER_MTS_GAPS_GAP_NOT_CALCULATED = 4047;
+		exports$1.ER_INVALID_ASSIGNMENT_TARGET = 4048;
+		exports$1.ER_OPERATION_NOT_ALLOWED_ON_GR_SECONDARY = 4049;
+		exports$1.ER_GRP_RPL_FAILOVER_CHANNEL_STATUS_PROPAGATION = 4050;
+		exports$1.ER_WARN_AUDIT_LOG_FORMAT_UNIX_TIMESTAMP_ONLY_WHEN_JSON = 4051;
+		exports$1.ER_INVALID_MFA_PLUGIN_SPECIFIED = 4052;
+		exports$1.ER_IDENTIFIED_BY_UNSUPPORTED = 4053;
+		exports$1.ER_INVALID_PLUGIN_FOR_REGISTRATION = 4054;
+		exports$1.ER_PLUGIN_REQUIRES_REGISTRATION = 4055;
+		exports$1.ER_MFA_METHOD_EXISTS = 4056;
+		exports$1.ER_MFA_METHOD_NOT_EXISTS = 4057;
+		exports$1.ER_AUTHENTICATION_POLICY_MISMATCH = 4058;
+		exports$1.ER_PLUGIN_REGISTRATION_DONE = 4059;
+		exports$1.ER_INVALID_USER_FOR_REGISTRATION = 4060;
+		exports$1.ER_USER_REGISTRATION_FAILED = 4061;
+		exports$1.ER_MFA_METHODS_INVALID_ORDER = 4062;
+		exports$1.ER_MFA_METHODS_IDENTICAL = 4063;
+		exports$1.ER_INVALID_MFA_OPERATIONS_FOR_PASSWORDLESS_USER = 4064;
+		exports$1.ER_CHANGE_REPLICATION_SOURCE_NO_OPTIONS_FOR_GTID_ONLY = 4065;
+		exports$1.ER_CHANGE_REP_SOURCE_CANT_DISABLE_REQ_ROW_FORMAT_WITH_GTID_ONLY = 4066;
+		exports$1.ER_CHANGE_REP_SOURCE_CANT_DISABLE_AUTO_POSITION_WITH_GTID_ONLY = 4067;
+		exports$1.ER_CHANGE_REP_SOURCE_CANT_DISABLE_GTID_ONLY_WITHOUT_POSITIONS = 4068;
+		exports$1.ER_CHANGE_REP_SOURCE_CANT_DISABLE_AUTO_POS_WITHOUT_POSITIONS = 4069;
+		exports$1.ER_CHANGE_REP_SOURCE_GR_CHANNEL_WITH_GTID_MODE_NOT_ON = 4070;
+		exports$1.ER_CANT_USE_GTID_ONLY_WITH_GTID_MODE_NOT_ON = 4071;
+		exports$1.ER_WARN_C_DISABLE_GTID_ONLY_WITH_SOURCE_AUTO_POS_INVALID_POS = 4072;
+		exports$1.ER_DA_SSL_FIPS_MODE_ERROR = 4073;
+		exports$1.ER_VALUE_OUT_OF_RANGE = 4074;
+		exports$1.ER_FULLTEXT_WITH_ROLLUP = 4075;
+		exports$1.ER_REGEXP_MISSING_RESOURCE = 4076;
+		exports$1.ER_WARN_REGEXP_USING_DEFAULT = 4077;
+		exports$1.ER_REGEXP_MISSING_FILE = 4078;
+		exports$1.ER_WARN_DEPRECATED_COLLATION = 4079;
+		exports$1.ER_CONCURRENT_PROCEDURE_USAGE = 4080;
+		exports$1.ER_DA_GLOBAL_CONN_LIMIT = 4081;
+		exports$1.ER_DA_CONN_LIMIT = 4082;
+		exports$1.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE_INSTANT = 4083;
+		exports$1.ER_WARN_SF_UDF_NAME_COLLISION = 4084;
+		exports$1.ER_CANNOT_PURGE_BINLOG_WITH_BACKUP_LOCK = 4085;
+		exports$1.ER_TOO_MANY_WINDOWS = 4086;
+		exports$1.ER_MYSQLBACKUP_CLIENT_MSG = 4087;
+		exports$1.ER_COMMENT_CONTAINS_INVALID_STRING = 4088;
+		exports$1.ER_DEFINITION_CONTAINS_INVALID_STRING = 4089;
+		exports$1.ER_CANT_EXECUTE_COMMAND_WITH_ASSIGNED_GTID_NEXT = 4090;
+		exports$1.ER_XA_TEMP_TABLE = 4091;
+		exports$1.ER_INNODB_MAX_ROW_VERSION = 4092;
+		exports$1.ER_INNODB_INSTANT_ADD_NOT_SUPPORTED_MAX_SIZE = 4093;
+		exports$1.ER_OPERATION_NOT_ALLOWED_WHILE_PRIMARY_CHANGE_IS_RUNNING = 4094;
+		exports$1.ER_WARN_DEPRECATED_DATETIME_DELIMITER = 4095;
+		exports$1.ER_WARN_DEPRECATED_SUPERFLUOUS_DELIMITER = 4096;
+		exports$1.ER_CANNOT_PERSIST_SENSITIVE_VARIABLES = 4097;
+		exports$1.ER_WARN_CANNOT_SECURELY_PERSIST_SENSITIVE_VARIABLES = 4098;
+		exports$1.ER_WARN_TRG_ALREADY_EXISTS = 4099;
+		exports$1.ER_IF_NOT_EXISTS_UNSUPPORTED_TRG_EXISTS_ON_DIFFERENT_TABLE = 4100;
+		exports$1.ER_IF_NOT_EXISTS_UNSUPPORTED_UDF_NATIVE_FCT_NAME_COLLISION = 4101;
+		exports$1.ER_SET_PASSWORD_AUTH_PLUGIN_ERROR = 4102;
+		exports$1.ER_REDUCED_DBLWR_FILE_CORRUPTED = 4103;
+		exports$1.ER_REDUCED_DBLWR_PAGE_FOUND = 4104;
+		exports$1.ER_SRS_INVALID_LATITUDE_OF_ORIGIN = 4105;
+		exports$1.ER_SRS_INVALID_LONGITUDE_OF_ORIGIN = 4106;
+		exports$1.ER_SRS_UNUSED_PROJ_PARAMETER_PRESENT = 4107;
+		exports$1.ER_GIPK_COLUMN_EXISTS = 4108;
+		exports$1.ER_GIPK_FAILED_AUTOINC_COLUMN_EXISTS = 4109;
+		exports$1.ER_GIPK_COLUMN_ALTER_NOT_ALLOWED = 4110;
+		exports$1.ER_DROP_PK_COLUMN_TO_DROP_GIPK = 4111;
+		exports$1.ER_CREATE_SELECT_WITH_GIPK_DISALLOWED_IN_SBR = 4112;
+		exports$1.ER_DA_EXPIRE_LOGS_DAYS_IGNORED = 4113;
+		exports$1.ER_CTE_RECURSIVE_NOT_UNION = 4114;
+		exports$1.ER_COMMAND_BACKEND_FAILED_TO_FETCH_SECURITY_CTX = 4115;
+		exports$1.ER_COMMAND_SERVICE_BACKEND_FAILED = 4116;
+		exports$1.ER_CLIENT_FILE_PRIVILEGE_FOR_REPLICATION_CHECKS = 4117;
+		exports$1.ER_GROUP_REPLICATION_FORCE_MEMBERS_COMMAND_FAILURE = 4118;
+		exports$1.ER_WARN_DEPRECATED_IDENT = 4119;
+		exports$1.ER_INTERSECT_ALL_MAX_DUPLICATES_EXCEEDED = 4120;
+		exports$1.ER_TP_QUERY_THRS_PER_GRP_EXCEEDS_TXN_THR_LIMIT = 4121;
+		exports$1.ER_BAD_TIMESTAMP_FORMAT = 4122;
+		exports$1.ER_SHAPE_PRIDICTION_UDF = 4123;
+		exports$1.ER_SRS_INVALID_HEIGHT = 4124;
+		exports$1.ER_SRS_INVALID_SCALING = 4125;
+		exports$1.ER_SRS_INVALID_ZONE_WIDTH = 4126;
+		exports$1.ER_SRS_INVALID_LATITUDE_POLAR_STERE_VAR_A = 4127;
+		exports$1.ER_WARN_DEPRECATED_CLIENT_NO_SCHEMA_OPTION = 4128;
+		exports$1.ER_TABLE_NOT_EMPTY = 4129;
+		exports$1.ER_TABLE_NO_PRIMARY_KEY = 4130;
+		exports$1.ER_TABLE_IN_SHARED_TABLESPACE = 4131;
+		exports$1.ER_INDEX_OTHER_THAN_PK = 4132;
+		exports$1.ER_LOAD_BULK_DATA_UNSORTED = 4133;
+		exports$1.ER_BULK_EXECUTOR_ERROR = 4134;
+		exports$1.ER_BULK_READER_LIBCURL_INIT_FAILED = 4135;
+		exports$1.ER_BULK_READER_LIBCURL_ERROR = 4136;
+		exports$1.ER_BULK_READER_SERVER_ERROR = 4137;
+		exports$1.ER_BULK_READER_COMMUNICATION_ERROR = 4138;
+		exports$1.ER_BULK_LOAD_DATA_FAILED = 4139;
+		exports$1.ER_BULK_LOADER_COLUMN_TOO_BIG_FOR_LEFTOVER_BUFFER = 4140;
+		exports$1.ER_BULK_LOADER_COMPONENT_ERROR = 4141;
+		exports$1.ER_BULK_LOADER_FILE_CONTAINS_LESS_LINES_THAN_IGNORE_CLAUSE = 4142;
+		exports$1.ER_BULK_PARSER_MISSING_ENCLOSED_BY = 4143;
+		exports$1.ER_BULK_PARSER_ROW_BUFFER_MAX_TOTAL_COLS_EXCEEDED = 4144;
+		exports$1.ER_BULK_PARSER_COPY_BUFFER_SIZE_EXCEEDED = 4145;
+		exports$1.ER_BULK_PARSER_UNEXPECTED_END_OF_INPUT = 4146;
+		exports$1.ER_BULK_PARSER_UNEXPECTED_ROW_TERMINATOR = 4147;
+		exports$1.ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_ENDING_ENCLOSED_BY = 4148;
+		exports$1.ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_NULL_ESCAPE = 4149;
+		exports$1.ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_COLUMN_TERMINATOR = 4150;
+		exports$1.ER_BULK_PARSER_INCOMPLETE_ESCAPE_SEQUENCE = 4151;
+		exports$1.ER_LOAD_BULK_DATA_FAILED = 4152;
+		exports$1.ER_LOAD_BULK_DATA_WRONG_VALUE_FOR_FIELD = 4153;
+		exports$1.ER_LOAD_BULK_DATA_WARN_NULL_TO_NOTNULL = 4154;
+		exports$1.ER_REQUIRE_TABLE_PRIMARY_KEY_CHECK_GENERATE_WITH_GR = 4155;
+		exports$1.ER_CANT_CHANGE_SYS_VAR_IN_READ_ONLY_MODE = 4156;
+		exports$1.ER_INNODB_INSTANT_ADD_DROP_NOT_SUPPORTED_MAX_SIZE = 4157;
+		exports$1.ER_INNODB_INSTANT_ADD_NOT_SUPPORTED_MAX_FIELDS = 4158;
+		exports$1.ER_CANT_SET_PERSISTED = 4159;
+		exports$1.ER_INSTALL_COMPONENT_SET_NULL_VALUE = 4160;
+		exports$1.ER_INSTALL_COMPONENT_SET_UNUSED_VALUE = 4161;
+		exports$1.ER_WARN_DEPRECATED_USER_DEFINED_COLLATIONS = 4162;
 
 		// Lookup-by-number table
-		exports[1] = 'EE_CANTCREATEFILE';
-		exports[2] = 'EE_READ';
-		exports[3] = 'EE_WRITE';
-		exports[4] = 'EE_BADCLOSE';
-		exports[5] = 'EE_OUTOFMEMORY';
-		exports[6] = 'EE_DELETE';
-		exports[7] = 'EE_LINK';
-		exports[9] = 'EE_EOFERR';
-		exports[10] = 'EE_CANTLOCK';
-		exports[11] = 'EE_CANTUNLOCK';
-		exports[12] = 'EE_DIR';
-		exports[13] = 'EE_STAT';
-		exports[14] = 'EE_CANT_CHSIZE';
-		exports[15] = 'EE_CANT_OPEN_STREAM';
-		exports[16] = 'EE_GETWD';
-		exports[17] = 'EE_SETWD';
-		exports[18] = 'EE_LINK_WARNING';
-		exports[19] = 'EE_OPEN_WARNING';
-		exports[20] = 'EE_DISK_FULL';
-		exports[21] = 'EE_CANT_MKDIR';
-		exports[22] = 'EE_UNKNOWN_CHARSET';
-		exports[23] = 'EE_OUT_OF_FILERESOURCES';
-		exports[24] = 'EE_CANT_READLINK';
-		exports[25] = 'EE_CANT_SYMLINK';
-		exports[26] = 'EE_REALPATH';
-		exports[27] = 'EE_SYNC';
-		exports[28] = 'EE_UNKNOWN_COLLATION';
-		exports[29] = 'EE_FILENOTFOUND';
-		exports[30] = 'EE_FILE_NOT_CLOSED';
-		exports[31] = 'EE_CHANGE_OWNERSHIP';
-		exports[32] = 'EE_CHANGE_PERMISSIONS';
-		exports[33] = 'EE_CANT_SEEK';
-		exports[34] = 'EE_CAPACITY_EXCEEDED';
-		exports[35] = 'EE_DISK_FULL_WITH_RETRY_MSG';
-		exports[36] = 'EE_FAILED_TO_CREATE_TIMER';
-		exports[37] = 'EE_FAILED_TO_DELETE_TIMER';
-		exports[38] = 'EE_FAILED_TO_CREATE_TIMER_QUEUE';
-		exports[39] = 'EE_FAILED_TO_START_TIMER_NOTIFY_THREAD';
-		exports[40] = 'EE_FAILED_TO_CREATE_TIMER_NOTIFY_THREAD_INTERRUPT_EVENT';
-		exports[41] = 'EE_EXITING_TIMER_NOTIFY_THREAD';
-		exports[42] = 'EE_WIN_LIBRARY_LOAD_FAILED';
-		exports[43] = 'EE_WIN_RUN_TIME_ERROR_CHECK';
-		exports[44] = 'EE_FAILED_TO_DETERMINE_LARGE_PAGE_SIZE';
-		exports[45] = 'EE_FAILED_TO_KILL_ALL_THREADS';
-		exports[46] = 'EE_FAILED_TO_CREATE_IO_COMPLETION_PORT';
-		exports[47] = 'EE_FAILED_TO_OPEN_DEFAULTS_FILE';
-		exports[48] = 'EE_FAILED_TO_HANDLE_DEFAULTS_FILE';
-		exports[49] = 'EE_WRONG_DIRECTIVE_IN_CONFIG_FILE';
-		exports[50] = 'EE_SKIPPING_DIRECTIVE_DUE_TO_MAX_INCLUDE_RECURSION';
-		exports[51] = 'EE_INCORRECT_GRP_DEFINITION_IN_CONFIG_FILE';
-		exports[52] = 'EE_OPTION_WITHOUT_GRP_IN_CONFIG_FILE';
-		exports[53] = 'EE_CONFIG_FILE_PERMISSION_ERROR';
-		exports[54] = 'EE_IGNORE_WORLD_WRITABLE_CONFIG_FILE';
-		exports[55] = 'EE_USING_DISABLED_OPTION';
-		exports[56] = 'EE_USING_DISABLED_SHORT_OPTION';
-		exports[57] = 'EE_USING_PASSWORD_ON_CLI_IS_INSECURE';
-		exports[58] = 'EE_UNKNOWN_SUFFIX_FOR_VARIABLE';
-		exports[59] = 'EE_SSL_ERROR_FROM_FILE';
-		exports[60] = 'EE_SSL_ERROR';
-		exports[61] = 'EE_NET_SEND_ERROR_IN_BOOTSTRAP';
-		exports[62] = 'EE_PACKETS_OUT_OF_ORDER';
-		exports[63] = 'EE_UNKNOWN_PROTOCOL_OPTION';
-		exports[64] = 'EE_FAILED_TO_LOCATE_SERVER_PUBLIC_KEY';
-		exports[65] = 'EE_PUBLIC_KEY_NOT_IN_PEM_FORMAT';
-		exports[66] = 'EE_DEBUG_INFO';
-		exports[67] = 'EE_UNKNOWN_VARIABLE';
-		exports[68] = 'EE_UNKNOWN_OPTION';
-		exports[69] = 'EE_UNKNOWN_SHORT_OPTION';
-		exports[70] = 'EE_OPTION_WITHOUT_ARGUMENT';
-		exports[71] = 'EE_OPTION_REQUIRES_ARGUMENT';
-		exports[72] = 'EE_SHORT_OPTION_REQUIRES_ARGUMENT';
-		exports[73] = 'EE_OPTION_IGNORED_DUE_TO_INVALID_VALUE';
-		exports[74] = 'EE_OPTION_WITH_EMPTY_VALUE';
-		exports[75] = 'EE_FAILED_TO_ASSIGN_MAX_VALUE_TO_OPTION';
-		exports[76] = 'EE_INCORRECT_BOOLEAN_VALUE_FOR_OPTION';
-		exports[77] = 'EE_FAILED_TO_SET_OPTION_VALUE';
-		exports[78] = 'EE_INCORRECT_INT_VALUE_FOR_OPTION';
-		exports[79] = 'EE_INCORRECT_UINT_VALUE_FOR_OPTION';
-		exports[80] = 'EE_ADJUSTED_SIGNED_VALUE_FOR_OPTION';
-		exports[81] = 'EE_ADJUSTED_UNSIGNED_VALUE_FOR_OPTION';
-		exports[82] = 'EE_ADJUSTED_ULONGLONG_VALUE_FOR_OPTION';
-		exports[83] = 'EE_ADJUSTED_DOUBLE_VALUE_FOR_OPTION';
-		exports[84] = 'EE_INVALID_DECIMAL_VALUE_FOR_OPTION';
-		exports[85] = 'EE_COLLATION_PARSER_ERROR';
-		exports[86] = 'EE_FAILED_TO_RESET_BEFORE_PRIMARY_IGNORABLE_CHAR';
-		exports[87] = 'EE_FAILED_TO_RESET_BEFORE_TERTIARY_IGNORABLE_CHAR';
-		exports[88] = 'EE_SHIFT_CHAR_OUT_OF_RANGE';
-		exports[89] = 'EE_RESET_CHAR_OUT_OF_RANGE';
-		exports[90] = 'EE_UNKNOWN_LDML_TAG';
-		exports[91] = 'EE_FAILED_TO_RESET_BEFORE_SECONDARY_IGNORABLE_CHAR';
-		exports[92] = 'EE_FAILED_PROCESSING_DIRECTIVE';
-		exports[93] = 'EE_PTHREAD_KILL_FAILED';
-		exports[120] = 'HA_ERR_KEY_NOT_FOUND';
-		exports[121] = 'HA_ERR_FOUND_DUPP_KEY';
-		exports[122] = 'HA_ERR_INTERNAL_ERROR';
-		exports[123] = 'HA_ERR_RECORD_CHANGED';
-		exports[124] = 'HA_ERR_WRONG_INDEX';
-		exports[125] = 'HA_ERR_ROLLED_BACK';
-		exports[126] = 'HA_ERR_CRASHED';
-		exports[127] = 'HA_ERR_WRONG_IN_RECORD';
-		exports[128] = 'HA_ERR_OUT_OF_MEM';
-		exports[130] = 'HA_ERR_NOT_A_TABLE';
-		exports[131] = 'HA_ERR_WRONG_COMMAND';
-		exports[132] = 'HA_ERR_OLD_FILE';
-		exports[133] = 'HA_ERR_NO_ACTIVE_RECORD';
-		exports[134] = 'HA_ERR_RECORD_DELETED';
-		exports[135] = 'HA_ERR_RECORD_FILE_FULL';
-		exports[136] = 'HA_ERR_INDEX_FILE_FULL';
-		exports[137] = 'HA_ERR_END_OF_FILE';
-		exports[138] = 'HA_ERR_UNSUPPORTED';
-		exports[139] = 'HA_ERR_TOO_BIG_ROW';
-		exports[140] = 'HA_WRONG_CREATE_OPTION';
-		exports[141] = 'HA_ERR_FOUND_DUPP_UNIQUE';
-		exports[142] = 'HA_ERR_UNKNOWN_CHARSET';
-		exports[143] = 'HA_ERR_WRONG_MRG_TABLE_DEF';
-		exports[144] = 'HA_ERR_CRASHED_ON_REPAIR';
-		exports[145] = 'HA_ERR_CRASHED_ON_USAGE';
-		exports[146] = 'HA_ERR_LOCK_WAIT_TIMEOUT';
-		exports[147] = 'HA_ERR_LOCK_TABLE_FULL';
-		exports[148] = 'HA_ERR_READ_ONLY_TRANSACTION';
-		exports[149] = 'HA_ERR_LOCK_DEADLOCK';
-		exports[150] = 'HA_ERR_CANNOT_ADD_FOREIGN';
-		exports[151] = 'HA_ERR_NO_REFERENCED_ROW';
-		exports[152] = 'HA_ERR_ROW_IS_REFERENCED';
-		exports[153] = 'HA_ERR_NO_SAVEPOINT';
-		exports[154] = 'HA_ERR_NON_UNIQUE_BLOCK_SIZE';
-		exports[155] = 'HA_ERR_NO_SUCH_TABLE';
-		exports[156] = 'HA_ERR_TABLE_EXIST';
-		exports[157] = 'HA_ERR_NO_CONNECTION';
-		exports[158] = 'HA_ERR_NULL_IN_SPATIAL';
-		exports[159] = 'HA_ERR_TABLE_DEF_CHANGED';
-		exports[160] = 'HA_ERR_NO_PARTITION_FOUND';
-		exports[161] = 'HA_ERR_RBR_LOGGING_FAILED';
-		exports[162] = 'HA_ERR_DROP_INDEX_FK';
-		exports[163] = 'HA_ERR_FOREIGN_DUPLICATE_KEY';
-		exports[164] = 'HA_ERR_TABLE_NEEDS_UPGRADE';
-		exports[165] = 'HA_ERR_TABLE_READONLY';
-		exports[166] = 'HA_ERR_AUTOINC_READ_FAILED';
-		exports[167] = 'HA_ERR_AUTOINC_ERANGE';
-		exports[168] = 'HA_ERR_GENERIC';
-		exports[169] = 'HA_ERR_RECORD_IS_THE_SAME';
-		exports[170] = 'HA_ERR_LOGGING_IMPOSSIBLE';
-		exports[171] = 'HA_ERR_CORRUPT_EVENT';
-		exports[172] = 'HA_ERR_NEW_FILE';
-		exports[173] = 'HA_ERR_ROWS_EVENT_APPLY';
-		exports[174] = 'HA_ERR_INITIALIZATION';
-		exports[175] = 'HA_ERR_FILE_TOO_SHORT';
-		exports[176] = 'HA_ERR_WRONG_CRC';
-		exports[177] = 'HA_ERR_TOO_MANY_CONCURRENT_TRXS';
-		exports[178] = 'HA_ERR_NOT_IN_LOCK_PARTITIONS';
-		exports[179] = 'HA_ERR_INDEX_COL_TOO_LONG';
-		exports[180] = 'HA_ERR_INDEX_CORRUPT';
-		exports[181] = 'HA_ERR_UNDO_REC_TOO_BIG';
-		exports[182] = 'HA_FTS_INVALID_DOCID';
-		exports[183] = 'HA_ERR_TABLE_IN_FK_CHECK';
-		exports[184] = 'HA_ERR_TABLESPACE_EXISTS';
-		exports[185] = 'HA_ERR_TOO_MANY_FIELDS';
-		exports[186] = 'HA_ERR_ROW_IN_WRONG_PARTITION';
-		exports[187] = 'HA_ERR_INNODB_READ_ONLY';
-		exports[188] = 'HA_ERR_FTS_EXCEED_RESULT_CACHE_LIMIT';
-		exports[189] = 'HA_ERR_TEMP_FILE_WRITE_FAILURE';
-		exports[190] = 'HA_ERR_INNODB_FORCED_RECOVERY';
-		exports[191] = 'HA_ERR_FTS_TOO_MANY_WORDS_IN_PHRASE';
-		exports[192] = 'HA_ERR_FK_DEPTH_EXCEEDED';
-		exports[193] = 'HA_MISSING_CREATE_OPTION';
-		exports[194] = 'HA_ERR_SE_OUT_OF_MEMORY';
-		exports[195] = 'HA_ERR_TABLE_CORRUPT';
-		exports[196] = 'HA_ERR_QUERY_INTERRUPTED';
-		exports[197] = 'HA_ERR_TABLESPACE_MISSING';
-		exports[198] = 'HA_ERR_TABLESPACE_IS_NOT_EMPTY';
-		exports[199] = 'HA_ERR_WRONG_FILE_NAME';
-		exports[200] = 'HA_ERR_NOT_ALLOWED_COMMAND';
-		exports[201] = 'HA_ERR_COMPUTE_FAILED';
-		exports[202] = 'HA_ERR_ROW_FORMAT_CHANGED';
-		exports[203] = 'HA_ERR_NO_WAIT_LOCK';
-		exports[204] = 'HA_ERR_DISK_FULL_NOWAIT';
-		exports[205] = 'HA_ERR_NO_SESSION_TEMP';
-		exports[206] = 'HA_ERR_WRONG_TABLE_NAME';
-		exports[207] = 'HA_ERR_TOO_LONG_PATH';
-		exports[208] = 'HA_ERR_SAMPLING_INIT_FAILED';
-		exports[209] = 'HA_ERR_FTS_TOO_MANY_NESTED_EXP';
-		exports[1000] = 'ER_HASHCHK';
-		exports[1001] = 'ER_NISAMCHK';
-		exports[1002] = 'ER_NO';
-		exports[1003] = 'ER_YES';
-		exports[1004] = 'ER_CANT_CREATE_FILE';
-		exports[1005] = 'ER_CANT_CREATE_TABLE';
-		exports[1006] = 'ER_CANT_CREATE_DB';
-		exports[1007] = 'ER_DB_CREATE_EXISTS';
-		exports[1008] = 'ER_DB_DROP_EXISTS';
-		exports[1009] = 'ER_DB_DROP_DELETE';
-		exports[1010] = 'ER_DB_DROP_RMDIR';
-		exports[1011] = 'ER_CANT_DELETE_FILE';
-		exports[1012] = 'ER_CANT_FIND_SYSTEM_REC';
-		exports[1013] = 'ER_CANT_GET_STAT';
-		exports[1014] = 'ER_CANT_GET_WD';
-		exports[1015] = 'ER_CANT_LOCK';
-		exports[1016] = 'ER_CANT_OPEN_FILE';
-		exports[1017] = 'ER_FILE_NOT_FOUND';
-		exports[1018] = 'ER_CANT_READ_DIR';
-		exports[1019] = 'ER_CANT_SET_WD';
-		exports[1020] = 'ER_CHECKREAD';
-		exports[1021] = 'ER_DISK_FULL';
-		exports[1022] = 'ER_DUP_KEY';
-		exports[1023] = 'ER_ERROR_ON_CLOSE';
-		exports[1024] = 'ER_ERROR_ON_READ';
-		exports[1025] = 'ER_ERROR_ON_RENAME';
-		exports[1026] = 'ER_ERROR_ON_WRITE';
-		exports[1027] = 'ER_FILE_USED';
-		exports[1028] = 'ER_FILSORT_ABORT';
-		exports[1029] = 'ER_FORM_NOT_FOUND';
-		exports[1030] = 'ER_GET_ERRNO';
-		exports[1031] = 'ER_ILLEGAL_HA';
-		exports[1032] = 'ER_KEY_NOT_FOUND';
-		exports[1033] = 'ER_NOT_FORM_FILE';
-		exports[1034] = 'ER_NOT_KEYFILE';
-		exports[1035] = 'ER_OLD_KEYFILE';
-		exports[1036] = 'ER_OPEN_AS_READONLY';
-		exports[1037] = 'ER_OUTOFMEMORY';
-		exports[1038] = 'ER_OUT_OF_SORTMEMORY';
-		exports[1039] = 'ER_UNEXPECTED_EOF';
-		exports[1040] = 'ER_CON_COUNT_ERROR';
-		exports[1041] = 'ER_OUT_OF_RESOURCES';
-		exports[1042] = 'ER_BAD_HOST_ERROR';
-		exports[1043] = 'ER_HANDSHAKE_ERROR';
-		exports[1044] = 'ER_DBACCESS_DENIED_ERROR';
-		exports[1045] = 'ER_ACCESS_DENIED_ERROR';
-		exports[1046] = 'ER_NO_DB_ERROR';
-		exports[1047] = 'ER_UNKNOWN_COM_ERROR';
-		exports[1048] = 'ER_BAD_NULL_ERROR';
-		exports[1049] = 'ER_BAD_DB_ERROR';
-		exports[1050] = 'ER_TABLE_EXISTS_ERROR';
-		exports[1051] = 'ER_BAD_TABLE_ERROR';
-		exports[1052] = 'ER_NON_UNIQ_ERROR';
-		exports[1053] = 'ER_SERVER_SHUTDOWN';
-		exports[1054] = 'ER_BAD_FIELD_ERROR';
-		exports[1055] = 'ER_WRONG_FIELD_WITH_GROUP';
-		exports[1056] = 'ER_WRONG_GROUP_FIELD';
-		exports[1057] = 'ER_WRONG_SUM_SELECT';
-		exports[1058] = 'ER_WRONG_VALUE_COUNT';
-		exports[1059] = 'ER_TOO_LONG_IDENT';
-		exports[1060] = 'ER_DUP_FIELDNAME';
-		exports[1061] = 'ER_DUP_KEYNAME';
-		exports[1062] = 'ER_DUP_ENTRY';
-		exports[1063] = 'ER_WRONG_FIELD_SPEC';
-		exports[1064] = 'ER_PARSE_ERROR';
-		exports[1065] = 'ER_EMPTY_QUERY';
-		exports[1066] = 'ER_NONUNIQ_TABLE';
-		exports[1067] = 'ER_INVALID_DEFAULT';
-		exports[1068] = 'ER_MULTIPLE_PRI_KEY';
-		exports[1069] = 'ER_TOO_MANY_KEYS';
-		exports[1070] = 'ER_TOO_MANY_KEY_PARTS';
-		exports[1071] = 'ER_TOO_LONG_KEY';
-		exports[1072] = 'ER_KEY_COLUMN_DOES_NOT_EXITS';
-		exports[1073] = 'ER_BLOB_USED_AS_KEY';
-		exports[1074] = 'ER_TOO_BIG_FIELDLENGTH';
-		exports[1075] = 'ER_WRONG_AUTO_KEY';
-		exports[1076] = 'ER_READY';
-		exports[1077] = 'ER_NORMAL_SHUTDOWN';
-		exports[1078] = 'ER_GOT_SIGNAL';
-		exports[1079] = 'ER_SHUTDOWN_COMPLETE';
-		exports[1080] = 'ER_FORCING_CLOSE';
-		exports[1081] = 'ER_IPSOCK_ERROR';
-		exports[1082] = 'ER_NO_SUCH_INDEX';
-		exports[1083] = 'ER_WRONG_FIELD_TERMINATORS';
-		exports[1084] = 'ER_BLOBS_AND_NO_TERMINATED';
-		exports[1085] = 'ER_TEXTFILE_NOT_READABLE';
-		exports[1086] = 'ER_FILE_EXISTS_ERROR';
-		exports[1087] = 'ER_LOAD_INFO';
-		exports[1088] = 'ER_ALTER_INFO';
-		exports[1089] = 'ER_WRONG_SUB_KEY';
-		exports[1090] = 'ER_CANT_REMOVE_ALL_FIELDS';
-		exports[1091] = 'ER_CANT_DROP_FIELD_OR_KEY';
-		exports[1092] = 'ER_INSERT_INFO';
-		exports[1093] = 'ER_UPDATE_TABLE_USED';
-		exports[1094] = 'ER_NO_SUCH_THREAD';
-		exports[1095] = 'ER_KILL_DENIED_ERROR';
-		exports[1096] = 'ER_NO_TABLES_USED';
-		exports[1097] = 'ER_TOO_BIG_SET';
-		exports[1098] = 'ER_NO_UNIQUE_LOGFILE';
-		exports[1099] = 'ER_TABLE_NOT_LOCKED_FOR_WRITE';
-		exports[1100] = 'ER_TABLE_NOT_LOCKED';
-		exports[1101] = 'ER_BLOB_CANT_HAVE_DEFAULT';
-		exports[1102] = 'ER_WRONG_DB_NAME';
-		exports[1103] = 'ER_WRONG_TABLE_NAME';
-		exports[1104] = 'ER_TOO_BIG_SELECT';
-		exports[1105] = 'ER_UNKNOWN_ERROR';
-		exports[1106] = 'ER_UNKNOWN_PROCEDURE';
-		exports[1107] = 'ER_WRONG_PARAMCOUNT_TO_PROCEDURE';
-		exports[1108] = 'ER_WRONG_PARAMETERS_TO_PROCEDURE';
-		exports[1109] = 'ER_UNKNOWN_TABLE';
-		exports[1110] = 'ER_FIELD_SPECIFIED_TWICE';
-		exports[1111] = 'ER_INVALID_GROUP_FUNC_USE';
-		exports[1112] = 'ER_UNSUPPORTED_EXTENSION';
-		exports[1113] = 'ER_TABLE_MUST_HAVE_COLUMNS';
-		exports[1114] = 'ER_RECORD_FILE_FULL';
-		exports[1115] = 'ER_UNKNOWN_CHARACTER_SET';
-		exports[1116] = 'ER_TOO_MANY_TABLES';
-		exports[1117] = 'ER_TOO_MANY_FIELDS';
-		exports[1118] = 'ER_TOO_BIG_ROWSIZE';
-		exports[1119] = 'ER_STACK_OVERRUN';
-		exports[1120] = 'ER_WRONG_OUTER_JOIN';
-		exports[1121] = 'ER_NULL_COLUMN_IN_INDEX';
-		exports[1122] = 'ER_CANT_FIND_UDF';
-		exports[1123] = 'ER_CANT_INITIALIZE_UDF';
-		exports[1124] = 'ER_UDF_NO_PATHS';
-		exports[1125] = 'ER_UDF_EXISTS';
-		exports[1126] = 'ER_CANT_OPEN_LIBRARY';
-		exports[1127] = 'ER_CANT_FIND_DL_ENTRY';
-		exports[1128] = 'ER_FUNCTION_NOT_DEFINED';
-		exports[1129] = 'ER_HOST_IS_BLOCKED';
-		exports[1130] = 'ER_HOST_NOT_PRIVILEGED';
-		exports[1131] = 'ER_PASSWORD_ANONYMOUS_USER';
-		exports[1132] = 'ER_PASSWORD_NOT_ALLOWED';
-		exports[1133] = 'ER_PASSWORD_NO_MATCH';
-		exports[1134] = 'ER_UPDATE_INFO';
-		exports[1135] = 'ER_CANT_CREATE_THREAD';
-		exports[1136] = 'ER_WRONG_VALUE_COUNT_ON_ROW';
-		exports[1137] = 'ER_CANT_REOPEN_TABLE';
-		exports[1138] = 'ER_INVALID_USE_OF_NULL';
-		exports[1139] = 'ER_REGEXP_ERROR';
-		exports[1140] = 'ER_MIX_OF_GROUP_FUNC_AND_FIELDS';
-		exports[1141] = 'ER_NONEXISTING_GRANT';
-		exports[1142] = 'ER_TABLEACCESS_DENIED_ERROR';
-		exports[1143] = 'ER_COLUMNACCESS_DENIED_ERROR';
-		exports[1144] = 'ER_ILLEGAL_GRANT_FOR_TABLE';
-		exports[1145] = 'ER_GRANT_WRONG_HOST_OR_USER';
-		exports[1146] = 'ER_NO_SUCH_TABLE';
-		exports[1147] = 'ER_NONEXISTING_TABLE_GRANT';
-		exports[1148] = 'ER_NOT_ALLOWED_COMMAND';
-		exports[1149] = 'ER_SYNTAX_ERROR';
-		exports[1150] = 'ER_UNUSED1';
-		exports[1151] = 'ER_UNUSED2';
-		exports[1152] = 'ER_ABORTING_CONNECTION';
-		exports[1153] = 'ER_NET_PACKET_TOO_LARGE';
-		exports[1154] = 'ER_NET_READ_ERROR_FROM_PIPE';
-		exports[1155] = 'ER_NET_FCNTL_ERROR';
-		exports[1156] = 'ER_NET_PACKETS_OUT_OF_ORDER';
-		exports[1157] = 'ER_NET_UNCOMPRESS_ERROR';
-		exports[1158] = 'ER_NET_READ_ERROR';
-		exports[1159] = 'ER_NET_READ_INTERRUPTED';
-		exports[1160] = 'ER_NET_ERROR_ON_WRITE';
-		exports[1161] = 'ER_NET_WRITE_INTERRUPTED';
-		exports[1162] = 'ER_TOO_LONG_STRING';
-		exports[1163] = 'ER_TABLE_CANT_HANDLE_BLOB';
-		exports[1164] = 'ER_TABLE_CANT_HANDLE_AUTO_INCREMENT';
-		exports[1165] = 'ER_UNUSED3';
-		exports[1166] = 'ER_WRONG_COLUMN_NAME';
-		exports[1167] = 'ER_WRONG_KEY_COLUMN';
-		exports[1168] = 'ER_WRONG_MRG_TABLE';
-		exports[1169] = 'ER_DUP_UNIQUE';
-		exports[1170] = 'ER_BLOB_KEY_WITHOUT_LENGTH';
-		exports[1171] = 'ER_PRIMARY_CANT_HAVE_NULL';
-		exports[1172] = 'ER_TOO_MANY_ROWS';
-		exports[1173] = 'ER_REQUIRES_PRIMARY_KEY';
-		exports[1174] = 'ER_NO_RAID_COMPILED';
-		exports[1175] = 'ER_UPDATE_WITHOUT_KEY_IN_SAFE_MODE';
-		exports[1176] = 'ER_KEY_DOES_NOT_EXITS';
-		exports[1177] = 'ER_CHECK_NO_SUCH_TABLE';
-		exports[1178] = 'ER_CHECK_NOT_IMPLEMENTED';
-		exports[1179] = 'ER_CANT_DO_THIS_DURING_AN_TRANSACTION';
-		exports[1180] = 'ER_ERROR_DURING_COMMIT';
-		exports[1181] = 'ER_ERROR_DURING_ROLLBACK';
-		exports[1182] = 'ER_ERROR_DURING_FLUSH_LOGS';
-		exports[1183] = 'ER_ERROR_DURING_CHECKPOINT';
-		exports[1184] = 'ER_NEW_ABORTING_CONNECTION';
-		exports[1185] = 'ER_DUMP_NOT_IMPLEMENTED';
-		exports[1186] = 'ER_FLUSH_MASTER_BINLOG_CLOSED';
-		exports[1187] = 'ER_INDEX_REBUILD';
-		exports[1188] = 'ER_SOURCE';
-		exports[1189] = 'ER_SOURCE_NET_READ';
-		exports[1190] = 'ER_SOURCE_NET_WRITE';
-		exports[1191] = 'ER_FT_MATCHING_KEY_NOT_FOUND';
-		exports[1192] = 'ER_LOCK_OR_ACTIVE_TRANSACTION';
-		exports[1193] = 'ER_UNKNOWN_SYSTEM_VARIABLE';
-		exports[1194] = 'ER_CRASHED_ON_USAGE';
-		exports[1195] = 'ER_CRASHED_ON_REPAIR';
-		exports[1196] = 'ER_WARNING_NOT_COMPLETE_ROLLBACK';
-		exports[1197] = 'ER_TRANS_CACHE_FULL';
-		exports[1198] = 'ER_SLAVE_MUST_STOP';
-		exports[1199] = 'ER_REPLICA_NOT_RUNNING';
-		exports[1200] = 'ER_BAD_REPLICA';
-		exports[1201] = 'ER_CONNECTION_METADATA';
-		exports[1202] = 'ER_REPLICA_THREAD';
-		exports[1203] = 'ER_TOO_MANY_USER_CONNECTIONS';
-		exports[1204] = 'ER_SET_CONSTANTS_ONLY';
-		exports[1205] = 'ER_LOCK_WAIT_TIMEOUT';
-		exports[1206] = 'ER_LOCK_TABLE_FULL';
-		exports[1207] = 'ER_READ_ONLY_TRANSACTION';
-		exports[1208] = 'ER_DROP_DB_WITH_READ_LOCK';
-		exports[1209] = 'ER_CREATE_DB_WITH_READ_LOCK';
-		exports[1210] = 'ER_WRONG_ARGUMENTS';
-		exports[1211] = 'ER_NO_PERMISSION_TO_CREATE_USER';
-		exports[1212] = 'ER_UNION_TABLES_IN_DIFFERENT_DIR';
-		exports[1213] = 'ER_LOCK_DEADLOCK';
-		exports[1214] = 'ER_TABLE_CANT_HANDLE_FT';
-		exports[1215] = 'ER_CANNOT_ADD_FOREIGN';
-		exports[1216] = 'ER_NO_REFERENCED_ROW';
-		exports[1217] = 'ER_ROW_IS_REFERENCED';
-		exports[1218] = 'ER_CONNECT_TO_SOURCE';
-		exports[1219] = 'ER_QUERY_ON_MASTER';
-		exports[1220] = 'ER_ERROR_WHEN_EXECUTING_COMMAND';
-		exports[1221] = 'ER_WRONG_USAGE';
-		exports[1222] = 'ER_WRONG_NUMBER_OF_COLUMNS_IN_SELECT';
-		exports[1223] = 'ER_CANT_UPDATE_WITH_READLOCK';
-		exports[1224] = 'ER_MIXING_NOT_ALLOWED';
-		exports[1225] = 'ER_DUP_ARGUMENT';
-		exports[1226] = 'ER_USER_LIMIT_REACHED';
-		exports[1227] = 'ER_SPECIFIC_ACCESS_DENIED_ERROR';
-		exports[1228] = 'ER_LOCAL_VARIABLE';
-		exports[1229] = 'ER_GLOBAL_VARIABLE';
-		exports[1230] = 'ER_NO_DEFAULT';
-		exports[1231] = 'ER_WRONG_VALUE_FOR_VAR';
-		exports[1232] = 'ER_WRONG_TYPE_FOR_VAR';
-		exports[1233] = 'ER_VAR_CANT_BE_READ';
-		exports[1234] = 'ER_CANT_USE_OPTION_HERE';
-		exports[1235] = 'ER_NOT_SUPPORTED_YET';
-		exports[1236] = 'ER_SOURCE_FATAL_ERROR_READING_BINLOG';
-		exports[1237] = 'ER_REPLICA_IGNORED_TABLE';
-		exports[1238] = 'ER_INCORRECT_GLOBAL_LOCAL_VAR';
-		exports[1239] = 'ER_WRONG_FK_DEF';
-		exports[1240] = 'ER_KEY_REF_DO_NOT_MATCH_TABLE_REF';
-		exports[1241] = 'ER_OPERAND_COLUMNS';
-		exports[1242] = 'ER_SUBQUERY_NO_1_ROW';
-		exports[1243] = 'ER_UNKNOWN_STMT_HANDLER';
-		exports[1244] = 'ER_CORRUPT_HELP_DB';
-		exports[1245] = 'ER_CYCLIC_REFERENCE';
-		exports[1246] = 'ER_AUTO_CONVERT';
-		exports[1247] = 'ER_ILLEGAL_REFERENCE';
-		exports[1248] = 'ER_DERIVED_MUST_HAVE_ALIAS';
-		exports[1249] = 'ER_SELECT_REDUCED';
-		exports[1250] = 'ER_TABLENAME_NOT_ALLOWED_HERE';
-		exports[1251] = 'ER_NOT_SUPPORTED_AUTH_MODE';
-		exports[1252] = 'ER_SPATIAL_CANT_HAVE_NULL';
-		exports[1253] = 'ER_COLLATION_CHARSET_MISMATCH';
-		exports[1254] = 'ER_SLAVE_WAS_RUNNING';
-		exports[1255] = 'ER_SLAVE_WAS_NOT_RUNNING';
-		exports[1256] = 'ER_TOO_BIG_FOR_UNCOMPRESS';
-		exports[1257] = 'ER_ZLIB_Z_MEM_ERROR';
-		exports[1258] = 'ER_ZLIB_Z_BUF_ERROR';
-		exports[1259] = 'ER_ZLIB_Z_DATA_ERROR';
-		exports[1260] = 'ER_CUT_VALUE_GROUP_CONCAT';
-		exports[1261] = 'ER_WARN_TOO_FEW_RECORDS';
-		exports[1262] = 'ER_WARN_TOO_MANY_RECORDS';
-		exports[1263] = 'ER_WARN_NULL_TO_NOTNULL';
-		exports[1264] = 'ER_WARN_DATA_OUT_OF_RANGE';
-		exports[1265] = 'WARN_DATA_TRUNCATED';
-		exports[1266] = 'ER_WARN_USING_OTHER_HANDLER';
-		exports[1267] = 'ER_CANT_AGGREGATE_2COLLATIONS';
-		exports[1268] = 'ER_DROP_USER';
-		exports[1269] = 'ER_REVOKE_GRANTS';
-		exports[1270] = 'ER_CANT_AGGREGATE_3COLLATIONS';
-		exports[1271] = 'ER_CANT_AGGREGATE_NCOLLATIONS';
-		exports[1272] = 'ER_VARIABLE_IS_NOT_STRUCT';
-		exports[1273] = 'ER_UNKNOWN_COLLATION';
-		exports[1274] = 'ER_REPLICA_IGNORED_SSL_PARAMS';
-		exports[1275] = 'ER_SERVER_IS_IN_SECURE_AUTH_MODE';
-		exports[1276] = 'ER_WARN_FIELD_RESOLVED';
-		exports[1277] = 'ER_BAD_REPLICA_UNTIL_COND';
-		exports[1278] = 'ER_MISSING_SKIP_REPLICA';
-		exports[1279] = 'ER_UNTIL_COND_IGNORED';
-		exports[1280] = 'ER_WRONG_NAME_FOR_INDEX';
-		exports[1281] = 'ER_WRONG_NAME_FOR_CATALOG';
-		exports[1282] = 'ER_WARN_QC_RESIZE';
-		exports[1283] = 'ER_BAD_FT_COLUMN';
-		exports[1284] = 'ER_UNKNOWN_KEY_CACHE';
-		exports[1285] = 'ER_WARN_HOSTNAME_WONT_WORK';
-		exports[1286] = 'ER_UNKNOWN_STORAGE_ENGINE';
-		exports[1287] = 'ER_WARN_DEPRECATED_SYNTAX';
-		exports[1288] = 'ER_NON_UPDATABLE_TABLE';
-		exports[1289] = 'ER_FEATURE_DISABLED';
-		exports[1290] = 'ER_OPTION_PREVENTS_STATEMENT';
-		exports[1291] = 'ER_DUPLICATED_VALUE_IN_TYPE';
-		exports[1292] = 'ER_TRUNCATED_WRONG_VALUE';
-		exports[1293] = 'ER_TOO_MUCH_AUTO_TIMESTAMP_COLS';
-		exports[1294] = 'ER_INVALID_ON_UPDATE';
-		exports[1295] = 'ER_UNSUPPORTED_PS';
-		exports[1296] = 'ER_GET_ERRMSG';
-		exports[1297] = 'ER_GET_TEMPORARY_ERRMSG';
-		exports[1298] = 'ER_UNKNOWN_TIME_ZONE';
-		exports[1299] = 'ER_WARN_INVALID_TIMESTAMP';
-		exports[1300] = 'ER_INVALID_CHARACTER_STRING';
-		exports[1301] = 'ER_WARN_ALLOWED_PACKET_OVERFLOWED';
-		exports[1302] = 'ER_CONFLICTING_DECLARATIONS';
-		exports[1303] = 'ER_SP_NO_RECURSIVE_CREATE';
-		exports[1304] = 'ER_SP_ALREADY_EXISTS';
-		exports[1305] = 'ER_SP_DOES_NOT_EXIST';
-		exports[1306] = 'ER_SP_DROP_FAILED';
-		exports[1307] = 'ER_SP_STORE_FAILED';
-		exports[1308] = 'ER_SP_LILABEL_MISMATCH';
-		exports[1309] = 'ER_SP_LABEL_REDEFINE';
-		exports[1310] = 'ER_SP_LABEL_MISMATCH';
-		exports[1311] = 'ER_SP_UNINIT_VAR';
-		exports[1312] = 'ER_SP_BADSELECT';
-		exports[1313] = 'ER_SP_BADRETURN';
-		exports[1314] = 'ER_SP_BADSTATEMENT';
-		exports[1315] = 'ER_UPDATE_LOG_DEPRECATED_IGNORED';
-		exports[1316] = 'ER_UPDATE_LOG_DEPRECATED_TRANSLATED';
-		exports[1317] = 'ER_QUERY_INTERRUPTED';
-		exports[1318] = 'ER_SP_WRONG_NO_OF_ARGS';
-		exports[1319] = 'ER_SP_COND_MISMATCH';
-		exports[1320] = 'ER_SP_NORETURN';
-		exports[1321] = 'ER_SP_NORETURNEND';
-		exports[1322] = 'ER_SP_BAD_CURSOR_QUERY';
-		exports[1323] = 'ER_SP_BAD_CURSOR_SELECT';
-		exports[1324] = 'ER_SP_CURSOR_MISMATCH';
-		exports[1325] = 'ER_SP_CURSOR_ALREADY_OPEN';
-		exports[1326] = 'ER_SP_CURSOR_NOT_OPEN';
-		exports[1327] = 'ER_SP_UNDECLARED_VAR';
-		exports[1328] = 'ER_SP_WRONG_NO_OF_FETCH_ARGS';
-		exports[1329] = 'ER_SP_FETCH_NO_DATA';
-		exports[1330] = 'ER_SP_DUP_PARAM';
-		exports[1331] = 'ER_SP_DUP_VAR';
-		exports[1332] = 'ER_SP_DUP_COND';
-		exports[1333] = 'ER_SP_DUP_CURS';
-		exports[1334] = 'ER_SP_CANT_ALTER';
-		exports[1335] = 'ER_SP_SUBSELECT_NYI';
-		exports[1336] = 'ER_STMT_NOT_ALLOWED_IN_SF_OR_TRG';
-		exports[1337] = 'ER_SP_VARCOND_AFTER_CURSHNDLR';
-		exports[1338] = 'ER_SP_CURSOR_AFTER_HANDLER';
-		exports[1339] = 'ER_SP_CASE_NOT_FOUND';
-		exports[1340] = 'ER_FPARSER_TOO_BIG_FILE';
-		exports[1341] = 'ER_FPARSER_BAD_HEADER';
-		exports[1342] = 'ER_FPARSER_EOF_IN_COMMENT';
-		exports[1343] = 'ER_FPARSER_ERROR_IN_PARAMETER';
-		exports[1344] = 'ER_FPARSER_EOF_IN_UNKNOWN_PARAMETER';
-		exports[1345] = 'ER_VIEW_NO_EXPLAIN';
-		exports[1346] = 'ER_FRM_UNKNOWN_TYPE';
-		exports[1347] = 'ER_WRONG_OBJECT';
-		exports[1348] = 'ER_NONUPDATEABLE_COLUMN';
-		exports[1349] = 'ER_VIEW_SELECT_DERIVED';
-		exports[1350] = 'ER_VIEW_SELECT_CLAUSE';
-		exports[1351] = 'ER_VIEW_SELECT_VARIABLE';
-		exports[1352] = 'ER_VIEW_SELECT_TMPTABLE';
-		exports[1353] = 'ER_VIEW_WRONG_LIST';
-		exports[1354] = 'ER_WARN_VIEW_MERGE';
-		exports[1355] = 'ER_WARN_VIEW_WITHOUT_KEY';
-		exports[1356] = 'ER_VIEW_INVALID';
-		exports[1357] = 'ER_SP_NO_DROP_SP';
-		exports[1358] = 'ER_SP_GOTO_IN_HNDLR';
-		exports[1359] = 'ER_TRG_ALREADY_EXISTS';
-		exports[1360] = 'ER_TRG_DOES_NOT_EXIST';
-		exports[1361] = 'ER_TRG_ON_VIEW_OR_TEMP_TABLE';
-		exports[1362] = 'ER_TRG_CANT_CHANGE_ROW';
-		exports[1363] = 'ER_TRG_NO_SUCH_ROW_IN_TRG';
-		exports[1364] = 'ER_NO_DEFAULT_FOR_FIELD';
-		exports[1365] = 'ER_DIVISION_BY_ZERO';
-		exports[1366] = 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD';
-		exports[1367] = 'ER_ILLEGAL_VALUE_FOR_TYPE';
-		exports[1368] = 'ER_VIEW_NONUPD_CHECK';
-		exports[1369] = 'ER_VIEW_CHECK_FAILED';
-		exports[1370] = 'ER_PROCACCESS_DENIED_ERROR';
-		exports[1371] = 'ER_RELAY_LOG_FAIL';
-		exports[1372] = 'ER_PASSWD_LENGTH';
-		exports[1373] = 'ER_UNKNOWN_TARGET_BINLOG';
-		exports[1374] = 'ER_IO_ERR_LOG_INDEX_READ';
-		exports[1375] = 'ER_BINLOG_PURGE_PROHIBITED';
-		exports[1376] = 'ER_FSEEK_FAIL';
-		exports[1377] = 'ER_BINLOG_PURGE_FATAL_ERR';
-		exports[1378] = 'ER_LOG_IN_USE';
-		exports[1379] = 'ER_LOG_PURGE_UNKNOWN_ERR';
-		exports[1380] = 'ER_RELAY_LOG_INIT';
-		exports[1381] = 'ER_NO_BINARY_LOGGING';
-		exports[1382] = 'ER_RESERVED_SYNTAX';
-		exports[1383] = 'ER_WSAS_FAILED';
-		exports[1384] = 'ER_DIFF_GROUPS_PROC';
-		exports[1385] = 'ER_NO_GROUP_FOR_PROC';
-		exports[1386] = 'ER_ORDER_WITH_PROC';
-		exports[1387] = 'ER_LOGGING_PROHIBIT_CHANGING_OF';
-		exports[1388] = 'ER_NO_FILE_MAPPING';
-		exports[1389] = 'ER_WRONG_MAGIC';
-		exports[1390] = 'ER_PS_MANY_PARAM';
-		exports[1391] = 'ER_KEY_PART_0';
-		exports[1392] = 'ER_VIEW_CHECKSUM';
-		exports[1393] = 'ER_VIEW_MULTIUPDATE';
-		exports[1394] = 'ER_VIEW_NO_INSERT_FIELD_LIST';
-		exports[1395] = 'ER_VIEW_DELETE_MERGE_VIEW';
-		exports[1396] = 'ER_CANNOT_USER';
-		exports[1397] = 'ER_XAER_NOTA';
-		exports[1398] = 'ER_XAER_INVAL';
-		exports[1399] = 'ER_XAER_RMFAIL';
-		exports[1400] = 'ER_XAER_OUTSIDE';
-		exports[1401] = 'ER_XAER_RMERR';
-		exports[1402] = 'ER_XA_RBROLLBACK';
-		exports[1403] = 'ER_NONEXISTING_PROC_GRANT';
-		exports[1404] = 'ER_PROC_AUTO_GRANT_FAIL';
-		exports[1405] = 'ER_PROC_AUTO_REVOKE_FAIL';
-		exports[1406] = 'ER_DATA_TOO_LONG';
-		exports[1407] = 'ER_SP_BAD_SQLSTATE';
-		exports[1408] = 'ER_STARTUP';
-		exports[1409] = 'ER_LOAD_FROM_FIXED_SIZE_ROWS_TO_VAR';
-		exports[1410] = 'ER_CANT_CREATE_USER_WITH_GRANT';
-		exports[1411] = 'ER_WRONG_VALUE_FOR_TYPE';
-		exports[1412] = 'ER_TABLE_DEF_CHANGED';
-		exports[1413] = 'ER_SP_DUP_HANDLER';
-		exports[1414] = 'ER_SP_NOT_VAR_ARG';
-		exports[1415] = 'ER_SP_NO_RETSET';
-		exports[1416] = 'ER_CANT_CREATE_GEOMETRY_OBJECT';
-		exports[1417] = 'ER_FAILED_ROUTINE_BREAK_BINLOG';
-		exports[1418] = 'ER_BINLOG_UNSAFE_ROUTINE';
-		exports[1419] = 'ER_BINLOG_CREATE_ROUTINE_NEED_SUPER';
-		exports[1420] = 'ER_EXEC_STMT_WITH_OPEN_CURSOR';
-		exports[1421] = 'ER_STMT_HAS_NO_OPEN_CURSOR';
-		exports[1422] = 'ER_COMMIT_NOT_ALLOWED_IN_SF_OR_TRG';
-		exports[1423] = 'ER_NO_DEFAULT_FOR_VIEW_FIELD';
-		exports[1424] = 'ER_SP_NO_RECURSION';
-		exports[1425] = 'ER_TOO_BIG_SCALE';
-		exports[1426] = 'ER_TOO_BIG_PRECISION';
-		exports[1427] = 'ER_M_BIGGER_THAN_D';
-		exports[1428] = 'ER_WRONG_LOCK_OF_SYSTEM_TABLE';
-		exports[1429] = 'ER_CONNECT_TO_FOREIGN_DATA_SOURCE';
-		exports[1430] = 'ER_QUERY_ON_FOREIGN_DATA_SOURCE';
-		exports[1431] = 'ER_FOREIGN_DATA_SOURCE_DOESNT_EXIST';
-		exports[1432] = 'ER_FOREIGN_DATA_STRING_INVALID_CANT_CREATE';
-		exports[1433] = 'ER_FOREIGN_DATA_STRING_INVALID';
-		exports[1434] = 'ER_CANT_CREATE_FEDERATED_TABLE';
-		exports[1435] = 'ER_TRG_IN_WRONG_SCHEMA';
-		exports[1436] = 'ER_STACK_OVERRUN_NEED_MORE';
-		exports[1437] = 'ER_TOO_LONG_BODY';
-		exports[1438] = 'ER_WARN_CANT_DROP_DEFAULT_KEYCACHE';
-		exports[1439] = 'ER_TOO_BIG_DISPLAYWIDTH';
-		exports[1440] = 'ER_XAER_DUPID';
-		exports[1441] = 'ER_DATETIME_FUNCTION_OVERFLOW';
-		exports[1442] = 'ER_CANT_UPDATE_USED_TABLE_IN_SF_OR_TRG';
-		exports[1443] = 'ER_VIEW_PREVENT_UPDATE';
-		exports[1444] = 'ER_PS_NO_RECURSION';
-		exports[1445] = 'ER_SP_CANT_SET_AUTOCOMMIT';
-		exports[1446] = 'ER_MALFORMED_DEFINER';
-		exports[1447] = 'ER_VIEW_FRM_NO_USER';
-		exports[1448] = 'ER_VIEW_OTHER_USER';
-		exports[1449] = 'ER_NO_SUCH_USER';
-		exports[1450] = 'ER_FORBID_SCHEMA_CHANGE';
-		exports[1451] = 'ER_ROW_IS_REFERENCED_2';
-		exports[1452] = 'ER_NO_REFERENCED_ROW_2';
-		exports[1453] = 'ER_SP_BAD_VAR_SHADOW';
-		exports[1454] = 'ER_TRG_NO_DEFINER';
-		exports[1455] = 'ER_OLD_FILE_FORMAT';
-		exports[1456] = 'ER_SP_RECURSION_LIMIT';
-		exports[1457] = 'ER_SP_PROC_TABLE_CORRUPT';
-		exports[1458] = 'ER_SP_WRONG_NAME';
-		exports[1459] = 'ER_TABLE_NEEDS_UPGRADE';
-		exports[1460] = 'ER_SP_NO_AGGREGATE';
-		exports[1461] = 'ER_MAX_PREPARED_STMT_COUNT_REACHED';
-		exports[1462] = 'ER_VIEW_RECURSIVE';
-		exports[1463] = 'ER_NON_GROUPING_FIELD_USED';
-		exports[1464] = 'ER_TABLE_CANT_HANDLE_SPKEYS';
-		exports[1465] = 'ER_NO_TRIGGERS_ON_SYSTEM_SCHEMA';
-		exports[1466] = 'ER_REMOVED_SPACES';
-		exports[1467] = 'ER_AUTOINC_READ_FAILED';
-		exports[1468] = 'ER_USERNAME';
-		exports[1469] = 'ER_HOSTNAME';
-		exports[1470] = 'ER_WRONG_STRING_LENGTH';
-		exports[1471] = 'ER_NON_INSERTABLE_TABLE';
-		exports[1472] = 'ER_ADMIN_WRONG_MRG_TABLE';
-		exports[1473] = 'ER_TOO_HIGH_LEVEL_OF_NESTING_FOR_SELECT';
-		exports[1474] = 'ER_NAME_BECOMES_EMPTY';
-		exports[1475] = 'ER_AMBIGUOUS_FIELD_TERM';
-		exports[1476] = 'ER_FOREIGN_SERVER_EXISTS';
-		exports[1477] = 'ER_FOREIGN_SERVER_DOESNT_EXIST';
-		exports[1478] = 'ER_ILLEGAL_HA_CREATE_OPTION';
-		exports[1479] = 'ER_PARTITION_REQUIRES_VALUES_ERROR';
-		exports[1480] = 'ER_PARTITION_WRONG_VALUES_ERROR';
-		exports[1481] = 'ER_PARTITION_MAXVALUE_ERROR';
-		exports[1482] = 'ER_PARTITION_SUBPARTITION_ERROR';
-		exports[1483] = 'ER_PARTITION_SUBPART_MIX_ERROR';
-		exports[1484] = 'ER_PARTITION_WRONG_NO_PART_ERROR';
-		exports[1485] = 'ER_PARTITION_WRONG_NO_SUBPART_ERROR';
-		exports[1486] = 'ER_WRONG_EXPR_IN_PARTITION_FUNC_ERROR';
-		exports[1487] = 'ER_NO_CONST_EXPR_IN_RANGE_OR_LIST_ERROR';
-		exports[1488] = 'ER_FIELD_NOT_FOUND_PART_ERROR';
-		exports[1489] = 'ER_LIST_OF_FIELDS_ONLY_IN_HASH_ERROR';
-		exports[1490] = 'ER_INCONSISTENT_PARTITION_INFO_ERROR';
-		exports[1491] = 'ER_PARTITION_FUNC_NOT_ALLOWED_ERROR';
-		exports[1492] = 'ER_PARTITIONS_MUST_BE_DEFINED_ERROR';
-		exports[1493] = 'ER_RANGE_NOT_INCREASING_ERROR';
-		exports[1494] = 'ER_INCONSISTENT_TYPE_OF_FUNCTIONS_ERROR';
-		exports[1495] = 'ER_MULTIPLE_DEF_CONST_IN_LIST_PART_ERROR';
-		exports[1496] = 'ER_PARTITION_ENTRY_ERROR';
-		exports[1497] = 'ER_MIX_HANDLER_ERROR';
-		exports[1498] = 'ER_PARTITION_NOT_DEFINED_ERROR';
-		exports[1499] = 'ER_TOO_MANY_PARTITIONS_ERROR';
-		exports[1500] = 'ER_SUBPARTITION_ERROR';
-		exports[1501] = 'ER_CANT_CREATE_HANDLER_FILE';
-		exports[1502] = 'ER_BLOB_FIELD_IN_PART_FUNC_ERROR';
-		exports[1503] = 'ER_UNIQUE_KEY_NEED_ALL_FIELDS_IN_PF';
-		exports[1504] = 'ER_NO_PARTS_ERROR';
-		exports[1505] = 'ER_PARTITION_MGMT_ON_NONPARTITIONED';
-		exports[1506] = 'ER_FOREIGN_KEY_ON_PARTITIONED';
-		exports[1507] = 'ER_DROP_PARTITION_NON_EXISTENT';
-		exports[1508] = 'ER_DROP_LAST_PARTITION';
-		exports[1509] = 'ER_COALESCE_ONLY_ON_HASH_PARTITION';
-		exports[1510] = 'ER_REORG_HASH_ONLY_ON_SAME_NO';
-		exports[1511] = 'ER_REORG_NO_PARAM_ERROR';
-		exports[1512] = 'ER_ONLY_ON_RANGE_LIST_PARTITION';
-		exports[1513] = 'ER_ADD_PARTITION_SUBPART_ERROR';
-		exports[1514] = 'ER_ADD_PARTITION_NO_NEW_PARTITION';
-		exports[1515] = 'ER_COALESCE_PARTITION_NO_PARTITION';
-		exports[1516] = 'ER_REORG_PARTITION_NOT_EXIST';
-		exports[1517] = 'ER_SAME_NAME_PARTITION';
-		exports[1518] = 'ER_NO_BINLOG_ERROR';
-		exports[1519] = 'ER_CONSECUTIVE_REORG_PARTITIONS';
-		exports[1520] = 'ER_REORG_OUTSIDE_RANGE';
-		exports[1521] = 'ER_PARTITION_FUNCTION_FAILURE';
-		exports[1522] = 'ER_PART_STATE_ERROR';
-		exports[1523] = 'ER_LIMITED_PART_RANGE';
-		exports[1524] = 'ER_PLUGIN_IS_NOT_LOADED';
-		exports[1525] = 'ER_WRONG_VALUE';
-		exports[1526] = 'ER_NO_PARTITION_FOR_GIVEN_VALUE';
-		exports[1527] = 'ER_FILEGROUP_OPTION_ONLY_ONCE';
-		exports[1528] = 'ER_CREATE_FILEGROUP_FAILED';
-		exports[1529] = 'ER_DROP_FILEGROUP_FAILED';
-		exports[1530] = 'ER_TABLESPACE_AUTO_EXTEND_ERROR';
-		exports[1531] = 'ER_WRONG_SIZE_NUMBER';
-		exports[1532] = 'ER_SIZE_OVERFLOW_ERROR';
-		exports[1533] = 'ER_ALTER_FILEGROUP_FAILED';
-		exports[1534] = 'ER_BINLOG_ROW_LOGGING_FAILED';
-		exports[1535] = 'ER_BINLOG_ROW_WRONG_TABLE_DEF';
-		exports[1536] = 'ER_BINLOG_ROW_RBR_TO_SBR';
-		exports[1537] = 'ER_EVENT_ALREADY_EXISTS';
-		exports[1538] = 'ER_EVENT_STORE_FAILED';
-		exports[1539] = 'ER_EVENT_DOES_NOT_EXIST';
-		exports[1540] = 'ER_EVENT_CANT_ALTER';
-		exports[1541] = 'ER_EVENT_DROP_FAILED';
-		exports[1542] = 'ER_EVENT_INTERVAL_NOT_POSITIVE_OR_TOO_BIG';
-		exports[1543] = 'ER_EVENT_ENDS_BEFORE_STARTS';
-		exports[1544] = 'ER_EVENT_EXEC_TIME_IN_THE_PAST';
-		exports[1545] = 'ER_EVENT_OPEN_TABLE_FAILED';
-		exports[1546] = 'ER_EVENT_NEITHER_M_EXPR_NOR_M_AT';
-		exports[1547] = 'ER_COL_COUNT_DOESNT_MATCH_CORRUPTED';
-		exports[1548] = 'ER_CANNOT_LOAD_FROM_TABLE';
-		exports[1549] = 'ER_EVENT_CANNOT_DELETE';
-		exports[1550] = 'ER_EVENT_COMPILE_ERROR';
-		exports[1551] = 'ER_EVENT_SAME_NAME';
-		exports[1552] = 'ER_EVENT_DATA_TOO_LONG';
-		exports[1553] = 'ER_DROP_INDEX_FK';
-		exports[1554] = 'ER_WARN_DEPRECATED_SYNTAX_WITH_VER';
-		exports[1555] = 'ER_CANT_WRITE_LOCK_LOG_TABLE';
-		exports[1556] = 'ER_CANT_LOCK_LOG_TABLE';
-		exports[1557] = 'ER_FOREIGN_DUPLICATE_KEY';
-		exports[1558] = 'ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE';
-		exports[1559] = 'ER_TEMP_TABLE_PREVENTS_SWITCH_OUT_OF_RBR';
-		exports[1560] = 'ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_FORMAT';
-		exports[1561] = 'ER_NDB_CANT_SWITCH_BINLOG_FORMAT';
-		exports[1562] = 'ER_PARTITION_NO_TEMPORARY';
-		exports[1563] = 'ER_PARTITION_CONST_DOMAIN_ERROR';
-		exports[1564] = 'ER_PARTITION_FUNCTION_IS_NOT_ALLOWED';
-		exports[1565] = 'ER_DDL_LOG_ERROR';
-		exports[1566] = 'ER_NULL_IN_VALUES_LESS_THAN';
-		exports[1567] = 'ER_WRONG_PARTITION_NAME';
-		exports[1568] = 'ER_CANT_CHANGE_TX_CHARACTERISTICS';
-		exports[1569] = 'ER_DUP_ENTRY_AUTOINCREMENT_CASE';
-		exports[1570] = 'ER_EVENT_MODIFY_QUEUE_ERROR';
-		exports[1571] = 'ER_EVENT_SET_VAR_ERROR';
-		exports[1572] = 'ER_PARTITION_MERGE_ERROR';
-		exports[1573] = 'ER_CANT_ACTIVATE_LOG';
-		exports[1574] = 'ER_RBR_NOT_AVAILABLE';
-		exports[1575] = 'ER_BASE64_DECODE_ERROR';
-		exports[1576] = 'ER_EVENT_RECURSION_FORBIDDEN';
-		exports[1577] = 'ER_EVENTS_DB_ERROR';
-		exports[1578] = 'ER_ONLY_INTEGERS_ALLOWED';
-		exports[1579] = 'ER_UNSUPORTED_LOG_ENGINE';
-		exports[1580] = 'ER_BAD_LOG_STATEMENT';
-		exports[1581] = 'ER_CANT_RENAME_LOG_TABLE';
-		exports[1582] = 'ER_WRONG_PARAMCOUNT_TO_NATIVE_FCT';
-		exports[1583] = 'ER_WRONG_PARAMETERS_TO_NATIVE_FCT';
-		exports[1584] = 'ER_WRONG_PARAMETERS_TO_STORED_FCT';
-		exports[1585] = 'ER_NATIVE_FCT_NAME_COLLISION';
-		exports[1586] = 'ER_DUP_ENTRY_WITH_KEY_NAME';
-		exports[1587] = 'ER_BINLOG_PURGE_EMFILE';
-		exports[1588] = 'ER_EVENT_CANNOT_CREATE_IN_THE_PAST';
-		exports[1589] = 'ER_EVENT_CANNOT_ALTER_IN_THE_PAST';
-		exports[1590] = 'ER_SLAVE_INCIDENT';
-		exports[1591] = 'ER_NO_PARTITION_FOR_GIVEN_VALUE_SILENT';
-		exports[1592] = 'ER_BINLOG_UNSAFE_STATEMENT';
-		exports[1593] = 'ER_BINLOG_FATAL_ERROR';
-		exports[1594] = 'ER_SLAVE_RELAY_LOG_READ_FAILURE';
-		exports[1595] = 'ER_SLAVE_RELAY_LOG_WRITE_FAILURE';
-		exports[1596] = 'ER_SLAVE_CREATE_EVENT_FAILURE';
-		exports[1597] = 'ER_SLAVE_MASTER_COM_FAILURE';
-		exports[1598] = 'ER_BINLOG_LOGGING_IMPOSSIBLE';
-		exports[1599] = 'ER_VIEW_NO_CREATION_CTX';
-		exports[1600] = 'ER_VIEW_INVALID_CREATION_CTX';
-		exports[1601] = 'ER_SR_INVALID_CREATION_CTX';
-		exports[1602] = 'ER_TRG_CORRUPTED_FILE';
-		exports[1603] = 'ER_TRG_NO_CREATION_CTX';
-		exports[1604] = 'ER_TRG_INVALID_CREATION_CTX';
-		exports[1605] = 'ER_EVENT_INVALID_CREATION_CTX';
-		exports[1606] = 'ER_TRG_CANT_OPEN_TABLE';
-		exports[1607] = 'ER_CANT_CREATE_SROUTINE';
-		exports[1608] = 'ER_NEVER_USED';
-		exports[1609] = 'ER_NO_FORMAT_DESCRIPTION_EVENT_BEFORE_BINLOG_STATEMENT';
-		exports[1610] = 'ER_REPLICA_CORRUPT_EVENT';
-		exports[1611] = 'ER_LOAD_DATA_INVALID_COLUMN';
-		exports[1612] = 'ER_LOG_PURGE_NO_FILE';
-		exports[1613] = 'ER_XA_RBTIMEOUT';
-		exports[1614] = 'ER_XA_RBDEADLOCK';
-		exports[1615] = 'ER_NEED_REPREPARE';
-		exports[1616] = 'ER_DELAYED_NOT_SUPPORTED';
-		exports[1617] = 'WARN_NO_CONNECTION_METADATA';
-		exports[1618] = 'WARN_OPTION_IGNORED';
-		exports[1619] = 'ER_PLUGIN_DELETE_BUILTIN';
-		exports[1620] = 'WARN_PLUGIN_BUSY';
-		exports[1621] = 'ER_VARIABLE_IS_READONLY';
-		exports[1622] = 'ER_WARN_ENGINE_TRANSACTION_ROLLBACK';
-		exports[1623] = 'ER_SLAVE_HEARTBEAT_FAILURE';
-		exports[1624] = 'ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE';
-		exports[1625] = 'ER_NDB_REPLICATION_SCHEMA_ERROR';
-		exports[1626] = 'ER_CONFLICT_FN_PARSE_ERROR';
-		exports[1627] = 'ER_EXCEPTIONS_WRITE_ERROR';
-		exports[1628] = 'ER_TOO_LONG_TABLE_COMMENT';
-		exports[1629] = 'ER_TOO_LONG_FIELD_COMMENT';
-		exports[1630] = 'ER_FUNC_INEXISTENT_NAME_COLLISION';
-		exports[1631] = 'ER_DATABASE_NAME';
-		exports[1632] = 'ER_TABLE_NAME';
-		exports[1633] = 'ER_PARTITION_NAME';
-		exports[1634] = 'ER_SUBPARTITION_NAME';
-		exports[1635] = 'ER_TEMPORARY_NAME';
-		exports[1636] = 'ER_RENAMED_NAME';
-		exports[1637] = 'ER_TOO_MANY_CONCURRENT_TRXS';
-		exports[1638] = 'WARN_NON_ASCII_SEPARATOR_NOT_IMPLEMENTED';
-		exports[1639] = 'ER_DEBUG_SYNC_TIMEOUT';
-		exports[1640] = 'ER_DEBUG_SYNC_HIT_LIMIT';
-		exports[1641] = 'ER_DUP_SIGNAL_SET';
-		exports[1642] = 'ER_SIGNAL_WARN';
-		exports[1643] = 'ER_SIGNAL_NOT_FOUND';
-		exports[1644] = 'ER_SIGNAL_EXCEPTION';
-		exports[1645] = 'ER_RESIGNAL_WITHOUT_ACTIVE_HANDLER';
-		exports[1646] = 'ER_SIGNAL_BAD_CONDITION_TYPE';
-		exports[1647] = 'WARN_COND_ITEM_TRUNCATED';
-		exports[1648] = 'ER_COND_ITEM_TOO_LONG';
-		exports[1649] = 'ER_UNKNOWN_LOCALE';
-		exports[1650] = 'ER_REPLICA_IGNORE_SERVER_IDS';
-		exports[1651] = 'ER_QUERY_CACHE_DISABLED';
-		exports[1652] = 'ER_SAME_NAME_PARTITION_FIELD';
-		exports[1653] = 'ER_PARTITION_COLUMN_LIST_ERROR';
-		exports[1654] = 'ER_WRONG_TYPE_COLUMN_VALUE_ERROR';
-		exports[1655] = 'ER_TOO_MANY_PARTITION_FUNC_FIELDS_ERROR';
-		exports[1656] = 'ER_MAXVALUE_IN_VALUES_IN';
-		exports[1657] = 'ER_TOO_MANY_VALUES_ERROR';
-		exports[1658] = 'ER_ROW_SINGLE_PARTITION_FIELD_ERROR';
-		exports[1659] = 'ER_FIELD_TYPE_NOT_ALLOWED_AS_PARTITION_FIELD';
-		exports[1660] = 'ER_PARTITION_FIELDS_TOO_LONG';
-		exports[1661] = 'ER_BINLOG_ROW_ENGINE_AND_STMT_ENGINE';
-		exports[1662] = 'ER_BINLOG_ROW_MODE_AND_STMT_ENGINE';
-		exports[1663] = 'ER_BINLOG_UNSAFE_AND_STMT_ENGINE';
-		exports[1664] = 'ER_BINLOG_ROW_INJECTION_AND_STMT_ENGINE';
-		exports[1665] = 'ER_BINLOG_STMT_MODE_AND_ROW_ENGINE';
-		exports[1666] = 'ER_BINLOG_ROW_INJECTION_AND_STMT_MODE';
-		exports[1667] = 'ER_BINLOG_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE';
-		exports[1668] = 'ER_BINLOG_UNSAFE_LIMIT';
-		exports[1669] = 'ER_UNUSED4';
-		exports[1670] = 'ER_BINLOG_UNSAFE_SYSTEM_TABLE';
-		exports[1671] = 'ER_BINLOG_UNSAFE_AUTOINC_COLUMNS';
-		exports[1672] = 'ER_BINLOG_UNSAFE_UDF';
-		exports[1673] = 'ER_BINLOG_UNSAFE_SYSTEM_VARIABLE';
-		exports[1674] = 'ER_BINLOG_UNSAFE_SYSTEM_FUNCTION';
-		exports[1675] = 'ER_BINLOG_UNSAFE_NONTRANS_AFTER_TRANS';
-		exports[1676] = 'ER_MESSAGE_AND_STATEMENT';
-		exports[1677] = 'ER_SLAVE_CONVERSION_FAILED';
-		exports[1678] = 'ER_REPLICA_CANT_CREATE_CONVERSION';
-		exports[1679] = 'ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_FORMAT';
-		exports[1680] = 'ER_PATH_LENGTH';
-		exports[1681] = 'ER_WARN_DEPRECATED_SYNTAX_NO_REPLACEMENT';
-		exports[1682] = 'ER_WRONG_NATIVE_TABLE_STRUCTURE';
-		exports[1683] = 'ER_WRONG_PERFSCHEMA_USAGE';
-		exports[1684] = 'ER_WARN_I_S_SKIPPED_TABLE';
-		exports[1685] = 'ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_DIRECT';
-		exports[1686] = 'ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_DIRECT';
-		exports[1687] = 'ER_SPATIAL_MUST_HAVE_GEOM_COL';
-		exports[1688] = 'ER_TOO_LONG_INDEX_COMMENT';
-		exports[1689] = 'ER_LOCK_ABORTED';
-		exports[1690] = 'ER_DATA_OUT_OF_RANGE';
-		exports[1691] = 'ER_WRONG_SPVAR_TYPE_IN_LIMIT';
-		exports[1692] = 'ER_BINLOG_UNSAFE_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE';
-		exports[1693] = 'ER_BINLOG_UNSAFE_MIXED_STATEMENT';
-		exports[1694] = 'ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_SQL_LOG_BIN';
-		exports[1695] = 'ER_STORED_FUNCTION_PREVENTS_SWITCH_SQL_LOG_BIN';
-		exports[1696] = 'ER_FAILED_READ_FROM_PAR_FILE';
-		exports[1697] = 'ER_VALUES_IS_NOT_INT_TYPE_ERROR';
-		exports[1698] = 'ER_ACCESS_DENIED_NO_PASSWORD_ERROR';
-		exports[1699] = 'ER_SET_PASSWORD_AUTH_PLUGIN';
-		exports[1700] = 'ER_GRANT_PLUGIN_USER_EXISTS';
-		exports[1701] = 'ER_TRUNCATE_ILLEGAL_FK';
-		exports[1702] = 'ER_PLUGIN_IS_PERMANENT';
-		exports[1703] = 'ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE_MIN';
-		exports[1704] = 'ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE_MAX';
-		exports[1705] = 'ER_STMT_CACHE_FULL';
-		exports[1706] = 'ER_MULTI_UPDATE_KEY_CONFLICT';
-		exports[1707] = 'ER_TABLE_NEEDS_REBUILD';
-		exports[1708] = 'WARN_OPTION_BELOW_LIMIT';
-		exports[1709] = 'ER_INDEX_COLUMN_TOO_LONG';
-		exports[1710] = 'ER_ERROR_IN_TRIGGER_BODY';
-		exports[1711] = 'ER_ERROR_IN_UNKNOWN_TRIGGER_BODY';
-		exports[1712] = 'ER_INDEX_CORRUPT';
-		exports[1713] = 'ER_UNDO_RECORD_TOO_BIG';
-		exports[1714] = 'ER_BINLOG_UNSAFE_INSERT_IGNORE_SELECT';
-		exports[1715] = 'ER_BINLOG_UNSAFE_INSERT_SELECT_UPDATE';
-		exports[1716] = 'ER_BINLOG_UNSAFE_REPLACE_SELECT';
-		exports[1717] = 'ER_BINLOG_UNSAFE_CREATE_IGNORE_SELECT';
-		exports[1718] = 'ER_BINLOG_UNSAFE_CREATE_REPLACE_SELECT';
-		exports[1719] = 'ER_BINLOG_UNSAFE_UPDATE_IGNORE';
-		exports[1720] = 'ER_PLUGIN_NO_UNINSTALL';
-		exports[1721] = 'ER_PLUGIN_NO_INSTALL';
-		exports[1722] = 'ER_BINLOG_UNSAFE_WRITE_AUTOINC_SELECT';
-		exports[1723] = 'ER_BINLOG_UNSAFE_CREATE_SELECT_AUTOINC';
-		exports[1724] = 'ER_BINLOG_UNSAFE_INSERT_TWO_KEYS';
-		exports[1725] = 'ER_TABLE_IN_FK_CHECK';
-		exports[1726] = 'ER_UNSUPPORTED_ENGINE';
-		exports[1727] = 'ER_BINLOG_UNSAFE_AUTOINC_NOT_FIRST';
-		exports[1728] = 'ER_CANNOT_LOAD_FROM_TABLE_V2';
-		exports[1729] = 'ER_SOURCE_DELAY_VALUE_OUT_OF_RANGE';
-		exports[1730] = 'ER_ONLY_FD_AND_RBR_EVENTS_ALLOWED_IN_BINLOG_STATEMENT';
-		exports[1731] = 'ER_PARTITION_EXCHANGE_DIFFERENT_OPTION';
-		exports[1732] = 'ER_PARTITION_EXCHANGE_PART_TABLE';
-		exports[1733] = 'ER_PARTITION_EXCHANGE_TEMP_TABLE';
-		exports[1734] = 'ER_PARTITION_INSTEAD_OF_SUBPARTITION';
-		exports[1735] = 'ER_UNKNOWN_PARTITION';
-		exports[1736] = 'ER_TABLES_DIFFERENT_METADATA';
-		exports[1737] = 'ER_ROW_DOES_NOT_MATCH_PARTITION';
-		exports[1738] = 'ER_BINLOG_CACHE_SIZE_GREATER_THAN_MAX';
-		exports[1739] = 'ER_WARN_INDEX_NOT_APPLICABLE';
-		exports[1740] = 'ER_PARTITION_EXCHANGE_FOREIGN_KEY';
-		exports[1741] = 'ER_NO_SUCH_KEY_VALUE';
-		exports[1742] = 'ER_RPL_INFO_DATA_TOO_LONG';
-		exports[1743] = 'ER_NETWORK_READ_EVENT_CHECKSUM_FAILURE';
-		exports[1744] = 'ER_BINLOG_READ_EVENT_CHECKSUM_FAILURE';
-		exports[1745] = 'ER_BINLOG_STMT_CACHE_SIZE_GREATER_THAN_MAX';
-		exports[1746] = 'ER_CANT_UPDATE_TABLE_IN_CREATE_TABLE_SELECT';
-		exports[1747] = 'ER_PARTITION_CLAUSE_ON_NONPARTITIONED';
-		exports[1748] = 'ER_ROW_DOES_NOT_MATCH_GIVEN_PARTITION_SET';
-		exports[1749] = 'ER_NO_SUCH_PARTITION';
-		exports[1750] = 'ER_CHANGE_RPL_INFO_REPOSITORY_FAILURE';
-		exports[1751] = 'ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_CREATED_TEMP_TABLE';
-		exports[1752] = 'ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_DROPPED_TEMP_TABLE';
-		exports[1753] = 'ER_MTA_FEATURE_IS_NOT_SUPPORTED';
-		exports[1754] = 'ER_MTA_UPDATED_DBS_GREATER_MAX';
-		exports[1755] = 'ER_MTA_CANT_PARALLEL';
-		exports[1756] = 'ER_MTA_INCONSISTENT_DATA';
-		exports[1757] = 'ER_FULLTEXT_NOT_SUPPORTED_WITH_PARTITIONING';
-		exports[1758] = 'ER_DA_INVALID_CONDITION_NUMBER';
-		exports[1759] = 'ER_INSECURE_PLAIN_TEXT';
-		exports[1760] = 'ER_INSECURE_CHANGE_SOURCE';
-		exports[1761] = 'ER_FOREIGN_DUPLICATE_KEY_WITH_CHILD_INFO';
-		exports[1762] = 'ER_FOREIGN_DUPLICATE_KEY_WITHOUT_CHILD_INFO';
-		exports[1763] = 'ER_SQLTHREAD_WITH_SECURE_REPLICA';
-		exports[1764] = 'ER_TABLE_HAS_NO_FT';
-		exports[1765] = 'ER_VARIABLE_NOT_SETTABLE_IN_SF_OR_TRIGGER';
-		exports[1766] = 'ER_VARIABLE_NOT_SETTABLE_IN_TRANSACTION';
-		exports[1767] = 'ER_GTID_NEXT_IS_NOT_IN_GTID_NEXT_LIST';
-		exports[1768] = 'ER_CANT_CHANGE_GTID_NEXT_IN_TRANSACTION';
-		exports[1769] = 'ER_SET_STATEMENT_CANNOT_INVOKE_FUNCTION';
-		exports[1770] = 'ER_GTID_NEXT_CANT_BE_AUTOMATIC_IF_GTID_NEXT_LIST_IS_NON_NULL';
-		exports[1771] = 'ER_SKIPPING_LOGGED_TRANSACTION';
-		exports[1772] = 'ER_MALFORMED_GTID_SET_SPECIFICATION';
-		exports[1773] = 'ER_MALFORMED_GTID_SET_ENCODING';
-		exports[1774] = 'ER_MALFORMED_GTID_SPECIFICATION';
-		exports[1775] = 'ER_GNO_EXHAUSTED';
-		exports[1776] = 'ER_BAD_REPLICA_AUTO_POSITION';
-		exports[1777] = 'ER_AUTO_POSITION_REQUIRES_GTID_MODE_NOT_OFF';
-		exports[1778] = 'ER_CANT_DO_IMPLICIT_COMMIT_IN_TRX_WHEN_GTID_NEXT_IS_SET';
-		exports[1779] = 'ER_GTID_MODE_ON_REQUIRES_ENFORCE_GTID_CONSISTENCY_ON';
-		exports[1780] = 'ER_GTID_MODE_REQUIRES_BINLOG';
-		exports[1781] = 'ER_CANT_SET_GTID_NEXT_TO_GTID_WHEN_GTID_MODE_IS_OFF';
-		exports[1782] = 'ER_CANT_SET_GTID_NEXT_TO_ANONYMOUS_WHEN_GTID_MODE_IS_ON';
-		exports[1783] = 'ER_CANT_SET_GTID_NEXT_LIST_TO_NON_NULL_WHEN_GTID_MODE_IS_OFF';
-		exports[1784] = 'ER_FOUND_GTID_EVENT_WHEN_GTID_MODE_IS_OFF';
-		exports[1785] = 'ER_GTID_UNSAFE_NON_TRANSACTIONAL_TABLE';
-		exports[1786] = 'ER_GTID_UNSAFE_CREATE_SELECT';
-		exports[1787] = 'ER_GTID_UNSAFE_CREATE_DROP_TEMP_TABLE_IN_TRANSACTION';
-		exports[1788] = 'ER_GTID_MODE_CAN_ONLY_CHANGE_ONE_STEP_AT_A_TIME';
-		exports[1789] = 'ER_SOURCE_HAS_PURGED_REQUIRED_GTIDS';
-		exports[1790] = 'ER_CANT_SET_GTID_NEXT_WHEN_OWNING_GTID';
-		exports[1791] = 'ER_UNKNOWN_EXPLAIN_FORMAT';
-		exports[1792] = 'ER_CANT_EXECUTE_IN_READ_ONLY_TRANSACTION';
-		exports[1793] = 'ER_TOO_LONG_TABLE_PARTITION_COMMENT';
-		exports[1794] = 'ER_REPLICA_CONFIGURATION';
-		exports[1795] = 'ER_INNODB_FT_LIMIT';
-		exports[1796] = 'ER_INNODB_NO_FT_TEMP_TABLE';
-		exports[1797] = 'ER_INNODB_FT_WRONG_DOCID_COLUMN';
-		exports[1798] = 'ER_INNODB_FT_WRONG_DOCID_INDEX';
-		exports[1799] = 'ER_INNODB_ONLINE_LOG_TOO_BIG';
-		exports[1800] = 'ER_UNKNOWN_ALTER_ALGORITHM';
-		exports[1801] = 'ER_UNKNOWN_ALTER_LOCK';
-		exports[1802] = 'ER_MTA_CHANGE_SOURCE_CANT_RUN_WITH_GAPS';
-		exports[1803] = 'ER_MTA_RECOVERY_FAILURE';
-		exports[1804] = 'ER_MTA_RESET_WORKERS';
-		exports[1805] = 'ER_COL_COUNT_DOESNT_MATCH_CORRUPTED_V2';
-		exports[1806] = 'ER_REPLICA_SILENT_RETRY_TRANSACTION';
-		exports[1807] = 'ER_DISCARD_FK_CHECKS_RUNNING';
-		exports[1808] = 'ER_TABLE_SCHEMA_MISMATCH';
-		exports[1809] = 'ER_TABLE_IN_SYSTEM_TABLESPACE';
-		exports[1810] = 'ER_IO_READ_ERROR';
-		exports[1811] = 'ER_IO_WRITE_ERROR';
-		exports[1812] = 'ER_TABLESPACE_MISSING';
-		exports[1813] = 'ER_TABLESPACE_EXISTS';
-		exports[1814] = 'ER_TABLESPACE_DISCARDED';
-		exports[1815] = 'ER_INTERNAL_ERROR';
-		exports[1816] = 'ER_INNODB_IMPORT_ERROR';
-		exports[1817] = 'ER_INNODB_INDEX_CORRUPT';
-		exports[1818] = 'ER_INVALID_YEAR_COLUMN_LENGTH';
-		exports[1819] = 'ER_NOT_VALID_PASSWORD';
-		exports[1820] = 'ER_MUST_CHANGE_PASSWORD';
-		exports[1821] = 'ER_FK_NO_INDEX_CHILD';
-		exports[1822] = 'ER_FK_NO_INDEX_PARENT';
-		exports[1823] = 'ER_FK_FAIL_ADD_SYSTEM';
-		exports[1824] = 'ER_FK_CANNOT_OPEN_PARENT';
-		exports[1825] = 'ER_FK_INCORRECT_OPTION';
-		exports[1826] = 'ER_FK_DUP_NAME';
-		exports[1827] = 'ER_PASSWORD_FORMAT';
-		exports[1828] = 'ER_FK_COLUMN_CANNOT_DROP';
-		exports[1829] = 'ER_FK_COLUMN_CANNOT_DROP_CHILD';
-		exports[1830] = 'ER_FK_COLUMN_NOT_NULL';
-		exports[1831] = 'ER_DUP_INDEX';
-		exports[1832] = 'ER_FK_COLUMN_CANNOT_CHANGE';
-		exports[1833] = 'ER_FK_COLUMN_CANNOT_CHANGE_CHILD';
-		exports[1834] = 'ER_UNUSED5';
-		exports[1835] = 'ER_MALFORMED_PACKET';
-		exports[1836] = 'ER_READ_ONLY_MODE';
-		exports[1837] = 'ER_GTID_NEXT_TYPE_UNDEFINED_GTID';
-		exports[1838] = 'ER_VARIABLE_NOT_SETTABLE_IN_SP';
-		exports[1839] = 'ER_CANT_SET_GTID_PURGED_WHEN_GTID_MODE_IS_OFF';
-		exports[1840] = 'ER_CANT_SET_GTID_PURGED_WHEN_GTID_EXECUTED_IS_NOT_EMPTY';
-		exports[1841] = 'ER_CANT_SET_GTID_PURGED_WHEN_OWNED_GTIDS_IS_NOT_EMPTY';
-		exports[1842] = 'ER_GTID_PURGED_WAS_CHANGED';
-		exports[1843] = 'ER_GTID_EXECUTED_WAS_CHANGED';
-		exports[1844] = 'ER_BINLOG_STMT_MODE_AND_NO_REPL_TABLES';
-		exports[1845] = 'ER_ALTER_OPERATION_NOT_SUPPORTED';
-		exports[1846] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON';
-		exports[1847] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COPY';
-		exports[1848] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_PARTITION';
-		exports[1849] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_RENAME';
-		exports[1850] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE';
-		exports[1851] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_CHECK';
-		exports[1852] = 'ER_UNUSED6';
-		exports[1853] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOPK';
-		exports[1854] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_AUTOINC';
-		exports[1855] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_HIDDEN_FTS';
-		exports[1856] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_CHANGE_FTS';
-		exports[1857] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FTS';
-		exports[1858] = 'ER_SQL_REPLICA_SKIP_COUNTER_NOT_SETTABLE_IN_GTID_MODE';
-		exports[1859] = 'ER_DUP_UNKNOWN_IN_INDEX';
-		exports[1860] = 'ER_IDENT_CAUSES_TOO_LONG_PATH';
-		exports[1861] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOT_NULL';
-		exports[1862] = 'ER_MUST_CHANGE_PASSWORD_LOGIN';
-		exports[1863] = 'ER_ROW_IN_WRONG_PARTITION';
-		exports[1864] = 'ER_MTA_EVENT_BIGGER_PENDING_JOBS_SIZE_MAX';
-		exports[1865] = 'ER_INNODB_NO_FT_USES_PARSER';
-		exports[1866] = 'ER_BINLOG_LOGICAL_CORRUPTION';
-		exports[1867] = 'ER_WARN_PURGE_LOG_IN_USE';
-		exports[1868] = 'ER_WARN_PURGE_LOG_IS_ACTIVE';
-		exports[1869] = 'ER_AUTO_INCREMENT_CONFLICT';
-		exports[1870] = 'WARN_ON_BLOCKHOLE_IN_RBR';
-		exports[1871] = 'ER_REPLICA_CM_INIT_REPOSITORY';
-		exports[1872] = 'ER_REPLICA_AM_INIT_REPOSITORY';
-		exports[1873] = 'ER_ACCESS_DENIED_CHANGE_USER_ERROR';
-		exports[1874] = 'ER_INNODB_READ_ONLY';
-		exports[1875] = 'ER_STOP_REPLICA_SQL_THREAD_TIMEOUT';
-		exports[1876] = 'ER_STOP_REPLICA_IO_THREAD_TIMEOUT';
-		exports[1877] = 'ER_TABLE_CORRUPT';
-		exports[1878] = 'ER_TEMP_FILE_WRITE_FAILURE';
-		exports[1879] = 'ER_INNODB_FT_AUX_NOT_HEX_ID';
-		exports[1880] = 'ER_OLD_TEMPORALS_UPGRADED';
-		exports[1881] = 'ER_INNODB_FORCED_RECOVERY';
-		exports[1882] = 'ER_AES_INVALID_IV';
-		exports[1883] = 'ER_PLUGIN_CANNOT_BE_UNINSTALLED';
-		exports[1884] = 'ER_GTID_UNSAFE_BINLOG_SPLITTABLE_STATEMENT_AND_ASSIGNED_GTID';
-		exports[1885] = 'ER_REPLICA_HAS_MORE_GTIDS_THAN_SOURCE';
-		exports[1886] = 'ER_MISSING_KEY';
-		exports[1887] = 'WARN_NAMED_PIPE_ACCESS_EVERYONE';
-		exports[3000] = 'ER_FILE_CORRUPT';
-		exports[3001] = 'ER_ERROR_ON_SOURCE';
-		exports[3002] = 'ER_INCONSISTENT_ERROR';
-		exports[3003] = 'ER_STORAGE_ENGINE_NOT_LOADED';
-		exports[3004] = 'ER_GET_STACKED_DA_WITHOUT_ACTIVE_HANDLER';
-		exports[3005] = 'ER_WARN_LEGACY_SYNTAX_CONVERTED';
-		exports[3006] = 'ER_BINLOG_UNSAFE_FULLTEXT_PLUGIN';
-		exports[3007] = 'ER_CANNOT_DISCARD_TEMPORARY_TABLE';
-		exports[3008] = 'ER_FK_DEPTH_EXCEEDED';
-		exports[3009] = 'ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE_V2';
-		exports[3010] = 'ER_WARN_TRIGGER_DOESNT_HAVE_CREATED';
-		exports[3011] = 'ER_REFERENCED_TRG_DOES_NOT_EXIST';
-		exports[3012] = 'ER_EXPLAIN_NOT_SUPPORTED';
-		exports[3013] = 'ER_INVALID_FIELD_SIZE';
-		exports[3014] = 'ER_MISSING_HA_CREATE_OPTION';
-		exports[3015] = 'ER_ENGINE_OUT_OF_MEMORY';
-		exports[3016] = 'ER_PASSWORD_EXPIRE_ANONYMOUS_USER';
-		exports[3017] = 'ER_REPLICA_SQL_THREAD_MUST_STOP';
-		exports[3018] = 'ER_NO_FT_MATERIALIZED_SUBQUERY';
-		exports[3019] = 'ER_INNODB_UNDO_LOG_FULL';
-		exports[3020] = 'ER_INVALID_ARGUMENT_FOR_LOGARITHM';
-		exports[3021] = 'ER_REPLICA_CHANNEL_IO_THREAD_MUST_STOP';
-		exports[3022] = 'ER_WARN_OPEN_TEMP_TABLES_MUST_BE_ZERO';
-		exports[3023] = 'ER_WARN_ONLY_SOURCE_LOG_FILE_NO_POS';
-		exports[3024] = 'ER_QUERY_TIMEOUT';
-		exports[3025] = 'ER_NON_RO_SELECT_DISABLE_TIMER';
-		exports[3026] = 'ER_DUP_LIST_ENTRY';
-		exports[3027] = 'ER_SQL_MODE_NO_EFFECT';
-		exports[3028] = 'ER_AGGREGATE_ORDER_FOR_UNION';
-		exports[3029] = 'ER_AGGREGATE_ORDER_NON_AGG_QUERY';
-		exports[3030] = 'ER_REPLICA_WORKER_STOPPED_PREVIOUS_THD_ERROR';
-		exports[3031] = 'ER_DONT_SUPPORT_REPLICA_PRESERVE_COMMIT_ORDER';
-		exports[3032] = 'ER_SERVER_OFFLINE_MODE';
-		exports[3033] = 'ER_GIS_DIFFERENT_SRIDS';
-		exports[3034] = 'ER_GIS_UNSUPPORTED_ARGUMENT';
-		exports[3035] = 'ER_GIS_UNKNOWN_ERROR';
-		exports[3036] = 'ER_GIS_UNKNOWN_EXCEPTION';
-		exports[3037] = 'ER_GIS_INVALID_DATA';
-		exports[3038] = 'ER_BOOST_GEOMETRY_EMPTY_INPUT_EXCEPTION';
-		exports[3039] = 'ER_BOOST_GEOMETRY_CENTROID_EXCEPTION';
-		exports[3040] = 'ER_BOOST_GEOMETRY_OVERLAY_INVALID_INPUT_EXCEPTION';
-		exports[3041] = 'ER_BOOST_GEOMETRY_TURN_INFO_EXCEPTION';
-		exports[3042] = 'ER_BOOST_GEOMETRY_SELF_INTERSECTION_POINT_EXCEPTION';
-		exports[3043] = 'ER_BOOST_GEOMETRY_UNKNOWN_EXCEPTION';
-		exports[3044] = 'ER_STD_BAD_ALLOC_ERROR';
-		exports[3045] = 'ER_STD_DOMAIN_ERROR';
-		exports[3046] = 'ER_STD_LENGTH_ERROR';
-		exports[3047] = 'ER_STD_INVALID_ARGUMENT';
-		exports[3048] = 'ER_STD_OUT_OF_RANGE_ERROR';
-		exports[3049] = 'ER_STD_OVERFLOW_ERROR';
-		exports[3050] = 'ER_STD_RANGE_ERROR';
-		exports[3051] = 'ER_STD_UNDERFLOW_ERROR';
-		exports[3052] = 'ER_STD_LOGIC_ERROR';
-		exports[3053] = 'ER_STD_RUNTIME_ERROR';
-		exports[3054] = 'ER_STD_UNKNOWN_EXCEPTION';
-		exports[3055] = 'ER_GIS_DATA_WRONG_ENDIANESS';
-		exports[3056] = 'ER_CHANGE_SOURCE_PASSWORD_LENGTH';
-		exports[3057] = 'ER_USER_LOCK_WRONG_NAME';
-		exports[3058] = 'ER_USER_LOCK_DEADLOCK';
-		exports[3059] = 'ER_REPLACE_INACCESSIBLE_ROWS';
-		exports[3060] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_GIS';
-		exports[3061] = 'ER_ILLEGAL_USER_VAR';
-		exports[3062] = 'ER_GTID_MODE_OFF';
-		exports[3063] = 'ER_UNSUPPORTED_BY_REPLICATION_THREAD';
-		exports[3064] = 'ER_INCORRECT_TYPE';
-		exports[3065] = 'ER_FIELD_IN_ORDER_NOT_SELECT';
-		exports[3066] = 'ER_AGGREGATE_IN_ORDER_NOT_SELECT';
-		exports[3067] = 'ER_INVALID_RPL_WILD_TABLE_FILTER_PATTERN';
-		exports[3068] = 'ER_NET_OK_PACKET_TOO_LARGE';
-		exports[3069] = 'ER_INVALID_JSON_DATA';
-		exports[3070] = 'ER_INVALID_GEOJSON_MISSING_MEMBER';
-		exports[3071] = 'ER_INVALID_GEOJSON_WRONG_TYPE';
-		exports[3072] = 'ER_INVALID_GEOJSON_UNSPECIFIED';
-		exports[3073] = 'ER_DIMENSION_UNSUPPORTED';
-		exports[3074] = 'ER_REPLICA_CHANNEL_DOES_NOT_EXIST';
-		exports[3075] = 'ER_SLAVE_MULTIPLE_CHANNELS_HOST_PORT';
-		exports[3076] = 'ER_REPLICA_CHANNEL_NAME_INVALID_OR_TOO_LONG';
-		exports[3077] = 'ER_REPLICA_NEW_CHANNEL_WRONG_REPOSITORY';
-		exports[3078] = 'ER_SLAVE_CHANNEL_DELETE';
-		exports[3079] = 'ER_REPLICA_MULTIPLE_CHANNELS_CMD';
-		exports[3080] = 'ER_REPLICA_MAX_CHANNELS_EXCEEDED';
-		exports[3081] = 'ER_REPLICA_CHANNEL_MUST_STOP';
-		exports[3082] = 'ER_REPLICA_CHANNEL_NOT_RUNNING';
-		exports[3083] = 'ER_REPLICA_CHANNEL_WAS_RUNNING';
-		exports[3084] = 'ER_REPLICA_CHANNEL_WAS_NOT_RUNNING';
-		exports[3085] = 'ER_REPLICA_CHANNEL_SQL_THREAD_MUST_STOP';
-		exports[3086] = 'ER_REPLICA_CHANNEL_SQL_SKIP_COUNTER';
-		exports[3087] = 'ER_WRONG_FIELD_WITH_GROUP_V2';
-		exports[3088] = 'ER_MIX_OF_GROUP_FUNC_AND_FIELDS_V2';
-		exports[3089] = 'ER_WARN_DEPRECATED_SYSVAR_UPDATE';
-		exports[3090] = 'ER_WARN_DEPRECATED_SQLMODE';
-		exports[3091] = 'ER_CANNOT_LOG_PARTIAL_DROP_DATABASE_WITH_GTID';
-		exports[3092] = 'ER_GROUP_REPLICATION_CONFIGURATION';
-		exports[3093] = 'ER_GROUP_REPLICATION_RUNNING';
-		exports[3094] = 'ER_GROUP_REPLICATION_APPLIER_INIT_ERROR';
-		exports[3095] = 'ER_GROUP_REPLICATION_STOP_APPLIER_THREAD_TIMEOUT';
-		exports[3096] = 'ER_GROUP_REPLICATION_COMMUNICATION_LAYER_SESSION_ERROR';
-		exports[3097] = 'ER_GROUP_REPLICATION_COMMUNICATION_LAYER_JOIN_ERROR';
-		exports[3098] = 'ER_BEFORE_DML_VALIDATION_ERROR';
-		exports[3099] = 'ER_PREVENTS_VARIABLE_WITHOUT_RBR';
-		exports[3100] = 'ER_RUN_HOOK_ERROR';
-		exports[3101] = 'ER_TRANSACTION_ROLLBACK_DURING_COMMIT';
-		exports[3102] = 'ER_GENERATED_COLUMN_FUNCTION_IS_NOT_ALLOWED';
-		exports[3103] = 'ER_UNSUPPORTED_ALTER_INPLACE_ON_VIRTUAL_COLUMN';
-		exports[3104] = 'ER_WRONG_FK_OPTION_FOR_GENERATED_COLUMN';
-		exports[3105] = 'ER_NON_DEFAULT_VALUE_FOR_GENERATED_COLUMN';
-		exports[3106] = 'ER_UNSUPPORTED_ACTION_ON_GENERATED_COLUMN';
-		exports[3107] = 'ER_GENERATED_COLUMN_NON_PRIOR';
-		exports[3108] = 'ER_DEPENDENT_BY_GENERATED_COLUMN';
-		exports[3109] = 'ER_GENERATED_COLUMN_REF_AUTO_INC';
-		exports[3110] = 'ER_FEATURE_NOT_AVAILABLE';
-		exports[3111] = 'ER_CANT_SET_GTID_MODE';
-		exports[3112] = 'ER_CANT_USE_AUTO_POSITION_WITH_GTID_MODE_OFF';
-		exports[3113] = 'ER_CANT_REPLICATE_ANONYMOUS_WITH_AUTO_POSITION';
-		exports[3114] = 'ER_CANT_REPLICATE_ANONYMOUS_WITH_GTID_MODE_ON';
-		exports[3115] = 'ER_CANT_REPLICATE_GTID_WITH_GTID_MODE_OFF';
-		exports[3116] =
+		exports$1[1] = 'EE_CANTCREATEFILE';
+		exports$1[2] = 'EE_READ';
+		exports$1[3] = 'EE_WRITE';
+		exports$1[4] = 'EE_BADCLOSE';
+		exports$1[5] = 'EE_OUTOFMEMORY';
+		exports$1[6] = 'EE_DELETE';
+		exports$1[7] = 'EE_LINK';
+		exports$1[9] = 'EE_EOFERR';
+		exports$1[10] = 'EE_CANTLOCK';
+		exports$1[11] = 'EE_CANTUNLOCK';
+		exports$1[12] = 'EE_DIR';
+		exports$1[13] = 'EE_STAT';
+		exports$1[14] = 'EE_CANT_CHSIZE';
+		exports$1[15] = 'EE_CANT_OPEN_STREAM';
+		exports$1[16] = 'EE_GETWD';
+		exports$1[17] = 'EE_SETWD';
+		exports$1[18] = 'EE_LINK_WARNING';
+		exports$1[19] = 'EE_OPEN_WARNING';
+		exports$1[20] = 'EE_DISK_FULL';
+		exports$1[21] = 'EE_CANT_MKDIR';
+		exports$1[22] = 'EE_UNKNOWN_CHARSET';
+		exports$1[23] = 'EE_OUT_OF_FILERESOURCES';
+		exports$1[24] = 'EE_CANT_READLINK';
+		exports$1[25] = 'EE_CANT_SYMLINK';
+		exports$1[26] = 'EE_REALPATH';
+		exports$1[27] = 'EE_SYNC';
+		exports$1[28] = 'EE_UNKNOWN_COLLATION';
+		exports$1[29] = 'EE_FILENOTFOUND';
+		exports$1[30] = 'EE_FILE_NOT_CLOSED';
+		exports$1[31] = 'EE_CHANGE_OWNERSHIP';
+		exports$1[32] = 'EE_CHANGE_PERMISSIONS';
+		exports$1[33] = 'EE_CANT_SEEK';
+		exports$1[34] = 'EE_CAPACITY_EXCEEDED';
+		exports$1[35] = 'EE_DISK_FULL_WITH_RETRY_MSG';
+		exports$1[36] = 'EE_FAILED_TO_CREATE_TIMER';
+		exports$1[37] = 'EE_FAILED_TO_DELETE_TIMER';
+		exports$1[38] = 'EE_FAILED_TO_CREATE_TIMER_QUEUE';
+		exports$1[39] = 'EE_FAILED_TO_START_TIMER_NOTIFY_THREAD';
+		exports$1[40] = 'EE_FAILED_TO_CREATE_TIMER_NOTIFY_THREAD_INTERRUPT_EVENT';
+		exports$1[41] = 'EE_EXITING_TIMER_NOTIFY_THREAD';
+		exports$1[42] = 'EE_WIN_LIBRARY_LOAD_FAILED';
+		exports$1[43] = 'EE_WIN_RUN_TIME_ERROR_CHECK';
+		exports$1[44] = 'EE_FAILED_TO_DETERMINE_LARGE_PAGE_SIZE';
+		exports$1[45] = 'EE_FAILED_TO_KILL_ALL_THREADS';
+		exports$1[46] = 'EE_FAILED_TO_CREATE_IO_COMPLETION_PORT';
+		exports$1[47] = 'EE_FAILED_TO_OPEN_DEFAULTS_FILE';
+		exports$1[48] = 'EE_FAILED_TO_HANDLE_DEFAULTS_FILE';
+		exports$1[49] = 'EE_WRONG_DIRECTIVE_IN_CONFIG_FILE';
+		exports$1[50] = 'EE_SKIPPING_DIRECTIVE_DUE_TO_MAX_INCLUDE_RECURSION';
+		exports$1[51] = 'EE_INCORRECT_GRP_DEFINITION_IN_CONFIG_FILE';
+		exports$1[52] = 'EE_OPTION_WITHOUT_GRP_IN_CONFIG_FILE';
+		exports$1[53] = 'EE_CONFIG_FILE_PERMISSION_ERROR';
+		exports$1[54] = 'EE_IGNORE_WORLD_WRITABLE_CONFIG_FILE';
+		exports$1[55] = 'EE_USING_DISABLED_OPTION';
+		exports$1[56] = 'EE_USING_DISABLED_SHORT_OPTION';
+		exports$1[57] = 'EE_USING_PASSWORD_ON_CLI_IS_INSECURE';
+		exports$1[58] = 'EE_UNKNOWN_SUFFIX_FOR_VARIABLE';
+		exports$1[59] = 'EE_SSL_ERROR_FROM_FILE';
+		exports$1[60] = 'EE_SSL_ERROR';
+		exports$1[61] = 'EE_NET_SEND_ERROR_IN_BOOTSTRAP';
+		exports$1[62] = 'EE_PACKETS_OUT_OF_ORDER';
+		exports$1[63] = 'EE_UNKNOWN_PROTOCOL_OPTION';
+		exports$1[64] = 'EE_FAILED_TO_LOCATE_SERVER_PUBLIC_KEY';
+		exports$1[65] = 'EE_PUBLIC_KEY_NOT_IN_PEM_FORMAT';
+		exports$1[66] = 'EE_DEBUG_INFO';
+		exports$1[67] = 'EE_UNKNOWN_VARIABLE';
+		exports$1[68] = 'EE_UNKNOWN_OPTION';
+		exports$1[69] = 'EE_UNKNOWN_SHORT_OPTION';
+		exports$1[70] = 'EE_OPTION_WITHOUT_ARGUMENT';
+		exports$1[71] = 'EE_OPTION_REQUIRES_ARGUMENT';
+		exports$1[72] = 'EE_SHORT_OPTION_REQUIRES_ARGUMENT';
+		exports$1[73] = 'EE_OPTION_IGNORED_DUE_TO_INVALID_VALUE';
+		exports$1[74] = 'EE_OPTION_WITH_EMPTY_VALUE';
+		exports$1[75] = 'EE_FAILED_TO_ASSIGN_MAX_VALUE_TO_OPTION';
+		exports$1[76] = 'EE_INCORRECT_BOOLEAN_VALUE_FOR_OPTION';
+		exports$1[77] = 'EE_FAILED_TO_SET_OPTION_VALUE';
+		exports$1[78] = 'EE_INCORRECT_INT_VALUE_FOR_OPTION';
+		exports$1[79] = 'EE_INCORRECT_UINT_VALUE_FOR_OPTION';
+		exports$1[80] = 'EE_ADJUSTED_SIGNED_VALUE_FOR_OPTION';
+		exports$1[81] = 'EE_ADJUSTED_UNSIGNED_VALUE_FOR_OPTION';
+		exports$1[82] = 'EE_ADJUSTED_ULONGLONG_VALUE_FOR_OPTION';
+		exports$1[83] = 'EE_ADJUSTED_DOUBLE_VALUE_FOR_OPTION';
+		exports$1[84] = 'EE_INVALID_DECIMAL_VALUE_FOR_OPTION';
+		exports$1[85] = 'EE_COLLATION_PARSER_ERROR';
+		exports$1[86] = 'EE_FAILED_TO_RESET_BEFORE_PRIMARY_IGNORABLE_CHAR';
+		exports$1[87] = 'EE_FAILED_TO_RESET_BEFORE_TERTIARY_IGNORABLE_CHAR';
+		exports$1[88] = 'EE_SHIFT_CHAR_OUT_OF_RANGE';
+		exports$1[89] = 'EE_RESET_CHAR_OUT_OF_RANGE';
+		exports$1[90] = 'EE_UNKNOWN_LDML_TAG';
+		exports$1[91] = 'EE_FAILED_TO_RESET_BEFORE_SECONDARY_IGNORABLE_CHAR';
+		exports$1[92] = 'EE_FAILED_PROCESSING_DIRECTIVE';
+		exports$1[93] = 'EE_PTHREAD_KILL_FAILED';
+		exports$1[120] = 'HA_ERR_KEY_NOT_FOUND';
+		exports$1[121] = 'HA_ERR_FOUND_DUPP_KEY';
+		exports$1[122] = 'HA_ERR_INTERNAL_ERROR';
+		exports$1[123] = 'HA_ERR_RECORD_CHANGED';
+		exports$1[124] = 'HA_ERR_WRONG_INDEX';
+		exports$1[125] = 'HA_ERR_ROLLED_BACK';
+		exports$1[126] = 'HA_ERR_CRASHED';
+		exports$1[127] = 'HA_ERR_WRONG_IN_RECORD';
+		exports$1[128] = 'HA_ERR_OUT_OF_MEM';
+		exports$1[130] = 'HA_ERR_NOT_A_TABLE';
+		exports$1[131] = 'HA_ERR_WRONG_COMMAND';
+		exports$1[132] = 'HA_ERR_OLD_FILE';
+		exports$1[133] = 'HA_ERR_NO_ACTIVE_RECORD';
+		exports$1[134] = 'HA_ERR_RECORD_DELETED';
+		exports$1[135] = 'HA_ERR_RECORD_FILE_FULL';
+		exports$1[136] = 'HA_ERR_INDEX_FILE_FULL';
+		exports$1[137] = 'HA_ERR_END_OF_FILE';
+		exports$1[138] = 'HA_ERR_UNSUPPORTED';
+		exports$1[139] = 'HA_ERR_TOO_BIG_ROW';
+		exports$1[140] = 'HA_WRONG_CREATE_OPTION';
+		exports$1[141] = 'HA_ERR_FOUND_DUPP_UNIQUE';
+		exports$1[142] = 'HA_ERR_UNKNOWN_CHARSET';
+		exports$1[143] = 'HA_ERR_WRONG_MRG_TABLE_DEF';
+		exports$1[144] = 'HA_ERR_CRASHED_ON_REPAIR';
+		exports$1[145] = 'HA_ERR_CRASHED_ON_USAGE';
+		exports$1[146] = 'HA_ERR_LOCK_WAIT_TIMEOUT';
+		exports$1[147] = 'HA_ERR_LOCK_TABLE_FULL';
+		exports$1[148] = 'HA_ERR_READ_ONLY_TRANSACTION';
+		exports$1[149] = 'HA_ERR_LOCK_DEADLOCK';
+		exports$1[150] = 'HA_ERR_CANNOT_ADD_FOREIGN';
+		exports$1[151] = 'HA_ERR_NO_REFERENCED_ROW';
+		exports$1[152] = 'HA_ERR_ROW_IS_REFERENCED';
+		exports$1[153] = 'HA_ERR_NO_SAVEPOINT';
+		exports$1[154] = 'HA_ERR_NON_UNIQUE_BLOCK_SIZE';
+		exports$1[155] = 'HA_ERR_NO_SUCH_TABLE';
+		exports$1[156] = 'HA_ERR_TABLE_EXIST';
+		exports$1[157] = 'HA_ERR_NO_CONNECTION';
+		exports$1[158] = 'HA_ERR_NULL_IN_SPATIAL';
+		exports$1[159] = 'HA_ERR_TABLE_DEF_CHANGED';
+		exports$1[160] = 'HA_ERR_NO_PARTITION_FOUND';
+		exports$1[161] = 'HA_ERR_RBR_LOGGING_FAILED';
+		exports$1[162] = 'HA_ERR_DROP_INDEX_FK';
+		exports$1[163] = 'HA_ERR_FOREIGN_DUPLICATE_KEY';
+		exports$1[164] = 'HA_ERR_TABLE_NEEDS_UPGRADE';
+		exports$1[165] = 'HA_ERR_TABLE_READONLY';
+		exports$1[166] = 'HA_ERR_AUTOINC_READ_FAILED';
+		exports$1[167] = 'HA_ERR_AUTOINC_ERANGE';
+		exports$1[168] = 'HA_ERR_GENERIC';
+		exports$1[169] = 'HA_ERR_RECORD_IS_THE_SAME';
+		exports$1[170] = 'HA_ERR_LOGGING_IMPOSSIBLE';
+		exports$1[171] = 'HA_ERR_CORRUPT_EVENT';
+		exports$1[172] = 'HA_ERR_NEW_FILE';
+		exports$1[173] = 'HA_ERR_ROWS_EVENT_APPLY';
+		exports$1[174] = 'HA_ERR_INITIALIZATION';
+		exports$1[175] = 'HA_ERR_FILE_TOO_SHORT';
+		exports$1[176] = 'HA_ERR_WRONG_CRC';
+		exports$1[177] = 'HA_ERR_TOO_MANY_CONCURRENT_TRXS';
+		exports$1[178] = 'HA_ERR_NOT_IN_LOCK_PARTITIONS';
+		exports$1[179] = 'HA_ERR_INDEX_COL_TOO_LONG';
+		exports$1[180] = 'HA_ERR_INDEX_CORRUPT';
+		exports$1[181] = 'HA_ERR_UNDO_REC_TOO_BIG';
+		exports$1[182] = 'HA_FTS_INVALID_DOCID';
+		exports$1[183] = 'HA_ERR_TABLE_IN_FK_CHECK';
+		exports$1[184] = 'HA_ERR_TABLESPACE_EXISTS';
+		exports$1[185] = 'HA_ERR_TOO_MANY_FIELDS';
+		exports$1[186] = 'HA_ERR_ROW_IN_WRONG_PARTITION';
+		exports$1[187] = 'HA_ERR_INNODB_READ_ONLY';
+		exports$1[188] = 'HA_ERR_FTS_EXCEED_RESULT_CACHE_LIMIT';
+		exports$1[189] = 'HA_ERR_TEMP_FILE_WRITE_FAILURE';
+		exports$1[190] = 'HA_ERR_INNODB_FORCED_RECOVERY';
+		exports$1[191] = 'HA_ERR_FTS_TOO_MANY_WORDS_IN_PHRASE';
+		exports$1[192] = 'HA_ERR_FK_DEPTH_EXCEEDED';
+		exports$1[193] = 'HA_MISSING_CREATE_OPTION';
+		exports$1[194] = 'HA_ERR_SE_OUT_OF_MEMORY';
+		exports$1[195] = 'HA_ERR_TABLE_CORRUPT';
+		exports$1[196] = 'HA_ERR_QUERY_INTERRUPTED';
+		exports$1[197] = 'HA_ERR_TABLESPACE_MISSING';
+		exports$1[198] = 'HA_ERR_TABLESPACE_IS_NOT_EMPTY';
+		exports$1[199] = 'HA_ERR_WRONG_FILE_NAME';
+		exports$1[200] = 'HA_ERR_NOT_ALLOWED_COMMAND';
+		exports$1[201] = 'HA_ERR_COMPUTE_FAILED';
+		exports$1[202] = 'HA_ERR_ROW_FORMAT_CHANGED';
+		exports$1[203] = 'HA_ERR_NO_WAIT_LOCK';
+		exports$1[204] = 'HA_ERR_DISK_FULL_NOWAIT';
+		exports$1[205] = 'HA_ERR_NO_SESSION_TEMP';
+		exports$1[206] = 'HA_ERR_WRONG_TABLE_NAME';
+		exports$1[207] = 'HA_ERR_TOO_LONG_PATH';
+		exports$1[208] = 'HA_ERR_SAMPLING_INIT_FAILED';
+		exports$1[209] = 'HA_ERR_FTS_TOO_MANY_NESTED_EXP';
+		exports$1[1000] = 'ER_HASHCHK';
+		exports$1[1001] = 'ER_NISAMCHK';
+		exports$1[1002] = 'ER_NO';
+		exports$1[1003] = 'ER_YES';
+		exports$1[1004] = 'ER_CANT_CREATE_FILE';
+		exports$1[1005] = 'ER_CANT_CREATE_TABLE';
+		exports$1[1006] = 'ER_CANT_CREATE_DB';
+		exports$1[1007] = 'ER_DB_CREATE_EXISTS';
+		exports$1[1008] = 'ER_DB_DROP_EXISTS';
+		exports$1[1009] = 'ER_DB_DROP_DELETE';
+		exports$1[1010] = 'ER_DB_DROP_RMDIR';
+		exports$1[1011] = 'ER_CANT_DELETE_FILE';
+		exports$1[1012] = 'ER_CANT_FIND_SYSTEM_REC';
+		exports$1[1013] = 'ER_CANT_GET_STAT';
+		exports$1[1014] = 'ER_CANT_GET_WD';
+		exports$1[1015] = 'ER_CANT_LOCK';
+		exports$1[1016] = 'ER_CANT_OPEN_FILE';
+		exports$1[1017] = 'ER_FILE_NOT_FOUND';
+		exports$1[1018] = 'ER_CANT_READ_DIR';
+		exports$1[1019] = 'ER_CANT_SET_WD';
+		exports$1[1020] = 'ER_CHECKREAD';
+		exports$1[1021] = 'ER_DISK_FULL';
+		exports$1[1022] = 'ER_DUP_KEY';
+		exports$1[1023] = 'ER_ERROR_ON_CLOSE';
+		exports$1[1024] = 'ER_ERROR_ON_READ';
+		exports$1[1025] = 'ER_ERROR_ON_RENAME';
+		exports$1[1026] = 'ER_ERROR_ON_WRITE';
+		exports$1[1027] = 'ER_FILE_USED';
+		exports$1[1028] = 'ER_FILSORT_ABORT';
+		exports$1[1029] = 'ER_FORM_NOT_FOUND';
+		exports$1[1030] = 'ER_GET_ERRNO';
+		exports$1[1031] = 'ER_ILLEGAL_HA';
+		exports$1[1032] = 'ER_KEY_NOT_FOUND';
+		exports$1[1033] = 'ER_NOT_FORM_FILE';
+		exports$1[1034] = 'ER_NOT_KEYFILE';
+		exports$1[1035] = 'ER_OLD_KEYFILE';
+		exports$1[1036] = 'ER_OPEN_AS_READONLY';
+		exports$1[1037] = 'ER_OUTOFMEMORY';
+		exports$1[1038] = 'ER_OUT_OF_SORTMEMORY';
+		exports$1[1039] = 'ER_UNEXPECTED_EOF';
+		exports$1[1040] = 'ER_CON_COUNT_ERROR';
+		exports$1[1041] = 'ER_OUT_OF_RESOURCES';
+		exports$1[1042] = 'ER_BAD_HOST_ERROR';
+		exports$1[1043] = 'ER_HANDSHAKE_ERROR';
+		exports$1[1044] = 'ER_DBACCESS_DENIED_ERROR';
+		exports$1[1045] = 'ER_ACCESS_DENIED_ERROR';
+		exports$1[1046] = 'ER_NO_DB_ERROR';
+		exports$1[1047] = 'ER_UNKNOWN_COM_ERROR';
+		exports$1[1048] = 'ER_BAD_NULL_ERROR';
+		exports$1[1049] = 'ER_BAD_DB_ERROR';
+		exports$1[1050] = 'ER_TABLE_EXISTS_ERROR';
+		exports$1[1051] = 'ER_BAD_TABLE_ERROR';
+		exports$1[1052] = 'ER_NON_UNIQ_ERROR';
+		exports$1[1053] = 'ER_SERVER_SHUTDOWN';
+		exports$1[1054] = 'ER_BAD_FIELD_ERROR';
+		exports$1[1055] = 'ER_WRONG_FIELD_WITH_GROUP';
+		exports$1[1056] = 'ER_WRONG_GROUP_FIELD';
+		exports$1[1057] = 'ER_WRONG_SUM_SELECT';
+		exports$1[1058] = 'ER_WRONG_VALUE_COUNT';
+		exports$1[1059] = 'ER_TOO_LONG_IDENT';
+		exports$1[1060] = 'ER_DUP_FIELDNAME';
+		exports$1[1061] = 'ER_DUP_KEYNAME';
+		exports$1[1062] = 'ER_DUP_ENTRY';
+		exports$1[1063] = 'ER_WRONG_FIELD_SPEC';
+		exports$1[1064] = 'ER_PARSE_ERROR';
+		exports$1[1065] = 'ER_EMPTY_QUERY';
+		exports$1[1066] = 'ER_NONUNIQ_TABLE';
+		exports$1[1067] = 'ER_INVALID_DEFAULT';
+		exports$1[1068] = 'ER_MULTIPLE_PRI_KEY';
+		exports$1[1069] = 'ER_TOO_MANY_KEYS';
+		exports$1[1070] = 'ER_TOO_MANY_KEY_PARTS';
+		exports$1[1071] = 'ER_TOO_LONG_KEY';
+		exports$1[1072] = 'ER_KEY_COLUMN_DOES_NOT_EXITS';
+		exports$1[1073] = 'ER_BLOB_USED_AS_KEY';
+		exports$1[1074] = 'ER_TOO_BIG_FIELDLENGTH';
+		exports$1[1075] = 'ER_WRONG_AUTO_KEY';
+		exports$1[1076] = 'ER_READY';
+		exports$1[1077] = 'ER_NORMAL_SHUTDOWN';
+		exports$1[1078] = 'ER_GOT_SIGNAL';
+		exports$1[1079] = 'ER_SHUTDOWN_COMPLETE';
+		exports$1[1080] = 'ER_FORCING_CLOSE';
+		exports$1[1081] = 'ER_IPSOCK_ERROR';
+		exports$1[1082] = 'ER_NO_SUCH_INDEX';
+		exports$1[1083] = 'ER_WRONG_FIELD_TERMINATORS';
+		exports$1[1084] = 'ER_BLOBS_AND_NO_TERMINATED';
+		exports$1[1085] = 'ER_TEXTFILE_NOT_READABLE';
+		exports$1[1086] = 'ER_FILE_EXISTS_ERROR';
+		exports$1[1087] = 'ER_LOAD_INFO';
+		exports$1[1088] = 'ER_ALTER_INFO';
+		exports$1[1089] = 'ER_WRONG_SUB_KEY';
+		exports$1[1090] = 'ER_CANT_REMOVE_ALL_FIELDS';
+		exports$1[1091] = 'ER_CANT_DROP_FIELD_OR_KEY';
+		exports$1[1092] = 'ER_INSERT_INFO';
+		exports$1[1093] = 'ER_UPDATE_TABLE_USED';
+		exports$1[1094] = 'ER_NO_SUCH_THREAD';
+		exports$1[1095] = 'ER_KILL_DENIED_ERROR';
+		exports$1[1096] = 'ER_NO_TABLES_USED';
+		exports$1[1097] = 'ER_TOO_BIG_SET';
+		exports$1[1098] = 'ER_NO_UNIQUE_LOGFILE';
+		exports$1[1099] = 'ER_TABLE_NOT_LOCKED_FOR_WRITE';
+		exports$1[1100] = 'ER_TABLE_NOT_LOCKED';
+		exports$1[1101] = 'ER_BLOB_CANT_HAVE_DEFAULT';
+		exports$1[1102] = 'ER_WRONG_DB_NAME';
+		exports$1[1103] = 'ER_WRONG_TABLE_NAME';
+		exports$1[1104] = 'ER_TOO_BIG_SELECT';
+		exports$1[1105] = 'ER_UNKNOWN_ERROR';
+		exports$1[1106] = 'ER_UNKNOWN_PROCEDURE';
+		exports$1[1107] = 'ER_WRONG_PARAMCOUNT_TO_PROCEDURE';
+		exports$1[1108] = 'ER_WRONG_PARAMETERS_TO_PROCEDURE';
+		exports$1[1109] = 'ER_UNKNOWN_TABLE';
+		exports$1[1110] = 'ER_FIELD_SPECIFIED_TWICE';
+		exports$1[1111] = 'ER_INVALID_GROUP_FUNC_USE';
+		exports$1[1112] = 'ER_UNSUPPORTED_EXTENSION';
+		exports$1[1113] = 'ER_TABLE_MUST_HAVE_COLUMNS';
+		exports$1[1114] = 'ER_RECORD_FILE_FULL';
+		exports$1[1115] = 'ER_UNKNOWN_CHARACTER_SET';
+		exports$1[1116] = 'ER_TOO_MANY_TABLES';
+		exports$1[1117] = 'ER_TOO_MANY_FIELDS';
+		exports$1[1118] = 'ER_TOO_BIG_ROWSIZE';
+		exports$1[1119] = 'ER_STACK_OVERRUN';
+		exports$1[1120] = 'ER_WRONG_OUTER_JOIN';
+		exports$1[1121] = 'ER_NULL_COLUMN_IN_INDEX';
+		exports$1[1122] = 'ER_CANT_FIND_UDF';
+		exports$1[1123] = 'ER_CANT_INITIALIZE_UDF';
+		exports$1[1124] = 'ER_UDF_NO_PATHS';
+		exports$1[1125] = 'ER_UDF_EXISTS';
+		exports$1[1126] = 'ER_CANT_OPEN_LIBRARY';
+		exports$1[1127] = 'ER_CANT_FIND_DL_ENTRY';
+		exports$1[1128] = 'ER_FUNCTION_NOT_DEFINED';
+		exports$1[1129] = 'ER_HOST_IS_BLOCKED';
+		exports$1[1130] = 'ER_HOST_NOT_PRIVILEGED';
+		exports$1[1131] = 'ER_PASSWORD_ANONYMOUS_USER';
+		exports$1[1132] = 'ER_PASSWORD_NOT_ALLOWED';
+		exports$1[1133] = 'ER_PASSWORD_NO_MATCH';
+		exports$1[1134] = 'ER_UPDATE_INFO';
+		exports$1[1135] = 'ER_CANT_CREATE_THREAD';
+		exports$1[1136] = 'ER_WRONG_VALUE_COUNT_ON_ROW';
+		exports$1[1137] = 'ER_CANT_REOPEN_TABLE';
+		exports$1[1138] = 'ER_INVALID_USE_OF_NULL';
+		exports$1[1139] = 'ER_REGEXP_ERROR';
+		exports$1[1140] = 'ER_MIX_OF_GROUP_FUNC_AND_FIELDS';
+		exports$1[1141] = 'ER_NONEXISTING_GRANT';
+		exports$1[1142] = 'ER_TABLEACCESS_DENIED_ERROR';
+		exports$1[1143] = 'ER_COLUMNACCESS_DENIED_ERROR';
+		exports$1[1144] = 'ER_ILLEGAL_GRANT_FOR_TABLE';
+		exports$1[1145] = 'ER_GRANT_WRONG_HOST_OR_USER';
+		exports$1[1146] = 'ER_NO_SUCH_TABLE';
+		exports$1[1147] = 'ER_NONEXISTING_TABLE_GRANT';
+		exports$1[1148] = 'ER_NOT_ALLOWED_COMMAND';
+		exports$1[1149] = 'ER_SYNTAX_ERROR';
+		exports$1[1150] = 'ER_UNUSED1';
+		exports$1[1151] = 'ER_UNUSED2';
+		exports$1[1152] = 'ER_ABORTING_CONNECTION';
+		exports$1[1153] = 'ER_NET_PACKET_TOO_LARGE';
+		exports$1[1154] = 'ER_NET_READ_ERROR_FROM_PIPE';
+		exports$1[1155] = 'ER_NET_FCNTL_ERROR';
+		exports$1[1156] = 'ER_NET_PACKETS_OUT_OF_ORDER';
+		exports$1[1157] = 'ER_NET_UNCOMPRESS_ERROR';
+		exports$1[1158] = 'ER_NET_READ_ERROR';
+		exports$1[1159] = 'ER_NET_READ_INTERRUPTED';
+		exports$1[1160] = 'ER_NET_ERROR_ON_WRITE';
+		exports$1[1161] = 'ER_NET_WRITE_INTERRUPTED';
+		exports$1[1162] = 'ER_TOO_LONG_STRING';
+		exports$1[1163] = 'ER_TABLE_CANT_HANDLE_BLOB';
+		exports$1[1164] = 'ER_TABLE_CANT_HANDLE_AUTO_INCREMENT';
+		exports$1[1165] = 'ER_UNUSED3';
+		exports$1[1166] = 'ER_WRONG_COLUMN_NAME';
+		exports$1[1167] = 'ER_WRONG_KEY_COLUMN';
+		exports$1[1168] = 'ER_WRONG_MRG_TABLE';
+		exports$1[1169] = 'ER_DUP_UNIQUE';
+		exports$1[1170] = 'ER_BLOB_KEY_WITHOUT_LENGTH';
+		exports$1[1171] = 'ER_PRIMARY_CANT_HAVE_NULL';
+		exports$1[1172] = 'ER_TOO_MANY_ROWS';
+		exports$1[1173] = 'ER_REQUIRES_PRIMARY_KEY';
+		exports$1[1174] = 'ER_NO_RAID_COMPILED';
+		exports$1[1175] = 'ER_UPDATE_WITHOUT_KEY_IN_SAFE_MODE';
+		exports$1[1176] = 'ER_KEY_DOES_NOT_EXITS';
+		exports$1[1177] = 'ER_CHECK_NO_SUCH_TABLE';
+		exports$1[1178] = 'ER_CHECK_NOT_IMPLEMENTED';
+		exports$1[1179] = 'ER_CANT_DO_THIS_DURING_AN_TRANSACTION';
+		exports$1[1180] = 'ER_ERROR_DURING_COMMIT';
+		exports$1[1181] = 'ER_ERROR_DURING_ROLLBACK';
+		exports$1[1182] = 'ER_ERROR_DURING_FLUSH_LOGS';
+		exports$1[1183] = 'ER_ERROR_DURING_CHECKPOINT';
+		exports$1[1184] = 'ER_NEW_ABORTING_CONNECTION';
+		exports$1[1185] = 'ER_DUMP_NOT_IMPLEMENTED';
+		exports$1[1186] = 'ER_FLUSH_MASTER_BINLOG_CLOSED';
+		exports$1[1187] = 'ER_INDEX_REBUILD';
+		exports$1[1188] = 'ER_SOURCE';
+		exports$1[1189] = 'ER_SOURCE_NET_READ';
+		exports$1[1190] = 'ER_SOURCE_NET_WRITE';
+		exports$1[1191] = 'ER_FT_MATCHING_KEY_NOT_FOUND';
+		exports$1[1192] = 'ER_LOCK_OR_ACTIVE_TRANSACTION';
+		exports$1[1193] = 'ER_UNKNOWN_SYSTEM_VARIABLE';
+		exports$1[1194] = 'ER_CRASHED_ON_USAGE';
+		exports$1[1195] = 'ER_CRASHED_ON_REPAIR';
+		exports$1[1196] = 'ER_WARNING_NOT_COMPLETE_ROLLBACK';
+		exports$1[1197] = 'ER_TRANS_CACHE_FULL';
+		exports$1[1198] = 'ER_SLAVE_MUST_STOP';
+		exports$1[1199] = 'ER_REPLICA_NOT_RUNNING';
+		exports$1[1200] = 'ER_BAD_REPLICA';
+		exports$1[1201] = 'ER_CONNECTION_METADATA';
+		exports$1[1202] = 'ER_REPLICA_THREAD';
+		exports$1[1203] = 'ER_TOO_MANY_USER_CONNECTIONS';
+		exports$1[1204] = 'ER_SET_CONSTANTS_ONLY';
+		exports$1[1205] = 'ER_LOCK_WAIT_TIMEOUT';
+		exports$1[1206] = 'ER_LOCK_TABLE_FULL';
+		exports$1[1207] = 'ER_READ_ONLY_TRANSACTION';
+		exports$1[1208] = 'ER_DROP_DB_WITH_READ_LOCK';
+		exports$1[1209] = 'ER_CREATE_DB_WITH_READ_LOCK';
+		exports$1[1210] = 'ER_WRONG_ARGUMENTS';
+		exports$1[1211] = 'ER_NO_PERMISSION_TO_CREATE_USER';
+		exports$1[1212] = 'ER_UNION_TABLES_IN_DIFFERENT_DIR';
+		exports$1[1213] = 'ER_LOCK_DEADLOCK';
+		exports$1[1214] = 'ER_TABLE_CANT_HANDLE_FT';
+		exports$1[1215] = 'ER_CANNOT_ADD_FOREIGN';
+		exports$1[1216] = 'ER_NO_REFERENCED_ROW';
+		exports$1[1217] = 'ER_ROW_IS_REFERENCED';
+		exports$1[1218] = 'ER_CONNECT_TO_SOURCE';
+		exports$1[1219] = 'ER_QUERY_ON_MASTER';
+		exports$1[1220] = 'ER_ERROR_WHEN_EXECUTING_COMMAND';
+		exports$1[1221] = 'ER_WRONG_USAGE';
+		exports$1[1222] = 'ER_WRONG_NUMBER_OF_COLUMNS_IN_SELECT';
+		exports$1[1223] = 'ER_CANT_UPDATE_WITH_READLOCK';
+		exports$1[1224] = 'ER_MIXING_NOT_ALLOWED';
+		exports$1[1225] = 'ER_DUP_ARGUMENT';
+		exports$1[1226] = 'ER_USER_LIMIT_REACHED';
+		exports$1[1227] = 'ER_SPECIFIC_ACCESS_DENIED_ERROR';
+		exports$1[1228] = 'ER_LOCAL_VARIABLE';
+		exports$1[1229] = 'ER_GLOBAL_VARIABLE';
+		exports$1[1230] = 'ER_NO_DEFAULT';
+		exports$1[1231] = 'ER_WRONG_VALUE_FOR_VAR';
+		exports$1[1232] = 'ER_WRONG_TYPE_FOR_VAR';
+		exports$1[1233] = 'ER_VAR_CANT_BE_READ';
+		exports$1[1234] = 'ER_CANT_USE_OPTION_HERE';
+		exports$1[1235] = 'ER_NOT_SUPPORTED_YET';
+		exports$1[1236] = 'ER_SOURCE_FATAL_ERROR_READING_BINLOG';
+		exports$1[1237] = 'ER_REPLICA_IGNORED_TABLE';
+		exports$1[1238] = 'ER_INCORRECT_GLOBAL_LOCAL_VAR';
+		exports$1[1239] = 'ER_WRONG_FK_DEF';
+		exports$1[1240] = 'ER_KEY_REF_DO_NOT_MATCH_TABLE_REF';
+		exports$1[1241] = 'ER_OPERAND_COLUMNS';
+		exports$1[1242] = 'ER_SUBQUERY_NO_1_ROW';
+		exports$1[1243] = 'ER_UNKNOWN_STMT_HANDLER';
+		exports$1[1244] = 'ER_CORRUPT_HELP_DB';
+		exports$1[1245] = 'ER_CYCLIC_REFERENCE';
+		exports$1[1246] = 'ER_AUTO_CONVERT';
+		exports$1[1247] = 'ER_ILLEGAL_REFERENCE';
+		exports$1[1248] = 'ER_DERIVED_MUST_HAVE_ALIAS';
+		exports$1[1249] = 'ER_SELECT_REDUCED';
+		exports$1[1250] = 'ER_TABLENAME_NOT_ALLOWED_HERE';
+		exports$1[1251] = 'ER_NOT_SUPPORTED_AUTH_MODE';
+		exports$1[1252] = 'ER_SPATIAL_CANT_HAVE_NULL';
+		exports$1[1253] = 'ER_COLLATION_CHARSET_MISMATCH';
+		exports$1[1254] = 'ER_SLAVE_WAS_RUNNING';
+		exports$1[1255] = 'ER_SLAVE_WAS_NOT_RUNNING';
+		exports$1[1256] = 'ER_TOO_BIG_FOR_UNCOMPRESS';
+		exports$1[1257] = 'ER_ZLIB_Z_MEM_ERROR';
+		exports$1[1258] = 'ER_ZLIB_Z_BUF_ERROR';
+		exports$1[1259] = 'ER_ZLIB_Z_DATA_ERROR';
+		exports$1[1260] = 'ER_CUT_VALUE_GROUP_CONCAT';
+		exports$1[1261] = 'ER_WARN_TOO_FEW_RECORDS';
+		exports$1[1262] = 'ER_WARN_TOO_MANY_RECORDS';
+		exports$1[1263] = 'ER_WARN_NULL_TO_NOTNULL';
+		exports$1[1264] = 'ER_WARN_DATA_OUT_OF_RANGE';
+		exports$1[1265] = 'WARN_DATA_TRUNCATED';
+		exports$1[1266] = 'ER_WARN_USING_OTHER_HANDLER';
+		exports$1[1267] = 'ER_CANT_AGGREGATE_2COLLATIONS';
+		exports$1[1268] = 'ER_DROP_USER';
+		exports$1[1269] = 'ER_REVOKE_GRANTS';
+		exports$1[1270] = 'ER_CANT_AGGREGATE_3COLLATIONS';
+		exports$1[1271] = 'ER_CANT_AGGREGATE_NCOLLATIONS';
+		exports$1[1272] = 'ER_VARIABLE_IS_NOT_STRUCT';
+		exports$1[1273] = 'ER_UNKNOWN_COLLATION';
+		exports$1[1274] = 'ER_REPLICA_IGNORED_SSL_PARAMS';
+		exports$1[1275] = 'ER_SERVER_IS_IN_SECURE_AUTH_MODE';
+		exports$1[1276] = 'ER_WARN_FIELD_RESOLVED';
+		exports$1[1277] = 'ER_BAD_REPLICA_UNTIL_COND';
+		exports$1[1278] = 'ER_MISSING_SKIP_REPLICA';
+		exports$1[1279] = 'ER_UNTIL_COND_IGNORED';
+		exports$1[1280] = 'ER_WRONG_NAME_FOR_INDEX';
+		exports$1[1281] = 'ER_WRONG_NAME_FOR_CATALOG';
+		exports$1[1282] = 'ER_WARN_QC_RESIZE';
+		exports$1[1283] = 'ER_BAD_FT_COLUMN';
+		exports$1[1284] = 'ER_UNKNOWN_KEY_CACHE';
+		exports$1[1285] = 'ER_WARN_HOSTNAME_WONT_WORK';
+		exports$1[1286] = 'ER_UNKNOWN_STORAGE_ENGINE';
+		exports$1[1287] = 'ER_WARN_DEPRECATED_SYNTAX';
+		exports$1[1288] = 'ER_NON_UPDATABLE_TABLE';
+		exports$1[1289] = 'ER_FEATURE_DISABLED';
+		exports$1[1290] = 'ER_OPTION_PREVENTS_STATEMENT';
+		exports$1[1291] = 'ER_DUPLICATED_VALUE_IN_TYPE';
+		exports$1[1292] = 'ER_TRUNCATED_WRONG_VALUE';
+		exports$1[1293] = 'ER_TOO_MUCH_AUTO_TIMESTAMP_COLS';
+		exports$1[1294] = 'ER_INVALID_ON_UPDATE';
+		exports$1[1295] = 'ER_UNSUPPORTED_PS';
+		exports$1[1296] = 'ER_GET_ERRMSG';
+		exports$1[1297] = 'ER_GET_TEMPORARY_ERRMSG';
+		exports$1[1298] = 'ER_UNKNOWN_TIME_ZONE';
+		exports$1[1299] = 'ER_WARN_INVALID_TIMESTAMP';
+		exports$1[1300] = 'ER_INVALID_CHARACTER_STRING';
+		exports$1[1301] = 'ER_WARN_ALLOWED_PACKET_OVERFLOWED';
+		exports$1[1302] = 'ER_CONFLICTING_DECLARATIONS';
+		exports$1[1303] = 'ER_SP_NO_RECURSIVE_CREATE';
+		exports$1[1304] = 'ER_SP_ALREADY_EXISTS';
+		exports$1[1305] = 'ER_SP_DOES_NOT_EXIST';
+		exports$1[1306] = 'ER_SP_DROP_FAILED';
+		exports$1[1307] = 'ER_SP_STORE_FAILED';
+		exports$1[1308] = 'ER_SP_LILABEL_MISMATCH';
+		exports$1[1309] = 'ER_SP_LABEL_REDEFINE';
+		exports$1[1310] = 'ER_SP_LABEL_MISMATCH';
+		exports$1[1311] = 'ER_SP_UNINIT_VAR';
+		exports$1[1312] = 'ER_SP_BADSELECT';
+		exports$1[1313] = 'ER_SP_BADRETURN';
+		exports$1[1314] = 'ER_SP_BADSTATEMENT';
+		exports$1[1315] = 'ER_UPDATE_LOG_DEPRECATED_IGNORED';
+		exports$1[1316] = 'ER_UPDATE_LOG_DEPRECATED_TRANSLATED';
+		exports$1[1317] = 'ER_QUERY_INTERRUPTED';
+		exports$1[1318] = 'ER_SP_WRONG_NO_OF_ARGS';
+		exports$1[1319] = 'ER_SP_COND_MISMATCH';
+		exports$1[1320] = 'ER_SP_NORETURN';
+		exports$1[1321] = 'ER_SP_NORETURNEND';
+		exports$1[1322] = 'ER_SP_BAD_CURSOR_QUERY';
+		exports$1[1323] = 'ER_SP_BAD_CURSOR_SELECT';
+		exports$1[1324] = 'ER_SP_CURSOR_MISMATCH';
+		exports$1[1325] = 'ER_SP_CURSOR_ALREADY_OPEN';
+		exports$1[1326] = 'ER_SP_CURSOR_NOT_OPEN';
+		exports$1[1327] = 'ER_SP_UNDECLARED_VAR';
+		exports$1[1328] = 'ER_SP_WRONG_NO_OF_FETCH_ARGS';
+		exports$1[1329] = 'ER_SP_FETCH_NO_DATA';
+		exports$1[1330] = 'ER_SP_DUP_PARAM';
+		exports$1[1331] = 'ER_SP_DUP_VAR';
+		exports$1[1332] = 'ER_SP_DUP_COND';
+		exports$1[1333] = 'ER_SP_DUP_CURS';
+		exports$1[1334] = 'ER_SP_CANT_ALTER';
+		exports$1[1335] = 'ER_SP_SUBSELECT_NYI';
+		exports$1[1336] = 'ER_STMT_NOT_ALLOWED_IN_SF_OR_TRG';
+		exports$1[1337] = 'ER_SP_VARCOND_AFTER_CURSHNDLR';
+		exports$1[1338] = 'ER_SP_CURSOR_AFTER_HANDLER';
+		exports$1[1339] = 'ER_SP_CASE_NOT_FOUND';
+		exports$1[1340] = 'ER_FPARSER_TOO_BIG_FILE';
+		exports$1[1341] = 'ER_FPARSER_BAD_HEADER';
+		exports$1[1342] = 'ER_FPARSER_EOF_IN_COMMENT';
+		exports$1[1343] = 'ER_FPARSER_ERROR_IN_PARAMETER';
+		exports$1[1344] = 'ER_FPARSER_EOF_IN_UNKNOWN_PARAMETER';
+		exports$1[1345] = 'ER_VIEW_NO_EXPLAIN';
+		exports$1[1346] = 'ER_FRM_UNKNOWN_TYPE';
+		exports$1[1347] = 'ER_WRONG_OBJECT';
+		exports$1[1348] = 'ER_NONUPDATEABLE_COLUMN';
+		exports$1[1349] = 'ER_VIEW_SELECT_DERIVED';
+		exports$1[1350] = 'ER_VIEW_SELECT_CLAUSE';
+		exports$1[1351] = 'ER_VIEW_SELECT_VARIABLE';
+		exports$1[1352] = 'ER_VIEW_SELECT_TMPTABLE';
+		exports$1[1353] = 'ER_VIEW_WRONG_LIST';
+		exports$1[1354] = 'ER_WARN_VIEW_MERGE';
+		exports$1[1355] = 'ER_WARN_VIEW_WITHOUT_KEY';
+		exports$1[1356] = 'ER_VIEW_INVALID';
+		exports$1[1357] = 'ER_SP_NO_DROP_SP';
+		exports$1[1358] = 'ER_SP_GOTO_IN_HNDLR';
+		exports$1[1359] = 'ER_TRG_ALREADY_EXISTS';
+		exports$1[1360] = 'ER_TRG_DOES_NOT_EXIST';
+		exports$1[1361] = 'ER_TRG_ON_VIEW_OR_TEMP_TABLE';
+		exports$1[1362] = 'ER_TRG_CANT_CHANGE_ROW';
+		exports$1[1363] = 'ER_TRG_NO_SUCH_ROW_IN_TRG';
+		exports$1[1364] = 'ER_NO_DEFAULT_FOR_FIELD';
+		exports$1[1365] = 'ER_DIVISION_BY_ZERO';
+		exports$1[1366] = 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD';
+		exports$1[1367] = 'ER_ILLEGAL_VALUE_FOR_TYPE';
+		exports$1[1368] = 'ER_VIEW_NONUPD_CHECK';
+		exports$1[1369] = 'ER_VIEW_CHECK_FAILED';
+		exports$1[1370] = 'ER_PROCACCESS_DENIED_ERROR';
+		exports$1[1371] = 'ER_RELAY_LOG_FAIL';
+		exports$1[1372] = 'ER_PASSWD_LENGTH';
+		exports$1[1373] = 'ER_UNKNOWN_TARGET_BINLOG';
+		exports$1[1374] = 'ER_IO_ERR_LOG_INDEX_READ';
+		exports$1[1375] = 'ER_BINLOG_PURGE_PROHIBITED';
+		exports$1[1376] = 'ER_FSEEK_FAIL';
+		exports$1[1377] = 'ER_BINLOG_PURGE_FATAL_ERR';
+		exports$1[1378] = 'ER_LOG_IN_USE';
+		exports$1[1379] = 'ER_LOG_PURGE_UNKNOWN_ERR';
+		exports$1[1380] = 'ER_RELAY_LOG_INIT';
+		exports$1[1381] = 'ER_NO_BINARY_LOGGING';
+		exports$1[1382] = 'ER_RESERVED_SYNTAX';
+		exports$1[1383] = 'ER_WSAS_FAILED';
+		exports$1[1384] = 'ER_DIFF_GROUPS_PROC';
+		exports$1[1385] = 'ER_NO_GROUP_FOR_PROC';
+		exports$1[1386] = 'ER_ORDER_WITH_PROC';
+		exports$1[1387] = 'ER_LOGGING_PROHIBIT_CHANGING_OF';
+		exports$1[1388] = 'ER_NO_FILE_MAPPING';
+		exports$1[1389] = 'ER_WRONG_MAGIC';
+		exports$1[1390] = 'ER_PS_MANY_PARAM';
+		exports$1[1391] = 'ER_KEY_PART_0';
+		exports$1[1392] = 'ER_VIEW_CHECKSUM';
+		exports$1[1393] = 'ER_VIEW_MULTIUPDATE';
+		exports$1[1394] = 'ER_VIEW_NO_INSERT_FIELD_LIST';
+		exports$1[1395] = 'ER_VIEW_DELETE_MERGE_VIEW';
+		exports$1[1396] = 'ER_CANNOT_USER';
+		exports$1[1397] = 'ER_XAER_NOTA';
+		exports$1[1398] = 'ER_XAER_INVAL';
+		exports$1[1399] = 'ER_XAER_RMFAIL';
+		exports$1[1400] = 'ER_XAER_OUTSIDE';
+		exports$1[1401] = 'ER_XAER_RMERR';
+		exports$1[1402] = 'ER_XA_RBROLLBACK';
+		exports$1[1403] = 'ER_NONEXISTING_PROC_GRANT';
+		exports$1[1404] = 'ER_PROC_AUTO_GRANT_FAIL';
+		exports$1[1405] = 'ER_PROC_AUTO_REVOKE_FAIL';
+		exports$1[1406] = 'ER_DATA_TOO_LONG';
+		exports$1[1407] = 'ER_SP_BAD_SQLSTATE';
+		exports$1[1408] = 'ER_STARTUP';
+		exports$1[1409] = 'ER_LOAD_FROM_FIXED_SIZE_ROWS_TO_VAR';
+		exports$1[1410] = 'ER_CANT_CREATE_USER_WITH_GRANT';
+		exports$1[1411] = 'ER_WRONG_VALUE_FOR_TYPE';
+		exports$1[1412] = 'ER_TABLE_DEF_CHANGED';
+		exports$1[1413] = 'ER_SP_DUP_HANDLER';
+		exports$1[1414] = 'ER_SP_NOT_VAR_ARG';
+		exports$1[1415] = 'ER_SP_NO_RETSET';
+		exports$1[1416] = 'ER_CANT_CREATE_GEOMETRY_OBJECT';
+		exports$1[1417] = 'ER_FAILED_ROUTINE_BREAK_BINLOG';
+		exports$1[1418] = 'ER_BINLOG_UNSAFE_ROUTINE';
+		exports$1[1419] = 'ER_BINLOG_CREATE_ROUTINE_NEED_SUPER';
+		exports$1[1420] = 'ER_EXEC_STMT_WITH_OPEN_CURSOR';
+		exports$1[1421] = 'ER_STMT_HAS_NO_OPEN_CURSOR';
+		exports$1[1422] = 'ER_COMMIT_NOT_ALLOWED_IN_SF_OR_TRG';
+		exports$1[1423] = 'ER_NO_DEFAULT_FOR_VIEW_FIELD';
+		exports$1[1424] = 'ER_SP_NO_RECURSION';
+		exports$1[1425] = 'ER_TOO_BIG_SCALE';
+		exports$1[1426] = 'ER_TOO_BIG_PRECISION';
+		exports$1[1427] = 'ER_M_BIGGER_THAN_D';
+		exports$1[1428] = 'ER_WRONG_LOCK_OF_SYSTEM_TABLE';
+		exports$1[1429] = 'ER_CONNECT_TO_FOREIGN_DATA_SOURCE';
+		exports$1[1430] = 'ER_QUERY_ON_FOREIGN_DATA_SOURCE';
+		exports$1[1431] = 'ER_FOREIGN_DATA_SOURCE_DOESNT_EXIST';
+		exports$1[1432] = 'ER_FOREIGN_DATA_STRING_INVALID_CANT_CREATE';
+		exports$1[1433] = 'ER_FOREIGN_DATA_STRING_INVALID';
+		exports$1[1434] = 'ER_CANT_CREATE_FEDERATED_TABLE';
+		exports$1[1435] = 'ER_TRG_IN_WRONG_SCHEMA';
+		exports$1[1436] = 'ER_STACK_OVERRUN_NEED_MORE';
+		exports$1[1437] = 'ER_TOO_LONG_BODY';
+		exports$1[1438] = 'ER_WARN_CANT_DROP_DEFAULT_KEYCACHE';
+		exports$1[1439] = 'ER_TOO_BIG_DISPLAYWIDTH';
+		exports$1[1440] = 'ER_XAER_DUPID';
+		exports$1[1441] = 'ER_DATETIME_FUNCTION_OVERFLOW';
+		exports$1[1442] = 'ER_CANT_UPDATE_USED_TABLE_IN_SF_OR_TRG';
+		exports$1[1443] = 'ER_VIEW_PREVENT_UPDATE';
+		exports$1[1444] = 'ER_PS_NO_RECURSION';
+		exports$1[1445] = 'ER_SP_CANT_SET_AUTOCOMMIT';
+		exports$1[1446] = 'ER_MALFORMED_DEFINER';
+		exports$1[1447] = 'ER_VIEW_FRM_NO_USER';
+		exports$1[1448] = 'ER_VIEW_OTHER_USER';
+		exports$1[1449] = 'ER_NO_SUCH_USER';
+		exports$1[1450] = 'ER_FORBID_SCHEMA_CHANGE';
+		exports$1[1451] = 'ER_ROW_IS_REFERENCED_2';
+		exports$1[1452] = 'ER_NO_REFERENCED_ROW_2';
+		exports$1[1453] = 'ER_SP_BAD_VAR_SHADOW';
+		exports$1[1454] = 'ER_TRG_NO_DEFINER';
+		exports$1[1455] = 'ER_OLD_FILE_FORMAT';
+		exports$1[1456] = 'ER_SP_RECURSION_LIMIT';
+		exports$1[1457] = 'ER_SP_PROC_TABLE_CORRUPT';
+		exports$1[1458] = 'ER_SP_WRONG_NAME';
+		exports$1[1459] = 'ER_TABLE_NEEDS_UPGRADE';
+		exports$1[1460] = 'ER_SP_NO_AGGREGATE';
+		exports$1[1461] = 'ER_MAX_PREPARED_STMT_COUNT_REACHED';
+		exports$1[1462] = 'ER_VIEW_RECURSIVE';
+		exports$1[1463] = 'ER_NON_GROUPING_FIELD_USED';
+		exports$1[1464] = 'ER_TABLE_CANT_HANDLE_SPKEYS';
+		exports$1[1465] = 'ER_NO_TRIGGERS_ON_SYSTEM_SCHEMA';
+		exports$1[1466] = 'ER_REMOVED_SPACES';
+		exports$1[1467] = 'ER_AUTOINC_READ_FAILED';
+		exports$1[1468] = 'ER_USERNAME';
+		exports$1[1469] = 'ER_HOSTNAME';
+		exports$1[1470] = 'ER_WRONG_STRING_LENGTH';
+		exports$1[1471] = 'ER_NON_INSERTABLE_TABLE';
+		exports$1[1472] = 'ER_ADMIN_WRONG_MRG_TABLE';
+		exports$1[1473] = 'ER_TOO_HIGH_LEVEL_OF_NESTING_FOR_SELECT';
+		exports$1[1474] = 'ER_NAME_BECOMES_EMPTY';
+		exports$1[1475] = 'ER_AMBIGUOUS_FIELD_TERM';
+		exports$1[1476] = 'ER_FOREIGN_SERVER_EXISTS';
+		exports$1[1477] = 'ER_FOREIGN_SERVER_DOESNT_EXIST';
+		exports$1[1478] = 'ER_ILLEGAL_HA_CREATE_OPTION';
+		exports$1[1479] = 'ER_PARTITION_REQUIRES_VALUES_ERROR';
+		exports$1[1480] = 'ER_PARTITION_WRONG_VALUES_ERROR';
+		exports$1[1481] = 'ER_PARTITION_MAXVALUE_ERROR';
+		exports$1[1482] = 'ER_PARTITION_SUBPARTITION_ERROR';
+		exports$1[1483] = 'ER_PARTITION_SUBPART_MIX_ERROR';
+		exports$1[1484] = 'ER_PARTITION_WRONG_NO_PART_ERROR';
+		exports$1[1485] = 'ER_PARTITION_WRONG_NO_SUBPART_ERROR';
+		exports$1[1486] = 'ER_WRONG_EXPR_IN_PARTITION_FUNC_ERROR';
+		exports$1[1487] = 'ER_NO_CONST_EXPR_IN_RANGE_OR_LIST_ERROR';
+		exports$1[1488] = 'ER_FIELD_NOT_FOUND_PART_ERROR';
+		exports$1[1489] = 'ER_LIST_OF_FIELDS_ONLY_IN_HASH_ERROR';
+		exports$1[1490] = 'ER_INCONSISTENT_PARTITION_INFO_ERROR';
+		exports$1[1491] = 'ER_PARTITION_FUNC_NOT_ALLOWED_ERROR';
+		exports$1[1492] = 'ER_PARTITIONS_MUST_BE_DEFINED_ERROR';
+		exports$1[1493] = 'ER_RANGE_NOT_INCREASING_ERROR';
+		exports$1[1494] = 'ER_INCONSISTENT_TYPE_OF_FUNCTIONS_ERROR';
+		exports$1[1495] = 'ER_MULTIPLE_DEF_CONST_IN_LIST_PART_ERROR';
+		exports$1[1496] = 'ER_PARTITION_ENTRY_ERROR';
+		exports$1[1497] = 'ER_MIX_HANDLER_ERROR';
+		exports$1[1498] = 'ER_PARTITION_NOT_DEFINED_ERROR';
+		exports$1[1499] = 'ER_TOO_MANY_PARTITIONS_ERROR';
+		exports$1[1500] = 'ER_SUBPARTITION_ERROR';
+		exports$1[1501] = 'ER_CANT_CREATE_HANDLER_FILE';
+		exports$1[1502] = 'ER_BLOB_FIELD_IN_PART_FUNC_ERROR';
+		exports$1[1503] = 'ER_UNIQUE_KEY_NEED_ALL_FIELDS_IN_PF';
+		exports$1[1504] = 'ER_NO_PARTS_ERROR';
+		exports$1[1505] = 'ER_PARTITION_MGMT_ON_NONPARTITIONED';
+		exports$1[1506] = 'ER_FOREIGN_KEY_ON_PARTITIONED';
+		exports$1[1507] = 'ER_DROP_PARTITION_NON_EXISTENT';
+		exports$1[1508] = 'ER_DROP_LAST_PARTITION';
+		exports$1[1509] = 'ER_COALESCE_ONLY_ON_HASH_PARTITION';
+		exports$1[1510] = 'ER_REORG_HASH_ONLY_ON_SAME_NO';
+		exports$1[1511] = 'ER_REORG_NO_PARAM_ERROR';
+		exports$1[1512] = 'ER_ONLY_ON_RANGE_LIST_PARTITION';
+		exports$1[1513] = 'ER_ADD_PARTITION_SUBPART_ERROR';
+		exports$1[1514] = 'ER_ADD_PARTITION_NO_NEW_PARTITION';
+		exports$1[1515] = 'ER_COALESCE_PARTITION_NO_PARTITION';
+		exports$1[1516] = 'ER_REORG_PARTITION_NOT_EXIST';
+		exports$1[1517] = 'ER_SAME_NAME_PARTITION';
+		exports$1[1518] = 'ER_NO_BINLOG_ERROR';
+		exports$1[1519] = 'ER_CONSECUTIVE_REORG_PARTITIONS';
+		exports$1[1520] = 'ER_REORG_OUTSIDE_RANGE';
+		exports$1[1521] = 'ER_PARTITION_FUNCTION_FAILURE';
+		exports$1[1522] = 'ER_PART_STATE_ERROR';
+		exports$1[1523] = 'ER_LIMITED_PART_RANGE';
+		exports$1[1524] = 'ER_PLUGIN_IS_NOT_LOADED';
+		exports$1[1525] = 'ER_WRONG_VALUE';
+		exports$1[1526] = 'ER_NO_PARTITION_FOR_GIVEN_VALUE';
+		exports$1[1527] = 'ER_FILEGROUP_OPTION_ONLY_ONCE';
+		exports$1[1528] = 'ER_CREATE_FILEGROUP_FAILED';
+		exports$1[1529] = 'ER_DROP_FILEGROUP_FAILED';
+		exports$1[1530] = 'ER_TABLESPACE_AUTO_EXTEND_ERROR';
+		exports$1[1531] = 'ER_WRONG_SIZE_NUMBER';
+		exports$1[1532] = 'ER_SIZE_OVERFLOW_ERROR';
+		exports$1[1533] = 'ER_ALTER_FILEGROUP_FAILED';
+		exports$1[1534] = 'ER_BINLOG_ROW_LOGGING_FAILED';
+		exports$1[1535] = 'ER_BINLOG_ROW_WRONG_TABLE_DEF';
+		exports$1[1536] = 'ER_BINLOG_ROW_RBR_TO_SBR';
+		exports$1[1537] = 'ER_EVENT_ALREADY_EXISTS';
+		exports$1[1538] = 'ER_EVENT_STORE_FAILED';
+		exports$1[1539] = 'ER_EVENT_DOES_NOT_EXIST';
+		exports$1[1540] = 'ER_EVENT_CANT_ALTER';
+		exports$1[1541] = 'ER_EVENT_DROP_FAILED';
+		exports$1[1542] = 'ER_EVENT_INTERVAL_NOT_POSITIVE_OR_TOO_BIG';
+		exports$1[1543] = 'ER_EVENT_ENDS_BEFORE_STARTS';
+		exports$1[1544] = 'ER_EVENT_EXEC_TIME_IN_THE_PAST';
+		exports$1[1545] = 'ER_EVENT_OPEN_TABLE_FAILED';
+		exports$1[1546] = 'ER_EVENT_NEITHER_M_EXPR_NOR_M_AT';
+		exports$1[1547] = 'ER_COL_COUNT_DOESNT_MATCH_CORRUPTED';
+		exports$1[1548] = 'ER_CANNOT_LOAD_FROM_TABLE';
+		exports$1[1549] = 'ER_EVENT_CANNOT_DELETE';
+		exports$1[1550] = 'ER_EVENT_COMPILE_ERROR';
+		exports$1[1551] = 'ER_EVENT_SAME_NAME';
+		exports$1[1552] = 'ER_EVENT_DATA_TOO_LONG';
+		exports$1[1553] = 'ER_DROP_INDEX_FK';
+		exports$1[1554] = 'ER_WARN_DEPRECATED_SYNTAX_WITH_VER';
+		exports$1[1555] = 'ER_CANT_WRITE_LOCK_LOG_TABLE';
+		exports$1[1556] = 'ER_CANT_LOCK_LOG_TABLE';
+		exports$1[1557] = 'ER_FOREIGN_DUPLICATE_KEY';
+		exports$1[1558] = 'ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE';
+		exports$1[1559] = 'ER_TEMP_TABLE_PREVENTS_SWITCH_OUT_OF_RBR';
+		exports$1[1560] = 'ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_FORMAT';
+		exports$1[1561] = 'ER_NDB_CANT_SWITCH_BINLOG_FORMAT';
+		exports$1[1562] = 'ER_PARTITION_NO_TEMPORARY';
+		exports$1[1563] = 'ER_PARTITION_CONST_DOMAIN_ERROR';
+		exports$1[1564] = 'ER_PARTITION_FUNCTION_IS_NOT_ALLOWED';
+		exports$1[1565] = 'ER_DDL_LOG_ERROR';
+		exports$1[1566] = 'ER_NULL_IN_VALUES_LESS_THAN';
+		exports$1[1567] = 'ER_WRONG_PARTITION_NAME';
+		exports$1[1568] = 'ER_CANT_CHANGE_TX_CHARACTERISTICS';
+		exports$1[1569] = 'ER_DUP_ENTRY_AUTOINCREMENT_CASE';
+		exports$1[1570] = 'ER_EVENT_MODIFY_QUEUE_ERROR';
+		exports$1[1571] = 'ER_EVENT_SET_VAR_ERROR';
+		exports$1[1572] = 'ER_PARTITION_MERGE_ERROR';
+		exports$1[1573] = 'ER_CANT_ACTIVATE_LOG';
+		exports$1[1574] = 'ER_RBR_NOT_AVAILABLE';
+		exports$1[1575] = 'ER_BASE64_DECODE_ERROR';
+		exports$1[1576] = 'ER_EVENT_RECURSION_FORBIDDEN';
+		exports$1[1577] = 'ER_EVENTS_DB_ERROR';
+		exports$1[1578] = 'ER_ONLY_INTEGERS_ALLOWED';
+		exports$1[1579] = 'ER_UNSUPORTED_LOG_ENGINE';
+		exports$1[1580] = 'ER_BAD_LOG_STATEMENT';
+		exports$1[1581] = 'ER_CANT_RENAME_LOG_TABLE';
+		exports$1[1582] = 'ER_WRONG_PARAMCOUNT_TO_NATIVE_FCT';
+		exports$1[1583] = 'ER_WRONG_PARAMETERS_TO_NATIVE_FCT';
+		exports$1[1584] = 'ER_WRONG_PARAMETERS_TO_STORED_FCT';
+		exports$1[1585] = 'ER_NATIVE_FCT_NAME_COLLISION';
+		exports$1[1586] = 'ER_DUP_ENTRY_WITH_KEY_NAME';
+		exports$1[1587] = 'ER_BINLOG_PURGE_EMFILE';
+		exports$1[1588] = 'ER_EVENT_CANNOT_CREATE_IN_THE_PAST';
+		exports$1[1589] = 'ER_EVENT_CANNOT_ALTER_IN_THE_PAST';
+		exports$1[1590] = 'ER_SLAVE_INCIDENT';
+		exports$1[1591] = 'ER_NO_PARTITION_FOR_GIVEN_VALUE_SILENT';
+		exports$1[1592] = 'ER_BINLOG_UNSAFE_STATEMENT';
+		exports$1[1593] = 'ER_BINLOG_FATAL_ERROR';
+		exports$1[1594] = 'ER_SLAVE_RELAY_LOG_READ_FAILURE';
+		exports$1[1595] = 'ER_SLAVE_RELAY_LOG_WRITE_FAILURE';
+		exports$1[1596] = 'ER_SLAVE_CREATE_EVENT_FAILURE';
+		exports$1[1597] = 'ER_SLAVE_MASTER_COM_FAILURE';
+		exports$1[1598] = 'ER_BINLOG_LOGGING_IMPOSSIBLE';
+		exports$1[1599] = 'ER_VIEW_NO_CREATION_CTX';
+		exports$1[1600] = 'ER_VIEW_INVALID_CREATION_CTX';
+		exports$1[1601] = 'ER_SR_INVALID_CREATION_CTX';
+		exports$1[1602] = 'ER_TRG_CORRUPTED_FILE';
+		exports$1[1603] = 'ER_TRG_NO_CREATION_CTX';
+		exports$1[1604] = 'ER_TRG_INVALID_CREATION_CTX';
+		exports$1[1605] = 'ER_EVENT_INVALID_CREATION_CTX';
+		exports$1[1606] = 'ER_TRG_CANT_OPEN_TABLE';
+		exports$1[1607] = 'ER_CANT_CREATE_SROUTINE';
+		exports$1[1608] = 'ER_NEVER_USED';
+		exports$1[1609] = 'ER_NO_FORMAT_DESCRIPTION_EVENT_BEFORE_BINLOG_STATEMENT';
+		exports$1[1610] = 'ER_REPLICA_CORRUPT_EVENT';
+		exports$1[1611] = 'ER_LOAD_DATA_INVALID_COLUMN';
+		exports$1[1612] = 'ER_LOG_PURGE_NO_FILE';
+		exports$1[1613] = 'ER_XA_RBTIMEOUT';
+		exports$1[1614] = 'ER_XA_RBDEADLOCK';
+		exports$1[1615] = 'ER_NEED_REPREPARE';
+		exports$1[1616] = 'ER_DELAYED_NOT_SUPPORTED';
+		exports$1[1617] = 'WARN_NO_CONNECTION_METADATA';
+		exports$1[1618] = 'WARN_OPTION_IGNORED';
+		exports$1[1619] = 'ER_PLUGIN_DELETE_BUILTIN';
+		exports$1[1620] = 'WARN_PLUGIN_BUSY';
+		exports$1[1621] = 'ER_VARIABLE_IS_READONLY';
+		exports$1[1622] = 'ER_WARN_ENGINE_TRANSACTION_ROLLBACK';
+		exports$1[1623] = 'ER_SLAVE_HEARTBEAT_FAILURE';
+		exports$1[1624] = 'ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE';
+		exports$1[1625] = 'ER_NDB_REPLICATION_SCHEMA_ERROR';
+		exports$1[1626] = 'ER_CONFLICT_FN_PARSE_ERROR';
+		exports$1[1627] = 'ER_EXCEPTIONS_WRITE_ERROR';
+		exports$1[1628] = 'ER_TOO_LONG_TABLE_COMMENT';
+		exports$1[1629] = 'ER_TOO_LONG_FIELD_COMMENT';
+		exports$1[1630] = 'ER_FUNC_INEXISTENT_NAME_COLLISION';
+		exports$1[1631] = 'ER_DATABASE_NAME';
+		exports$1[1632] = 'ER_TABLE_NAME';
+		exports$1[1633] = 'ER_PARTITION_NAME';
+		exports$1[1634] = 'ER_SUBPARTITION_NAME';
+		exports$1[1635] = 'ER_TEMPORARY_NAME';
+		exports$1[1636] = 'ER_RENAMED_NAME';
+		exports$1[1637] = 'ER_TOO_MANY_CONCURRENT_TRXS';
+		exports$1[1638] = 'WARN_NON_ASCII_SEPARATOR_NOT_IMPLEMENTED';
+		exports$1[1639] = 'ER_DEBUG_SYNC_TIMEOUT';
+		exports$1[1640] = 'ER_DEBUG_SYNC_HIT_LIMIT';
+		exports$1[1641] = 'ER_DUP_SIGNAL_SET';
+		exports$1[1642] = 'ER_SIGNAL_WARN';
+		exports$1[1643] = 'ER_SIGNAL_NOT_FOUND';
+		exports$1[1644] = 'ER_SIGNAL_EXCEPTION';
+		exports$1[1645] = 'ER_RESIGNAL_WITHOUT_ACTIVE_HANDLER';
+		exports$1[1646] = 'ER_SIGNAL_BAD_CONDITION_TYPE';
+		exports$1[1647] = 'WARN_COND_ITEM_TRUNCATED';
+		exports$1[1648] = 'ER_COND_ITEM_TOO_LONG';
+		exports$1[1649] = 'ER_UNKNOWN_LOCALE';
+		exports$1[1650] = 'ER_REPLICA_IGNORE_SERVER_IDS';
+		exports$1[1651] = 'ER_QUERY_CACHE_DISABLED';
+		exports$1[1652] = 'ER_SAME_NAME_PARTITION_FIELD';
+		exports$1[1653] = 'ER_PARTITION_COLUMN_LIST_ERROR';
+		exports$1[1654] = 'ER_WRONG_TYPE_COLUMN_VALUE_ERROR';
+		exports$1[1655] = 'ER_TOO_MANY_PARTITION_FUNC_FIELDS_ERROR';
+		exports$1[1656] = 'ER_MAXVALUE_IN_VALUES_IN';
+		exports$1[1657] = 'ER_TOO_MANY_VALUES_ERROR';
+		exports$1[1658] = 'ER_ROW_SINGLE_PARTITION_FIELD_ERROR';
+		exports$1[1659] = 'ER_FIELD_TYPE_NOT_ALLOWED_AS_PARTITION_FIELD';
+		exports$1[1660] = 'ER_PARTITION_FIELDS_TOO_LONG';
+		exports$1[1661] = 'ER_BINLOG_ROW_ENGINE_AND_STMT_ENGINE';
+		exports$1[1662] = 'ER_BINLOG_ROW_MODE_AND_STMT_ENGINE';
+		exports$1[1663] = 'ER_BINLOG_UNSAFE_AND_STMT_ENGINE';
+		exports$1[1664] = 'ER_BINLOG_ROW_INJECTION_AND_STMT_ENGINE';
+		exports$1[1665] = 'ER_BINLOG_STMT_MODE_AND_ROW_ENGINE';
+		exports$1[1666] = 'ER_BINLOG_ROW_INJECTION_AND_STMT_MODE';
+		exports$1[1667] = 'ER_BINLOG_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE';
+		exports$1[1668] = 'ER_BINLOG_UNSAFE_LIMIT';
+		exports$1[1669] = 'ER_UNUSED4';
+		exports$1[1670] = 'ER_BINLOG_UNSAFE_SYSTEM_TABLE';
+		exports$1[1671] = 'ER_BINLOG_UNSAFE_AUTOINC_COLUMNS';
+		exports$1[1672] = 'ER_BINLOG_UNSAFE_UDF';
+		exports$1[1673] = 'ER_BINLOG_UNSAFE_SYSTEM_VARIABLE';
+		exports$1[1674] = 'ER_BINLOG_UNSAFE_SYSTEM_FUNCTION';
+		exports$1[1675] = 'ER_BINLOG_UNSAFE_NONTRANS_AFTER_TRANS';
+		exports$1[1676] = 'ER_MESSAGE_AND_STATEMENT';
+		exports$1[1677] = 'ER_SLAVE_CONVERSION_FAILED';
+		exports$1[1678] = 'ER_REPLICA_CANT_CREATE_CONVERSION';
+		exports$1[1679] = 'ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_FORMAT';
+		exports$1[1680] = 'ER_PATH_LENGTH';
+		exports$1[1681] = 'ER_WARN_DEPRECATED_SYNTAX_NO_REPLACEMENT';
+		exports$1[1682] = 'ER_WRONG_NATIVE_TABLE_STRUCTURE';
+		exports$1[1683] = 'ER_WRONG_PERFSCHEMA_USAGE';
+		exports$1[1684] = 'ER_WARN_I_S_SKIPPED_TABLE';
+		exports$1[1685] = 'ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_DIRECT';
+		exports$1[1686] = 'ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_DIRECT';
+		exports$1[1687] = 'ER_SPATIAL_MUST_HAVE_GEOM_COL';
+		exports$1[1688] = 'ER_TOO_LONG_INDEX_COMMENT';
+		exports$1[1689] = 'ER_LOCK_ABORTED';
+		exports$1[1690] = 'ER_DATA_OUT_OF_RANGE';
+		exports$1[1691] = 'ER_WRONG_SPVAR_TYPE_IN_LIMIT';
+		exports$1[1692] = 'ER_BINLOG_UNSAFE_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE';
+		exports$1[1693] = 'ER_BINLOG_UNSAFE_MIXED_STATEMENT';
+		exports$1[1694] = 'ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_SQL_LOG_BIN';
+		exports$1[1695] = 'ER_STORED_FUNCTION_PREVENTS_SWITCH_SQL_LOG_BIN';
+		exports$1[1696] = 'ER_FAILED_READ_FROM_PAR_FILE';
+		exports$1[1697] = 'ER_VALUES_IS_NOT_INT_TYPE_ERROR';
+		exports$1[1698] = 'ER_ACCESS_DENIED_NO_PASSWORD_ERROR';
+		exports$1[1699] = 'ER_SET_PASSWORD_AUTH_PLUGIN';
+		exports$1[1700] = 'ER_GRANT_PLUGIN_USER_EXISTS';
+		exports$1[1701] = 'ER_TRUNCATE_ILLEGAL_FK';
+		exports$1[1702] = 'ER_PLUGIN_IS_PERMANENT';
+		exports$1[1703] = 'ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE_MIN';
+		exports$1[1704] = 'ER_REPLICA_HEARTBEAT_VALUE_OUT_OF_RANGE_MAX';
+		exports$1[1705] = 'ER_STMT_CACHE_FULL';
+		exports$1[1706] = 'ER_MULTI_UPDATE_KEY_CONFLICT';
+		exports$1[1707] = 'ER_TABLE_NEEDS_REBUILD';
+		exports$1[1708] = 'WARN_OPTION_BELOW_LIMIT';
+		exports$1[1709] = 'ER_INDEX_COLUMN_TOO_LONG';
+		exports$1[1710] = 'ER_ERROR_IN_TRIGGER_BODY';
+		exports$1[1711] = 'ER_ERROR_IN_UNKNOWN_TRIGGER_BODY';
+		exports$1[1712] = 'ER_INDEX_CORRUPT';
+		exports$1[1713] = 'ER_UNDO_RECORD_TOO_BIG';
+		exports$1[1714] = 'ER_BINLOG_UNSAFE_INSERT_IGNORE_SELECT';
+		exports$1[1715] = 'ER_BINLOG_UNSAFE_INSERT_SELECT_UPDATE';
+		exports$1[1716] = 'ER_BINLOG_UNSAFE_REPLACE_SELECT';
+		exports$1[1717] = 'ER_BINLOG_UNSAFE_CREATE_IGNORE_SELECT';
+		exports$1[1718] = 'ER_BINLOG_UNSAFE_CREATE_REPLACE_SELECT';
+		exports$1[1719] = 'ER_BINLOG_UNSAFE_UPDATE_IGNORE';
+		exports$1[1720] = 'ER_PLUGIN_NO_UNINSTALL';
+		exports$1[1721] = 'ER_PLUGIN_NO_INSTALL';
+		exports$1[1722] = 'ER_BINLOG_UNSAFE_WRITE_AUTOINC_SELECT';
+		exports$1[1723] = 'ER_BINLOG_UNSAFE_CREATE_SELECT_AUTOINC';
+		exports$1[1724] = 'ER_BINLOG_UNSAFE_INSERT_TWO_KEYS';
+		exports$1[1725] = 'ER_TABLE_IN_FK_CHECK';
+		exports$1[1726] = 'ER_UNSUPPORTED_ENGINE';
+		exports$1[1727] = 'ER_BINLOG_UNSAFE_AUTOINC_NOT_FIRST';
+		exports$1[1728] = 'ER_CANNOT_LOAD_FROM_TABLE_V2';
+		exports$1[1729] = 'ER_SOURCE_DELAY_VALUE_OUT_OF_RANGE';
+		exports$1[1730] = 'ER_ONLY_FD_AND_RBR_EVENTS_ALLOWED_IN_BINLOG_STATEMENT';
+		exports$1[1731] = 'ER_PARTITION_EXCHANGE_DIFFERENT_OPTION';
+		exports$1[1732] = 'ER_PARTITION_EXCHANGE_PART_TABLE';
+		exports$1[1733] = 'ER_PARTITION_EXCHANGE_TEMP_TABLE';
+		exports$1[1734] = 'ER_PARTITION_INSTEAD_OF_SUBPARTITION';
+		exports$1[1735] = 'ER_UNKNOWN_PARTITION';
+		exports$1[1736] = 'ER_TABLES_DIFFERENT_METADATA';
+		exports$1[1737] = 'ER_ROW_DOES_NOT_MATCH_PARTITION';
+		exports$1[1738] = 'ER_BINLOG_CACHE_SIZE_GREATER_THAN_MAX';
+		exports$1[1739] = 'ER_WARN_INDEX_NOT_APPLICABLE';
+		exports$1[1740] = 'ER_PARTITION_EXCHANGE_FOREIGN_KEY';
+		exports$1[1741] = 'ER_NO_SUCH_KEY_VALUE';
+		exports$1[1742] = 'ER_RPL_INFO_DATA_TOO_LONG';
+		exports$1[1743] = 'ER_NETWORK_READ_EVENT_CHECKSUM_FAILURE';
+		exports$1[1744] = 'ER_BINLOG_READ_EVENT_CHECKSUM_FAILURE';
+		exports$1[1745] = 'ER_BINLOG_STMT_CACHE_SIZE_GREATER_THAN_MAX';
+		exports$1[1746] = 'ER_CANT_UPDATE_TABLE_IN_CREATE_TABLE_SELECT';
+		exports$1[1747] = 'ER_PARTITION_CLAUSE_ON_NONPARTITIONED';
+		exports$1[1748] = 'ER_ROW_DOES_NOT_MATCH_GIVEN_PARTITION_SET';
+		exports$1[1749] = 'ER_NO_SUCH_PARTITION';
+		exports$1[1750] = 'ER_CHANGE_RPL_INFO_REPOSITORY_FAILURE';
+		exports$1[1751] = 'ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_CREATED_TEMP_TABLE';
+		exports$1[1752] = 'ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_DROPPED_TEMP_TABLE';
+		exports$1[1753] = 'ER_MTA_FEATURE_IS_NOT_SUPPORTED';
+		exports$1[1754] = 'ER_MTA_UPDATED_DBS_GREATER_MAX';
+		exports$1[1755] = 'ER_MTA_CANT_PARALLEL';
+		exports$1[1756] = 'ER_MTA_INCONSISTENT_DATA';
+		exports$1[1757] = 'ER_FULLTEXT_NOT_SUPPORTED_WITH_PARTITIONING';
+		exports$1[1758] = 'ER_DA_INVALID_CONDITION_NUMBER';
+		exports$1[1759] = 'ER_INSECURE_PLAIN_TEXT';
+		exports$1[1760] = 'ER_INSECURE_CHANGE_SOURCE';
+		exports$1[1761] = 'ER_FOREIGN_DUPLICATE_KEY_WITH_CHILD_INFO';
+		exports$1[1762] = 'ER_FOREIGN_DUPLICATE_KEY_WITHOUT_CHILD_INFO';
+		exports$1[1763] = 'ER_SQLTHREAD_WITH_SECURE_REPLICA';
+		exports$1[1764] = 'ER_TABLE_HAS_NO_FT';
+		exports$1[1765] = 'ER_VARIABLE_NOT_SETTABLE_IN_SF_OR_TRIGGER';
+		exports$1[1766] = 'ER_VARIABLE_NOT_SETTABLE_IN_TRANSACTION';
+		exports$1[1767] = 'ER_GTID_NEXT_IS_NOT_IN_GTID_NEXT_LIST';
+		exports$1[1768] = 'ER_CANT_CHANGE_GTID_NEXT_IN_TRANSACTION';
+		exports$1[1769] = 'ER_SET_STATEMENT_CANNOT_INVOKE_FUNCTION';
+		exports$1[1770] = 'ER_GTID_NEXT_CANT_BE_AUTOMATIC_IF_GTID_NEXT_LIST_IS_NON_NULL';
+		exports$1[1771] = 'ER_SKIPPING_LOGGED_TRANSACTION';
+		exports$1[1772] = 'ER_MALFORMED_GTID_SET_SPECIFICATION';
+		exports$1[1773] = 'ER_MALFORMED_GTID_SET_ENCODING';
+		exports$1[1774] = 'ER_MALFORMED_GTID_SPECIFICATION';
+		exports$1[1775] = 'ER_GNO_EXHAUSTED';
+		exports$1[1776] = 'ER_BAD_REPLICA_AUTO_POSITION';
+		exports$1[1777] = 'ER_AUTO_POSITION_REQUIRES_GTID_MODE_NOT_OFF';
+		exports$1[1778] = 'ER_CANT_DO_IMPLICIT_COMMIT_IN_TRX_WHEN_GTID_NEXT_IS_SET';
+		exports$1[1779] = 'ER_GTID_MODE_ON_REQUIRES_ENFORCE_GTID_CONSISTENCY_ON';
+		exports$1[1780] = 'ER_GTID_MODE_REQUIRES_BINLOG';
+		exports$1[1781] = 'ER_CANT_SET_GTID_NEXT_TO_GTID_WHEN_GTID_MODE_IS_OFF';
+		exports$1[1782] = 'ER_CANT_SET_GTID_NEXT_TO_ANONYMOUS_WHEN_GTID_MODE_IS_ON';
+		exports$1[1783] = 'ER_CANT_SET_GTID_NEXT_LIST_TO_NON_NULL_WHEN_GTID_MODE_IS_OFF';
+		exports$1[1784] = 'ER_FOUND_GTID_EVENT_WHEN_GTID_MODE_IS_OFF';
+		exports$1[1785] = 'ER_GTID_UNSAFE_NON_TRANSACTIONAL_TABLE';
+		exports$1[1786] = 'ER_GTID_UNSAFE_CREATE_SELECT';
+		exports$1[1787] = 'ER_GTID_UNSAFE_CREATE_DROP_TEMP_TABLE_IN_TRANSACTION';
+		exports$1[1788] = 'ER_GTID_MODE_CAN_ONLY_CHANGE_ONE_STEP_AT_A_TIME';
+		exports$1[1789] = 'ER_SOURCE_HAS_PURGED_REQUIRED_GTIDS';
+		exports$1[1790] = 'ER_CANT_SET_GTID_NEXT_WHEN_OWNING_GTID';
+		exports$1[1791] = 'ER_UNKNOWN_EXPLAIN_FORMAT';
+		exports$1[1792] = 'ER_CANT_EXECUTE_IN_READ_ONLY_TRANSACTION';
+		exports$1[1793] = 'ER_TOO_LONG_TABLE_PARTITION_COMMENT';
+		exports$1[1794] = 'ER_REPLICA_CONFIGURATION';
+		exports$1[1795] = 'ER_INNODB_FT_LIMIT';
+		exports$1[1796] = 'ER_INNODB_NO_FT_TEMP_TABLE';
+		exports$1[1797] = 'ER_INNODB_FT_WRONG_DOCID_COLUMN';
+		exports$1[1798] = 'ER_INNODB_FT_WRONG_DOCID_INDEX';
+		exports$1[1799] = 'ER_INNODB_ONLINE_LOG_TOO_BIG';
+		exports$1[1800] = 'ER_UNKNOWN_ALTER_ALGORITHM';
+		exports$1[1801] = 'ER_UNKNOWN_ALTER_LOCK';
+		exports$1[1802] = 'ER_MTA_CHANGE_SOURCE_CANT_RUN_WITH_GAPS';
+		exports$1[1803] = 'ER_MTA_RECOVERY_FAILURE';
+		exports$1[1804] = 'ER_MTA_RESET_WORKERS';
+		exports$1[1805] = 'ER_COL_COUNT_DOESNT_MATCH_CORRUPTED_V2';
+		exports$1[1806] = 'ER_REPLICA_SILENT_RETRY_TRANSACTION';
+		exports$1[1807] = 'ER_DISCARD_FK_CHECKS_RUNNING';
+		exports$1[1808] = 'ER_TABLE_SCHEMA_MISMATCH';
+		exports$1[1809] = 'ER_TABLE_IN_SYSTEM_TABLESPACE';
+		exports$1[1810] = 'ER_IO_READ_ERROR';
+		exports$1[1811] = 'ER_IO_WRITE_ERROR';
+		exports$1[1812] = 'ER_TABLESPACE_MISSING';
+		exports$1[1813] = 'ER_TABLESPACE_EXISTS';
+		exports$1[1814] = 'ER_TABLESPACE_DISCARDED';
+		exports$1[1815] = 'ER_INTERNAL_ERROR';
+		exports$1[1816] = 'ER_INNODB_IMPORT_ERROR';
+		exports$1[1817] = 'ER_INNODB_INDEX_CORRUPT';
+		exports$1[1818] = 'ER_INVALID_YEAR_COLUMN_LENGTH';
+		exports$1[1819] = 'ER_NOT_VALID_PASSWORD';
+		exports$1[1820] = 'ER_MUST_CHANGE_PASSWORD';
+		exports$1[1821] = 'ER_FK_NO_INDEX_CHILD';
+		exports$1[1822] = 'ER_FK_NO_INDEX_PARENT';
+		exports$1[1823] = 'ER_FK_FAIL_ADD_SYSTEM';
+		exports$1[1824] = 'ER_FK_CANNOT_OPEN_PARENT';
+		exports$1[1825] = 'ER_FK_INCORRECT_OPTION';
+		exports$1[1826] = 'ER_FK_DUP_NAME';
+		exports$1[1827] = 'ER_PASSWORD_FORMAT';
+		exports$1[1828] = 'ER_FK_COLUMN_CANNOT_DROP';
+		exports$1[1829] = 'ER_FK_COLUMN_CANNOT_DROP_CHILD';
+		exports$1[1830] = 'ER_FK_COLUMN_NOT_NULL';
+		exports$1[1831] = 'ER_DUP_INDEX';
+		exports$1[1832] = 'ER_FK_COLUMN_CANNOT_CHANGE';
+		exports$1[1833] = 'ER_FK_COLUMN_CANNOT_CHANGE_CHILD';
+		exports$1[1834] = 'ER_UNUSED5';
+		exports$1[1835] = 'ER_MALFORMED_PACKET';
+		exports$1[1836] = 'ER_READ_ONLY_MODE';
+		exports$1[1837] = 'ER_GTID_NEXT_TYPE_UNDEFINED_GTID';
+		exports$1[1838] = 'ER_VARIABLE_NOT_SETTABLE_IN_SP';
+		exports$1[1839] = 'ER_CANT_SET_GTID_PURGED_WHEN_GTID_MODE_IS_OFF';
+		exports$1[1840] = 'ER_CANT_SET_GTID_PURGED_WHEN_GTID_EXECUTED_IS_NOT_EMPTY';
+		exports$1[1841] = 'ER_CANT_SET_GTID_PURGED_WHEN_OWNED_GTIDS_IS_NOT_EMPTY';
+		exports$1[1842] = 'ER_GTID_PURGED_WAS_CHANGED';
+		exports$1[1843] = 'ER_GTID_EXECUTED_WAS_CHANGED';
+		exports$1[1844] = 'ER_BINLOG_STMT_MODE_AND_NO_REPL_TABLES';
+		exports$1[1845] = 'ER_ALTER_OPERATION_NOT_SUPPORTED';
+		exports$1[1846] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON';
+		exports$1[1847] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COPY';
+		exports$1[1848] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_PARTITION';
+		exports$1[1849] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_RENAME';
+		exports$1[1850] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE';
+		exports$1[1851] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_CHECK';
+		exports$1[1852] = 'ER_UNUSED6';
+		exports$1[1853] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOPK';
+		exports$1[1854] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_AUTOINC';
+		exports$1[1855] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_HIDDEN_FTS';
+		exports$1[1856] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_CHANGE_FTS';
+		exports$1[1857] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FTS';
+		exports$1[1858] = 'ER_SQL_REPLICA_SKIP_COUNTER_NOT_SETTABLE_IN_GTID_MODE';
+		exports$1[1859] = 'ER_DUP_UNKNOWN_IN_INDEX';
+		exports$1[1860] = 'ER_IDENT_CAUSES_TOO_LONG_PATH';
+		exports$1[1861] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOT_NULL';
+		exports$1[1862] = 'ER_MUST_CHANGE_PASSWORD_LOGIN';
+		exports$1[1863] = 'ER_ROW_IN_WRONG_PARTITION';
+		exports$1[1864] = 'ER_MTA_EVENT_BIGGER_PENDING_JOBS_SIZE_MAX';
+		exports$1[1865] = 'ER_INNODB_NO_FT_USES_PARSER';
+		exports$1[1866] = 'ER_BINLOG_LOGICAL_CORRUPTION';
+		exports$1[1867] = 'ER_WARN_PURGE_LOG_IN_USE';
+		exports$1[1868] = 'ER_WARN_PURGE_LOG_IS_ACTIVE';
+		exports$1[1869] = 'ER_AUTO_INCREMENT_CONFLICT';
+		exports$1[1870] = 'WARN_ON_BLOCKHOLE_IN_RBR';
+		exports$1[1871] = 'ER_REPLICA_CM_INIT_REPOSITORY';
+		exports$1[1872] = 'ER_REPLICA_AM_INIT_REPOSITORY';
+		exports$1[1873] = 'ER_ACCESS_DENIED_CHANGE_USER_ERROR';
+		exports$1[1874] = 'ER_INNODB_READ_ONLY';
+		exports$1[1875] = 'ER_STOP_REPLICA_SQL_THREAD_TIMEOUT';
+		exports$1[1876] = 'ER_STOP_REPLICA_IO_THREAD_TIMEOUT';
+		exports$1[1877] = 'ER_TABLE_CORRUPT';
+		exports$1[1878] = 'ER_TEMP_FILE_WRITE_FAILURE';
+		exports$1[1879] = 'ER_INNODB_FT_AUX_NOT_HEX_ID';
+		exports$1[1880] = 'ER_OLD_TEMPORALS_UPGRADED';
+		exports$1[1881] = 'ER_INNODB_FORCED_RECOVERY';
+		exports$1[1882] = 'ER_AES_INVALID_IV';
+		exports$1[1883] = 'ER_PLUGIN_CANNOT_BE_UNINSTALLED';
+		exports$1[1884] = 'ER_GTID_UNSAFE_BINLOG_SPLITTABLE_STATEMENT_AND_ASSIGNED_GTID';
+		exports$1[1885] = 'ER_REPLICA_HAS_MORE_GTIDS_THAN_SOURCE';
+		exports$1[1886] = 'ER_MISSING_KEY';
+		exports$1[1887] = 'WARN_NAMED_PIPE_ACCESS_EVERYONE';
+		exports$1[3000] = 'ER_FILE_CORRUPT';
+		exports$1[3001] = 'ER_ERROR_ON_SOURCE';
+		exports$1[3002] = 'ER_INCONSISTENT_ERROR';
+		exports$1[3003] = 'ER_STORAGE_ENGINE_NOT_LOADED';
+		exports$1[3004] = 'ER_GET_STACKED_DA_WITHOUT_ACTIVE_HANDLER';
+		exports$1[3005] = 'ER_WARN_LEGACY_SYNTAX_CONVERTED';
+		exports$1[3006] = 'ER_BINLOG_UNSAFE_FULLTEXT_PLUGIN';
+		exports$1[3007] = 'ER_CANNOT_DISCARD_TEMPORARY_TABLE';
+		exports$1[3008] = 'ER_FK_DEPTH_EXCEEDED';
+		exports$1[3009] = 'ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE_V2';
+		exports$1[3010] = 'ER_WARN_TRIGGER_DOESNT_HAVE_CREATED';
+		exports$1[3011] = 'ER_REFERENCED_TRG_DOES_NOT_EXIST';
+		exports$1[3012] = 'ER_EXPLAIN_NOT_SUPPORTED';
+		exports$1[3013] = 'ER_INVALID_FIELD_SIZE';
+		exports$1[3014] = 'ER_MISSING_HA_CREATE_OPTION';
+		exports$1[3015] = 'ER_ENGINE_OUT_OF_MEMORY';
+		exports$1[3016] = 'ER_PASSWORD_EXPIRE_ANONYMOUS_USER';
+		exports$1[3017] = 'ER_REPLICA_SQL_THREAD_MUST_STOP';
+		exports$1[3018] = 'ER_NO_FT_MATERIALIZED_SUBQUERY';
+		exports$1[3019] = 'ER_INNODB_UNDO_LOG_FULL';
+		exports$1[3020] = 'ER_INVALID_ARGUMENT_FOR_LOGARITHM';
+		exports$1[3021] = 'ER_REPLICA_CHANNEL_IO_THREAD_MUST_STOP';
+		exports$1[3022] = 'ER_WARN_OPEN_TEMP_TABLES_MUST_BE_ZERO';
+		exports$1[3023] = 'ER_WARN_ONLY_SOURCE_LOG_FILE_NO_POS';
+		exports$1[3024] = 'ER_QUERY_TIMEOUT';
+		exports$1[3025] = 'ER_NON_RO_SELECT_DISABLE_TIMER';
+		exports$1[3026] = 'ER_DUP_LIST_ENTRY';
+		exports$1[3027] = 'ER_SQL_MODE_NO_EFFECT';
+		exports$1[3028] = 'ER_AGGREGATE_ORDER_FOR_UNION';
+		exports$1[3029] = 'ER_AGGREGATE_ORDER_NON_AGG_QUERY';
+		exports$1[3030] = 'ER_REPLICA_WORKER_STOPPED_PREVIOUS_THD_ERROR';
+		exports$1[3031] = 'ER_DONT_SUPPORT_REPLICA_PRESERVE_COMMIT_ORDER';
+		exports$1[3032] = 'ER_SERVER_OFFLINE_MODE';
+		exports$1[3033] = 'ER_GIS_DIFFERENT_SRIDS';
+		exports$1[3034] = 'ER_GIS_UNSUPPORTED_ARGUMENT';
+		exports$1[3035] = 'ER_GIS_UNKNOWN_ERROR';
+		exports$1[3036] = 'ER_GIS_UNKNOWN_EXCEPTION';
+		exports$1[3037] = 'ER_GIS_INVALID_DATA';
+		exports$1[3038] = 'ER_BOOST_GEOMETRY_EMPTY_INPUT_EXCEPTION';
+		exports$1[3039] = 'ER_BOOST_GEOMETRY_CENTROID_EXCEPTION';
+		exports$1[3040] = 'ER_BOOST_GEOMETRY_OVERLAY_INVALID_INPUT_EXCEPTION';
+		exports$1[3041] = 'ER_BOOST_GEOMETRY_TURN_INFO_EXCEPTION';
+		exports$1[3042] = 'ER_BOOST_GEOMETRY_SELF_INTERSECTION_POINT_EXCEPTION';
+		exports$1[3043] = 'ER_BOOST_GEOMETRY_UNKNOWN_EXCEPTION';
+		exports$1[3044] = 'ER_STD_BAD_ALLOC_ERROR';
+		exports$1[3045] = 'ER_STD_DOMAIN_ERROR';
+		exports$1[3046] = 'ER_STD_LENGTH_ERROR';
+		exports$1[3047] = 'ER_STD_INVALID_ARGUMENT';
+		exports$1[3048] = 'ER_STD_OUT_OF_RANGE_ERROR';
+		exports$1[3049] = 'ER_STD_OVERFLOW_ERROR';
+		exports$1[3050] = 'ER_STD_RANGE_ERROR';
+		exports$1[3051] = 'ER_STD_UNDERFLOW_ERROR';
+		exports$1[3052] = 'ER_STD_LOGIC_ERROR';
+		exports$1[3053] = 'ER_STD_RUNTIME_ERROR';
+		exports$1[3054] = 'ER_STD_UNKNOWN_EXCEPTION';
+		exports$1[3055] = 'ER_GIS_DATA_WRONG_ENDIANESS';
+		exports$1[3056] = 'ER_CHANGE_SOURCE_PASSWORD_LENGTH';
+		exports$1[3057] = 'ER_USER_LOCK_WRONG_NAME';
+		exports$1[3058] = 'ER_USER_LOCK_DEADLOCK';
+		exports$1[3059] = 'ER_REPLACE_INACCESSIBLE_ROWS';
+		exports$1[3060] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_GIS';
+		exports$1[3061] = 'ER_ILLEGAL_USER_VAR';
+		exports$1[3062] = 'ER_GTID_MODE_OFF';
+		exports$1[3063] = 'ER_UNSUPPORTED_BY_REPLICATION_THREAD';
+		exports$1[3064] = 'ER_INCORRECT_TYPE';
+		exports$1[3065] = 'ER_FIELD_IN_ORDER_NOT_SELECT';
+		exports$1[3066] = 'ER_AGGREGATE_IN_ORDER_NOT_SELECT';
+		exports$1[3067] = 'ER_INVALID_RPL_WILD_TABLE_FILTER_PATTERN';
+		exports$1[3068] = 'ER_NET_OK_PACKET_TOO_LARGE';
+		exports$1[3069] = 'ER_INVALID_JSON_DATA';
+		exports$1[3070] = 'ER_INVALID_GEOJSON_MISSING_MEMBER';
+		exports$1[3071] = 'ER_INVALID_GEOJSON_WRONG_TYPE';
+		exports$1[3072] = 'ER_INVALID_GEOJSON_UNSPECIFIED';
+		exports$1[3073] = 'ER_DIMENSION_UNSUPPORTED';
+		exports$1[3074] = 'ER_REPLICA_CHANNEL_DOES_NOT_EXIST';
+		exports$1[3075] = 'ER_SLAVE_MULTIPLE_CHANNELS_HOST_PORT';
+		exports$1[3076] = 'ER_REPLICA_CHANNEL_NAME_INVALID_OR_TOO_LONG';
+		exports$1[3077] = 'ER_REPLICA_NEW_CHANNEL_WRONG_REPOSITORY';
+		exports$1[3078] = 'ER_SLAVE_CHANNEL_DELETE';
+		exports$1[3079] = 'ER_REPLICA_MULTIPLE_CHANNELS_CMD';
+		exports$1[3080] = 'ER_REPLICA_MAX_CHANNELS_EXCEEDED';
+		exports$1[3081] = 'ER_REPLICA_CHANNEL_MUST_STOP';
+		exports$1[3082] = 'ER_REPLICA_CHANNEL_NOT_RUNNING';
+		exports$1[3083] = 'ER_REPLICA_CHANNEL_WAS_RUNNING';
+		exports$1[3084] = 'ER_REPLICA_CHANNEL_WAS_NOT_RUNNING';
+		exports$1[3085] = 'ER_REPLICA_CHANNEL_SQL_THREAD_MUST_STOP';
+		exports$1[3086] = 'ER_REPLICA_CHANNEL_SQL_SKIP_COUNTER';
+		exports$1[3087] = 'ER_WRONG_FIELD_WITH_GROUP_V2';
+		exports$1[3088] = 'ER_MIX_OF_GROUP_FUNC_AND_FIELDS_V2';
+		exports$1[3089] = 'ER_WARN_DEPRECATED_SYSVAR_UPDATE';
+		exports$1[3090] = 'ER_WARN_DEPRECATED_SQLMODE';
+		exports$1[3091] = 'ER_CANNOT_LOG_PARTIAL_DROP_DATABASE_WITH_GTID';
+		exports$1[3092] = 'ER_GROUP_REPLICATION_CONFIGURATION';
+		exports$1[3093] = 'ER_GROUP_REPLICATION_RUNNING';
+		exports$1[3094] = 'ER_GROUP_REPLICATION_APPLIER_INIT_ERROR';
+		exports$1[3095] = 'ER_GROUP_REPLICATION_STOP_APPLIER_THREAD_TIMEOUT';
+		exports$1[3096] = 'ER_GROUP_REPLICATION_COMMUNICATION_LAYER_SESSION_ERROR';
+		exports$1[3097] = 'ER_GROUP_REPLICATION_COMMUNICATION_LAYER_JOIN_ERROR';
+		exports$1[3098] = 'ER_BEFORE_DML_VALIDATION_ERROR';
+		exports$1[3099] = 'ER_PREVENTS_VARIABLE_WITHOUT_RBR';
+		exports$1[3100] = 'ER_RUN_HOOK_ERROR';
+		exports$1[3101] = 'ER_TRANSACTION_ROLLBACK_DURING_COMMIT';
+		exports$1[3102] = 'ER_GENERATED_COLUMN_FUNCTION_IS_NOT_ALLOWED';
+		exports$1[3103] = 'ER_UNSUPPORTED_ALTER_INPLACE_ON_VIRTUAL_COLUMN';
+		exports$1[3104] = 'ER_WRONG_FK_OPTION_FOR_GENERATED_COLUMN';
+		exports$1[3105] = 'ER_NON_DEFAULT_VALUE_FOR_GENERATED_COLUMN';
+		exports$1[3106] = 'ER_UNSUPPORTED_ACTION_ON_GENERATED_COLUMN';
+		exports$1[3107] = 'ER_GENERATED_COLUMN_NON_PRIOR';
+		exports$1[3108] = 'ER_DEPENDENT_BY_GENERATED_COLUMN';
+		exports$1[3109] = 'ER_GENERATED_COLUMN_REF_AUTO_INC';
+		exports$1[3110] = 'ER_FEATURE_NOT_AVAILABLE';
+		exports$1[3111] = 'ER_CANT_SET_GTID_MODE';
+		exports$1[3112] = 'ER_CANT_USE_AUTO_POSITION_WITH_GTID_MODE_OFF';
+		exports$1[3113] = 'ER_CANT_REPLICATE_ANONYMOUS_WITH_AUTO_POSITION';
+		exports$1[3114] = 'ER_CANT_REPLICATE_ANONYMOUS_WITH_GTID_MODE_ON';
+		exports$1[3115] = 'ER_CANT_REPLICATE_GTID_WITH_GTID_MODE_OFF';
+		exports$1[3116] =
 		  'ER_CANT_ENFORCE_GTID_CONSISTENCY_WITH_ONGOING_GTID_VIOLATING_TX';
-		exports[3117] =
+		exports$1[3117] =
 		  'ER_ENFORCE_GTID_CONSISTENCY_WARN_WITH_ONGOING_GTID_VIOLATING_TX';
-		exports[3118] = 'ER_ACCOUNT_HAS_BEEN_LOCKED';
-		exports[3119] = 'ER_WRONG_TABLESPACE_NAME';
-		exports[3120] = 'ER_TABLESPACE_IS_NOT_EMPTY';
-		exports[3121] = 'ER_WRONG_FILE_NAME';
-		exports[3122] = 'ER_BOOST_GEOMETRY_INCONSISTENT_TURNS_EXCEPTION';
-		exports[3123] = 'ER_WARN_OPTIMIZER_HINT_SYNTAX_ERROR';
-		exports[3124] = 'ER_WARN_BAD_MAX_EXECUTION_TIME';
-		exports[3125] = 'ER_WARN_UNSUPPORTED_MAX_EXECUTION_TIME';
-		exports[3126] = 'ER_WARN_CONFLICTING_HINT';
-		exports[3127] = 'ER_WARN_UNKNOWN_QB_NAME';
-		exports[3128] = 'ER_UNRESOLVED_HINT_NAME';
-		exports[3129] = 'ER_WARN_ON_MODIFYING_GTID_EXECUTED_TABLE';
-		exports[3130] = 'ER_PLUGGABLE_PROTOCOL_COMMAND_NOT_SUPPORTED';
-		exports[3131] = 'ER_LOCKING_SERVICE_WRONG_NAME';
-		exports[3132] = 'ER_LOCKING_SERVICE_DEADLOCK';
-		exports[3133] = 'ER_LOCKING_SERVICE_TIMEOUT';
-		exports[3134] = 'ER_GIS_MAX_POINTS_IN_GEOMETRY_OVERFLOWED';
-		exports[3135] = 'ER_SQL_MODE_MERGED';
-		exports[3136] = 'ER_VTOKEN_PLUGIN_TOKEN_MISMATCH';
-		exports[3137] = 'ER_VTOKEN_PLUGIN_TOKEN_NOT_FOUND';
-		exports[3138] = 'ER_CANT_SET_VARIABLE_WHEN_OWNING_GTID';
-		exports[3139] = 'ER_REPLICA_CHANNEL_OPERATION_NOT_ALLOWED';
-		exports[3140] = 'ER_INVALID_JSON_TEXT';
-		exports[3141] = 'ER_INVALID_JSON_TEXT_IN_PARAM';
-		exports[3142] = 'ER_INVALID_JSON_BINARY_DATA';
-		exports[3143] = 'ER_INVALID_JSON_PATH';
-		exports[3144] = 'ER_INVALID_JSON_CHARSET';
-		exports[3145] = 'ER_INVALID_JSON_CHARSET_IN_FUNCTION';
-		exports[3146] = 'ER_INVALID_TYPE_FOR_JSON';
-		exports[3147] = 'ER_INVALID_CAST_TO_JSON';
-		exports[3148] = 'ER_INVALID_JSON_PATH_CHARSET';
-		exports[3149] = 'ER_INVALID_JSON_PATH_WILDCARD';
-		exports[3150] = 'ER_JSON_VALUE_TOO_BIG';
-		exports[3151] = 'ER_JSON_KEY_TOO_BIG';
-		exports[3152] = 'ER_JSON_USED_AS_KEY';
-		exports[3153] = 'ER_JSON_VACUOUS_PATH';
-		exports[3154] = 'ER_JSON_BAD_ONE_OR_ALL_ARG';
-		exports[3155] = 'ER_NUMERIC_JSON_VALUE_OUT_OF_RANGE';
-		exports[3156] = 'ER_INVALID_JSON_VALUE_FOR_CAST';
-		exports[3157] = 'ER_JSON_DOCUMENT_TOO_DEEP';
-		exports[3158] = 'ER_JSON_DOCUMENT_NULL_KEY';
-		exports[3159] = 'ER_SECURE_TRANSPORT_REQUIRED';
-		exports[3160] = 'ER_NO_SECURE_TRANSPORTS_CONFIGURED';
-		exports[3161] = 'ER_DISABLED_STORAGE_ENGINE';
-		exports[3162] = 'ER_USER_DOES_NOT_EXIST';
-		exports[3163] = 'ER_USER_ALREADY_EXISTS';
-		exports[3164] = 'ER_AUDIT_API_ABORT';
-		exports[3165] = 'ER_INVALID_JSON_PATH_ARRAY_CELL';
-		exports[3166] = 'ER_BUFPOOL_RESIZE_INPROGRESS';
-		exports[3167] = 'ER_FEATURE_DISABLED_SEE_DOC';
-		exports[3168] = 'ER_SERVER_ISNT_AVAILABLE';
-		exports[3169] = 'ER_SESSION_WAS_KILLED';
-		exports[3170] = 'ER_CAPACITY_EXCEEDED';
-		exports[3171] = 'ER_CAPACITY_EXCEEDED_IN_RANGE_OPTIMIZER';
-		exports[3172] = 'ER_TABLE_NEEDS_UPG_PART';
-		exports[3173] = 'ER_CANT_WAIT_FOR_EXECUTED_GTID_SET_WHILE_OWNING_A_GTID';
-		exports[3174] = 'ER_CANNOT_ADD_FOREIGN_BASE_COL_VIRTUAL';
-		exports[3175] = 'ER_CANNOT_CREATE_VIRTUAL_INDEX_CONSTRAINT';
-		exports[3176] = 'ER_ERROR_ON_MODIFYING_GTID_EXECUTED_TABLE';
-		exports[3177] = 'ER_LOCK_REFUSED_BY_ENGINE';
-		exports[3178] = 'ER_UNSUPPORTED_ALTER_ONLINE_ON_VIRTUAL_COLUMN';
-		exports[3179] = 'ER_MASTER_KEY_ROTATION_NOT_SUPPORTED_BY_SE';
-		exports[3180] = 'ER_MASTER_KEY_ROTATION_ERROR_BY_SE';
-		exports[3181] = 'ER_MASTER_KEY_ROTATION_BINLOG_FAILED';
-		exports[3182] = 'ER_MASTER_KEY_ROTATION_SE_UNAVAILABLE';
-		exports[3183] = 'ER_TABLESPACE_CANNOT_ENCRYPT';
-		exports[3184] = 'ER_INVALID_ENCRYPTION_OPTION';
-		exports[3185] = 'ER_CANNOT_FIND_KEY_IN_KEYRING';
-		exports[3186] = 'ER_CAPACITY_EXCEEDED_IN_PARSER';
-		exports[3187] = 'ER_UNSUPPORTED_ALTER_ENCRYPTION_INPLACE';
-		exports[3188] = 'ER_KEYRING_UDF_KEYRING_SERVICE_ERROR';
-		exports[3189] = 'ER_USER_COLUMN_OLD_LENGTH';
-		exports[3190] = 'ER_CANT_RESET_SOURCE';
-		exports[3191] = 'ER_GROUP_REPLICATION_MAX_GROUP_SIZE';
-		exports[3192] = 'ER_CANNOT_ADD_FOREIGN_BASE_COL_STORED';
-		exports[3193] = 'ER_TABLE_REFERENCED';
-		exports[3194] = 'ER_PARTITION_ENGINE_DEPRECATED_FOR_TABLE';
-		exports[3195] = 'ER_WARN_USING_GEOMFROMWKB_TO_SET_SRID_ZERO';
-		exports[3196] = 'ER_WARN_USING_GEOMFROMWKB_TO_SET_SRID';
-		exports[3197] = 'ER_XA_RETRY';
-		exports[3198] = 'ER_KEYRING_AWS_UDF_AWS_KMS_ERROR';
-		exports[3199] = 'ER_BINLOG_UNSAFE_XA';
-		exports[3200] = 'ER_UDF_ERROR';
-		exports[3201] = 'ER_KEYRING_MIGRATION_FAILURE';
-		exports[3202] = 'ER_KEYRING_ACCESS_DENIED_ERROR';
-		exports[3203] = 'ER_KEYRING_MIGRATION_STATUS';
-		exports[3204] = 'ER_PLUGIN_FAILED_TO_OPEN_TABLES';
-		exports[3205] = 'ER_PLUGIN_FAILED_TO_OPEN_TABLE';
-		exports[3206] = 'ER_AUDIT_LOG_NO_KEYRING_PLUGIN_INSTALLED';
-		exports[3207] = 'ER_AUDIT_LOG_ENCRYPTION_PASSWORD_HAS_NOT_BEEN_SET';
-		exports[3208] = 'ER_AUDIT_LOG_COULD_NOT_CREATE_AES_KEY';
-		exports[3209] = 'ER_AUDIT_LOG_ENCRYPTION_PASSWORD_CANNOT_BE_FETCHED';
-		exports[3210] = 'ER_AUDIT_LOG_JSON_FILTERING_NOT_ENABLED';
-		exports[3211] = 'ER_AUDIT_LOG_UDF_INSUFFICIENT_PRIVILEGE';
-		exports[3212] = 'ER_AUDIT_LOG_SUPER_PRIVILEGE_REQUIRED';
-		exports[3213] = 'ER_COULD_NOT_REINITIALIZE_AUDIT_LOG_FILTERS';
-		exports[3214] = 'ER_AUDIT_LOG_UDF_INVALID_ARGUMENT_TYPE';
-		exports[3215] = 'ER_AUDIT_LOG_UDF_INVALID_ARGUMENT_COUNT';
-		exports[3216] = 'ER_AUDIT_LOG_HAS_NOT_BEEN_INSTALLED';
-		exports[3217] = 'ER_AUDIT_LOG_UDF_READ_INVALID_MAX_ARRAY_LENGTH_ARG_TYPE';
-		exports[3218] = 'ER_AUDIT_LOG_UDF_READ_INVALID_MAX_ARRAY_LENGTH_ARG_VALUE';
-		exports[3219] = 'ER_AUDIT_LOG_JSON_FILTER_PARSING_ERROR';
-		exports[3220] = 'ER_AUDIT_LOG_JSON_FILTER_NAME_CANNOT_BE_EMPTY';
-		exports[3221] = 'ER_AUDIT_LOG_JSON_USER_NAME_CANNOT_BE_EMPTY';
-		exports[3222] = 'ER_AUDIT_LOG_JSON_FILTER_DOES_NOT_EXISTS';
-		exports[3223] = 'ER_AUDIT_LOG_USER_FIRST_CHARACTER_MUST_BE_ALPHANUMERIC';
-		exports[3224] = 'ER_AUDIT_LOG_USER_NAME_INVALID_CHARACTER';
-		exports[3225] = 'ER_AUDIT_LOG_HOST_NAME_INVALID_CHARACTER';
-		exports[3226] = 'WARN_DEPRECATED_MAXDB_SQL_MODE_FOR_TIMESTAMP';
-		exports[3227] = 'ER_XA_REPLICATION_FILTERS';
-		exports[3228] = 'ER_CANT_OPEN_ERROR_LOG';
-		exports[3229] = 'ER_GROUPING_ON_TIMESTAMP_IN_DST';
-		exports[3230] = 'ER_CANT_START_SERVER_NAMED_PIPE';
-		exports[3231] = 'ER_WRITE_SET_EXCEEDS_LIMIT';
-		exports[3232] = 'ER_DEPRECATED_TLS_VERSION_SESSION_57';
-		exports[3233] = 'ER_WARN_DEPRECATED_TLS_VERSION_57';
-		exports[3234] = 'ER_WARN_WRONG_NATIVE_TABLE_STRUCTURE';
-		exports[3235] = 'ER_AES_INVALID_KDF_NAME';
-		exports[3236] = 'ER_AES_INVALID_KDF_ITERATIONS';
-		exports[3237] = 'WARN_AES_KEY_SIZE';
-		exports[3238] = 'ER_AES_INVALID_KDF_OPTION_SIZE';
-		exports[3500] = 'ER_UNSUPPORT_COMPRESSED_TEMPORARY_TABLE';
-		exports[3501] = 'ER_ACL_OPERATION_FAILED';
-		exports[3502] = 'ER_UNSUPPORTED_INDEX_ALGORITHM';
-		exports[3503] = 'ER_NO_SUCH_DB';
-		exports[3504] = 'ER_TOO_BIG_ENUM';
-		exports[3505] = 'ER_TOO_LONG_SET_ENUM_VALUE';
-		exports[3506] = 'ER_INVALID_DD_OBJECT';
-		exports[3507] = 'ER_UPDATING_DD_TABLE';
-		exports[3508] = 'ER_INVALID_DD_OBJECT_ID';
-		exports[3509] = 'ER_INVALID_DD_OBJECT_NAME';
-		exports[3510] = 'ER_TABLESPACE_MISSING_WITH_NAME';
-		exports[3511] = 'ER_TOO_LONG_ROUTINE_COMMENT';
-		exports[3512] = 'ER_SP_LOAD_FAILED';
-		exports[3513] = 'ER_INVALID_BITWISE_OPERANDS_SIZE';
-		exports[3514] = 'ER_INVALID_BITWISE_AGGREGATE_OPERANDS_SIZE';
-		exports[3515] = 'ER_WARN_UNSUPPORTED_HINT';
-		exports[3516] = 'ER_UNEXPECTED_GEOMETRY_TYPE';
-		exports[3517] = 'ER_SRS_PARSE_ERROR';
-		exports[3518] = 'ER_SRS_PROJ_PARAMETER_MISSING';
-		exports[3519] = 'ER_WARN_SRS_NOT_FOUND';
-		exports[3520] = 'ER_SRS_NOT_CARTESIAN';
-		exports[3521] = 'ER_SRS_NOT_CARTESIAN_UNDEFINED';
-		exports[3522] = 'ER_PK_INDEX_CANT_BE_INVISIBLE';
-		exports[3523] = 'ER_UNKNOWN_AUTHID';
-		exports[3524] = 'ER_FAILED_ROLE_GRANT';
-		exports[3525] = 'ER_OPEN_ROLE_TABLES';
-		exports[3526] = 'ER_FAILED_DEFAULT_ROLES';
-		exports[3527] = 'ER_COMPONENTS_NO_SCHEME';
-		exports[3528] = 'ER_COMPONENTS_NO_SCHEME_SERVICE';
-		exports[3529] = 'ER_COMPONENTS_CANT_LOAD';
-		exports[3530] = 'ER_ROLE_NOT_GRANTED';
-		exports[3531] = 'ER_FAILED_REVOKE_ROLE';
-		exports[3532] = 'ER_RENAME_ROLE';
-		exports[3533] = 'ER_COMPONENTS_CANT_ACQUIRE_SERVICE_IMPLEMENTATION';
-		exports[3534] = 'ER_COMPONENTS_CANT_SATISFY_DEPENDENCY';
-		exports[3535] = 'ER_COMPONENTS_LOAD_CANT_REGISTER_SERVICE_IMPLEMENTATION';
-		exports[3536] = 'ER_COMPONENTS_LOAD_CANT_INITIALIZE';
-		exports[3537] = 'ER_COMPONENTS_UNLOAD_NOT_LOADED';
-		exports[3538] = 'ER_COMPONENTS_UNLOAD_CANT_DEINITIALIZE';
-		exports[3539] = 'ER_COMPONENTS_CANT_RELEASE_SERVICE';
-		exports[3540] = 'ER_COMPONENTS_UNLOAD_CANT_UNREGISTER_SERVICE';
-		exports[3541] = 'ER_COMPONENTS_CANT_UNLOAD';
-		exports[3542] = 'ER_WARN_UNLOAD_THE_NOT_PERSISTED';
-		exports[3543] = 'ER_COMPONENT_TABLE_INCORRECT';
-		exports[3544] = 'ER_COMPONENT_MANIPULATE_ROW_FAILED';
-		exports[3545] = 'ER_COMPONENTS_UNLOAD_DUPLICATE_IN_GROUP';
-		exports[3546] = 'ER_CANT_SET_GTID_PURGED_DUE_SETS_CONSTRAINTS';
-		exports[3547] = 'ER_CANNOT_LOCK_USER_MANAGEMENT_CACHES';
-		exports[3548] = 'ER_SRS_NOT_FOUND';
-		exports[3549] = 'ER_VARIABLE_NOT_PERSISTED';
-		exports[3550] = 'ER_IS_QUERY_INVALID_CLAUSE';
-		exports[3551] = 'ER_UNABLE_TO_STORE_STATISTICS';
-		exports[3552] = 'ER_NO_SYSTEM_SCHEMA_ACCESS';
-		exports[3553] = 'ER_NO_SYSTEM_TABLESPACE_ACCESS';
-		exports[3554] = 'ER_NO_SYSTEM_TABLE_ACCESS';
-		exports[3555] = 'ER_NO_SYSTEM_TABLE_ACCESS_FOR_DICTIONARY_TABLE';
-		exports[3556] = 'ER_NO_SYSTEM_TABLE_ACCESS_FOR_SYSTEM_TABLE';
-		exports[3557] = 'ER_NO_SYSTEM_TABLE_ACCESS_FOR_TABLE';
-		exports[3558] = 'ER_INVALID_OPTION_KEY';
-		exports[3559] = 'ER_INVALID_OPTION_VALUE';
-		exports[3560] = 'ER_INVALID_OPTION_KEY_VALUE_PAIR';
-		exports[3561] = 'ER_INVALID_OPTION_START_CHARACTER';
-		exports[3562] = 'ER_INVALID_OPTION_END_CHARACTER';
-		exports[3563] = 'ER_INVALID_OPTION_CHARACTERS';
-		exports[3564] = 'ER_DUPLICATE_OPTION_KEY';
-		exports[3565] = 'ER_WARN_SRS_NOT_FOUND_AXIS_ORDER';
-		exports[3566] = 'ER_NO_ACCESS_TO_NATIVE_FCT';
-		exports[3567] = 'ER_RESET_SOURCE_TO_VALUE_OUT_OF_RANGE';
-		exports[3568] = 'ER_UNRESOLVED_TABLE_LOCK';
-		exports[3569] = 'ER_DUPLICATE_TABLE_LOCK';
-		exports[3570] = 'ER_BINLOG_UNSAFE_SKIP_LOCKED';
-		exports[3571] = 'ER_BINLOG_UNSAFE_NOWAIT';
-		exports[3572] = 'ER_LOCK_NOWAIT';
-		exports[3573] = 'ER_CTE_RECURSIVE_REQUIRES_UNION';
-		exports[3574] = 'ER_CTE_RECURSIVE_REQUIRES_NONRECURSIVE_FIRST';
-		exports[3575] = 'ER_CTE_RECURSIVE_FORBIDS_AGGREGATION';
-		exports[3576] = 'ER_CTE_RECURSIVE_FORBIDDEN_JOIN_ORDER';
-		exports[3577] = 'ER_CTE_RECURSIVE_REQUIRES_SINGLE_REFERENCE';
-		exports[3578] = 'ER_SWITCH_TMP_ENGINE';
-		exports[3579] = 'ER_WINDOW_NO_SUCH_WINDOW';
-		exports[3580] = 'ER_WINDOW_CIRCULARITY_IN_WINDOW_GRAPH';
-		exports[3581] = 'ER_WINDOW_NO_CHILD_PARTITIONING';
-		exports[3582] = 'ER_WINDOW_NO_INHERIT_FRAME';
-		exports[3583] = 'ER_WINDOW_NO_REDEFINE_ORDER_BY';
-		exports[3584] = 'ER_WINDOW_FRAME_START_ILLEGAL';
-		exports[3585] = 'ER_WINDOW_FRAME_END_ILLEGAL';
-		exports[3586] = 'ER_WINDOW_FRAME_ILLEGAL';
-		exports[3587] = 'ER_WINDOW_RANGE_FRAME_ORDER_TYPE';
-		exports[3588] = 'ER_WINDOW_RANGE_FRAME_TEMPORAL_TYPE';
-		exports[3589] = 'ER_WINDOW_RANGE_FRAME_NUMERIC_TYPE';
-		exports[3590] = 'ER_WINDOW_RANGE_BOUND_NOT_CONSTANT';
-		exports[3591] = 'ER_WINDOW_DUPLICATE_NAME';
-		exports[3592] = 'ER_WINDOW_ILLEGAL_ORDER_BY';
-		exports[3593] = 'ER_WINDOW_INVALID_WINDOW_FUNC_USE';
-		exports[3594] = 'ER_WINDOW_INVALID_WINDOW_FUNC_ALIAS_USE';
-		exports[3595] = 'ER_WINDOW_NESTED_WINDOW_FUNC_USE_IN_WINDOW_SPEC';
-		exports[3596] = 'ER_WINDOW_ROWS_INTERVAL_USE';
-		exports[3597] = 'ER_WINDOW_NO_GROUP_ORDER';
-		exports[3598] = 'ER_WINDOW_EXPLAIN_JSON';
-		exports[3599] = 'ER_WINDOW_FUNCTION_IGNORES_FRAME';
-		exports[3600] = 'ER_WL9236_NOW';
-		exports[3601] = 'ER_INVALID_NO_OF_ARGS';
-		exports[3602] = 'ER_FIELD_IN_GROUPING_NOT_GROUP_BY';
-		exports[3603] = 'ER_TOO_LONG_TABLESPACE_COMMENT';
-		exports[3604] = 'ER_ENGINE_CANT_DROP_TABLE';
-		exports[3605] = 'ER_ENGINE_CANT_DROP_MISSING_TABLE';
-		exports[3606] = 'ER_TABLESPACE_DUP_FILENAME';
-		exports[3607] = 'ER_DB_DROP_RMDIR2';
-		exports[3608] = 'ER_IMP_NO_FILES_MATCHED';
-		exports[3609] = 'ER_IMP_SCHEMA_DOES_NOT_EXIST';
-		exports[3610] = 'ER_IMP_TABLE_ALREADY_EXISTS';
-		exports[3611] = 'ER_IMP_INCOMPATIBLE_MYSQLD_VERSION';
-		exports[3612] = 'ER_IMP_INCOMPATIBLE_DD_VERSION';
-		exports[3613] = 'ER_IMP_INCOMPATIBLE_SDI_VERSION';
-		exports[3614] = 'ER_WARN_INVALID_HINT';
-		exports[3615] = 'ER_VAR_DOES_NOT_EXIST';
-		exports[3616] = 'ER_LONGITUDE_OUT_OF_RANGE';
-		exports[3617] = 'ER_LATITUDE_OUT_OF_RANGE';
-		exports[3618] = 'ER_NOT_IMPLEMENTED_FOR_GEOGRAPHIC_SRS';
-		exports[3619] = 'ER_ILLEGAL_PRIVILEGE_LEVEL';
-		exports[3620] = 'ER_NO_SYSTEM_VIEW_ACCESS';
-		exports[3621] = 'ER_COMPONENT_FILTER_FLABBERGASTED';
-		exports[3622] = 'ER_PART_EXPR_TOO_LONG';
-		exports[3623] = 'ER_UDF_DROP_DYNAMICALLY_REGISTERED';
-		exports[3624] = 'ER_UNABLE_TO_STORE_COLUMN_STATISTICS';
-		exports[3625] = 'ER_UNABLE_TO_UPDATE_COLUMN_STATISTICS';
-		exports[3626] = 'ER_UNABLE_TO_DROP_COLUMN_STATISTICS';
-		exports[3627] = 'ER_UNABLE_TO_BUILD_HISTOGRAM';
-		exports[3628] = 'ER_MANDATORY_ROLE';
-		exports[3629] = 'ER_MISSING_TABLESPACE_FILE';
-		exports[3630] = 'ER_PERSIST_ONLY_ACCESS_DENIED_ERROR';
-		exports[3631] = 'ER_CMD_NEED_SUPER';
-		exports[3632] = 'ER_PATH_IN_DATADIR';
-		exports[3633] = 'ER_CLONE_DDL_IN_PROGRESS';
-		exports[3634] = 'ER_CLONE_TOO_MANY_CONCURRENT_CLONES';
-		exports[3635] = 'ER_APPLIER_LOG_EVENT_VALIDATION_ERROR';
-		exports[3636] = 'ER_CTE_MAX_RECURSION_DEPTH';
-		exports[3637] = 'ER_NOT_HINT_UPDATABLE_VARIABLE';
-		exports[3638] = 'ER_CREDENTIALS_CONTRADICT_TO_HISTORY';
-		exports[3639] = 'ER_WARNING_PASSWORD_HISTORY_CLAUSES_VOID';
-		exports[3640] = 'ER_CLIENT_DOES_NOT_SUPPORT';
-		exports[3641] = 'ER_I_S_SKIPPED_TABLESPACE';
-		exports[3642] = 'ER_TABLESPACE_ENGINE_MISMATCH';
-		exports[3643] = 'ER_WRONG_SRID_FOR_COLUMN';
-		exports[3644] = 'ER_CANNOT_ALTER_SRID_DUE_TO_INDEX';
-		exports[3645] = 'ER_WARN_BINLOG_PARTIAL_UPDATES_DISABLED';
-		exports[3646] = 'ER_WARN_BINLOG_V1_ROW_EVENTS_DISABLED';
-		exports[3647] = 'ER_WARN_BINLOG_PARTIAL_UPDATES_SUGGESTS_PARTIAL_IMAGES';
-		exports[3648] = 'ER_COULD_NOT_APPLY_JSON_DIFF';
-		exports[3649] = 'ER_CORRUPTED_JSON_DIFF';
-		exports[3650] = 'ER_RESOURCE_GROUP_EXISTS';
-		exports[3651] = 'ER_RESOURCE_GROUP_NOT_EXISTS';
-		exports[3652] = 'ER_INVALID_VCPU_ID';
-		exports[3653] = 'ER_INVALID_VCPU_RANGE';
-		exports[3654] = 'ER_INVALID_THREAD_PRIORITY';
-		exports[3655] = 'ER_DISALLOWED_OPERATION';
-		exports[3656] = 'ER_RESOURCE_GROUP_BUSY';
-		exports[3657] = 'ER_RESOURCE_GROUP_DISABLED';
-		exports[3658] = 'ER_FEATURE_UNSUPPORTED';
-		exports[3659] = 'ER_ATTRIBUTE_IGNORED';
-		exports[3660] = 'ER_INVALID_THREAD_ID';
-		exports[3661] = 'ER_RESOURCE_GROUP_BIND_FAILED';
-		exports[3662] = 'ER_INVALID_USE_OF_FORCE_OPTION';
-		exports[3663] = 'ER_GROUP_REPLICATION_COMMAND_FAILURE';
-		exports[3664] = 'ER_SDI_OPERATION_FAILED';
-		exports[3665] = 'ER_MISSING_JSON_TABLE_VALUE';
-		exports[3666] = 'ER_WRONG_JSON_TABLE_VALUE';
-		exports[3667] = 'ER_TF_MUST_HAVE_ALIAS';
-		exports[3668] = 'ER_TF_FORBIDDEN_JOIN_TYPE';
-		exports[3669] = 'ER_JT_VALUE_OUT_OF_RANGE';
-		exports[3670] = 'ER_JT_MAX_NESTED_PATH';
-		exports[3671] = 'ER_PASSWORD_EXPIRATION_NOT_SUPPORTED_BY_AUTH_METHOD';
-		exports[3672] = 'ER_INVALID_GEOJSON_CRS_NOT_TOP_LEVEL';
-		exports[3673] = 'ER_BAD_NULL_ERROR_NOT_IGNORED';
-		exports[3674] = 'WARN_USELESS_SPATIAL_INDEX';
-		exports[3675] = 'ER_DISK_FULL_NOWAIT';
-		exports[3676] = 'ER_PARSE_ERROR_IN_DIGEST_FN';
-		exports[3677] = 'ER_UNDISCLOSED_PARSE_ERROR_IN_DIGEST_FN';
-		exports[3678] = 'ER_SCHEMA_DIR_EXISTS';
-		exports[3679] = 'ER_SCHEMA_DIR_MISSING';
-		exports[3680] = 'ER_SCHEMA_DIR_CREATE_FAILED';
-		exports[3681] = 'ER_SCHEMA_DIR_UNKNOWN';
-		exports[3682] = 'ER_ONLY_IMPLEMENTED_FOR_SRID_0_AND_4326';
-		exports[3683] = 'ER_BINLOG_EXPIRE_LOG_DAYS_AND_SECS_USED_TOGETHER';
-		exports[3684] = 'ER_REGEXP_BUFFER_OVERFLOW';
-		exports[3685] = 'ER_REGEXP_ILLEGAL_ARGUMENT';
-		exports[3686] = 'ER_REGEXP_INDEX_OUTOFBOUNDS_ERROR';
-		exports[3687] = 'ER_REGEXP_INTERNAL_ERROR';
-		exports[3688] = 'ER_REGEXP_RULE_SYNTAX';
-		exports[3689] = 'ER_REGEXP_BAD_ESCAPE_SEQUENCE';
-		exports[3690] = 'ER_REGEXP_UNIMPLEMENTED';
-		exports[3691] = 'ER_REGEXP_MISMATCHED_PAREN';
-		exports[3692] = 'ER_REGEXP_BAD_INTERVAL';
-		exports[3693] = 'ER_REGEXP_MAX_LT_MIN';
-		exports[3694] = 'ER_REGEXP_INVALID_BACK_REF';
-		exports[3695] = 'ER_REGEXP_LOOK_BEHIND_LIMIT';
-		exports[3696] = 'ER_REGEXP_MISSING_CLOSE_BRACKET';
-		exports[3697] = 'ER_REGEXP_INVALID_RANGE';
-		exports[3698] = 'ER_REGEXP_STACK_OVERFLOW';
-		exports[3699] = 'ER_REGEXP_TIME_OUT';
-		exports[3700] = 'ER_REGEXP_PATTERN_TOO_BIG';
-		exports[3701] = 'ER_CANT_SET_ERROR_LOG_SERVICE';
-		exports[3702] = 'ER_EMPTY_PIPELINE_FOR_ERROR_LOG_SERVICE';
-		exports[3703] = 'ER_COMPONENT_FILTER_DIAGNOSTICS';
-		exports[3704] = 'ER_NOT_IMPLEMENTED_FOR_CARTESIAN_SRS';
-		exports[3705] = 'ER_NOT_IMPLEMENTED_FOR_PROJECTED_SRS';
-		exports[3706] = 'ER_NONPOSITIVE_RADIUS';
-		exports[3707] = 'ER_RESTART_SERVER_FAILED';
-		exports[3708] = 'ER_SRS_MISSING_MANDATORY_ATTRIBUTE';
-		exports[3709] = 'ER_SRS_MULTIPLE_ATTRIBUTE_DEFINITIONS';
-		exports[3710] = 'ER_SRS_NAME_CANT_BE_EMPTY_OR_WHITESPACE';
-		exports[3711] = 'ER_SRS_ORGANIZATION_CANT_BE_EMPTY_OR_WHITESPACE';
-		exports[3712] = 'ER_SRS_ID_ALREADY_EXISTS';
-		exports[3713] = 'ER_WARN_SRS_ID_ALREADY_EXISTS';
-		exports[3714] = 'ER_CANT_MODIFY_SRID_0';
-		exports[3715] = 'ER_WARN_RESERVED_SRID_RANGE';
-		exports[3716] = 'ER_CANT_MODIFY_SRS_USED_BY_COLUMN';
-		exports[3717] = 'ER_SRS_INVALID_CHARACTER_IN_ATTRIBUTE';
-		exports[3718] = 'ER_SRS_ATTRIBUTE_STRING_TOO_LONG';
-		exports[3719] = 'ER_DEPRECATED_UTF8_ALIAS';
-		exports[3720] = 'ER_DEPRECATED_NATIONAL';
-		exports[3721] = 'ER_INVALID_DEFAULT_UTF8MB4_COLLATION';
-		exports[3722] = 'ER_UNABLE_TO_COLLECT_LOG_STATUS';
-		exports[3723] = 'ER_RESERVED_TABLESPACE_NAME';
-		exports[3724] = 'ER_UNABLE_TO_SET_OPTION';
-		exports[3725] = 'ER_REPLICA_POSSIBLY_DIVERGED_AFTER_DDL';
-		exports[3726] = 'ER_SRS_NOT_GEOGRAPHIC';
-		exports[3727] = 'ER_POLYGON_TOO_LARGE';
-		exports[3728] = 'ER_SPATIAL_UNIQUE_INDEX';
-		exports[3729] = 'ER_INDEX_TYPE_NOT_SUPPORTED_FOR_SPATIAL_INDEX';
-		exports[3730] = 'ER_FK_CANNOT_DROP_PARENT';
-		exports[3731] = 'ER_GEOMETRY_PARAM_LONGITUDE_OUT_OF_RANGE';
-		exports[3732] = 'ER_GEOMETRY_PARAM_LATITUDE_OUT_OF_RANGE';
-		exports[3733] = 'ER_FK_CANNOT_USE_VIRTUAL_COLUMN';
-		exports[3734] = 'ER_FK_NO_COLUMN_PARENT';
-		exports[3735] = 'ER_CANT_SET_ERROR_SUPPRESSION_LIST';
-		exports[3736] = 'ER_SRS_GEOGCS_INVALID_AXES';
-		exports[3737] = 'ER_SRS_INVALID_SEMI_MAJOR_AXIS';
-		exports[3738] = 'ER_SRS_INVALID_INVERSE_FLATTENING';
-		exports[3739] = 'ER_SRS_INVALID_ANGULAR_UNIT';
-		exports[3740] = 'ER_SRS_INVALID_PRIME_MERIDIAN';
-		exports[3741] = 'ER_TRANSFORM_SOURCE_SRS_NOT_SUPPORTED';
-		exports[3742] = 'ER_TRANSFORM_TARGET_SRS_NOT_SUPPORTED';
-		exports[3743] = 'ER_TRANSFORM_SOURCE_SRS_MISSING_TOWGS84';
-		exports[3744] = 'ER_TRANSFORM_TARGET_SRS_MISSING_TOWGS84';
-		exports[3745] = 'ER_TEMP_TABLE_PREVENTS_SWITCH_SESSION_BINLOG_FORMAT';
-		exports[3746] = 'ER_TEMP_TABLE_PREVENTS_SWITCH_GLOBAL_BINLOG_FORMAT';
-		exports[3747] = 'ER_RUNNING_APPLIER_PREVENTS_SWITCH_GLOBAL_BINLOG_FORMAT';
-		exports[3748] = 'ER_CLIENT_GTID_UNSAFE_CREATE_DROP_TEMP_TABLE_IN_TRX_IN_SBR';
-		exports[3749] = 'ER_XA_CANT_CREATE_MDL_BACKUP';
-		exports[3750] = 'ER_TABLE_WITHOUT_PK';
-		exports[3751] = 'ER_WARN_DATA_TRUNCATED_FUNCTIONAL_INDEX';
-		exports[3752] = 'ER_WARN_DATA_OUT_OF_RANGE_FUNCTIONAL_INDEX';
-		exports[3753] = 'ER_FUNCTIONAL_INDEX_ON_JSON_OR_GEOMETRY_FUNCTION';
-		exports[3754] = 'ER_FUNCTIONAL_INDEX_REF_AUTO_INCREMENT';
-		exports[3755] = 'ER_CANNOT_DROP_COLUMN_FUNCTIONAL_INDEX';
-		exports[3756] = 'ER_FUNCTIONAL_INDEX_PRIMARY_KEY';
-		exports[3757] = 'ER_FUNCTIONAL_INDEX_ON_LOB';
-		exports[3758] = 'ER_FUNCTIONAL_INDEX_FUNCTION_IS_NOT_ALLOWED';
-		exports[3759] = 'ER_FULLTEXT_FUNCTIONAL_INDEX';
-		exports[3760] = 'ER_SPATIAL_FUNCTIONAL_INDEX';
-		exports[3761] = 'ER_WRONG_KEY_COLUMN_FUNCTIONAL_INDEX';
-		exports[3762] = 'ER_FUNCTIONAL_INDEX_ON_FIELD';
-		exports[3763] = 'ER_GENERATED_COLUMN_NAMED_FUNCTION_IS_NOT_ALLOWED';
-		exports[3764] = 'ER_GENERATED_COLUMN_ROW_VALUE';
-		exports[3765] = 'ER_GENERATED_COLUMN_VARIABLES';
-		exports[3766] = 'ER_DEPENDENT_BY_DEFAULT_GENERATED_VALUE';
-		exports[3767] = 'ER_DEFAULT_VAL_GENERATED_NON_PRIOR';
-		exports[3768] = 'ER_DEFAULT_VAL_GENERATED_REF_AUTO_INC';
-		exports[3769] = 'ER_DEFAULT_VAL_GENERATED_FUNCTION_IS_NOT_ALLOWED';
-		exports[3770] = 'ER_DEFAULT_VAL_GENERATED_NAMED_FUNCTION_IS_NOT_ALLOWED';
-		exports[3771] = 'ER_DEFAULT_VAL_GENERATED_ROW_VALUE';
-		exports[3772] = 'ER_DEFAULT_VAL_GENERATED_VARIABLES';
-		exports[3773] = 'ER_DEFAULT_AS_VAL_GENERATED';
-		exports[3774] = 'ER_UNSUPPORTED_ACTION_ON_DEFAULT_VAL_GENERATED';
-		exports[3775] = 'ER_GTID_UNSAFE_ALTER_ADD_COL_WITH_DEFAULT_EXPRESSION';
-		exports[3776] = 'ER_FK_CANNOT_CHANGE_ENGINE';
-		exports[3777] = 'ER_WARN_DEPRECATED_USER_SET_EXPR';
-		exports[3778] = 'ER_WARN_DEPRECATED_UTF8MB3_COLLATION';
-		exports[3779] = 'ER_WARN_DEPRECATED_NESTED_COMMENT_SYNTAX';
-		exports[3780] = 'ER_FK_INCOMPATIBLE_COLUMNS';
-		exports[3781] = 'ER_GR_HOLD_WAIT_TIMEOUT';
-		exports[3782] = 'ER_GR_HOLD_KILLED';
-		exports[3783] = 'ER_GR_HOLD_MEMBER_STATUS_ERROR';
-		exports[3784] = 'ER_RPL_ENCRYPTION_FAILED_TO_FETCH_KEY';
-		exports[3785] = 'ER_RPL_ENCRYPTION_KEY_NOT_FOUND';
-		exports[3786] = 'ER_RPL_ENCRYPTION_KEYRING_INVALID_KEY';
-		exports[3787] = 'ER_RPL_ENCRYPTION_HEADER_ERROR';
-		exports[3788] = 'ER_RPL_ENCRYPTION_FAILED_TO_ROTATE_LOGS';
-		exports[3789] = 'ER_RPL_ENCRYPTION_KEY_EXISTS_UNEXPECTED';
-		exports[3790] = 'ER_RPL_ENCRYPTION_FAILED_TO_GENERATE_KEY';
-		exports[3791] = 'ER_RPL_ENCRYPTION_FAILED_TO_STORE_KEY';
-		exports[3792] = 'ER_RPL_ENCRYPTION_FAILED_TO_REMOVE_KEY';
-		exports[3793] = 'ER_RPL_ENCRYPTION_UNABLE_TO_CHANGE_OPTION';
-		exports[3794] = 'ER_RPL_ENCRYPTION_MASTER_KEY_RECOVERY_FAILED';
-		exports[3795] = 'ER_SLOW_LOG_MODE_IGNORED_WHEN_NOT_LOGGING_TO_FILE';
-		exports[3796] = 'ER_GRP_TRX_CONSISTENCY_NOT_ALLOWED';
-		exports[3797] = 'ER_GRP_TRX_CONSISTENCY_BEFORE';
-		exports[3798] = 'ER_GRP_TRX_CONSISTENCY_AFTER_ON_TRX_BEGIN';
-		exports[3799] = 'ER_GRP_TRX_CONSISTENCY_BEGIN_NOT_ALLOWED';
-		exports[3800] = 'ER_FUNCTIONAL_INDEX_ROW_VALUE_IS_NOT_ALLOWED';
-		exports[3801] = 'ER_RPL_ENCRYPTION_FAILED_TO_ENCRYPT';
-		exports[3802] = 'ER_PAGE_TRACKING_NOT_STARTED';
-		exports[3803] = 'ER_PAGE_TRACKING_RANGE_NOT_TRACKED';
-		exports[3804] = 'ER_PAGE_TRACKING_CANNOT_PURGE';
-		exports[3805] = 'ER_RPL_ENCRYPTION_CANNOT_ROTATE_BINLOG_MASTER_KEY';
-		exports[3806] = 'ER_BINLOG_MASTER_KEY_RECOVERY_OUT_OF_COMBINATION';
-		exports[3807] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_OPERATE_KEY';
-		exports[3808] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_ROTATE_LOGS';
-		exports[3809] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_REENCRYPT_LOG';
-		exports[3810] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_CLEANUP_UNUSED_KEYS';
-		exports[3811] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_CLEANUP_AUX_KEY';
-		exports[3812] = 'ER_NON_BOOLEAN_EXPR_FOR_CHECK_CONSTRAINT';
-		exports[3813] = 'ER_COLUMN_CHECK_CONSTRAINT_REFERENCES_OTHER_COLUMN';
-		exports[3814] = 'ER_CHECK_CONSTRAINT_NAMED_FUNCTION_IS_NOT_ALLOWED';
-		exports[3815] = 'ER_CHECK_CONSTRAINT_FUNCTION_IS_NOT_ALLOWED';
-		exports[3816] = 'ER_CHECK_CONSTRAINT_VARIABLES';
-		exports[3817] = 'ER_CHECK_CONSTRAINT_ROW_VALUE';
-		exports[3818] = 'ER_CHECK_CONSTRAINT_REFERS_AUTO_INCREMENT_COLUMN';
-		exports[3819] = 'ER_CHECK_CONSTRAINT_VIOLATED';
-		exports[3820] = 'ER_CHECK_CONSTRAINT_REFERS_UNKNOWN_COLUMN';
-		exports[3821] = 'ER_CHECK_CONSTRAINT_NOT_FOUND';
-		exports[3822] = 'ER_CHECK_CONSTRAINT_DUP_NAME';
-		exports[3823] = 'ER_CHECK_CONSTRAINT_CLAUSE_USING_FK_REFER_ACTION_COLUMN';
-		exports[3824] = 'WARN_UNENCRYPTED_TABLE_IN_ENCRYPTED_DB';
-		exports[3825] = 'ER_INVALID_ENCRYPTION_REQUEST';
-		exports[3826] = 'ER_CANNOT_SET_TABLE_ENCRYPTION';
-		exports[3827] = 'ER_CANNOT_SET_DATABASE_ENCRYPTION';
-		exports[3828] = 'ER_CANNOT_SET_TABLESPACE_ENCRYPTION';
-		exports[3829] = 'ER_TABLESPACE_CANNOT_BE_ENCRYPTED';
-		exports[3830] = 'ER_TABLESPACE_CANNOT_BE_DECRYPTED';
-		exports[3831] = 'ER_TABLESPACE_TYPE_UNKNOWN';
-		exports[3832] = 'ER_TARGET_TABLESPACE_UNENCRYPTED';
-		exports[3833] = 'ER_CANNOT_USE_ENCRYPTION_CLAUSE';
-		exports[3834] = 'ER_INVALID_MULTIPLE_CLAUSES';
-		exports[3835] = 'ER_UNSUPPORTED_USE_OF_GRANT_AS';
-		exports[3836] = 'ER_UKNOWN_AUTH_ID_OR_ACCESS_DENIED_FOR_GRANT_AS';
-		exports[3837] = 'ER_DEPENDENT_BY_FUNCTIONAL_INDEX';
-		exports[3838] = 'ER_PLUGIN_NOT_EARLY';
-		exports[3839] = 'ER_INNODB_REDO_LOG_ARCHIVE_START_SUBDIR_PATH';
-		exports[3840] = 'ER_INNODB_REDO_LOG_ARCHIVE_START_TIMEOUT';
-		exports[3841] = 'ER_INNODB_REDO_LOG_ARCHIVE_DIRS_INVALID';
-		exports[3842] = 'ER_INNODB_REDO_LOG_ARCHIVE_LABEL_NOT_FOUND';
-		exports[3843] = 'ER_INNODB_REDO_LOG_ARCHIVE_DIR_EMPTY';
-		exports[3844] = 'ER_INNODB_REDO_LOG_ARCHIVE_NO_SUCH_DIR';
-		exports[3845] = 'ER_INNODB_REDO_LOG_ARCHIVE_DIR_CLASH';
-		exports[3846] = 'ER_INNODB_REDO_LOG_ARCHIVE_DIR_PERMISSIONS';
-		exports[3847] = 'ER_INNODB_REDO_LOG_ARCHIVE_FILE_CREATE';
-		exports[3848] = 'ER_INNODB_REDO_LOG_ARCHIVE_ACTIVE';
-		exports[3849] = 'ER_INNODB_REDO_LOG_ARCHIVE_INACTIVE';
-		exports[3850] = 'ER_INNODB_REDO_LOG_ARCHIVE_FAILED';
-		exports[3851] = 'ER_INNODB_REDO_LOG_ARCHIVE_SESSION';
-		exports[3852] = 'ER_STD_REGEX_ERROR';
-		exports[3853] = 'ER_INVALID_JSON_TYPE';
-		exports[3854] = 'ER_CANNOT_CONVERT_STRING';
-		exports[3855] = 'ER_DEPENDENT_BY_PARTITION_FUNC';
-		exports[3856] = 'ER_WARN_DEPRECATED_FLOAT_AUTO_INCREMENT';
-		exports[3857] = 'ER_RPL_CANT_STOP_REPLICA_WHILE_LOCKED_BACKUP';
-		exports[3858] = 'ER_WARN_DEPRECATED_FLOAT_DIGITS';
-		exports[3859] = 'ER_WARN_DEPRECATED_FLOAT_UNSIGNED';
-		exports[3860] = 'ER_WARN_DEPRECATED_INTEGER_DISPLAY_WIDTH';
-		exports[3861] = 'ER_WARN_DEPRECATED_ZEROFILL';
-		exports[3862] = 'ER_CLONE_DONOR';
-		exports[3863] = 'ER_CLONE_PROTOCOL';
-		exports[3864] = 'ER_CLONE_DONOR_VERSION';
-		exports[3865] = 'ER_CLONE_OS';
-		exports[3866] = 'ER_CLONE_PLATFORM';
-		exports[3867] = 'ER_CLONE_CHARSET';
-		exports[3868] = 'ER_CLONE_CONFIG';
-		exports[3869] = 'ER_CLONE_SYS_CONFIG';
-		exports[3870] = 'ER_CLONE_PLUGIN_MATCH';
-		exports[3871] = 'ER_CLONE_LOOPBACK';
-		exports[3872] = 'ER_CLONE_ENCRYPTION';
-		exports[3873] = 'ER_CLONE_DISK_SPACE';
-		exports[3874] = 'ER_CLONE_IN_PROGRESS';
-		exports[3875] = 'ER_CLONE_DISALLOWED';
-		exports[3876] = 'ER_CANNOT_GRANT_ROLES_TO_ANONYMOUS_USER';
-		exports[3877] = 'ER_SECONDARY_ENGINE_PLUGIN';
-		exports[3878] = 'ER_SECOND_PASSWORD_CANNOT_BE_EMPTY';
-		exports[3879] = 'ER_DB_ACCESS_DENIED';
-		exports[3880] = 'ER_DA_AUTH_ID_WITH_SYSTEM_USER_PRIV_IN_MANDATORY_ROLES';
-		exports[3881] = 'ER_DA_RPL_GTID_TABLE_CANNOT_OPEN';
-		exports[3882] = 'ER_GEOMETRY_IN_UNKNOWN_LENGTH_UNIT';
-		exports[3883] = 'ER_DA_PLUGIN_INSTALL_ERROR';
-		exports[3884] = 'ER_NO_SESSION_TEMP';
-		exports[3885] = 'ER_DA_UNKNOWN_ERROR_NUMBER';
-		exports[3886] = 'ER_COLUMN_CHANGE_SIZE';
-		exports[3887] = 'ER_REGEXP_INVALID_CAPTURE_GROUP_NAME';
-		exports[3888] = 'ER_DA_SSL_LIBRARY_ERROR';
-		exports[3889] = 'ER_SECONDARY_ENGINE';
-		exports[3890] = 'ER_SECONDARY_ENGINE_DDL';
-		exports[3891] = 'ER_INCORRECT_CURRENT_PASSWORD';
-		exports[3892] = 'ER_MISSING_CURRENT_PASSWORD';
-		exports[3893] = 'ER_CURRENT_PASSWORD_NOT_REQUIRED';
-		exports[3894] = 'ER_PASSWORD_CANNOT_BE_RETAINED_ON_PLUGIN_CHANGE';
-		exports[3895] = 'ER_CURRENT_PASSWORD_CANNOT_BE_RETAINED';
-		exports[3896] = 'ER_PARTIAL_REVOKES_EXIST';
-		exports[3897] = 'ER_CANNOT_GRANT_SYSTEM_PRIV_TO_MANDATORY_ROLE';
-		exports[3898] = 'ER_XA_REPLICATION_FILTERS';
-		exports[3899] = 'ER_UNSUPPORTED_SQL_MODE';
-		exports[3900] = 'ER_REGEXP_INVALID_FLAG';
-		exports[3901] = 'ER_PARTIAL_REVOKE_AND_DB_GRANT_BOTH_EXISTS';
-		exports[3902] = 'ER_UNIT_NOT_FOUND';
-		exports[3903] = 'ER_INVALID_JSON_VALUE_FOR_FUNC_INDEX';
-		exports[3904] = 'ER_JSON_VALUE_OUT_OF_RANGE_FOR_FUNC_INDEX';
-		exports[3905] = 'ER_EXCEEDED_MV_KEYS_NUM';
-		exports[3906] = 'ER_EXCEEDED_MV_KEYS_SPACE';
-		exports[3907] = 'ER_FUNCTIONAL_INDEX_DATA_IS_TOO_LONG';
-		exports[3908] = 'ER_WRONG_MVI_VALUE';
-		exports[3909] = 'ER_WARN_FUNC_INDEX_NOT_APPLICABLE';
-		exports[3910] = 'ER_GRP_RPL_UDF_ERROR';
-		exports[3911] = 'ER_UPDATE_GTID_PURGED_WITH_GR';
-		exports[3912] = 'ER_GROUPING_ON_TIMESTAMP_IN_DST';
-		exports[3913] = 'ER_TABLE_NAME_CAUSES_TOO_LONG_PATH';
-		exports[3914] = 'ER_AUDIT_LOG_INSUFFICIENT_PRIVILEGE';
-		exports[3915] = 'ER_AUDIT_LOG_PASSWORD_HAS_BEEN_COPIED';
-		exports[3916] = 'ER_DA_GRP_RPL_STARTED_AUTO_REJOIN';
-		exports[3917] = 'ER_SYSVAR_CHANGE_DURING_QUERY';
-		exports[3918] = 'ER_GLOBSTAT_CHANGE_DURING_QUERY';
-		exports[3919] = 'ER_GRP_RPL_MESSAGE_SERVICE_INIT_FAILURE';
-		exports[3920] = 'ER_CHANGE_SOURCE_WRONG_COMPRESSION_ALGORITHM_CLIENT';
-		exports[3921] = 'ER_CHANGE_SOURCE_WRONG_COMPRESSION_LEVEL_CLIENT';
-		exports[3922] = 'ER_WRONG_COMPRESSION_ALGORITHM_CLIENT';
-		exports[3923] = 'ER_WRONG_COMPRESSION_LEVEL_CLIENT';
-		exports[3924] = 'ER_CHANGE_SOURCE_WRONG_COMPRESSION_ALGORITHM_LIST_CLIENT';
-		exports[3925] = 'ER_CLIENT_PRIVILEGE_CHECKS_USER_CANNOT_BE_ANONYMOUS';
-		exports[3926] = 'ER_CLIENT_PRIVILEGE_CHECKS_USER_DOES_NOT_EXIST';
-		exports[3927] = 'ER_CLIENT_PRIVILEGE_CHECKS_USER_CORRUPT';
-		exports[3928] = 'ER_CLIENT_PRIVILEGE_CHECKS_USER_NEEDS_RPL_APPLIER_PRIV';
-		exports[3929] = 'ER_WARN_DA_PRIVILEGE_NOT_REGISTERED';
-		exports[3930] = 'ER_CLIENT_KEYRING_UDF_KEY_INVALID';
-		exports[3931] = 'ER_CLIENT_KEYRING_UDF_KEY_TYPE_INVALID';
-		exports[3932] = 'ER_CLIENT_KEYRING_UDF_KEY_TOO_LONG';
-		exports[3933] = 'ER_CLIENT_KEYRING_UDF_KEY_TYPE_TOO_LONG';
-		exports[3934] = 'ER_JSON_SCHEMA_VALIDATION_ERROR_WITH_DETAILED_REPORT';
-		exports[3935] = 'ER_DA_UDF_INVALID_CHARSET_SPECIFIED';
-		exports[3936] = 'ER_DA_UDF_INVALID_CHARSET';
-		exports[3937] = 'ER_DA_UDF_INVALID_COLLATION';
-		exports[3938] = 'ER_DA_UDF_INVALID_EXTENSION_ARGUMENT_TYPE';
-		exports[3939] = 'ER_MULTIPLE_CONSTRAINTS_WITH_SAME_NAME';
-		exports[3940] = 'ER_CONSTRAINT_NOT_FOUND';
-		exports[3941] = 'ER_ALTER_CONSTRAINT_ENFORCEMENT_NOT_SUPPORTED';
-		exports[3942] = 'ER_TABLE_VALUE_CONSTRUCTOR_MUST_HAVE_COLUMNS';
-		exports[3943] = 'ER_TABLE_VALUE_CONSTRUCTOR_CANNOT_HAVE_DEFAULT';
-		exports[3944] = 'ER_CLIENT_QUERY_FAILURE_INVALID_NON_ROW_FORMAT';
-		exports[3945] = 'ER_REQUIRE_ROW_FORMAT_INVALID_VALUE';
-		exports[3946] = 'ER_FAILED_TO_DETERMINE_IF_ROLE_IS_MANDATORY';
-		exports[3947] = 'ER_FAILED_TO_FETCH_MANDATORY_ROLE_LIST';
-		exports[3948] = 'ER_CLIENT_LOCAL_FILES_DISABLED';
-		exports[3949] = 'ER_IMP_INCOMPATIBLE_CFG_VERSION';
-		exports[3950] = 'ER_DA_OOM';
-		exports[3951] = 'ER_DA_UDF_INVALID_ARGUMENT_TO_SET_CHARSET';
-		exports[3952] = 'ER_DA_UDF_INVALID_RETURN_TYPE_TO_SET_CHARSET';
-		exports[3953] = 'ER_MULTIPLE_INTO_CLAUSES';
-		exports[3954] = 'ER_MISPLACED_INTO';
-		exports[3955] =
+		exports$1[3118] = 'ER_ACCOUNT_HAS_BEEN_LOCKED';
+		exports$1[3119] = 'ER_WRONG_TABLESPACE_NAME';
+		exports$1[3120] = 'ER_TABLESPACE_IS_NOT_EMPTY';
+		exports$1[3121] = 'ER_WRONG_FILE_NAME';
+		exports$1[3122] = 'ER_BOOST_GEOMETRY_INCONSISTENT_TURNS_EXCEPTION';
+		exports$1[3123] = 'ER_WARN_OPTIMIZER_HINT_SYNTAX_ERROR';
+		exports$1[3124] = 'ER_WARN_BAD_MAX_EXECUTION_TIME';
+		exports$1[3125] = 'ER_WARN_UNSUPPORTED_MAX_EXECUTION_TIME';
+		exports$1[3126] = 'ER_WARN_CONFLICTING_HINT';
+		exports$1[3127] = 'ER_WARN_UNKNOWN_QB_NAME';
+		exports$1[3128] = 'ER_UNRESOLVED_HINT_NAME';
+		exports$1[3129] = 'ER_WARN_ON_MODIFYING_GTID_EXECUTED_TABLE';
+		exports$1[3130] = 'ER_PLUGGABLE_PROTOCOL_COMMAND_NOT_SUPPORTED';
+		exports$1[3131] = 'ER_LOCKING_SERVICE_WRONG_NAME';
+		exports$1[3132] = 'ER_LOCKING_SERVICE_DEADLOCK';
+		exports$1[3133] = 'ER_LOCKING_SERVICE_TIMEOUT';
+		exports$1[3134] = 'ER_GIS_MAX_POINTS_IN_GEOMETRY_OVERFLOWED';
+		exports$1[3135] = 'ER_SQL_MODE_MERGED';
+		exports$1[3136] = 'ER_VTOKEN_PLUGIN_TOKEN_MISMATCH';
+		exports$1[3137] = 'ER_VTOKEN_PLUGIN_TOKEN_NOT_FOUND';
+		exports$1[3138] = 'ER_CANT_SET_VARIABLE_WHEN_OWNING_GTID';
+		exports$1[3139] = 'ER_REPLICA_CHANNEL_OPERATION_NOT_ALLOWED';
+		exports$1[3140] = 'ER_INVALID_JSON_TEXT';
+		exports$1[3141] = 'ER_INVALID_JSON_TEXT_IN_PARAM';
+		exports$1[3142] = 'ER_INVALID_JSON_BINARY_DATA';
+		exports$1[3143] = 'ER_INVALID_JSON_PATH';
+		exports$1[3144] = 'ER_INVALID_JSON_CHARSET';
+		exports$1[3145] = 'ER_INVALID_JSON_CHARSET_IN_FUNCTION';
+		exports$1[3146] = 'ER_INVALID_TYPE_FOR_JSON';
+		exports$1[3147] = 'ER_INVALID_CAST_TO_JSON';
+		exports$1[3148] = 'ER_INVALID_JSON_PATH_CHARSET';
+		exports$1[3149] = 'ER_INVALID_JSON_PATH_WILDCARD';
+		exports$1[3150] = 'ER_JSON_VALUE_TOO_BIG';
+		exports$1[3151] = 'ER_JSON_KEY_TOO_BIG';
+		exports$1[3152] = 'ER_JSON_USED_AS_KEY';
+		exports$1[3153] = 'ER_JSON_VACUOUS_PATH';
+		exports$1[3154] = 'ER_JSON_BAD_ONE_OR_ALL_ARG';
+		exports$1[3155] = 'ER_NUMERIC_JSON_VALUE_OUT_OF_RANGE';
+		exports$1[3156] = 'ER_INVALID_JSON_VALUE_FOR_CAST';
+		exports$1[3157] = 'ER_JSON_DOCUMENT_TOO_DEEP';
+		exports$1[3158] = 'ER_JSON_DOCUMENT_NULL_KEY';
+		exports$1[3159] = 'ER_SECURE_TRANSPORT_REQUIRED';
+		exports$1[3160] = 'ER_NO_SECURE_TRANSPORTS_CONFIGURED';
+		exports$1[3161] = 'ER_DISABLED_STORAGE_ENGINE';
+		exports$1[3162] = 'ER_USER_DOES_NOT_EXIST';
+		exports$1[3163] = 'ER_USER_ALREADY_EXISTS';
+		exports$1[3164] = 'ER_AUDIT_API_ABORT';
+		exports$1[3165] = 'ER_INVALID_JSON_PATH_ARRAY_CELL';
+		exports$1[3166] = 'ER_BUFPOOL_RESIZE_INPROGRESS';
+		exports$1[3167] = 'ER_FEATURE_DISABLED_SEE_DOC';
+		exports$1[3168] = 'ER_SERVER_ISNT_AVAILABLE';
+		exports$1[3169] = 'ER_SESSION_WAS_KILLED';
+		exports$1[3170] = 'ER_CAPACITY_EXCEEDED';
+		exports$1[3171] = 'ER_CAPACITY_EXCEEDED_IN_RANGE_OPTIMIZER';
+		exports$1[3172] = 'ER_TABLE_NEEDS_UPG_PART';
+		exports$1[3173] = 'ER_CANT_WAIT_FOR_EXECUTED_GTID_SET_WHILE_OWNING_A_GTID';
+		exports$1[3174] = 'ER_CANNOT_ADD_FOREIGN_BASE_COL_VIRTUAL';
+		exports$1[3175] = 'ER_CANNOT_CREATE_VIRTUAL_INDEX_CONSTRAINT';
+		exports$1[3176] = 'ER_ERROR_ON_MODIFYING_GTID_EXECUTED_TABLE';
+		exports$1[3177] = 'ER_LOCK_REFUSED_BY_ENGINE';
+		exports$1[3178] = 'ER_UNSUPPORTED_ALTER_ONLINE_ON_VIRTUAL_COLUMN';
+		exports$1[3179] = 'ER_MASTER_KEY_ROTATION_NOT_SUPPORTED_BY_SE';
+		exports$1[3180] = 'ER_MASTER_KEY_ROTATION_ERROR_BY_SE';
+		exports$1[3181] = 'ER_MASTER_KEY_ROTATION_BINLOG_FAILED';
+		exports$1[3182] = 'ER_MASTER_KEY_ROTATION_SE_UNAVAILABLE';
+		exports$1[3183] = 'ER_TABLESPACE_CANNOT_ENCRYPT';
+		exports$1[3184] = 'ER_INVALID_ENCRYPTION_OPTION';
+		exports$1[3185] = 'ER_CANNOT_FIND_KEY_IN_KEYRING';
+		exports$1[3186] = 'ER_CAPACITY_EXCEEDED_IN_PARSER';
+		exports$1[3187] = 'ER_UNSUPPORTED_ALTER_ENCRYPTION_INPLACE';
+		exports$1[3188] = 'ER_KEYRING_UDF_KEYRING_SERVICE_ERROR';
+		exports$1[3189] = 'ER_USER_COLUMN_OLD_LENGTH';
+		exports$1[3190] = 'ER_CANT_RESET_SOURCE';
+		exports$1[3191] = 'ER_GROUP_REPLICATION_MAX_GROUP_SIZE';
+		exports$1[3192] = 'ER_CANNOT_ADD_FOREIGN_BASE_COL_STORED';
+		exports$1[3193] = 'ER_TABLE_REFERENCED';
+		exports$1[3194] = 'ER_PARTITION_ENGINE_DEPRECATED_FOR_TABLE';
+		exports$1[3195] = 'ER_WARN_USING_GEOMFROMWKB_TO_SET_SRID_ZERO';
+		exports$1[3196] = 'ER_WARN_USING_GEOMFROMWKB_TO_SET_SRID';
+		exports$1[3197] = 'ER_XA_RETRY';
+		exports$1[3198] = 'ER_KEYRING_AWS_UDF_AWS_KMS_ERROR';
+		exports$1[3199] = 'ER_BINLOG_UNSAFE_XA';
+		exports$1[3200] = 'ER_UDF_ERROR';
+		exports$1[3201] = 'ER_KEYRING_MIGRATION_FAILURE';
+		exports$1[3202] = 'ER_KEYRING_ACCESS_DENIED_ERROR';
+		exports$1[3203] = 'ER_KEYRING_MIGRATION_STATUS';
+		exports$1[3204] = 'ER_PLUGIN_FAILED_TO_OPEN_TABLES';
+		exports$1[3205] = 'ER_PLUGIN_FAILED_TO_OPEN_TABLE';
+		exports$1[3206] = 'ER_AUDIT_LOG_NO_KEYRING_PLUGIN_INSTALLED';
+		exports$1[3207] = 'ER_AUDIT_LOG_ENCRYPTION_PASSWORD_HAS_NOT_BEEN_SET';
+		exports$1[3208] = 'ER_AUDIT_LOG_COULD_NOT_CREATE_AES_KEY';
+		exports$1[3209] = 'ER_AUDIT_LOG_ENCRYPTION_PASSWORD_CANNOT_BE_FETCHED';
+		exports$1[3210] = 'ER_AUDIT_LOG_JSON_FILTERING_NOT_ENABLED';
+		exports$1[3211] = 'ER_AUDIT_LOG_UDF_INSUFFICIENT_PRIVILEGE';
+		exports$1[3212] = 'ER_AUDIT_LOG_SUPER_PRIVILEGE_REQUIRED';
+		exports$1[3213] = 'ER_COULD_NOT_REINITIALIZE_AUDIT_LOG_FILTERS';
+		exports$1[3214] = 'ER_AUDIT_LOG_UDF_INVALID_ARGUMENT_TYPE';
+		exports$1[3215] = 'ER_AUDIT_LOG_UDF_INVALID_ARGUMENT_COUNT';
+		exports$1[3216] = 'ER_AUDIT_LOG_HAS_NOT_BEEN_INSTALLED';
+		exports$1[3217] = 'ER_AUDIT_LOG_UDF_READ_INVALID_MAX_ARRAY_LENGTH_ARG_TYPE';
+		exports$1[3218] = 'ER_AUDIT_LOG_UDF_READ_INVALID_MAX_ARRAY_LENGTH_ARG_VALUE';
+		exports$1[3219] = 'ER_AUDIT_LOG_JSON_FILTER_PARSING_ERROR';
+		exports$1[3220] = 'ER_AUDIT_LOG_JSON_FILTER_NAME_CANNOT_BE_EMPTY';
+		exports$1[3221] = 'ER_AUDIT_LOG_JSON_USER_NAME_CANNOT_BE_EMPTY';
+		exports$1[3222] = 'ER_AUDIT_LOG_JSON_FILTER_DOES_NOT_EXISTS';
+		exports$1[3223] = 'ER_AUDIT_LOG_USER_FIRST_CHARACTER_MUST_BE_ALPHANUMERIC';
+		exports$1[3224] = 'ER_AUDIT_LOG_USER_NAME_INVALID_CHARACTER';
+		exports$1[3225] = 'ER_AUDIT_LOG_HOST_NAME_INVALID_CHARACTER';
+		exports$1[3226] = 'WARN_DEPRECATED_MAXDB_SQL_MODE_FOR_TIMESTAMP';
+		exports$1[3227] = 'ER_XA_REPLICATION_FILTERS';
+		exports$1[3228] = 'ER_CANT_OPEN_ERROR_LOG';
+		exports$1[3229] = 'ER_GROUPING_ON_TIMESTAMP_IN_DST';
+		exports$1[3230] = 'ER_CANT_START_SERVER_NAMED_PIPE';
+		exports$1[3231] = 'ER_WRITE_SET_EXCEEDS_LIMIT';
+		exports$1[3232] = 'ER_DEPRECATED_TLS_VERSION_SESSION_57';
+		exports$1[3233] = 'ER_WARN_DEPRECATED_TLS_VERSION_57';
+		exports$1[3234] = 'ER_WARN_WRONG_NATIVE_TABLE_STRUCTURE';
+		exports$1[3235] = 'ER_AES_INVALID_KDF_NAME';
+		exports$1[3236] = 'ER_AES_INVALID_KDF_ITERATIONS';
+		exports$1[3237] = 'WARN_AES_KEY_SIZE';
+		exports$1[3238] = 'ER_AES_INVALID_KDF_OPTION_SIZE';
+		exports$1[3500] = 'ER_UNSUPPORT_COMPRESSED_TEMPORARY_TABLE';
+		exports$1[3501] = 'ER_ACL_OPERATION_FAILED';
+		exports$1[3502] = 'ER_UNSUPPORTED_INDEX_ALGORITHM';
+		exports$1[3503] = 'ER_NO_SUCH_DB';
+		exports$1[3504] = 'ER_TOO_BIG_ENUM';
+		exports$1[3505] = 'ER_TOO_LONG_SET_ENUM_VALUE';
+		exports$1[3506] = 'ER_INVALID_DD_OBJECT';
+		exports$1[3507] = 'ER_UPDATING_DD_TABLE';
+		exports$1[3508] = 'ER_INVALID_DD_OBJECT_ID';
+		exports$1[3509] = 'ER_INVALID_DD_OBJECT_NAME';
+		exports$1[3510] = 'ER_TABLESPACE_MISSING_WITH_NAME';
+		exports$1[3511] = 'ER_TOO_LONG_ROUTINE_COMMENT';
+		exports$1[3512] = 'ER_SP_LOAD_FAILED';
+		exports$1[3513] = 'ER_INVALID_BITWISE_OPERANDS_SIZE';
+		exports$1[3514] = 'ER_INVALID_BITWISE_AGGREGATE_OPERANDS_SIZE';
+		exports$1[3515] = 'ER_WARN_UNSUPPORTED_HINT';
+		exports$1[3516] = 'ER_UNEXPECTED_GEOMETRY_TYPE';
+		exports$1[3517] = 'ER_SRS_PARSE_ERROR';
+		exports$1[3518] = 'ER_SRS_PROJ_PARAMETER_MISSING';
+		exports$1[3519] = 'ER_WARN_SRS_NOT_FOUND';
+		exports$1[3520] = 'ER_SRS_NOT_CARTESIAN';
+		exports$1[3521] = 'ER_SRS_NOT_CARTESIAN_UNDEFINED';
+		exports$1[3522] = 'ER_PK_INDEX_CANT_BE_INVISIBLE';
+		exports$1[3523] = 'ER_UNKNOWN_AUTHID';
+		exports$1[3524] = 'ER_FAILED_ROLE_GRANT';
+		exports$1[3525] = 'ER_OPEN_ROLE_TABLES';
+		exports$1[3526] = 'ER_FAILED_DEFAULT_ROLES';
+		exports$1[3527] = 'ER_COMPONENTS_NO_SCHEME';
+		exports$1[3528] = 'ER_COMPONENTS_NO_SCHEME_SERVICE';
+		exports$1[3529] = 'ER_COMPONENTS_CANT_LOAD';
+		exports$1[3530] = 'ER_ROLE_NOT_GRANTED';
+		exports$1[3531] = 'ER_FAILED_REVOKE_ROLE';
+		exports$1[3532] = 'ER_RENAME_ROLE';
+		exports$1[3533] = 'ER_COMPONENTS_CANT_ACQUIRE_SERVICE_IMPLEMENTATION';
+		exports$1[3534] = 'ER_COMPONENTS_CANT_SATISFY_DEPENDENCY';
+		exports$1[3535] = 'ER_COMPONENTS_LOAD_CANT_REGISTER_SERVICE_IMPLEMENTATION';
+		exports$1[3536] = 'ER_COMPONENTS_LOAD_CANT_INITIALIZE';
+		exports$1[3537] = 'ER_COMPONENTS_UNLOAD_NOT_LOADED';
+		exports$1[3538] = 'ER_COMPONENTS_UNLOAD_CANT_DEINITIALIZE';
+		exports$1[3539] = 'ER_COMPONENTS_CANT_RELEASE_SERVICE';
+		exports$1[3540] = 'ER_COMPONENTS_UNLOAD_CANT_UNREGISTER_SERVICE';
+		exports$1[3541] = 'ER_COMPONENTS_CANT_UNLOAD';
+		exports$1[3542] = 'ER_WARN_UNLOAD_THE_NOT_PERSISTED';
+		exports$1[3543] = 'ER_COMPONENT_TABLE_INCORRECT';
+		exports$1[3544] = 'ER_COMPONENT_MANIPULATE_ROW_FAILED';
+		exports$1[3545] = 'ER_COMPONENTS_UNLOAD_DUPLICATE_IN_GROUP';
+		exports$1[3546] = 'ER_CANT_SET_GTID_PURGED_DUE_SETS_CONSTRAINTS';
+		exports$1[3547] = 'ER_CANNOT_LOCK_USER_MANAGEMENT_CACHES';
+		exports$1[3548] = 'ER_SRS_NOT_FOUND';
+		exports$1[3549] = 'ER_VARIABLE_NOT_PERSISTED';
+		exports$1[3550] = 'ER_IS_QUERY_INVALID_CLAUSE';
+		exports$1[3551] = 'ER_UNABLE_TO_STORE_STATISTICS';
+		exports$1[3552] = 'ER_NO_SYSTEM_SCHEMA_ACCESS';
+		exports$1[3553] = 'ER_NO_SYSTEM_TABLESPACE_ACCESS';
+		exports$1[3554] = 'ER_NO_SYSTEM_TABLE_ACCESS';
+		exports$1[3555] = 'ER_NO_SYSTEM_TABLE_ACCESS_FOR_DICTIONARY_TABLE';
+		exports$1[3556] = 'ER_NO_SYSTEM_TABLE_ACCESS_FOR_SYSTEM_TABLE';
+		exports$1[3557] = 'ER_NO_SYSTEM_TABLE_ACCESS_FOR_TABLE';
+		exports$1[3558] = 'ER_INVALID_OPTION_KEY';
+		exports$1[3559] = 'ER_INVALID_OPTION_VALUE';
+		exports$1[3560] = 'ER_INVALID_OPTION_KEY_VALUE_PAIR';
+		exports$1[3561] = 'ER_INVALID_OPTION_START_CHARACTER';
+		exports$1[3562] = 'ER_INVALID_OPTION_END_CHARACTER';
+		exports$1[3563] = 'ER_INVALID_OPTION_CHARACTERS';
+		exports$1[3564] = 'ER_DUPLICATE_OPTION_KEY';
+		exports$1[3565] = 'ER_WARN_SRS_NOT_FOUND_AXIS_ORDER';
+		exports$1[3566] = 'ER_NO_ACCESS_TO_NATIVE_FCT';
+		exports$1[3567] = 'ER_RESET_SOURCE_TO_VALUE_OUT_OF_RANGE';
+		exports$1[3568] = 'ER_UNRESOLVED_TABLE_LOCK';
+		exports$1[3569] = 'ER_DUPLICATE_TABLE_LOCK';
+		exports$1[3570] = 'ER_BINLOG_UNSAFE_SKIP_LOCKED';
+		exports$1[3571] = 'ER_BINLOG_UNSAFE_NOWAIT';
+		exports$1[3572] = 'ER_LOCK_NOWAIT';
+		exports$1[3573] = 'ER_CTE_RECURSIVE_REQUIRES_UNION';
+		exports$1[3574] = 'ER_CTE_RECURSIVE_REQUIRES_NONRECURSIVE_FIRST';
+		exports$1[3575] = 'ER_CTE_RECURSIVE_FORBIDS_AGGREGATION';
+		exports$1[3576] = 'ER_CTE_RECURSIVE_FORBIDDEN_JOIN_ORDER';
+		exports$1[3577] = 'ER_CTE_RECURSIVE_REQUIRES_SINGLE_REFERENCE';
+		exports$1[3578] = 'ER_SWITCH_TMP_ENGINE';
+		exports$1[3579] = 'ER_WINDOW_NO_SUCH_WINDOW';
+		exports$1[3580] = 'ER_WINDOW_CIRCULARITY_IN_WINDOW_GRAPH';
+		exports$1[3581] = 'ER_WINDOW_NO_CHILD_PARTITIONING';
+		exports$1[3582] = 'ER_WINDOW_NO_INHERIT_FRAME';
+		exports$1[3583] = 'ER_WINDOW_NO_REDEFINE_ORDER_BY';
+		exports$1[3584] = 'ER_WINDOW_FRAME_START_ILLEGAL';
+		exports$1[3585] = 'ER_WINDOW_FRAME_END_ILLEGAL';
+		exports$1[3586] = 'ER_WINDOW_FRAME_ILLEGAL';
+		exports$1[3587] = 'ER_WINDOW_RANGE_FRAME_ORDER_TYPE';
+		exports$1[3588] = 'ER_WINDOW_RANGE_FRAME_TEMPORAL_TYPE';
+		exports$1[3589] = 'ER_WINDOW_RANGE_FRAME_NUMERIC_TYPE';
+		exports$1[3590] = 'ER_WINDOW_RANGE_BOUND_NOT_CONSTANT';
+		exports$1[3591] = 'ER_WINDOW_DUPLICATE_NAME';
+		exports$1[3592] = 'ER_WINDOW_ILLEGAL_ORDER_BY';
+		exports$1[3593] = 'ER_WINDOW_INVALID_WINDOW_FUNC_USE';
+		exports$1[3594] = 'ER_WINDOW_INVALID_WINDOW_FUNC_ALIAS_USE';
+		exports$1[3595] = 'ER_WINDOW_NESTED_WINDOW_FUNC_USE_IN_WINDOW_SPEC';
+		exports$1[3596] = 'ER_WINDOW_ROWS_INTERVAL_USE';
+		exports$1[3597] = 'ER_WINDOW_NO_GROUP_ORDER';
+		exports$1[3598] = 'ER_WINDOW_EXPLAIN_JSON';
+		exports$1[3599] = 'ER_WINDOW_FUNCTION_IGNORES_FRAME';
+		exports$1[3600] = 'ER_WL9236_NOW';
+		exports$1[3601] = 'ER_INVALID_NO_OF_ARGS';
+		exports$1[3602] = 'ER_FIELD_IN_GROUPING_NOT_GROUP_BY';
+		exports$1[3603] = 'ER_TOO_LONG_TABLESPACE_COMMENT';
+		exports$1[3604] = 'ER_ENGINE_CANT_DROP_TABLE';
+		exports$1[3605] = 'ER_ENGINE_CANT_DROP_MISSING_TABLE';
+		exports$1[3606] = 'ER_TABLESPACE_DUP_FILENAME';
+		exports$1[3607] = 'ER_DB_DROP_RMDIR2';
+		exports$1[3608] = 'ER_IMP_NO_FILES_MATCHED';
+		exports$1[3609] = 'ER_IMP_SCHEMA_DOES_NOT_EXIST';
+		exports$1[3610] = 'ER_IMP_TABLE_ALREADY_EXISTS';
+		exports$1[3611] = 'ER_IMP_INCOMPATIBLE_MYSQLD_VERSION';
+		exports$1[3612] = 'ER_IMP_INCOMPATIBLE_DD_VERSION';
+		exports$1[3613] = 'ER_IMP_INCOMPATIBLE_SDI_VERSION';
+		exports$1[3614] = 'ER_WARN_INVALID_HINT';
+		exports$1[3615] = 'ER_VAR_DOES_NOT_EXIST';
+		exports$1[3616] = 'ER_LONGITUDE_OUT_OF_RANGE';
+		exports$1[3617] = 'ER_LATITUDE_OUT_OF_RANGE';
+		exports$1[3618] = 'ER_NOT_IMPLEMENTED_FOR_GEOGRAPHIC_SRS';
+		exports$1[3619] = 'ER_ILLEGAL_PRIVILEGE_LEVEL';
+		exports$1[3620] = 'ER_NO_SYSTEM_VIEW_ACCESS';
+		exports$1[3621] = 'ER_COMPONENT_FILTER_FLABBERGASTED';
+		exports$1[3622] = 'ER_PART_EXPR_TOO_LONG';
+		exports$1[3623] = 'ER_UDF_DROP_DYNAMICALLY_REGISTERED';
+		exports$1[3624] = 'ER_UNABLE_TO_STORE_COLUMN_STATISTICS';
+		exports$1[3625] = 'ER_UNABLE_TO_UPDATE_COLUMN_STATISTICS';
+		exports$1[3626] = 'ER_UNABLE_TO_DROP_COLUMN_STATISTICS';
+		exports$1[3627] = 'ER_UNABLE_TO_BUILD_HISTOGRAM';
+		exports$1[3628] = 'ER_MANDATORY_ROLE';
+		exports$1[3629] = 'ER_MISSING_TABLESPACE_FILE';
+		exports$1[3630] = 'ER_PERSIST_ONLY_ACCESS_DENIED_ERROR';
+		exports$1[3631] = 'ER_CMD_NEED_SUPER';
+		exports$1[3632] = 'ER_PATH_IN_DATADIR';
+		exports$1[3633] = 'ER_CLONE_DDL_IN_PROGRESS';
+		exports$1[3634] = 'ER_CLONE_TOO_MANY_CONCURRENT_CLONES';
+		exports$1[3635] = 'ER_APPLIER_LOG_EVENT_VALIDATION_ERROR';
+		exports$1[3636] = 'ER_CTE_MAX_RECURSION_DEPTH';
+		exports$1[3637] = 'ER_NOT_HINT_UPDATABLE_VARIABLE';
+		exports$1[3638] = 'ER_CREDENTIALS_CONTRADICT_TO_HISTORY';
+		exports$1[3639] = 'ER_WARNING_PASSWORD_HISTORY_CLAUSES_VOID';
+		exports$1[3640] = 'ER_CLIENT_DOES_NOT_SUPPORT';
+		exports$1[3641] = 'ER_I_S_SKIPPED_TABLESPACE';
+		exports$1[3642] = 'ER_TABLESPACE_ENGINE_MISMATCH';
+		exports$1[3643] = 'ER_WRONG_SRID_FOR_COLUMN';
+		exports$1[3644] = 'ER_CANNOT_ALTER_SRID_DUE_TO_INDEX';
+		exports$1[3645] = 'ER_WARN_BINLOG_PARTIAL_UPDATES_DISABLED';
+		exports$1[3646] = 'ER_WARN_BINLOG_V1_ROW_EVENTS_DISABLED';
+		exports$1[3647] = 'ER_WARN_BINLOG_PARTIAL_UPDATES_SUGGESTS_PARTIAL_IMAGES';
+		exports$1[3648] = 'ER_COULD_NOT_APPLY_JSON_DIFF';
+		exports$1[3649] = 'ER_CORRUPTED_JSON_DIFF';
+		exports$1[3650] = 'ER_RESOURCE_GROUP_EXISTS';
+		exports$1[3651] = 'ER_RESOURCE_GROUP_NOT_EXISTS';
+		exports$1[3652] = 'ER_INVALID_VCPU_ID';
+		exports$1[3653] = 'ER_INVALID_VCPU_RANGE';
+		exports$1[3654] = 'ER_INVALID_THREAD_PRIORITY';
+		exports$1[3655] = 'ER_DISALLOWED_OPERATION';
+		exports$1[3656] = 'ER_RESOURCE_GROUP_BUSY';
+		exports$1[3657] = 'ER_RESOURCE_GROUP_DISABLED';
+		exports$1[3658] = 'ER_FEATURE_UNSUPPORTED';
+		exports$1[3659] = 'ER_ATTRIBUTE_IGNORED';
+		exports$1[3660] = 'ER_INVALID_THREAD_ID';
+		exports$1[3661] = 'ER_RESOURCE_GROUP_BIND_FAILED';
+		exports$1[3662] = 'ER_INVALID_USE_OF_FORCE_OPTION';
+		exports$1[3663] = 'ER_GROUP_REPLICATION_COMMAND_FAILURE';
+		exports$1[3664] = 'ER_SDI_OPERATION_FAILED';
+		exports$1[3665] = 'ER_MISSING_JSON_TABLE_VALUE';
+		exports$1[3666] = 'ER_WRONG_JSON_TABLE_VALUE';
+		exports$1[3667] = 'ER_TF_MUST_HAVE_ALIAS';
+		exports$1[3668] = 'ER_TF_FORBIDDEN_JOIN_TYPE';
+		exports$1[3669] = 'ER_JT_VALUE_OUT_OF_RANGE';
+		exports$1[3670] = 'ER_JT_MAX_NESTED_PATH';
+		exports$1[3671] = 'ER_PASSWORD_EXPIRATION_NOT_SUPPORTED_BY_AUTH_METHOD';
+		exports$1[3672] = 'ER_INVALID_GEOJSON_CRS_NOT_TOP_LEVEL';
+		exports$1[3673] = 'ER_BAD_NULL_ERROR_NOT_IGNORED';
+		exports$1[3674] = 'WARN_USELESS_SPATIAL_INDEX';
+		exports$1[3675] = 'ER_DISK_FULL_NOWAIT';
+		exports$1[3676] = 'ER_PARSE_ERROR_IN_DIGEST_FN';
+		exports$1[3677] = 'ER_UNDISCLOSED_PARSE_ERROR_IN_DIGEST_FN';
+		exports$1[3678] = 'ER_SCHEMA_DIR_EXISTS';
+		exports$1[3679] = 'ER_SCHEMA_DIR_MISSING';
+		exports$1[3680] = 'ER_SCHEMA_DIR_CREATE_FAILED';
+		exports$1[3681] = 'ER_SCHEMA_DIR_UNKNOWN';
+		exports$1[3682] = 'ER_ONLY_IMPLEMENTED_FOR_SRID_0_AND_4326';
+		exports$1[3683] = 'ER_BINLOG_EXPIRE_LOG_DAYS_AND_SECS_USED_TOGETHER';
+		exports$1[3684] = 'ER_REGEXP_BUFFER_OVERFLOW';
+		exports$1[3685] = 'ER_REGEXP_ILLEGAL_ARGUMENT';
+		exports$1[3686] = 'ER_REGEXP_INDEX_OUTOFBOUNDS_ERROR';
+		exports$1[3687] = 'ER_REGEXP_INTERNAL_ERROR';
+		exports$1[3688] = 'ER_REGEXP_RULE_SYNTAX';
+		exports$1[3689] = 'ER_REGEXP_BAD_ESCAPE_SEQUENCE';
+		exports$1[3690] = 'ER_REGEXP_UNIMPLEMENTED';
+		exports$1[3691] = 'ER_REGEXP_MISMATCHED_PAREN';
+		exports$1[3692] = 'ER_REGEXP_BAD_INTERVAL';
+		exports$1[3693] = 'ER_REGEXP_MAX_LT_MIN';
+		exports$1[3694] = 'ER_REGEXP_INVALID_BACK_REF';
+		exports$1[3695] = 'ER_REGEXP_LOOK_BEHIND_LIMIT';
+		exports$1[3696] = 'ER_REGEXP_MISSING_CLOSE_BRACKET';
+		exports$1[3697] = 'ER_REGEXP_INVALID_RANGE';
+		exports$1[3698] = 'ER_REGEXP_STACK_OVERFLOW';
+		exports$1[3699] = 'ER_REGEXP_TIME_OUT';
+		exports$1[3700] = 'ER_REGEXP_PATTERN_TOO_BIG';
+		exports$1[3701] = 'ER_CANT_SET_ERROR_LOG_SERVICE';
+		exports$1[3702] = 'ER_EMPTY_PIPELINE_FOR_ERROR_LOG_SERVICE';
+		exports$1[3703] = 'ER_COMPONENT_FILTER_DIAGNOSTICS';
+		exports$1[3704] = 'ER_NOT_IMPLEMENTED_FOR_CARTESIAN_SRS';
+		exports$1[3705] = 'ER_NOT_IMPLEMENTED_FOR_PROJECTED_SRS';
+		exports$1[3706] = 'ER_NONPOSITIVE_RADIUS';
+		exports$1[3707] = 'ER_RESTART_SERVER_FAILED';
+		exports$1[3708] = 'ER_SRS_MISSING_MANDATORY_ATTRIBUTE';
+		exports$1[3709] = 'ER_SRS_MULTIPLE_ATTRIBUTE_DEFINITIONS';
+		exports$1[3710] = 'ER_SRS_NAME_CANT_BE_EMPTY_OR_WHITESPACE';
+		exports$1[3711] = 'ER_SRS_ORGANIZATION_CANT_BE_EMPTY_OR_WHITESPACE';
+		exports$1[3712] = 'ER_SRS_ID_ALREADY_EXISTS';
+		exports$1[3713] = 'ER_WARN_SRS_ID_ALREADY_EXISTS';
+		exports$1[3714] = 'ER_CANT_MODIFY_SRID_0';
+		exports$1[3715] = 'ER_WARN_RESERVED_SRID_RANGE';
+		exports$1[3716] = 'ER_CANT_MODIFY_SRS_USED_BY_COLUMN';
+		exports$1[3717] = 'ER_SRS_INVALID_CHARACTER_IN_ATTRIBUTE';
+		exports$1[3718] = 'ER_SRS_ATTRIBUTE_STRING_TOO_LONG';
+		exports$1[3719] = 'ER_DEPRECATED_UTF8_ALIAS';
+		exports$1[3720] = 'ER_DEPRECATED_NATIONAL';
+		exports$1[3721] = 'ER_INVALID_DEFAULT_UTF8MB4_COLLATION';
+		exports$1[3722] = 'ER_UNABLE_TO_COLLECT_LOG_STATUS';
+		exports$1[3723] = 'ER_RESERVED_TABLESPACE_NAME';
+		exports$1[3724] = 'ER_UNABLE_TO_SET_OPTION';
+		exports$1[3725] = 'ER_REPLICA_POSSIBLY_DIVERGED_AFTER_DDL';
+		exports$1[3726] = 'ER_SRS_NOT_GEOGRAPHIC';
+		exports$1[3727] = 'ER_POLYGON_TOO_LARGE';
+		exports$1[3728] = 'ER_SPATIAL_UNIQUE_INDEX';
+		exports$1[3729] = 'ER_INDEX_TYPE_NOT_SUPPORTED_FOR_SPATIAL_INDEX';
+		exports$1[3730] = 'ER_FK_CANNOT_DROP_PARENT';
+		exports$1[3731] = 'ER_GEOMETRY_PARAM_LONGITUDE_OUT_OF_RANGE';
+		exports$1[3732] = 'ER_GEOMETRY_PARAM_LATITUDE_OUT_OF_RANGE';
+		exports$1[3733] = 'ER_FK_CANNOT_USE_VIRTUAL_COLUMN';
+		exports$1[3734] = 'ER_FK_NO_COLUMN_PARENT';
+		exports$1[3735] = 'ER_CANT_SET_ERROR_SUPPRESSION_LIST';
+		exports$1[3736] = 'ER_SRS_GEOGCS_INVALID_AXES';
+		exports$1[3737] = 'ER_SRS_INVALID_SEMI_MAJOR_AXIS';
+		exports$1[3738] = 'ER_SRS_INVALID_INVERSE_FLATTENING';
+		exports$1[3739] = 'ER_SRS_INVALID_ANGULAR_UNIT';
+		exports$1[3740] = 'ER_SRS_INVALID_PRIME_MERIDIAN';
+		exports$1[3741] = 'ER_TRANSFORM_SOURCE_SRS_NOT_SUPPORTED';
+		exports$1[3742] = 'ER_TRANSFORM_TARGET_SRS_NOT_SUPPORTED';
+		exports$1[3743] = 'ER_TRANSFORM_SOURCE_SRS_MISSING_TOWGS84';
+		exports$1[3744] = 'ER_TRANSFORM_TARGET_SRS_MISSING_TOWGS84';
+		exports$1[3745] = 'ER_TEMP_TABLE_PREVENTS_SWITCH_SESSION_BINLOG_FORMAT';
+		exports$1[3746] = 'ER_TEMP_TABLE_PREVENTS_SWITCH_GLOBAL_BINLOG_FORMAT';
+		exports$1[3747] = 'ER_RUNNING_APPLIER_PREVENTS_SWITCH_GLOBAL_BINLOG_FORMAT';
+		exports$1[3748] = 'ER_CLIENT_GTID_UNSAFE_CREATE_DROP_TEMP_TABLE_IN_TRX_IN_SBR';
+		exports$1[3749] = 'ER_XA_CANT_CREATE_MDL_BACKUP';
+		exports$1[3750] = 'ER_TABLE_WITHOUT_PK';
+		exports$1[3751] = 'ER_WARN_DATA_TRUNCATED_FUNCTIONAL_INDEX';
+		exports$1[3752] = 'ER_WARN_DATA_OUT_OF_RANGE_FUNCTIONAL_INDEX';
+		exports$1[3753] = 'ER_FUNCTIONAL_INDEX_ON_JSON_OR_GEOMETRY_FUNCTION';
+		exports$1[3754] = 'ER_FUNCTIONAL_INDEX_REF_AUTO_INCREMENT';
+		exports$1[3755] = 'ER_CANNOT_DROP_COLUMN_FUNCTIONAL_INDEX';
+		exports$1[3756] = 'ER_FUNCTIONAL_INDEX_PRIMARY_KEY';
+		exports$1[3757] = 'ER_FUNCTIONAL_INDEX_ON_LOB';
+		exports$1[3758] = 'ER_FUNCTIONAL_INDEX_FUNCTION_IS_NOT_ALLOWED';
+		exports$1[3759] = 'ER_FULLTEXT_FUNCTIONAL_INDEX';
+		exports$1[3760] = 'ER_SPATIAL_FUNCTIONAL_INDEX';
+		exports$1[3761] = 'ER_WRONG_KEY_COLUMN_FUNCTIONAL_INDEX';
+		exports$1[3762] = 'ER_FUNCTIONAL_INDEX_ON_FIELD';
+		exports$1[3763] = 'ER_GENERATED_COLUMN_NAMED_FUNCTION_IS_NOT_ALLOWED';
+		exports$1[3764] = 'ER_GENERATED_COLUMN_ROW_VALUE';
+		exports$1[3765] = 'ER_GENERATED_COLUMN_VARIABLES';
+		exports$1[3766] = 'ER_DEPENDENT_BY_DEFAULT_GENERATED_VALUE';
+		exports$1[3767] = 'ER_DEFAULT_VAL_GENERATED_NON_PRIOR';
+		exports$1[3768] = 'ER_DEFAULT_VAL_GENERATED_REF_AUTO_INC';
+		exports$1[3769] = 'ER_DEFAULT_VAL_GENERATED_FUNCTION_IS_NOT_ALLOWED';
+		exports$1[3770] = 'ER_DEFAULT_VAL_GENERATED_NAMED_FUNCTION_IS_NOT_ALLOWED';
+		exports$1[3771] = 'ER_DEFAULT_VAL_GENERATED_ROW_VALUE';
+		exports$1[3772] = 'ER_DEFAULT_VAL_GENERATED_VARIABLES';
+		exports$1[3773] = 'ER_DEFAULT_AS_VAL_GENERATED';
+		exports$1[3774] = 'ER_UNSUPPORTED_ACTION_ON_DEFAULT_VAL_GENERATED';
+		exports$1[3775] = 'ER_GTID_UNSAFE_ALTER_ADD_COL_WITH_DEFAULT_EXPRESSION';
+		exports$1[3776] = 'ER_FK_CANNOT_CHANGE_ENGINE';
+		exports$1[3777] = 'ER_WARN_DEPRECATED_USER_SET_EXPR';
+		exports$1[3778] = 'ER_WARN_DEPRECATED_UTF8MB3_COLLATION';
+		exports$1[3779] = 'ER_WARN_DEPRECATED_NESTED_COMMENT_SYNTAX';
+		exports$1[3780] = 'ER_FK_INCOMPATIBLE_COLUMNS';
+		exports$1[3781] = 'ER_GR_HOLD_WAIT_TIMEOUT';
+		exports$1[3782] = 'ER_GR_HOLD_KILLED';
+		exports$1[3783] = 'ER_GR_HOLD_MEMBER_STATUS_ERROR';
+		exports$1[3784] = 'ER_RPL_ENCRYPTION_FAILED_TO_FETCH_KEY';
+		exports$1[3785] = 'ER_RPL_ENCRYPTION_KEY_NOT_FOUND';
+		exports$1[3786] = 'ER_RPL_ENCRYPTION_KEYRING_INVALID_KEY';
+		exports$1[3787] = 'ER_RPL_ENCRYPTION_HEADER_ERROR';
+		exports$1[3788] = 'ER_RPL_ENCRYPTION_FAILED_TO_ROTATE_LOGS';
+		exports$1[3789] = 'ER_RPL_ENCRYPTION_KEY_EXISTS_UNEXPECTED';
+		exports$1[3790] = 'ER_RPL_ENCRYPTION_FAILED_TO_GENERATE_KEY';
+		exports$1[3791] = 'ER_RPL_ENCRYPTION_FAILED_TO_STORE_KEY';
+		exports$1[3792] = 'ER_RPL_ENCRYPTION_FAILED_TO_REMOVE_KEY';
+		exports$1[3793] = 'ER_RPL_ENCRYPTION_UNABLE_TO_CHANGE_OPTION';
+		exports$1[3794] = 'ER_RPL_ENCRYPTION_MASTER_KEY_RECOVERY_FAILED';
+		exports$1[3795] = 'ER_SLOW_LOG_MODE_IGNORED_WHEN_NOT_LOGGING_TO_FILE';
+		exports$1[3796] = 'ER_GRP_TRX_CONSISTENCY_NOT_ALLOWED';
+		exports$1[3797] = 'ER_GRP_TRX_CONSISTENCY_BEFORE';
+		exports$1[3798] = 'ER_GRP_TRX_CONSISTENCY_AFTER_ON_TRX_BEGIN';
+		exports$1[3799] = 'ER_GRP_TRX_CONSISTENCY_BEGIN_NOT_ALLOWED';
+		exports$1[3800] = 'ER_FUNCTIONAL_INDEX_ROW_VALUE_IS_NOT_ALLOWED';
+		exports$1[3801] = 'ER_RPL_ENCRYPTION_FAILED_TO_ENCRYPT';
+		exports$1[3802] = 'ER_PAGE_TRACKING_NOT_STARTED';
+		exports$1[3803] = 'ER_PAGE_TRACKING_RANGE_NOT_TRACKED';
+		exports$1[3804] = 'ER_PAGE_TRACKING_CANNOT_PURGE';
+		exports$1[3805] = 'ER_RPL_ENCRYPTION_CANNOT_ROTATE_BINLOG_MASTER_KEY';
+		exports$1[3806] = 'ER_BINLOG_MASTER_KEY_RECOVERY_OUT_OF_COMBINATION';
+		exports$1[3807] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_OPERATE_KEY';
+		exports$1[3808] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_ROTATE_LOGS';
+		exports$1[3809] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_REENCRYPT_LOG';
+		exports$1[3810] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_CLEANUP_UNUSED_KEYS';
+		exports$1[3811] = 'ER_BINLOG_MASTER_KEY_ROTATION_FAIL_TO_CLEANUP_AUX_KEY';
+		exports$1[3812] = 'ER_NON_BOOLEAN_EXPR_FOR_CHECK_CONSTRAINT';
+		exports$1[3813] = 'ER_COLUMN_CHECK_CONSTRAINT_REFERENCES_OTHER_COLUMN';
+		exports$1[3814] = 'ER_CHECK_CONSTRAINT_NAMED_FUNCTION_IS_NOT_ALLOWED';
+		exports$1[3815] = 'ER_CHECK_CONSTRAINT_FUNCTION_IS_NOT_ALLOWED';
+		exports$1[3816] = 'ER_CHECK_CONSTRAINT_VARIABLES';
+		exports$1[3817] = 'ER_CHECK_CONSTRAINT_ROW_VALUE';
+		exports$1[3818] = 'ER_CHECK_CONSTRAINT_REFERS_AUTO_INCREMENT_COLUMN';
+		exports$1[3819] = 'ER_CHECK_CONSTRAINT_VIOLATED';
+		exports$1[3820] = 'ER_CHECK_CONSTRAINT_REFERS_UNKNOWN_COLUMN';
+		exports$1[3821] = 'ER_CHECK_CONSTRAINT_NOT_FOUND';
+		exports$1[3822] = 'ER_CHECK_CONSTRAINT_DUP_NAME';
+		exports$1[3823] = 'ER_CHECK_CONSTRAINT_CLAUSE_USING_FK_REFER_ACTION_COLUMN';
+		exports$1[3824] = 'WARN_UNENCRYPTED_TABLE_IN_ENCRYPTED_DB';
+		exports$1[3825] = 'ER_INVALID_ENCRYPTION_REQUEST';
+		exports$1[3826] = 'ER_CANNOT_SET_TABLE_ENCRYPTION';
+		exports$1[3827] = 'ER_CANNOT_SET_DATABASE_ENCRYPTION';
+		exports$1[3828] = 'ER_CANNOT_SET_TABLESPACE_ENCRYPTION';
+		exports$1[3829] = 'ER_TABLESPACE_CANNOT_BE_ENCRYPTED';
+		exports$1[3830] = 'ER_TABLESPACE_CANNOT_BE_DECRYPTED';
+		exports$1[3831] = 'ER_TABLESPACE_TYPE_UNKNOWN';
+		exports$1[3832] = 'ER_TARGET_TABLESPACE_UNENCRYPTED';
+		exports$1[3833] = 'ER_CANNOT_USE_ENCRYPTION_CLAUSE';
+		exports$1[3834] = 'ER_INVALID_MULTIPLE_CLAUSES';
+		exports$1[3835] = 'ER_UNSUPPORTED_USE_OF_GRANT_AS';
+		exports$1[3836] = 'ER_UKNOWN_AUTH_ID_OR_ACCESS_DENIED_FOR_GRANT_AS';
+		exports$1[3837] = 'ER_DEPENDENT_BY_FUNCTIONAL_INDEX';
+		exports$1[3838] = 'ER_PLUGIN_NOT_EARLY';
+		exports$1[3839] = 'ER_INNODB_REDO_LOG_ARCHIVE_START_SUBDIR_PATH';
+		exports$1[3840] = 'ER_INNODB_REDO_LOG_ARCHIVE_START_TIMEOUT';
+		exports$1[3841] = 'ER_INNODB_REDO_LOG_ARCHIVE_DIRS_INVALID';
+		exports$1[3842] = 'ER_INNODB_REDO_LOG_ARCHIVE_LABEL_NOT_FOUND';
+		exports$1[3843] = 'ER_INNODB_REDO_LOG_ARCHIVE_DIR_EMPTY';
+		exports$1[3844] = 'ER_INNODB_REDO_LOG_ARCHIVE_NO_SUCH_DIR';
+		exports$1[3845] = 'ER_INNODB_REDO_LOG_ARCHIVE_DIR_CLASH';
+		exports$1[3846] = 'ER_INNODB_REDO_LOG_ARCHIVE_DIR_PERMISSIONS';
+		exports$1[3847] = 'ER_INNODB_REDO_LOG_ARCHIVE_FILE_CREATE';
+		exports$1[3848] = 'ER_INNODB_REDO_LOG_ARCHIVE_ACTIVE';
+		exports$1[3849] = 'ER_INNODB_REDO_LOG_ARCHIVE_INACTIVE';
+		exports$1[3850] = 'ER_INNODB_REDO_LOG_ARCHIVE_FAILED';
+		exports$1[3851] = 'ER_INNODB_REDO_LOG_ARCHIVE_SESSION';
+		exports$1[3852] = 'ER_STD_REGEX_ERROR';
+		exports$1[3853] = 'ER_INVALID_JSON_TYPE';
+		exports$1[3854] = 'ER_CANNOT_CONVERT_STRING';
+		exports$1[3855] = 'ER_DEPENDENT_BY_PARTITION_FUNC';
+		exports$1[3856] = 'ER_WARN_DEPRECATED_FLOAT_AUTO_INCREMENT';
+		exports$1[3857] = 'ER_RPL_CANT_STOP_REPLICA_WHILE_LOCKED_BACKUP';
+		exports$1[3858] = 'ER_WARN_DEPRECATED_FLOAT_DIGITS';
+		exports$1[3859] = 'ER_WARN_DEPRECATED_FLOAT_UNSIGNED';
+		exports$1[3860] = 'ER_WARN_DEPRECATED_INTEGER_DISPLAY_WIDTH';
+		exports$1[3861] = 'ER_WARN_DEPRECATED_ZEROFILL';
+		exports$1[3862] = 'ER_CLONE_DONOR';
+		exports$1[3863] = 'ER_CLONE_PROTOCOL';
+		exports$1[3864] = 'ER_CLONE_DONOR_VERSION';
+		exports$1[3865] = 'ER_CLONE_OS';
+		exports$1[3866] = 'ER_CLONE_PLATFORM';
+		exports$1[3867] = 'ER_CLONE_CHARSET';
+		exports$1[3868] = 'ER_CLONE_CONFIG';
+		exports$1[3869] = 'ER_CLONE_SYS_CONFIG';
+		exports$1[3870] = 'ER_CLONE_PLUGIN_MATCH';
+		exports$1[3871] = 'ER_CLONE_LOOPBACK';
+		exports$1[3872] = 'ER_CLONE_ENCRYPTION';
+		exports$1[3873] = 'ER_CLONE_DISK_SPACE';
+		exports$1[3874] = 'ER_CLONE_IN_PROGRESS';
+		exports$1[3875] = 'ER_CLONE_DISALLOWED';
+		exports$1[3876] = 'ER_CANNOT_GRANT_ROLES_TO_ANONYMOUS_USER';
+		exports$1[3877] = 'ER_SECONDARY_ENGINE_PLUGIN';
+		exports$1[3878] = 'ER_SECOND_PASSWORD_CANNOT_BE_EMPTY';
+		exports$1[3879] = 'ER_DB_ACCESS_DENIED';
+		exports$1[3880] = 'ER_DA_AUTH_ID_WITH_SYSTEM_USER_PRIV_IN_MANDATORY_ROLES';
+		exports$1[3881] = 'ER_DA_RPL_GTID_TABLE_CANNOT_OPEN';
+		exports$1[3882] = 'ER_GEOMETRY_IN_UNKNOWN_LENGTH_UNIT';
+		exports$1[3883] = 'ER_DA_PLUGIN_INSTALL_ERROR';
+		exports$1[3884] = 'ER_NO_SESSION_TEMP';
+		exports$1[3885] = 'ER_DA_UNKNOWN_ERROR_NUMBER';
+		exports$1[3886] = 'ER_COLUMN_CHANGE_SIZE';
+		exports$1[3887] = 'ER_REGEXP_INVALID_CAPTURE_GROUP_NAME';
+		exports$1[3888] = 'ER_DA_SSL_LIBRARY_ERROR';
+		exports$1[3889] = 'ER_SECONDARY_ENGINE';
+		exports$1[3890] = 'ER_SECONDARY_ENGINE_DDL';
+		exports$1[3891] = 'ER_INCORRECT_CURRENT_PASSWORD';
+		exports$1[3892] = 'ER_MISSING_CURRENT_PASSWORD';
+		exports$1[3893] = 'ER_CURRENT_PASSWORD_NOT_REQUIRED';
+		exports$1[3894] = 'ER_PASSWORD_CANNOT_BE_RETAINED_ON_PLUGIN_CHANGE';
+		exports$1[3895] = 'ER_CURRENT_PASSWORD_CANNOT_BE_RETAINED';
+		exports$1[3896] = 'ER_PARTIAL_REVOKES_EXIST';
+		exports$1[3897] = 'ER_CANNOT_GRANT_SYSTEM_PRIV_TO_MANDATORY_ROLE';
+		exports$1[3898] = 'ER_XA_REPLICATION_FILTERS';
+		exports$1[3899] = 'ER_UNSUPPORTED_SQL_MODE';
+		exports$1[3900] = 'ER_REGEXP_INVALID_FLAG';
+		exports$1[3901] = 'ER_PARTIAL_REVOKE_AND_DB_GRANT_BOTH_EXISTS';
+		exports$1[3902] = 'ER_UNIT_NOT_FOUND';
+		exports$1[3903] = 'ER_INVALID_JSON_VALUE_FOR_FUNC_INDEX';
+		exports$1[3904] = 'ER_JSON_VALUE_OUT_OF_RANGE_FOR_FUNC_INDEX';
+		exports$1[3905] = 'ER_EXCEEDED_MV_KEYS_NUM';
+		exports$1[3906] = 'ER_EXCEEDED_MV_KEYS_SPACE';
+		exports$1[3907] = 'ER_FUNCTIONAL_INDEX_DATA_IS_TOO_LONG';
+		exports$1[3908] = 'ER_WRONG_MVI_VALUE';
+		exports$1[3909] = 'ER_WARN_FUNC_INDEX_NOT_APPLICABLE';
+		exports$1[3910] = 'ER_GRP_RPL_UDF_ERROR';
+		exports$1[3911] = 'ER_UPDATE_GTID_PURGED_WITH_GR';
+		exports$1[3912] = 'ER_GROUPING_ON_TIMESTAMP_IN_DST';
+		exports$1[3913] = 'ER_TABLE_NAME_CAUSES_TOO_LONG_PATH';
+		exports$1[3914] = 'ER_AUDIT_LOG_INSUFFICIENT_PRIVILEGE';
+		exports$1[3915] = 'ER_AUDIT_LOG_PASSWORD_HAS_BEEN_COPIED';
+		exports$1[3916] = 'ER_DA_GRP_RPL_STARTED_AUTO_REJOIN';
+		exports$1[3917] = 'ER_SYSVAR_CHANGE_DURING_QUERY';
+		exports$1[3918] = 'ER_GLOBSTAT_CHANGE_DURING_QUERY';
+		exports$1[3919] = 'ER_GRP_RPL_MESSAGE_SERVICE_INIT_FAILURE';
+		exports$1[3920] = 'ER_CHANGE_SOURCE_WRONG_COMPRESSION_ALGORITHM_CLIENT';
+		exports$1[3921] = 'ER_CHANGE_SOURCE_WRONG_COMPRESSION_LEVEL_CLIENT';
+		exports$1[3922] = 'ER_WRONG_COMPRESSION_ALGORITHM_CLIENT';
+		exports$1[3923] = 'ER_WRONG_COMPRESSION_LEVEL_CLIENT';
+		exports$1[3924] = 'ER_CHANGE_SOURCE_WRONG_COMPRESSION_ALGORITHM_LIST_CLIENT';
+		exports$1[3925] = 'ER_CLIENT_PRIVILEGE_CHECKS_USER_CANNOT_BE_ANONYMOUS';
+		exports$1[3926] = 'ER_CLIENT_PRIVILEGE_CHECKS_USER_DOES_NOT_EXIST';
+		exports$1[3927] = 'ER_CLIENT_PRIVILEGE_CHECKS_USER_CORRUPT';
+		exports$1[3928] = 'ER_CLIENT_PRIVILEGE_CHECKS_USER_NEEDS_RPL_APPLIER_PRIV';
+		exports$1[3929] = 'ER_WARN_DA_PRIVILEGE_NOT_REGISTERED';
+		exports$1[3930] = 'ER_CLIENT_KEYRING_UDF_KEY_INVALID';
+		exports$1[3931] = 'ER_CLIENT_KEYRING_UDF_KEY_TYPE_INVALID';
+		exports$1[3932] = 'ER_CLIENT_KEYRING_UDF_KEY_TOO_LONG';
+		exports$1[3933] = 'ER_CLIENT_KEYRING_UDF_KEY_TYPE_TOO_LONG';
+		exports$1[3934] = 'ER_JSON_SCHEMA_VALIDATION_ERROR_WITH_DETAILED_REPORT';
+		exports$1[3935] = 'ER_DA_UDF_INVALID_CHARSET_SPECIFIED';
+		exports$1[3936] = 'ER_DA_UDF_INVALID_CHARSET';
+		exports$1[3937] = 'ER_DA_UDF_INVALID_COLLATION';
+		exports$1[3938] = 'ER_DA_UDF_INVALID_EXTENSION_ARGUMENT_TYPE';
+		exports$1[3939] = 'ER_MULTIPLE_CONSTRAINTS_WITH_SAME_NAME';
+		exports$1[3940] = 'ER_CONSTRAINT_NOT_FOUND';
+		exports$1[3941] = 'ER_ALTER_CONSTRAINT_ENFORCEMENT_NOT_SUPPORTED';
+		exports$1[3942] = 'ER_TABLE_VALUE_CONSTRUCTOR_MUST_HAVE_COLUMNS';
+		exports$1[3943] = 'ER_TABLE_VALUE_CONSTRUCTOR_CANNOT_HAVE_DEFAULT';
+		exports$1[3944] = 'ER_CLIENT_QUERY_FAILURE_INVALID_NON_ROW_FORMAT';
+		exports$1[3945] = 'ER_REQUIRE_ROW_FORMAT_INVALID_VALUE';
+		exports$1[3946] = 'ER_FAILED_TO_DETERMINE_IF_ROLE_IS_MANDATORY';
+		exports$1[3947] = 'ER_FAILED_TO_FETCH_MANDATORY_ROLE_LIST';
+		exports$1[3948] = 'ER_CLIENT_LOCAL_FILES_DISABLED';
+		exports$1[3949] = 'ER_IMP_INCOMPATIBLE_CFG_VERSION';
+		exports$1[3950] = 'ER_DA_OOM';
+		exports$1[3951] = 'ER_DA_UDF_INVALID_ARGUMENT_TO_SET_CHARSET';
+		exports$1[3952] = 'ER_DA_UDF_INVALID_RETURN_TYPE_TO_SET_CHARSET';
+		exports$1[3953] = 'ER_MULTIPLE_INTO_CLAUSES';
+		exports$1[3954] = 'ER_MISPLACED_INTO';
+		exports$1[3955] =
 		  'ER_USER_ACCESS_DENIED_FOR_USER_ACCOUNT_BLOCKED_BY_PASSWORD_LOCK';
-		exports[3956] = 'ER_WARN_DEPRECATED_YEAR_UNSIGNED';
-		exports[3957] = 'ER_CLONE_NETWORK_PACKET';
-		exports[3958] = 'ER_SDI_OPERATION_FAILED_MISSING_RECORD';
-		exports[3959] = 'ER_DEPENDENT_BY_CHECK_CONSTRAINT';
-		exports[3960] = 'ER_GRP_OPERATION_NOT_ALLOWED_GR_MUST_STOP';
-		exports[3961] = 'ER_WARN_DEPRECATED_JSON_TABLE_ON_ERROR_ON_EMPTY';
-		exports[3962] = 'ER_WARN_DEPRECATED_INNER_INTO';
-		exports[3963] = 'ER_WARN_DEPRECATED_VALUES_FUNCTION_ALWAYS_NULL';
-		exports[3964] = 'ER_WARN_DEPRECATED_SQL_CALC_FOUND_ROWS';
-		exports[3965] = 'ER_WARN_DEPRECATED_FOUND_ROWS';
-		exports[3966] = 'ER_MISSING_JSON_VALUE';
-		exports[3967] = 'ER_MULTIPLE_JSON_VALUES';
-		exports[3968] = 'ER_HOSTNAME_TOO_LONG';
-		exports[3969] = 'ER_WARN_CLIENT_DEPRECATED_PARTITION_PREFIX_KEY';
-		exports[3970] = 'ER_GROUP_REPLICATION_USER_EMPTY_MSG';
-		exports[3971] = 'ER_GROUP_REPLICATION_USER_MANDATORY_MSG';
-		exports[3972] = 'ER_GROUP_REPLICATION_PASSWORD_LENGTH';
-		exports[3973] = 'ER_SUBQUERY_TRANSFORM_REJECTED';
-		exports[3974] = 'ER_DA_GRP_RPL_RECOVERY_ENDPOINT_FORMAT';
-		exports[3975] = 'ER_DA_GRP_RPL_RECOVERY_ENDPOINT_INVALID';
-		exports[3976] = 'ER_WRONG_VALUE_FOR_VAR_PLUS_ACTIONABLE_PART';
-		exports[3977] = 'ER_STATEMENT_NOT_ALLOWED_AFTER_START_TRANSACTION';
-		exports[3978] = 'ER_FOREIGN_KEY_WITH_ATOMIC_CREATE_SELECT';
-		exports[3979] = 'ER_NOT_ALLOWED_WITH_START_TRANSACTION';
-		exports[3980] = 'ER_INVALID_JSON_ATTRIBUTE';
-		exports[3981] = 'ER_ENGINE_ATTRIBUTE_NOT_SUPPORTED';
-		exports[3982] = 'ER_INVALID_USER_ATTRIBUTE_JSON';
-		exports[3983] = 'ER_INNODB_REDO_DISABLED';
-		exports[3984] = 'ER_INNODB_REDO_ARCHIVING_ENABLED';
-		exports[3985] = 'ER_MDL_OUT_OF_RESOURCES';
-		exports[3986] = 'ER_IMPLICIT_COMPARISON_FOR_JSON';
-		exports[3987] = 'ER_FUNCTION_DOES_NOT_SUPPORT_CHARACTER_SET';
-		exports[3988] = 'ER_IMPOSSIBLE_STRING_CONVERSION';
-		exports[3989] = 'ER_SCHEMA_READ_ONLY';
-		exports[3990] = 'ER_RPL_ASYNC_RECONNECT_GTID_MODE_OFF';
-		exports[3991] = 'ER_RPL_ASYNC_RECONNECT_AUTO_POSITION_OFF';
-		exports[3992] = 'ER_DISABLE_GTID_MODE_REQUIRES_ASYNC_RECONNECT_OFF';
-		exports[3993] = 'ER_DISABLE_AUTO_POSITION_REQUIRES_ASYNC_RECONNECT_OFF';
-		exports[3994] = 'ER_INVALID_PARAMETER_USE';
-		exports[3995] = 'ER_CHARACTER_SET_MISMATCH';
-		exports[3996] = 'ER_WARN_VAR_VALUE_CHANGE_NOT_SUPPORTED';
-		exports[3997] = 'ER_INVALID_TIME_ZONE_INTERVAL';
-		exports[3998] = 'ER_INVALID_CAST';
-		exports[3999] = 'ER_HYPERGRAPH_NOT_SUPPORTED_YET';
-		exports[4000] = 'ER_WARN_HYPERGRAPH_EXPERIMENTAL';
-		exports[4001] = 'ER_DA_NO_ERROR_LOG_PARSER_CONFIGURED';
-		exports[4002] = 'ER_DA_ERROR_LOG_TABLE_DISABLED';
-		exports[4003] = 'ER_DA_ERROR_LOG_MULTIPLE_FILTERS';
-		exports[4004] = 'ER_DA_CANT_OPEN_ERROR_LOG';
-		exports[4005] = 'ER_USER_REFERENCED_AS_DEFINER';
-		exports[4006] = 'ER_CANNOT_USER_REFERENCED_AS_DEFINER';
-		exports[4007] = 'ER_REGEX_NUMBER_TOO_BIG';
-		exports[4008] = 'ER_SPVAR_NONINTEGER_TYPE';
-		exports[4009] = 'WARN_UNSUPPORTED_ACL_TABLES_READ';
-		exports[4010] = 'ER_BINLOG_UNSAFE_ACL_TABLE_READ_IN_DML_DDL';
-		exports[4011] = 'ER_STOP_REPLICA_MONITOR_IO_THREAD_TIMEOUT';
-		exports[4012] = 'ER_STARTING_REPLICA_MONITOR_IO_THREAD';
-		exports[4013] = 'ER_CANT_USE_ANONYMOUS_TO_GTID_WITH_GTID_MODE_NOT_ON';
-		exports[4014] = 'ER_CANT_COMBINE_ANONYMOUS_TO_GTID_AND_AUTOPOSITION';
-		exports[4015] =
+		exports$1[3956] = 'ER_WARN_DEPRECATED_YEAR_UNSIGNED';
+		exports$1[3957] = 'ER_CLONE_NETWORK_PACKET';
+		exports$1[3958] = 'ER_SDI_OPERATION_FAILED_MISSING_RECORD';
+		exports$1[3959] = 'ER_DEPENDENT_BY_CHECK_CONSTRAINT';
+		exports$1[3960] = 'ER_GRP_OPERATION_NOT_ALLOWED_GR_MUST_STOP';
+		exports$1[3961] = 'ER_WARN_DEPRECATED_JSON_TABLE_ON_ERROR_ON_EMPTY';
+		exports$1[3962] = 'ER_WARN_DEPRECATED_INNER_INTO';
+		exports$1[3963] = 'ER_WARN_DEPRECATED_VALUES_FUNCTION_ALWAYS_NULL';
+		exports$1[3964] = 'ER_WARN_DEPRECATED_SQL_CALC_FOUND_ROWS';
+		exports$1[3965] = 'ER_WARN_DEPRECATED_FOUND_ROWS';
+		exports$1[3966] = 'ER_MISSING_JSON_VALUE';
+		exports$1[3967] = 'ER_MULTIPLE_JSON_VALUES';
+		exports$1[3968] = 'ER_HOSTNAME_TOO_LONG';
+		exports$1[3969] = 'ER_WARN_CLIENT_DEPRECATED_PARTITION_PREFIX_KEY';
+		exports$1[3970] = 'ER_GROUP_REPLICATION_USER_EMPTY_MSG';
+		exports$1[3971] = 'ER_GROUP_REPLICATION_USER_MANDATORY_MSG';
+		exports$1[3972] = 'ER_GROUP_REPLICATION_PASSWORD_LENGTH';
+		exports$1[3973] = 'ER_SUBQUERY_TRANSFORM_REJECTED';
+		exports$1[3974] = 'ER_DA_GRP_RPL_RECOVERY_ENDPOINT_FORMAT';
+		exports$1[3975] = 'ER_DA_GRP_RPL_RECOVERY_ENDPOINT_INVALID';
+		exports$1[3976] = 'ER_WRONG_VALUE_FOR_VAR_PLUS_ACTIONABLE_PART';
+		exports$1[3977] = 'ER_STATEMENT_NOT_ALLOWED_AFTER_START_TRANSACTION';
+		exports$1[3978] = 'ER_FOREIGN_KEY_WITH_ATOMIC_CREATE_SELECT';
+		exports$1[3979] = 'ER_NOT_ALLOWED_WITH_START_TRANSACTION';
+		exports$1[3980] = 'ER_INVALID_JSON_ATTRIBUTE';
+		exports$1[3981] = 'ER_ENGINE_ATTRIBUTE_NOT_SUPPORTED';
+		exports$1[3982] = 'ER_INVALID_USER_ATTRIBUTE_JSON';
+		exports$1[3983] = 'ER_INNODB_REDO_DISABLED';
+		exports$1[3984] = 'ER_INNODB_REDO_ARCHIVING_ENABLED';
+		exports$1[3985] = 'ER_MDL_OUT_OF_RESOURCES';
+		exports$1[3986] = 'ER_IMPLICIT_COMPARISON_FOR_JSON';
+		exports$1[3987] = 'ER_FUNCTION_DOES_NOT_SUPPORT_CHARACTER_SET';
+		exports$1[3988] = 'ER_IMPOSSIBLE_STRING_CONVERSION';
+		exports$1[3989] = 'ER_SCHEMA_READ_ONLY';
+		exports$1[3990] = 'ER_RPL_ASYNC_RECONNECT_GTID_MODE_OFF';
+		exports$1[3991] = 'ER_RPL_ASYNC_RECONNECT_AUTO_POSITION_OFF';
+		exports$1[3992] = 'ER_DISABLE_GTID_MODE_REQUIRES_ASYNC_RECONNECT_OFF';
+		exports$1[3993] = 'ER_DISABLE_AUTO_POSITION_REQUIRES_ASYNC_RECONNECT_OFF';
+		exports$1[3994] = 'ER_INVALID_PARAMETER_USE';
+		exports$1[3995] = 'ER_CHARACTER_SET_MISMATCH';
+		exports$1[3996] = 'ER_WARN_VAR_VALUE_CHANGE_NOT_SUPPORTED';
+		exports$1[3997] = 'ER_INVALID_TIME_ZONE_INTERVAL';
+		exports$1[3998] = 'ER_INVALID_CAST';
+		exports$1[3999] = 'ER_HYPERGRAPH_NOT_SUPPORTED_YET';
+		exports$1[4000] = 'ER_WARN_HYPERGRAPH_EXPERIMENTAL';
+		exports$1[4001] = 'ER_DA_NO_ERROR_LOG_PARSER_CONFIGURED';
+		exports$1[4002] = 'ER_DA_ERROR_LOG_TABLE_DISABLED';
+		exports$1[4003] = 'ER_DA_ERROR_LOG_MULTIPLE_FILTERS';
+		exports$1[4004] = 'ER_DA_CANT_OPEN_ERROR_LOG';
+		exports$1[4005] = 'ER_USER_REFERENCED_AS_DEFINER';
+		exports$1[4006] = 'ER_CANNOT_USER_REFERENCED_AS_DEFINER';
+		exports$1[4007] = 'ER_REGEX_NUMBER_TOO_BIG';
+		exports$1[4008] = 'ER_SPVAR_NONINTEGER_TYPE';
+		exports$1[4009] = 'WARN_UNSUPPORTED_ACL_TABLES_READ';
+		exports$1[4010] = 'ER_BINLOG_UNSAFE_ACL_TABLE_READ_IN_DML_DDL';
+		exports$1[4011] = 'ER_STOP_REPLICA_MONITOR_IO_THREAD_TIMEOUT';
+		exports$1[4012] = 'ER_STARTING_REPLICA_MONITOR_IO_THREAD';
+		exports$1[4013] = 'ER_CANT_USE_ANONYMOUS_TO_GTID_WITH_GTID_MODE_NOT_ON';
+		exports$1[4014] = 'ER_CANT_COMBINE_ANONYMOUS_TO_GTID_AND_AUTOPOSITION';
+		exports$1[4015] =
 		  'ER_ASSIGN_GTIDS_TO_ANONYMOUS_TRANSACTIONS_REQUIRES_GTID_MODE_ON';
-		exports[4016] = 'ER_SQL_REPLICA_SKIP_COUNTER_USED_WITH_GTID_MODE_ON';
-		exports[4017] =
+		exports$1[4016] = 'ER_SQL_REPLICA_SKIP_COUNTER_USED_WITH_GTID_MODE_ON';
+		exports$1[4017] =
 		  'ER_USING_ASSIGN_GTIDS_TO_ANONYMOUS_TRANSACTIONS_AS_LOCAL_OR_UUID';
-		exports[4018] =
+		exports$1[4018] =
 		  'ER_CANT_SET_ANONYMOUS_TO_GTID_AND_WAIT_UNTIL_SQL_THD_AFTER_GTIDS';
-		exports[4019] = 'ER_CANT_SET_SQL_AFTER_OR_BEFORE_GTIDS_WITH_ANONYMOUS_TO_GTID';
-		exports[4020] = 'ER_ANONYMOUS_TO_GTID_UUID_SAME_AS_GROUP_NAME';
-		exports[4021] = 'ER_CANT_USE_SAME_UUID_AS_GROUP_NAME';
-		exports[4022] = 'ER_GRP_RPL_RECOVERY_CHANNEL_STILL_RUNNING';
-		exports[4023] = 'ER_INNODB_INVALID_AUTOEXTEND_SIZE_VALUE';
-		exports[4024] = 'ER_INNODB_INCOMPATIBLE_WITH_TABLESPACE';
-		exports[4025] = 'ER_INNODB_AUTOEXTEND_SIZE_OUT_OF_RANGE';
-		exports[4026] = 'ER_CANNOT_USE_AUTOEXTEND_SIZE_CLAUSE';
-		exports[4027] = 'ER_ROLE_GRANTED_TO_ITSELF';
-		exports[4028] = 'ER_TABLE_MUST_HAVE_A_VISIBLE_COLUMN';
-		exports[4029] = 'ER_INNODB_COMPRESSION_FAILURE';
-		exports[4030] = 'ER_WARN_ASYNC_CONN_FAILOVER_NETWORK_NAMESPACE';
-		exports[4031] = 'ER_CLIENT_INTERACTION_TIMEOUT';
-		exports[4032] = 'ER_INVALID_CAST_TO_GEOMETRY';
-		exports[4033] = 'ER_INVALID_CAST_POLYGON_RING_DIRECTION';
-		exports[4034] = 'ER_GIS_DIFFERENT_SRIDS_AGGREGATION';
-		exports[4035] = 'ER_RELOAD_KEYRING_FAILURE';
-		exports[4036] = 'ER_SDI_GET_KEYS_INVALID_TABLESPACE';
-		exports[4037] = 'ER_CHANGE_RPL_SRC_WRONG_COMPRESSION_ALGORITHM_SIZE';
-		exports[4038] = 'ER_WARN_DEPRECATED_TLS_VERSION_FOR_CHANNEL_CLI';
-		exports[4039] = 'ER_CANT_USE_SAME_UUID_AS_VIEW_CHANGE_UUID';
-		exports[4040] = 'ER_ANONYMOUS_TO_GTID_UUID_SAME_AS_VIEW_CHANGE_UUID';
-		exports[4041] = 'ER_GRP_RPL_VIEW_CHANGE_UUID_FAIL_GET_VARIABLE';
-		exports[4042] = 'ER_WARN_ADUIT_LOG_MAX_SIZE_AND_PRUNE_SECONDS';
-		exports[4043] = 'ER_WARN_ADUIT_LOG_MAX_SIZE_CLOSE_TO_ROTATE_ON_SIZE';
-		exports[4044] = 'ER_KERBEROS_CREATE_USER';
-		exports[4045] = 'ER_INSTALL_PLUGIN_CONFLICT_CLIENT';
-		exports[4046] = 'ER_DA_ERROR_LOG_COMPONENT_FLUSH_FAILED';
-		exports[4047] = 'ER_WARN_SQL_AFTER_MTS_GAPS_GAP_NOT_CALCULATED';
-		exports[4048] = 'ER_INVALID_ASSIGNMENT_TARGET';
-		exports[4049] = 'ER_OPERATION_NOT_ALLOWED_ON_GR_SECONDARY';
-		exports[4050] = 'ER_GRP_RPL_FAILOVER_CHANNEL_STATUS_PROPAGATION';
-		exports[4051] = 'ER_WARN_AUDIT_LOG_FORMAT_UNIX_TIMESTAMP_ONLY_WHEN_JSON';
-		exports[4052] = 'ER_INVALID_MFA_PLUGIN_SPECIFIED';
-		exports[4053] = 'ER_IDENTIFIED_BY_UNSUPPORTED';
-		exports[4054] = 'ER_INVALID_PLUGIN_FOR_REGISTRATION';
-		exports[4055] = 'ER_PLUGIN_REQUIRES_REGISTRATION';
-		exports[4056] = 'ER_MFA_METHOD_EXISTS';
-		exports[4057] = 'ER_MFA_METHOD_NOT_EXISTS';
-		exports[4058] = 'ER_AUTHENTICATION_POLICY_MISMATCH';
-		exports[4059] = 'ER_PLUGIN_REGISTRATION_DONE';
-		exports[4060] = 'ER_INVALID_USER_FOR_REGISTRATION';
-		exports[4061] = 'ER_USER_REGISTRATION_FAILED';
-		exports[4062] = 'ER_MFA_METHODS_INVALID_ORDER';
-		exports[4063] = 'ER_MFA_METHODS_IDENTICAL';
-		exports[4064] = 'ER_INVALID_MFA_OPERATIONS_FOR_PASSWORDLESS_USER';
-		exports[4065] = 'ER_CHANGE_REPLICATION_SOURCE_NO_OPTIONS_FOR_GTID_ONLY';
-		exports[4066] =
+		exports$1[4019] = 'ER_CANT_SET_SQL_AFTER_OR_BEFORE_GTIDS_WITH_ANONYMOUS_TO_GTID';
+		exports$1[4020] = 'ER_ANONYMOUS_TO_GTID_UUID_SAME_AS_GROUP_NAME';
+		exports$1[4021] = 'ER_CANT_USE_SAME_UUID_AS_GROUP_NAME';
+		exports$1[4022] = 'ER_GRP_RPL_RECOVERY_CHANNEL_STILL_RUNNING';
+		exports$1[4023] = 'ER_INNODB_INVALID_AUTOEXTEND_SIZE_VALUE';
+		exports$1[4024] = 'ER_INNODB_INCOMPATIBLE_WITH_TABLESPACE';
+		exports$1[4025] = 'ER_INNODB_AUTOEXTEND_SIZE_OUT_OF_RANGE';
+		exports$1[4026] = 'ER_CANNOT_USE_AUTOEXTEND_SIZE_CLAUSE';
+		exports$1[4027] = 'ER_ROLE_GRANTED_TO_ITSELF';
+		exports$1[4028] = 'ER_TABLE_MUST_HAVE_A_VISIBLE_COLUMN';
+		exports$1[4029] = 'ER_INNODB_COMPRESSION_FAILURE';
+		exports$1[4030] = 'ER_WARN_ASYNC_CONN_FAILOVER_NETWORK_NAMESPACE';
+		exports$1[4031] = 'ER_CLIENT_INTERACTION_TIMEOUT';
+		exports$1[4032] = 'ER_INVALID_CAST_TO_GEOMETRY';
+		exports$1[4033] = 'ER_INVALID_CAST_POLYGON_RING_DIRECTION';
+		exports$1[4034] = 'ER_GIS_DIFFERENT_SRIDS_AGGREGATION';
+		exports$1[4035] = 'ER_RELOAD_KEYRING_FAILURE';
+		exports$1[4036] = 'ER_SDI_GET_KEYS_INVALID_TABLESPACE';
+		exports$1[4037] = 'ER_CHANGE_RPL_SRC_WRONG_COMPRESSION_ALGORITHM_SIZE';
+		exports$1[4038] = 'ER_WARN_DEPRECATED_TLS_VERSION_FOR_CHANNEL_CLI';
+		exports$1[4039] = 'ER_CANT_USE_SAME_UUID_AS_VIEW_CHANGE_UUID';
+		exports$1[4040] = 'ER_ANONYMOUS_TO_GTID_UUID_SAME_AS_VIEW_CHANGE_UUID';
+		exports$1[4041] = 'ER_GRP_RPL_VIEW_CHANGE_UUID_FAIL_GET_VARIABLE';
+		exports$1[4042] = 'ER_WARN_ADUIT_LOG_MAX_SIZE_AND_PRUNE_SECONDS';
+		exports$1[4043] = 'ER_WARN_ADUIT_LOG_MAX_SIZE_CLOSE_TO_ROTATE_ON_SIZE';
+		exports$1[4044] = 'ER_KERBEROS_CREATE_USER';
+		exports$1[4045] = 'ER_INSTALL_PLUGIN_CONFLICT_CLIENT';
+		exports$1[4046] = 'ER_DA_ERROR_LOG_COMPONENT_FLUSH_FAILED';
+		exports$1[4047] = 'ER_WARN_SQL_AFTER_MTS_GAPS_GAP_NOT_CALCULATED';
+		exports$1[4048] = 'ER_INVALID_ASSIGNMENT_TARGET';
+		exports$1[4049] = 'ER_OPERATION_NOT_ALLOWED_ON_GR_SECONDARY';
+		exports$1[4050] = 'ER_GRP_RPL_FAILOVER_CHANNEL_STATUS_PROPAGATION';
+		exports$1[4051] = 'ER_WARN_AUDIT_LOG_FORMAT_UNIX_TIMESTAMP_ONLY_WHEN_JSON';
+		exports$1[4052] = 'ER_INVALID_MFA_PLUGIN_SPECIFIED';
+		exports$1[4053] = 'ER_IDENTIFIED_BY_UNSUPPORTED';
+		exports$1[4054] = 'ER_INVALID_PLUGIN_FOR_REGISTRATION';
+		exports$1[4055] = 'ER_PLUGIN_REQUIRES_REGISTRATION';
+		exports$1[4056] = 'ER_MFA_METHOD_EXISTS';
+		exports$1[4057] = 'ER_MFA_METHOD_NOT_EXISTS';
+		exports$1[4058] = 'ER_AUTHENTICATION_POLICY_MISMATCH';
+		exports$1[4059] = 'ER_PLUGIN_REGISTRATION_DONE';
+		exports$1[4060] = 'ER_INVALID_USER_FOR_REGISTRATION';
+		exports$1[4061] = 'ER_USER_REGISTRATION_FAILED';
+		exports$1[4062] = 'ER_MFA_METHODS_INVALID_ORDER';
+		exports$1[4063] = 'ER_MFA_METHODS_IDENTICAL';
+		exports$1[4064] = 'ER_INVALID_MFA_OPERATIONS_FOR_PASSWORDLESS_USER';
+		exports$1[4065] = 'ER_CHANGE_REPLICATION_SOURCE_NO_OPTIONS_FOR_GTID_ONLY';
+		exports$1[4066] =
 		  'ER_CHANGE_REP_SOURCE_CANT_DISABLE_REQ_ROW_FORMAT_WITH_GTID_ONLY';
-		exports[4067] =
+		exports$1[4067] =
 		  'ER_CHANGE_REP_SOURCE_CANT_DISABLE_AUTO_POSITION_WITH_GTID_ONLY';
-		exports[4068] = 'ER_CHANGE_REP_SOURCE_CANT_DISABLE_GTID_ONLY_WITHOUT_POSITIONS';
-		exports[4069] = 'ER_CHANGE_REP_SOURCE_CANT_DISABLE_AUTO_POS_WITHOUT_POSITIONS';
-		exports[4070] = 'ER_CHANGE_REP_SOURCE_GR_CHANNEL_WITH_GTID_MODE_NOT_ON';
-		exports[4071] = 'ER_CANT_USE_GTID_ONLY_WITH_GTID_MODE_NOT_ON';
-		exports[4072] = 'ER_WARN_C_DISABLE_GTID_ONLY_WITH_SOURCE_AUTO_POS_INVALID_POS';
-		exports[4073] = 'ER_DA_SSL_FIPS_MODE_ERROR';
-		exports[4074] = 'ER_VALUE_OUT_OF_RANGE';
-		exports[4075] = 'ER_FULLTEXT_WITH_ROLLUP';
-		exports[4076] = 'ER_REGEXP_MISSING_RESOURCE';
-		exports[4077] = 'ER_WARN_REGEXP_USING_DEFAULT';
-		exports[4078] = 'ER_REGEXP_MISSING_FILE';
-		exports[4079] = 'ER_WARN_DEPRECATED_COLLATION';
-		exports[4080] = 'ER_CONCURRENT_PROCEDURE_USAGE';
-		exports[4081] = 'ER_DA_GLOBAL_CONN_LIMIT';
-		exports[4082] = 'ER_DA_CONN_LIMIT';
-		exports[4083] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE_INSTANT';
-		exports[4084] = 'ER_WARN_SF_UDF_NAME_COLLISION';
-		exports[4085] = 'ER_CANNOT_PURGE_BINLOG_WITH_BACKUP_LOCK';
-		exports[4086] = 'ER_TOO_MANY_WINDOWS';
-		exports[4087] = 'ER_MYSQLBACKUP_CLIENT_MSG';
-		exports[4088] = 'ER_COMMENT_CONTAINS_INVALID_STRING';
-		exports[4089] = 'ER_DEFINITION_CONTAINS_INVALID_STRING';
-		exports[4090] = 'ER_CANT_EXECUTE_COMMAND_WITH_ASSIGNED_GTID_NEXT';
-		exports[4091] = 'ER_XA_TEMP_TABLE';
-		exports[4092] = 'ER_INNODB_MAX_ROW_VERSION';
-		exports[4093] = 'ER_INNODB_INSTANT_ADD_NOT_SUPPORTED_MAX_SIZE';
-		exports[4094] = 'ER_OPERATION_NOT_ALLOWED_WHILE_PRIMARY_CHANGE_IS_RUNNING';
-		exports[4095] = 'ER_WARN_DEPRECATED_DATETIME_DELIMITER';
-		exports[4096] = 'ER_WARN_DEPRECATED_SUPERFLUOUS_DELIMITER';
-		exports[4097] = 'ER_CANNOT_PERSIST_SENSITIVE_VARIABLES';
-		exports[4098] = 'ER_WARN_CANNOT_SECURELY_PERSIST_SENSITIVE_VARIABLES';
-		exports[4099] = 'ER_WARN_TRG_ALREADY_EXISTS';
-		exports[4100] = 'ER_IF_NOT_EXISTS_UNSUPPORTED_TRG_EXISTS_ON_DIFFERENT_TABLE';
-		exports[4101] = 'ER_IF_NOT_EXISTS_UNSUPPORTED_UDF_NATIVE_FCT_NAME_COLLISION';
-		exports[4102] = 'ER_SET_PASSWORD_AUTH_PLUGIN_ERROR';
-		exports[4103] = 'ER_REDUCED_DBLWR_FILE_CORRUPTED';
-		exports[4104] = 'ER_REDUCED_DBLWR_PAGE_FOUND';
-		exports[4105] = 'ER_SRS_INVALID_LATITUDE_OF_ORIGIN';
-		exports[4106] = 'ER_SRS_INVALID_LONGITUDE_OF_ORIGIN';
-		exports[4107] = 'ER_SRS_UNUSED_PROJ_PARAMETER_PRESENT';
-		exports[4108] = 'ER_GIPK_COLUMN_EXISTS';
-		exports[4109] = 'ER_GIPK_FAILED_AUTOINC_COLUMN_EXISTS';
-		exports[4110] = 'ER_GIPK_COLUMN_ALTER_NOT_ALLOWED';
-		exports[4111] = 'ER_DROP_PK_COLUMN_TO_DROP_GIPK';
-		exports[4112] = 'ER_CREATE_SELECT_WITH_GIPK_DISALLOWED_IN_SBR';
-		exports[4113] = 'ER_DA_EXPIRE_LOGS_DAYS_IGNORED';
-		exports[4114] = 'ER_CTE_RECURSIVE_NOT_UNION';
-		exports[4115] = 'ER_COMMAND_BACKEND_FAILED_TO_FETCH_SECURITY_CTX';
-		exports[4116] = 'ER_COMMAND_SERVICE_BACKEND_FAILED';
-		exports[4117] = 'ER_CLIENT_FILE_PRIVILEGE_FOR_REPLICATION_CHECKS';
-		exports[4118] = 'ER_GROUP_REPLICATION_FORCE_MEMBERS_COMMAND_FAILURE';
-		exports[4119] = 'ER_WARN_DEPRECATED_IDENT';
-		exports[4120] = 'ER_INTERSECT_ALL_MAX_DUPLICATES_EXCEEDED';
-		exports[4121] = 'ER_TP_QUERY_THRS_PER_GRP_EXCEEDS_TXN_THR_LIMIT';
-		exports[4122] = 'ER_BAD_TIMESTAMP_FORMAT';
-		exports[4123] = 'ER_SHAPE_PRIDICTION_UDF';
-		exports[4124] = 'ER_SRS_INVALID_HEIGHT';
-		exports[4125] = 'ER_SRS_INVALID_SCALING';
-		exports[4126] = 'ER_SRS_INVALID_ZONE_WIDTH';
-		exports[4127] = 'ER_SRS_INVALID_LATITUDE_POLAR_STERE_VAR_A';
-		exports[4128] = 'ER_WARN_DEPRECATED_CLIENT_NO_SCHEMA_OPTION';
-		exports[4129] = 'ER_TABLE_NOT_EMPTY';
-		exports[4130] = 'ER_TABLE_NO_PRIMARY_KEY';
-		exports[4131] = 'ER_TABLE_IN_SHARED_TABLESPACE';
-		exports[4132] = 'ER_INDEX_OTHER_THAN_PK';
-		exports[4133] = 'ER_LOAD_BULK_DATA_UNSORTED';
-		exports[4134] = 'ER_BULK_EXECUTOR_ERROR';
-		exports[4135] = 'ER_BULK_READER_LIBCURL_INIT_FAILED';
-		exports[4136] = 'ER_BULK_READER_LIBCURL_ERROR';
-		exports[4137] = 'ER_BULK_READER_SERVER_ERROR';
-		exports[4138] = 'ER_BULK_READER_COMMUNICATION_ERROR';
-		exports[4139] = 'ER_BULK_LOAD_DATA_FAILED';
-		exports[4140] = 'ER_BULK_LOADER_COLUMN_TOO_BIG_FOR_LEFTOVER_BUFFER';
-		exports[4141] = 'ER_BULK_LOADER_COMPONENT_ERROR';
-		exports[4142] = 'ER_BULK_LOADER_FILE_CONTAINS_LESS_LINES_THAN_IGNORE_CLAUSE';
-		exports[4143] = 'ER_BULK_PARSER_MISSING_ENCLOSED_BY';
-		exports[4144] = 'ER_BULK_PARSER_ROW_BUFFER_MAX_TOTAL_COLS_EXCEEDED';
-		exports[4145] = 'ER_BULK_PARSER_COPY_BUFFER_SIZE_EXCEEDED';
-		exports[4146] = 'ER_BULK_PARSER_UNEXPECTED_END_OF_INPUT';
-		exports[4147] = 'ER_BULK_PARSER_UNEXPECTED_ROW_TERMINATOR';
-		exports[4148] = 'ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_ENDING_ENCLOSED_BY';
-		exports[4149] = 'ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_NULL_ESCAPE';
-		exports[4150] = 'ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_COLUMN_TERMINATOR';
-		exports[4151] = 'ER_BULK_PARSER_INCOMPLETE_ESCAPE_SEQUENCE';
-		exports[4152] = 'ER_LOAD_BULK_DATA_FAILED';
-		exports[4153] = 'ER_LOAD_BULK_DATA_WRONG_VALUE_FOR_FIELD';
-		exports[4154] = 'ER_LOAD_BULK_DATA_WARN_NULL_TO_NOTNULL';
-		exports[4155] = 'ER_REQUIRE_TABLE_PRIMARY_KEY_CHECK_GENERATE_WITH_GR';
-		exports[4156] = 'ER_CANT_CHANGE_SYS_VAR_IN_READ_ONLY_MODE';
-		exports[4157] = 'ER_INNODB_INSTANT_ADD_DROP_NOT_SUPPORTED_MAX_SIZE';
-		exports[4158] = 'ER_INNODB_INSTANT_ADD_NOT_SUPPORTED_MAX_FIELDS';
-		exports[4159] = 'ER_CANT_SET_PERSISTED';
-		exports[4160] = 'ER_INSTALL_COMPONENT_SET_NULL_VALUE';
-		exports[4161] = 'ER_INSTALL_COMPONENT_SET_UNUSED_VALUE';
-		exports[4162] = 'ER_WARN_DEPRECATED_USER_DEFINED_COLLATIONS'; 
+		exports$1[4068] = 'ER_CHANGE_REP_SOURCE_CANT_DISABLE_GTID_ONLY_WITHOUT_POSITIONS';
+		exports$1[4069] = 'ER_CHANGE_REP_SOURCE_CANT_DISABLE_AUTO_POS_WITHOUT_POSITIONS';
+		exports$1[4070] = 'ER_CHANGE_REP_SOURCE_GR_CHANNEL_WITH_GTID_MODE_NOT_ON';
+		exports$1[4071] = 'ER_CANT_USE_GTID_ONLY_WITH_GTID_MODE_NOT_ON';
+		exports$1[4072] = 'ER_WARN_C_DISABLE_GTID_ONLY_WITH_SOURCE_AUTO_POS_INVALID_POS';
+		exports$1[4073] = 'ER_DA_SSL_FIPS_MODE_ERROR';
+		exports$1[4074] = 'ER_VALUE_OUT_OF_RANGE';
+		exports$1[4075] = 'ER_FULLTEXT_WITH_ROLLUP';
+		exports$1[4076] = 'ER_REGEXP_MISSING_RESOURCE';
+		exports$1[4077] = 'ER_WARN_REGEXP_USING_DEFAULT';
+		exports$1[4078] = 'ER_REGEXP_MISSING_FILE';
+		exports$1[4079] = 'ER_WARN_DEPRECATED_COLLATION';
+		exports$1[4080] = 'ER_CONCURRENT_PROCEDURE_USAGE';
+		exports$1[4081] = 'ER_DA_GLOBAL_CONN_LIMIT';
+		exports$1[4082] = 'ER_DA_CONN_LIMIT';
+		exports$1[4083] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE_INSTANT';
+		exports$1[4084] = 'ER_WARN_SF_UDF_NAME_COLLISION';
+		exports$1[4085] = 'ER_CANNOT_PURGE_BINLOG_WITH_BACKUP_LOCK';
+		exports$1[4086] = 'ER_TOO_MANY_WINDOWS';
+		exports$1[4087] = 'ER_MYSQLBACKUP_CLIENT_MSG';
+		exports$1[4088] = 'ER_COMMENT_CONTAINS_INVALID_STRING';
+		exports$1[4089] = 'ER_DEFINITION_CONTAINS_INVALID_STRING';
+		exports$1[4090] = 'ER_CANT_EXECUTE_COMMAND_WITH_ASSIGNED_GTID_NEXT';
+		exports$1[4091] = 'ER_XA_TEMP_TABLE';
+		exports$1[4092] = 'ER_INNODB_MAX_ROW_VERSION';
+		exports$1[4093] = 'ER_INNODB_INSTANT_ADD_NOT_SUPPORTED_MAX_SIZE';
+		exports$1[4094] = 'ER_OPERATION_NOT_ALLOWED_WHILE_PRIMARY_CHANGE_IS_RUNNING';
+		exports$1[4095] = 'ER_WARN_DEPRECATED_DATETIME_DELIMITER';
+		exports$1[4096] = 'ER_WARN_DEPRECATED_SUPERFLUOUS_DELIMITER';
+		exports$1[4097] = 'ER_CANNOT_PERSIST_SENSITIVE_VARIABLES';
+		exports$1[4098] = 'ER_WARN_CANNOT_SECURELY_PERSIST_SENSITIVE_VARIABLES';
+		exports$1[4099] = 'ER_WARN_TRG_ALREADY_EXISTS';
+		exports$1[4100] = 'ER_IF_NOT_EXISTS_UNSUPPORTED_TRG_EXISTS_ON_DIFFERENT_TABLE';
+		exports$1[4101] = 'ER_IF_NOT_EXISTS_UNSUPPORTED_UDF_NATIVE_FCT_NAME_COLLISION';
+		exports$1[4102] = 'ER_SET_PASSWORD_AUTH_PLUGIN_ERROR';
+		exports$1[4103] = 'ER_REDUCED_DBLWR_FILE_CORRUPTED';
+		exports$1[4104] = 'ER_REDUCED_DBLWR_PAGE_FOUND';
+		exports$1[4105] = 'ER_SRS_INVALID_LATITUDE_OF_ORIGIN';
+		exports$1[4106] = 'ER_SRS_INVALID_LONGITUDE_OF_ORIGIN';
+		exports$1[4107] = 'ER_SRS_UNUSED_PROJ_PARAMETER_PRESENT';
+		exports$1[4108] = 'ER_GIPK_COLUMN_EXISTS';
+		exports$1[4109] = 'ER_GIPK_FAILED_AUTOINC_COLUMN_EXISTS';
+		exports$1[4110] = 'ER_GIPK_COLUMN_ALTER_NOT_ALLOWED';
+		exports$1[4111] = 'ER_DROP_PK_COLUMN_TO_DROP_GIPK';
+		exports$1[4112] = 'ER_CREATE_SELECT_WITH_GIPK_DISALLOWED_IN_SBR';
+		exports$1[4113] = 'ER_DA_EXPIRE_LOGS_DAYS_IGNORED';
+		exports$1[4114] = 'ER_CTE_RECURSIVE_NOT_UNION';
+		exports$1[4115] = 'ER_COMMAND_BACKEND_FAILED_TO_FETCH_SECURITY_CTX';
+		exports$1[4116] = 'ER_COMMAND_SERVICE_BACKEND_FAILED';
+		exports$1[4117] = 'ER_CLIENT_FILE_PRIVILEGE_FOR_REPLICATION_CHECKS';
+		exports$1[4118] = 'ER_GROUP_REPLICATION_FORCE_MEMBERS_COMMAND_FAILURE';
+		exports$1[4119] = 'ER_WARN_DEPRECATED_IDENT';
+		exports$1[4120] = 'ER_INTERSECT_ALL_MAX_DUPLICATES_EXCEEDED';
+		exports$1[4121] = 'ER_TP_QUERY_THRS_PER_GRP_EXCEEDS_TXN_THR_LIMIT';
+		exports$1[4122] = 'ER_BAD_TIMESTAMP_FORMAT';
+		exports$1[4123] = 'ER_SHAPE_PRIDICTION_UDF';
+		exports$1[4124] = 'ER_SRS_INVALID_HEIGHT';
+		exports$1[4125] = 'ER_SRS_INVALID_SCALING';
+		exports$1[4126] = 'ER_SRS_INVALID_ZONE_WIDTH';
+		exports$1[4127] = 'ER_SRS_INVALID_LATITUDE_POLAR_STERE_VAR_A';
+		exports$1[4128] = 'ER_WARN_DEPRECATED_CLIENT_NO_SCHEMA_OPTION';
+		exports$1[4129] = 'ER_TABLE_NOT_EMPTY';
+		exports$1[4130] = 'ER_TABLE_NO_PRIMARY_KEY';
+		exports$1[4131] = 'ER_TABLE_IN_SHARED_TABLESPACE';
+		exports$1[4132] = 'ER_INDEX_OTHER_THAN_PK';
+		exports$1[4133] = 'ER_LOAD_BULK_DATA_UNSORTED';
+		exports$1[4134] = 'ER_BULK_EXECUTOR_ERROR';
+		exports$1[4135] = 'ER_BULK_READER_LIBCURL_INIT_FAILED';
+		exports$1[4136] = 'ER_BULK_READER_LIBCURL_ERROR';
+		exports$1[4137] = 'ER_BULK_READER_SERVER_ERROR';
+		exports$1[4138] = 'ER_BULK_READER_COMMUNICATION_ERROR';
+		exports$1[4139] = 'ER_BULK_LOAD_DATA_FAILED';
+		exports$1[4140] = 'ER_BULK_LOADER_COLUMN_TOO_BIG_FOR_LEFTOVER_BUFFER';
+		exports$1[4141] = 'ER_BULK_LOADER_COMPONENT_ERROR';
+		exports$1[4142] = 'ER_BULK_LOADER_FILE_CONTAINS_LESS_LINES_THAN_IGNORE_CLAUSE';
+		exports$1[4143] = 'ER_BULK_PARSER_MISSING_ENCLOSED_BY';
+		exports$1[4144] = 'ER_BULK_PARSER_ROW_BUFFER_MAX_TOTAL_COLS_EXCEEDED';
+		exports$1[4145] = 'ER_BULK_PARSER_COPY_BUFFER_SIZE_EXCEEDED';
+		exports$1[4146] = 'ER_BULK_PARSER_UNEXPECTED_END_OF_INPUT';
+		exports$1[4147] = 'ER_BULK_PARSER_UNEXPECTED_ROW_TERMINATOR';
+		exports$1[4148] = 'ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_ENDING_ENCLOSED_BY';
+		exports$1[4149] = 'ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_NULL_ESCAPE';
+		exports$1[4150] = 'ER_BULK_PARSER_UNEXPECTED_CHAR_AFTER_COLUMN_TERMINATOR';
+		exports$1[4151] = 'ER_BULK_PARSER_INCOMPLETE_ESCAPE_SEQUENCE';
+		exports$1[4152] = 'ER_LOAD_BULK_DATA_FAILED';
+		exports$1[4153] = 'ER_LOAD_BULK_DATA_WRONG_VALUE_FOR_FIELD';
+		exports$1[4154] = 'ER_LOAD_BULK_DATA_WARN_NULL_TO_NOTNULL';
+		exports$1[4155] = 'ER_REQUIRE_TABLE_PRIMARY_KEY_CHECK_GENERATE_WITH_GR';
+		exports$1[4156] = 'ER_CANT_CHANGE_SYS_VAR_IN_READ_ONLY_MODE';
+		exports$1[4157] = 'ER_INNODB_INSTANT_ADD_DROP_NOT_SUPPORTED_MAX_SIZE';
+		exports$1[4158] = 'ER_INNODB_INSTANT_ADD_NOT_SUPPORTED_MAX_FIELDS';
+		exports$1[4159] = 'ER_CANT_SET_PERSISTED';
+		exports$1[4160] = 'ER_INSTALL_COMPONENT_SET_NULL_VALUE';
+		exports$1[4161] = 'ER_INSTALL_COMPONENT_SET_UNUSED_VALUE';
+		exports$1[4162] = 'ER_WARN_DEPRECATED_USER_DEFINED_COLLATIONS'; 
 	} (errors));
 	return errors;
 }
 
-var umd = {exports: {}};
+var umd$1 = {exports: {}};
+
+var umd = umd$1.exports;
 
 var hasRequiredUmd;
 
 function requireUmd () {
-	if (hasRequiredUmd) return umd.exports;
+	if (hasRequiredUmd) return umd$1.exports;
 	hasRequiredUmd = 1;
-	(function (module, exports) {
+	(function (module, exports$1) {
 		// GENERATED FILE. DO NOT EDIT.
-		var Long = (function(exports) {
-		  
-		  Object.defineProperty(exports, "__esModule", {
-		    value: true
-		  });
-		  exports.default = void 0;
-		  
-		  /**
-		   * @license
-		   * Copyright 2009 The Closure Library Authors
-		   * Copyright 2020 Daniel Wirtz / The long.js Authors.
-		   *
-		   * Licensed under the Apache License, Version 2.0 (the "License");
-		   * you may not use this file except in compliance with the License.
-		   * You may obtain a copy of the License at
-		   *
-		   *     http://www.apache.org/licenses/LICENSE-2.0
-		   *
-		   * Unless required by applicable law or agreed to in writing, software
-		   * distributed under the License is distributed on an "AS IS" BASIS,
-		   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-		   * See the License for the specific language governing permissions and
-		   * limitations under the License.
-		   *
-		   * SPDX-License-Identifier: Apache-2.0
-		   */
-		  // WebAssembly optimizations to do native i64 multiplication and divide
-		  var wasm = null;
-		  
-		  try {
-		    wasm = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 13, 2, 96, 0, 1, 127, 96, 4, 127, 127, 127, 127, 1, 127, 3, 7, 6, 0, 1, 1, 1, 1, 1, 6, 6, 1, 127, 1, 65, 0, 11, 7, 50, 6, 3, 109, 117, 108, 0, 1, 5, 100, 105, 118, 95, 115, 0, 2, 5, 100, 105, 118, 95, 117, 0, 3, 5, 114, 101, 109, 95, 115, 0, 4, 5, 114, 101, 109, 95, 117, 0, 5, 8, 103, 101, 116, 95, 104, 105, 103, 104, 0, 0, 10, 191, 1, 6, 4, 0, 35, 0, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 126, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 127, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 128, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 129, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11, 36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173, 32, 3, 173, 66, 32, 134, 132, 130, 34, 4, 66, 32, 135, 167, 36, 0, 32, 4, 167, 11])), {}).exports;
-		  } catch (e) {// no wasm support :(
+		(function (global, factory) {
+		  function preferDefault(exports$1) {
+		    return exports$1.default || exports$1;
 		  }
-		  /**
-		   * Constructs a 64 bit two's-complement integer, given its low and high 32 bit values as *signed* integers.
-		   *  See the from* functions below for more convenient ways of constructing Longs.
-		   * @exports Long
-		   * @class A Long class for representing a 64 bit two's-complement integer value.
-		   * @param {number} low The low (signed) 32 bits of the long
-		   * @param {number} high The high (signed) 32 bits of the long
-		   * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
-		   * @constructor
-		   */
-		  
-		  
-		  function Long(low, high, unsigned) {
+		  {
+		    factory(exports$1);
+		    module.exports = preferDefault(exports$1);
+		  }
+		})(
+		  typeof globalThis !== "undefined"
+		    ? globalThis
+		    : typeof self !== "undefined"
+		      ? self
+		      : umd,
+		  function (_exports) {
+
+		    Object.defineProperty(_exports, "__esModule", {
+		      value: true,
+		    });
+		    _exports.default = void 0;
 		    /**
-		     * The low 32 bits as a signed value.
-		     * @type {number}
+		     * @license
+		     * Copyright 2009 The Closure Library Authors
+		     * Copyright 2020 Daniel Wirtz / The long.js Authors.
+		     *
+		     * Licensed under the Apache License, Version 2.0 (the "License");
+		     * you may not use this file except in compliance with the License.
+		     * You may obtain a copy of the License at
+		     *
+		     *     http://www.apache.org/licenses/LICENSE-2.0
+		     *
+		     * Unless required by applicable law or agreed to in writing, software
+		     * distributed under the License is distributed on an "AS IS" BASIS,
+		     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		     * See the License for the specific language governing permissions and
+		     * limitations under the License.
+		     *
+		     * SPDX-License-Identifier: Apache-2.0
 		     */
-		    this.low = low | 0;
+
+		    // WebAssembly optimizations to do native i64 multiplication and divide
+		    var wasm = null;
+		    try {
+		      wasm = new WebAssembly.Instance(
+		        new WebAssembly.Module(
+		          new Uint8Array([
+		            // \0asm
+		            0, 97, 115, 109,
+		            // version 1
+		            1, 0, 0, 0,
+		            // section "type"
+		            1, 13, 2,
+		            // 0, () => i32
+		            96, 0, 1, 127,
+		            // 1, (i32, i32, i32, i32) => i32
+		            96, 4, 127, 127, 127, 127, 1, 127,
+		            // section "function"
+		            3, 7, 6,
+		            // 0, type 0
+		            0,
+		            // 1, type 1
+		            1,
+		            // 2, type 1
+		            1,
+		            // 3, type 1
+		            1,
+		            // 4, type 1
+		            1,
+		            // 5, type 1
+		            1,
+		            // section "global"
+		            6, 6, 1,
+		            // 0, "high", mutable i32
+		            127, 1, 65, 0, 11,
+		            // section "export"
+		            7, 50, 6,
+		            // 0, "mul"
+		            3, 109, 117, 108, 0, 1,
+		            // 1, "div_s"
+		            5, 100, 105, 118, 95, 115, 0, 2,
+		            // 2, "div_u"
+		            5, 100, 105, 118, 95, 117, 0, 3,
+		            // 3, "rem_s"
+		            5, 114, 101, 109, 95, 115, 0, 4,
+		            // 4, "rem_u"
+		            5, 114, 101, 109, 95, 117, 0, 5,
+		            // 5, "get_high"
+		            8, 103, 101, 116, 95, 104, 105, 103, 104, 0, 0,
+		            // section "code"
+		            10, 191, 1, 6,
+		            // 0, "get_high"
+		            4, 0, 35, 0, 11,
+		            // 1, "mul"
+		            36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173,
+		            32, 3, 173, 66, 32, 134, 132, 126, 34, 4, 66, 32, 135, 167, 36, 0,
+		            32, 4, 167, 11,
+		            // 2, "div_s"
+		            36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173,
+		            32, 3, 173, 66, 32, 134, 132, 127, 34, 4, 66, 32, 135, 167, 36, 0,
+		            32, 4, 167, 11,
+		            // 3, "div_u"
+		            36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173,
+		            32, 3, 173, 66, 32, 134, 132, 128, 34, 4, 66, 32, 135, 167, 36, 0,
+		            32, 4, 167, 11,
+		            // 4, "rem_s"
+		            36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173,
+		            32, 3, 173, 66, 32, 134, 132, 129, 34, 4, 66, 32, 135, 167, 36, 0,
+		            32, 4, 167, 11,
+		            // 5, "rem_u"
+		            36, 1, 1, 126, 32, 0, 173, 32, 1, 173, 66, 32, 134, 132, 32, 2, 173,
+		            32, 3, 173, 66, 32, 134, 132, 130, 34, 4, 66, 32, 135, 167, 36, 0,
+		            32, 4, 167, 11,
+		          ]),
+		        ),
+		        {},
+		      ).exports;
+		    } catch {
+		      // no wasm support :(
+		    }
+
 		    /**
-		     * The high 32 bits as a signed value.
-		     * @type {number}
+		     * Constructs a 64 bit two's-complement integer, given its low and high 32 bit values as *signed* integers.
+		     *  See the from* functions below for more convenient ways of constructing Longs.
+		     * @exports Long
+		     * @class A Long class for representing a 64 bit two's-complement integer value.
+		     * @param {number} low The low (signed) 32 bits of the long
+		     * @param {number} high The high (signed) 32 bits of the long
+		     * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
+		     * @constructor
 		     */
-		  
-		    this.high = high | 0;
+		    function Long(low, high, unsigned) {
+		      /**
+		       * The low 32 bits as a signed value.
+		       * @type {number}
+		       */
+		      this.low = low | 0;
+
+		      /**
+		       * The high 32 bits as a signed value.
+		       * @type {number}
+		       */
+		      this.high = high | 0;
+
+		      /**
+		       * Whether unsigned or not.
+		       * @type {boolean}
+		       */
+		      this.unsigned = !!unsigned;
+		    }
+
+		    // The internal representation of a long is the two given signed, 32-bit values.
+		    // We use 32-bit pieces because these are the size of integers on which
+		    // Javascript performs bit-operations.  For operations like addition and
+		    // multiplication, we split each number into 16 bit pieces, which can easily be
+		    // multiplied within Javascript's floating-point representation without overflow
+		    // or change in sign.
+		    //
+		    // In the algorithms below, we frequently reduce the negative case to the
+		    // positive case by negating the input(s) and then post-processing the result.
+		    // Note that we must ALWAYS check specially whether those values are MIN_VALUE
+		    // (-2^63) because -MIN_VALUE == MIN_VALUE (since 2^63 cannot be represented as
+		    // a positive number, it overflows back into a negative).  Not handling this
+		    // case would often result in infinite recursion.
+		    //
+		    // Common constant values ZERO, ONE, NEG_ONE, etc. are defined below the from*
+		    // methods on which they depend.
+
 		    /**
-		     * Whether unsigned or not.
+		     * An indicator used to reliably determine if an object is a Long or not.
 		     * @type {boolean}
+		     * @const
+		     * @private
 		     */
-		  
-		    this.unsigned = !!unsigned;
-		  } // The internal representation of a long is the two given signed, 32-bit values.
-		  // We use 32-bit pieces because these are the size of integers on which
-		  // Javascript performs bit-operations.  For operations like addition and
-		  // multiplication, we split each number into 16 bit pieces, which can easily be
-		  // multiplied within Javascript's floating-point representation without overflow
-		  // or change in sign.
-		  //
-		  // In the algorithms below, we frequently reduce the negative case to the
-		  // positive case by negating the input(s) and then post-processing the result.
-		  // Note that we must ALWAYS check specially whether those values are MIN_VALUE
-		  // (-2^63) because -MIN_VALUE == MIN_VALUE (since 2^63 cannot be represented as
-		  // a positive number, it overflows back into a negative).  Not handling this
-		  // case would often result in infinite recursion.
-		  //
-		  // Common constant values ZERO, ONE, NEG_ONE, etc. are defined below the from*
-		  // methods on which they depend.
-		  
-		  /**
-		   * An indicator used to reliably determine if an object is a Long or not.
-		   * @type {boolean}
-		   * @const
-		   * @private
-		   */
-		  
-		  
-		  Long.prototype.__isLong__;
-		  Object.defineProperty(Long.prototype, "__isLong__", {
-		    value: true
-		  });
-		  /**
-		   * @function
-		   * @param {*} obj Object
-		   * @returns {boolean}
-		   * @inner
-		   */
-		  
-		  function isLong(obj) {
-		    return (obj && obj["__isLong__"]) === true;
-		  }
-		  /**
-		   * @function
-		   * @param {*} value number
-		   * @returns {number}
-		   * @inner
-		   */
-		  
-		  
-		  function ctz32(value) {
-		    var c = Math.clz32(value & -value);
-		    return value ? 31 - c : c;
-		  }
-		  /**
-		   * Tests if the specified object is a Long.
-		   * @function
-		   * @param {*} obj Object
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  Long.isLong = isLong;
-		  /**
-		   * A cache of the Long representations of small integer values.
-		   * @type {!Object}
-		   * @inner
-		   */
-		  
-		  var INT_CACHE = {};
-		  /**
-		   * A cache of the Long representations of small unsigned integer values.
-		   * @type {!Object}
-		   * @inner
-		   */
-		  
-		  var UINT_CACHE = {};
-		  /**
-		   * @param {number} value
-		   * @param {boolean=} unsigned
-		   * @returns {!Long}
-		   * @inner
-		   */
-		  
-		  function fromInt(value, unsigned) {
-		    var obj, cachedObj, cache;
-		  
-		    if (unsigned) {
-		      value >>>= 0;
-		  
-		      if (cache = 0 <= value && value < 256) {
-		        cachedObj = UINT_CACHE[value];
-		        if (cachedObj) return cachedObj;
-		      }
-		  
-		      obj = fromBits(value, 0, true);
-		      if (cache) UINT_CACHE[value] = obj;
-		      return obj;
-		    } else {
-		      value |= 0;
-		  
-		      if (cache = -128 <= value && value < 128) {
-		        cachedObj = INT_CACHE[value];
-		        if (cachedObj) return cachedObj;
-		      }
-		  
-		      obj = fromBits(value, value < 0 ? -1 : 0, false);
-		      if (cache) INT_CACHE[value] = obj;
-		      return obj;
+		    Long.prototype.__isLong__;
+		    Object.defineProperty(Long.prototype, "__isLong__", {
+		      value: true,
+		    });
+
+		    /**
+		     * @function
+		     * @param {*} obj Object
+		     * @returns {boolean}
+		     * @inner
+		     */
+		    function isLong(obj) {
+		      return (obj && obj["__isLong__"]) === true;
 		    }
-		  }
-		  /**
-		   * Returns a Long representing the given 32 bit integer value.
-		   * @function
-		   * @param {number} value The 32 bit integer in question
-		   * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
-		   * @returns {!Long} The corresponding Long value
-		   */
-		  
-		  
-		  Long.fromInt = fromInt;
-		  /**
-		   * @param {number} value
-		   * @param {boolean=} unsigned
-		   * @returns {!Long}
-		   * @inner
-		   */
-		  
-		  function fromNumber(value, unsigned) {
-		    if (isNaN(value)) return unsigned ? UZERO : ZERO;
-		  
-		    if (unsigned) {
-		      if (value < 0) return UZERO;
-		      if (value >= TWO_PWR_64_DBL) return MAX_UNSIGNED_VALUE;
-		    } else {
-		      if (value <= -TWO_PWR_63_DBL) return MIN_VALUE;
-		      if (value + 1 >= TWO_PWR_63_DBL) return MAX_VALUE;
+
+		    /**
+		     * @function
+		     * @param {*} value number
+		     * @returns {number}
+		     * @inner
+		     */
+		    function ctz32(value) {
+		      var c = Math.clz32(value & -value);
+		      return value ? 31 - c : c;
 		    }
-		  
-		    if (value < 0) return fromNumber(-value, unsigned).neg();
-		    return fromBits(value % TWO_PWR_32_DBL | 0, value / TWO_PWR_32_DBL | 0, unsigned);
-		  }
-		  /**
-		   * Returns a Long representing the given value, provided that it is a finite number. Otherwise, zero is returned.
-		   * @function
-		   * @param {number} value The number in question
-		   * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
-		   * @returns {!Long} The corresponding Long value
-		   */
-		  
-		  
-		  Long.fromNumber = fromNumber;
-		  /**
-		   * @param {number} lowBits
-		   * @param {number} highBits
-		   * @param {boolean=} unsigned
-		   * @returns {!Long}
-		   * @inner
-		   */
-		  
-		  function fromBits(lowBits, highBits, unsigned) {
-		    return new Long(lowBits, highBits, unsigned);
-		  }
-		  /**
-		   * Returns a Long representing the 64 bit integer that comes by concatenating the given low and high bits. Each is
-		   *  assumed to use 32 bits.
-		   * @function
-		   * @param {number} lowBits The low 32 bits
-		   * @param {number} highBits The high 32 bits
-		   * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
-		   * @returns {!Long} The corresponding Long value
-		   */
-		  
-		  
-		  Long.fromBits = fromBits;
-		  /**
-		   * @function
-		   * @param {number} base
-		   * @param {number} exponent
-		   * @returns {number}
-		   * @inner
-		   */
-		  
-		  var pow_dbl = Math.pow; // Used 4 times (4*8 to 15+4)
-		  
-		  /**
-		   * @param {string} str
-		   * @param {(boolean|number)=} unsigned
-		   * @param {number=} radix
-		   * @returns {!Long}
-		   * @inner
-		   */
-		  
-		  function fromString(str, unsigned, radix) {
-		    if (str.length === 0) throw Error('empty string');
-		  
-		    if (typeof unsigned === 'number') {
-		      // For goog.math.long compatibility
-		      radix = unsigned;
-		      unsigned = false;
-		    } else {
-		      unsigned = !!unsigned;
-		    }
-		  
-		    if (str === "NaN" || str === "Infinity" || str === "+Infinity" || str === "-Infinity") return unsigned ? UZERO : ZERO;
-		    radix = radix || 10;
-		    if (radix < 2 || 36 < radix) throw RangeError('radix');
-		    var p;
-		    if ((p = str.indexOf('-')) > 0) throw Error('interior hyphen');else if (p === 0) {
-		      return fromString(str.substring(1), unsigned, radix).neg();
-		    } // Do several (8) digits each time through the loop, so as to
-		    // minimize the calls to the very expensive emulated div.
-		  
-		    var radixToPower = fromNumber(pow_dbl(radix, 8));
-		    var result = ZERO;
-		  
-		    for (var i = 0; i < str.length; i += 8) {
-		      var size = Math.min(8, str.length - i),
-		          value = parseInt(str.substring(i, i + size), radix);
-		  
-		      if (size < 8) {
-		        var power = fromNumber(pow_dbl(radix, size));
-		        result = result.mul(power).add(fromNumber(value));
+
+		    /**
+		     * Tests if the specified object is a Long.
+		     * @function
+		     * @param {*} obj Object
+		     * @returns {boolean}
+		     */
+		    Long.isLong = isLong;
+
+		    /**
+		     * A cache of the Long representations of small integer values.
+		     * @type {!Object}
+		     * @inner
+		     */
+		    var INT_CACHE = {};
+
+		    /**
+		     * A cache of the Long representations of small unsigned integer values.
+		     * @type {!Object}
+		     * @inner
+		     */
+		    var UINT_CACHE = {};
+
+		    /**
+		     * @param {number} value
+		     * @param {boolean=} unsigned
+		     * @returns {!Long}
+		     * @inner
+		     */
+		    function fromInt(value, unsigned) {
+		      var obj, cachedObj, cache;
+		      if (unsigned) {
+		        value >>>= 0;
+		        if ((cache = 0 <= value && value < 256)) {
+		          cachedObj = UINT_CACHE[value];
+		          if (cachedObj) return cachedObj;
+		        }
+		        obj = fromBits(value, 0, true);
+		        if (cache) UINT_CACHE[value] = obj;
+		        return obj;
 		      } else {
-		        result = result.mul(radixToPower);
-		        result = result.add(fromNumber(value));
+		        value |= 0;
+		        if ((cache = -128 <= value && value < 128)) {
+		          cachedObj = INT_CACHE[value];
+		          if (cachedObj) return cachedObj;
+		        }
+		        obj = fromBits(value, value < 0 ? -1 : 0, false);
+		        if (cache) INT_CACHE[value] = obj;
+		        return obj;
 		      }
 		    }
-		  
-		    result.unsigned = unsigned;
-		    return result;
-		  }
-		  /**
-		   * Returns a Long representation of the given string, written using the specified radix.
-		   * @function
-		   * @param {string} str The textual representation of the Long
-		   * @param {(boolean|number)=} unsigned Whether unsigned or not, defaults to signed
-		   * @param {number=} radix The radix in which the text is written (2-36), defaults to 10
-		   * @returns {!Long} The corresponding Long value
-		   */
-		  
-		  
-		  Long.fromString = fromString;
-		  /**
-		   * @function
-		   * @param {!Long|number|string|!{low: number, high: number, unsigned: boolean}} val
-		   * @param {boolean=} unsigned
-		   * @returns {!Long}
-		   * @inner
-		   */
-		  
-		  function fromValue(val, unsigned) {
-		    if (typeof val === 'number') return fromNumber(val, unsigned);
-		    if (typeof val === 'string') return fromString(val, unsigned); // Throws for non-objects, converts non-instanceof Long:
-		  
-		    return fromBits(val.low, val.high, typeof unsigned === 'boolean' ? unsigned : val.unsigned);
-		  }
-		  /**
-		   * Converts the specified value to a Long using the appropriate from* function for its type.
-		   * @function
-		   * @param {!Long|number|string|!{low: number, high: number, unsigned: boolean}} val Value
-		   * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
-		   * @returns {!Long}
-		   */
-		  
-		  
-		  Long.fromValue = fromValue; // NOTE: the compiler should inline these constant values below and then remove these variables, so there should be
-		  // no runtime penalty for these.
-		  
-		  /**
-		   * @type {number}
-		   * @const
-		   * @inner
-		   */
-		  
-		  var TWO_PWR_16_DBL = 1 << 16;
-		  /**
-		   * @type {number}
-		   * @const
-		   * @inner
-		   */
-		  
-		  var TWO_PWR_24_DBL = 1 << 24;
-		  /**
-		   * @type {number}
-		   * @const
-		   * @inner
-		   */
-		  
-		  var TWO_PWR_32_DBL = TWO_PWR_16_DBL * TWO_PWR_16_DBL;
-		  /**
-		   * @type {number}
-		   * @const
-		   * @inner
-		   */
-		  
-		  var TWO_PWR_64_DBL = TWO_PWR_32_DBL * TWO_PWR_32_DBL;
-		  /**
-		   * @type {number}
-		   * @const
-		   * @inner
-		   */
-		  
-		  var TWO_PWR_63_DBL = TWO_PWR_64_DBL / 2;
-		  /**
-		   * @type {!Long}
-		   * @const
-		   * @inner
-		   */
-		  
-		  var TWO_PWR_24 = fromInt(TWO_PWR_24_DBL);
-		  /**
-		   * @type {!Long}
-		   * @inner
-		   */
-		  
-		  var ZERO = fromInt(0);
-		  /**
-		   * Signed zero.
-		   * @type {!Long}
-		   */
-		  
-		  Long.ZERO = ZERO;
-		  /**
-		   * @type {!Long}
-		   * @inner
-		   */
-		  
-		  var UZERO = fromInt(0, true);
-		  /**
-		   * Unsigned zero.
-		   * @type {!Long}
-		   */
-		  
-		  Long.UZERO = UZERO;
-		  /**
-		   * @type {!Long}
-		   * @inner
-		   */
-		  
-		  var ONE = fromInt(1);
-		  /**
-		   * Signed one.
-		   * @type {!Long}
-		   */
-		  
-		  Long.ONE = ONE;
-		  /**
-		   * @type {!Long}
-		   * @inner
-		   */
-		  
-		  var UONE = fromInt(1, true);
-		  /**
-		   * Unsigned one.
-		   * @type {!Long}
-		   */
-		  
-		  Long.UONE = UONE;
-		  /**
-		   * @type {!Long}
-		   * @inner
-		   */
-		  
-		  var NEG_ONE = fromInt(-1);
-		  /**
-		   * Signed negative one.
-		   * @type {!Long}
-		   */
-		  
-		  Long.NEG_ONE = NEG_ONE;
-		  /**
-		   * @type {!Long}
-		   * @inner
-		   */
-		  
-		  var MAX_VALUE = fromBits(0xFFFFFFFF | 0, 0x7FFFFFFF | 0, false);
-		  /**
-		   * Maximum signed value.
-		   * @type {!Long}
-		   */
-		  
-		  Long.MAX_VALUE = MAX_VALUE;
-		  /**
-		   * @type {!Long}
-		   * @inner
-		   */
-		  
-		  var MAX_UNSIGNED_VALUE = fromBits(0xFFFFFFFF | 0, 0xFFFFFFFF | 0, true);
-		  /**
-		   * Maximum unsigned value.
-		   * @type {!Long}
-		   */
-		  
-		  Long.MAX_UNSIGNED_VALUE = MAX_UNSIGNED_VALUE;
-		  /**
-		   * @type {!Long}
-		   * @inner
-		   */
-		  
-		  var MIN_VALUE = fromBits(0, 0x80000000 | 0, false);
-		  /**
-		   * Minimum signed value.
-		   * @type {!Long}
-		   */
-		  
-		  Long.MIN_VALUE = MIN_VALUE;
-		  /**
-		   * @alias Long.prototype
-		   * @inner
-		   */
-		  
-		  var LongPrototype = Long.prototype;
-		  /**
-		   * Converts the Long to a 32 bit integer, assuming it is a 32 bit integer.
-		   * @this {!Long}
-		   * @returns {number}
-		   */
-		  
-		  LongPrototype.toInt = function toInt() {
-		    return this.unsigned ? this.low >>> 0 : this.low;
-		  };
-		  /**
-		   * Converts the Long to a the nearest floating-point representation of this value (double, 53 bit mantissa).
-		   * @this {!Long}
-		   * @returns {number}
-		   */
-		  
-		  
-		  LongPrototype.toNumber = function toNumber() {
-		    if (this.unsigned) return (this.high >>> 0) * TWO_PWR_32_DBL + (this.low >>> 0);
-		    return this.high * TWO_PWR_32_DBL + (this.low >>> 0);
-		  };
-		  /**
-		   * Converts the Long to a string written in the specified radix.
-		   * @this {!Long}
-		   * @param {number=} radix Radix (2-36), defaults to 10
-		   * @returns {string}
-		   * @override
-		   * @throws {RangeError} If `radix` is out of range
-		   */
-		  
-		  
-		  LongPrototype.toString = function toString(radix) {
-		    radix = radix || 10;
-		    if (radix < 2 || 36 < radix) throw RangeError('radix');
-		    if (this.isZero()) return '0';
-		  
-		    if (this.isNegative()) {
-		      // Unsigned Longs are never negative
-		      if (this.eq(MIN_VALUE)) {
-		        // We need to change the Long value before it can be negated, so we remove
-		        // the bottom-most digit in this base and then recurse to do the rest.
-		        var radixLong = fromNumber(radix),
+
+		    /**
+		     * Returns a Long representing the given 32 bit integer value.
+		     * @function
+		     * @param {number} value The 32 bit integer in question
+		     * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
+		     * @returns {!Long} The corresponding Long value
+		     */
+		    Long.fromInt = fromInt;
+
+		    /**
+		     * @param {number} value
+		     * @param {boolean=} unsigned
+		     * @returns {!Long}
+		     * @inner
+		     */
+		    function fromNumber(value, unsigned) {
+		      if (isNaN(value)) return unsigned ? UZERO : ZERO;
+		      if (unsigned) {
+		        if (value < 0) return UZERO;
+		        if (value >= TWO_PWR_64_DBL) return MAX_UNSIGNED_VALUE;
+		      } else {
+		        if (value <= -TWO_PWR_63_DBL) return MIN_VALUE;
+		        if (value + 1 >= TWO_PWR_63_DBL) return MAX_VALUE;
+		      }
+		      if (value < 0) return fromNumber(-value, unsigned).neg();
+		      return fromBits(
+		        value % TWO_PWR_32_DBL | 0,
+		        (value / TWO_PWR_32_DBL) | 0,
+		        unsigned,
+		      );
+		    }
+
+		    /**
+		     * Returns a Long representing the given value, provided that it is a finite number. Otherwise, zero is returned.
+		     * @function
+		     * @param {number} value The number in question
+		     * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
+		     * @returns {!Long} The corresponding Long value
+		     */
+		    Long.fromNumber = fromNumber;
+
+		    /**
+		     * @param {number} lowBits
+		     * @param {number} highBits
+		     * @param {boolean=} unsigned
+		     * @returns {!Long}
+		     * @inner
+		     */
+		    function fromBits(lowBits, highBits, unsigned) {
+		      return new Long(lowBits, highBits, unsigned);
+		    }
+
+		    /**
+		     * Returns a Long representing the 64 bit integer that comes by concatenating the given low and high bits. Each is
+		     *  assumed to use 32 bits.
+		     * @function
+		     * @param {number} lowBits The low 32 bits
+		     * @param {number} highBits The high 32 bits
+		     * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
+		     * @returns {!Long} The corresponding Long value
+		     */
+		    Long.fromBits = fromBits;
+
+		    /**
+		     * @function
+		     * @param {number} base
+		     * @param {number} exponent
+		     * @returns {number}
+		     * @inner
+		     */
+		    var pow_dbl = Math.pow; // Used 4 times (4*8 to 15+4)
+
+		    /**
+		     * @param {string} str
+		     * @param {(boolean|number)=} unsigned
+		     * @param {number=} radix
+		     * @returns {!Long}
+		     * @inner
+		     */
+		    function fromString(str, unsigned, radix) {
+		      if (str.length === 0) throw Error("empty string");
+		      if (typeof unsigned === "number") {
+		        // For goog.math.long compatibility
+		        radix = unsigned;
+		        unsigned = false;
+		      } else {
+		        unsigned = !!unsigned;
+		      }
+		      if (
+		        str === "NaN" ||
+		        str === "Infinity" ||
+		        str === "+Infinity" ||
+		        str === "-Infinity"
+		      )
+		        return unsigned ? UZERO : ZERO;
+		      radix = radix || 10;
+		      if (radix < 2 || 36 < radix) throw RangeError("radix");
+		      var p;
+		      if ((p = str.indexOf("-")) > 0) throw Error("interior hyphen");
+		      else if (p === 0) {
+		        return fromString(str.substring(1), unsigned, radix).neg();
+		      }
+
+		      // Do several (8) digits each time through the loop, so as to
+		      // minimize the calls to the very expensive emulated div.
+		      var radixToPower = fromNumber(pow_dbl(radix, 8));
+		      var result = ZERO;
+		      for (var i = 0; i < str.length; i += 8) {
+		        var size = Math.min(8, str.length - i),
+		          value = parseInt(str.substring(i, i + size), radix);
+		        if (size < 8) {
+		          var power = fromNumber(pow_dbl(radix, size));
+		          result = result.mul(power).add(fromNumber(value));
+		        } else {
+		          result = result.mul(radixToPower);
+		          result = result.add(fromNumber(value));
+		        }
+		      }
+		      result.unsigned = unsigned;
+		      return result;
+		    }
+
+		    /**
+		     * Returns a Long representation of the given string, written using the specified radix.
+		     * @function
+		     * @param {string} str The textual representation of the Long
+		     * @param {(boolean|number)=} unsigned Whether unsigned or not, defaults to signed
+		     * @param {number=} radix The radix in which the text is written (2-36), defaults to 10
+		     * @returns {!Long} The corresponding Long value
+		     */
+		    Long.fromString = fromString;
+
+		    /**
+		     * @function
+		     * @param {!Long|number|string|!{low: number, high: number, unsigned: boolean}} val
+		     * @param {boolean=} unsigned
+		     * @returns {!Long}
+		     * @inner
+		     */
+		    function fromValue(val, unsigned) {
+		      if (typeof val === "number") return fromNumber(val, unsigned);
+		      if (typeof val === "string") return fromString(val, unsigned);
+		      // Throws for non-objects, converts non-instanceof Long:
+		      return fromBits(
+		        val.low,
+		        val.high,
+		        typeof unsigned === "boolean" ? unsigned : val.unsigned,
+		      );
+		    }
+
+		    /**
+		     * Converts the specified value to a Long using the appropriate from* function for its type.
+		     * @function
+		     * @param {!Long|number|bigint|string|!{low: number, high: number, unsigned: boolean}} val Value
+		     * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
+		     * @returns {!Long}
+		     */
+		    Long.fromValue = fromValue;
+
+		    // NOTE: the compiler should inline these constant values below and then remove these variables, so there should be
+		    // no runtime penalty for these.
+
+		    /**
+		     * @type {number}
+		     * @const
+		     * @inner
+		     */
+		    var TWO_PWR_16_DBL = 1 << 16;
+
+		    /**
+		     * @type {number}
+		     * @const
+		     * @inner
+		     */
+		    var TWO_PWR_24_DBL = 1 << 24;
+
+		    /**
+		     * @type {number}
+		     * @const
+		     * @inner
+		     */
+		    var TWO_PWR_32_DBL = TWO_PWR_16_DBL * TWO_PWR_16_DBL;
+
+		    /**
+		     * @type {number}
+		     * @const
+		     * @inner
+		     */
+		    var TWO_PWR_64_DBL = TWO_PWR_32_DBL * TWO_PWR_32_DBL;
+
+		    /**
+		     * @type {number}
+		     * @const
+		     * @inner
+		     */
+		    var TWO_PWR_63_DBL = TWO_PWR_64_DBL / 2;
+
+		    /**
+		     * @type {!Long}
+		     * @const
+		     * @inner
+		     */
+		    var TWO_PWR_24 = fromInt(TWO_PWR_24_DBL);
+
+		    /**
+		     * @type {!Long}
+		     * @inner
+		     */
+		    var ZERO = fromInt(0);
+
+		    /**
+		     * Signed zero.
+		     * @type {!Long}
+		     */
+		    Long.ZERO = ZERO;
+
+		    /**
+		     * @type {!Long}
+		     * @inner
+		     */
+		    var UZERO = fromInt(0, true);
+
+		    /**
+		     * Unsigned zero.
+		     * @type {!Long}
+		     */
+		    Long.UZERO = UZERO;
+
+		    /**
+		     * @type {!Long}
+		     * @inner
+		     */
+		    var ONE = fromInt(1);
+
+		    /**
+		     * Signed one.
+		     * @type {!Long}
+		     */
+		    Long.ONE = ONE;
+
+		    /**
+		     * @type {!Long}
+		     * @inner
+		     */
+		    var UONE = fromInt(1, true);
+
+		    /**
+		     * Unsigned one.
+		     * @type {!Long}
+		     */
+		    Long.UONE = UONE;
+
+		    /**
+		     * @type {!Long}
+		     * @inner
+		     */
+		    var NEG_ONE = fromInt(-1);
+
+		    /**
+		     * Signed negative one.
+		     * @type {!Long}
+		     */
+		    Long.NEG_ONE = NEG_ONE;
+
+		    /**
+		     * @type {!Long}
+		     * @inner
+		     */
+		    var MAX_VALUE = fromBits(0xffffffff | 0, 0x7fffffff | 0, false);
+
+		    /**
+		     * Maximum signed value.
+		     * @type {!Long}
+		     */
+		    Long.MAX_VALUE = MAX_VALUE;
+
+		    /**
+		     * @type {!Long}
+		     * @inner
+		     */
+		    var MAX_UNSIGNED_VALUE = fromBits(0xffffffff | 0, 0xffffffff | 0, true);
+
+		    /**
+		     * Maximum unsigned value.
+		     * @type {!Long}
+		     */
+		    Long.MAX_UNSIGNED_VALUE = MAX_UNSIGNED_VALUE;
+
+		    /**
+		     * @type {!Long}
+		     * @inner
+		     */
+		    var MIN_VALUE = fromBits(0, 0x80000000 | 0, false);
+
+		    /**
+		     * Minimum signed value.
+		     * @type {!Long}
+		     */
+		    Long.MIN_VALUE = MIN_VALUE;
+
+		    /**
+		     * @alias Long.prototype
+		     * @inner
+		     */
+		    var LongPrototype = Long.prototype;
+
+		    /**
+		     * Converts the Long to a 32 bit integer, assuming it is a 32 bit integer.
+		     * @this {!Long}
+		     * @returns {number}
+		     */
+		    LongPrototype.toInt = function toInt() {
+		      return this.unsigned ? this.low >>> 0 : this.low;
+		    };
+
+		    /**
+		     * Converts the Long to a the nearest floating-point representation of this value (double, 53 bit mantissa).
+		     * @this {!Long}
+		     * @returns {number}
+		     */
+		    LongPrototype.toNumber = function toNumber() {
+		      if (this.unsigned)
+		        return (this.high >>> 0) * TWO_PWR_32_DBL + (this.low >>> 0);
+		      return this.high * TWO_PWR_32_DBL + (this.low >>> 0);
+		    };
+
+		    /**
+		     * Converts the Long to a string written in the specified radix.
+		     * @this {!Long}
+		     * @param {number=} radix Radix (2-36), defaults to 10
+		     * @returns {string}
+		     * @override
+		     * @throws {RangeError} If `radix` is out of range
+		     */
+		    LongPrototype.toString = function toString(radix) {
+		      radix = radix || 10;
+		      if (radix < 2 || 36 < radix) throw RangeError("radix");
+		      if (this.isZero()) return "0";
+		      if (this.isNegative()) {
+		        // Unsigned Longs are never negative
+		        if (this.eq(MIN_VALUE)) {
+		          // We need to change the Long value before it can be negated, so we remove
+		          // the bottom-most digit in this base and then recurse to do the rest.
+		          var radixLong = fromNumber(radix),
 		            div = this.div(radixLong),
 		            rem1 = div.mul(radixLong).sub(this);
-		        return div.toString(radix) + rem1.toInt().toString(radix);
-		      } else return '-' + this.neg().toString(radix);
-		    } // Do several (6) digits each time through the loop, so as to
-		    // minimize the calls to the very expensive emulated div.
-		  
-		  
-		    var radixToPower = fromNumber(pow_dbl(radix, 6), this.unsigned),
+		          return div.toString(radix) + rem1.toInt().toString(radix);
+		        } else return "-" + this.neg().toString(radix);
+		      }
+
+		      // Do several (6) digits each time through the loop, so as to
+		      // minimize the calls to the very expensive emulated div.
+		      var radixToPower = fromNumber(pow_dbl(radix, 6), this.unsigned),
 		        rem = this;
-		    var result = '';
-		  
-		    while (true) {
-		      var remDiv = rem.div(radixToPower),
+		      var result = "";
+		      while (true) {
+		        var remDiv = rem.div(radixToPower),
 		          intval = rem.sub(remDiv.mul(radixToPower)).toInt() >>> 0,
 		          digits = intval.toString(radix);
-		      rem = remDiv;
-		      if (rem.isZero()) return digits + result;else {
-		        while (digits.length < 6) digits = '0' + digits;
-		  
-		        result = '' + digits + result;
-		      }
-		    }
-		  };
-		  /**
-		   * Gets the high 32 bits as a signed integer.
-		   * @this {!Long}
-		   * @returns {number} Signed high bits
-		   */
-		  
-		  
-		  LongPrototype.getHighBits = function getHighBits() {
-		    return this.high;
-		  };
-		  /**
-		   * Gets the high 32 bits as an unsigned integer.
-		   * @this {!Long}
-		   * @returns {number} Unsigned high bits
-		   */
-		  
-		  
-		  LongPrototype.getHighBitsUnsigned = function getHighBitsUnsigned() {
-		    return this.high >>> 0;
-		  };
-		  /**
-		   * Gets the low 32 bits as a signed integer.
-		   * @this {!Long}
-		   * @returns {number} Signed low bits
-		   */
-		  
-		  
-		  LongPrototype.getLowBits = function getLowBits() {
-		    return this.low;
-		  };
-		  /**
-		   * Gets the low 32 bits as an unsigned integer.
-		   * @this {!Long}
-		   * @returns {number} Unsigned low bits
-		   */
-		  
-		  
-		  LongPrototype.getLowBitsUnsigned = function getLowBitsUnsigned() {
-		    return this.low >>> 0;
-		  };
-		  /**
-		   * Gets the number of bits needed to represent the absolute value of this Long.
-		   * @this {!Long}
-		   * @returns {number}
-		   */
-		  
-		  
-		  LongPrototype.getNumBitsAbs = function getNumBitsAbs() {
-		    if (this.isNegative()) // Unsigned Longs are never negative
-		      return this.eq(MIN_VALUE) ? 64 : this.neg().getNumBitsAbs();
-		    var val = this.high != 0 ? this.high : this.low;
-		  
-		    for (var bit = 31; bit > 0; bit--) if ((val & 1 << bit) != 0) break;
-		  
-		    return this.high != 0 ? bit + 33 : bit + 1;
-		  };
-		  /**
-		   * Tests if this Long's value equals zero.
-		   * @this {!Long}
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.isZero = function isZero() {
-		    return this.high === 0 && this.low === 0;
-		  };
-		  /**
-		   * Tests if this Long's value equals zero. This is an alias of {@link Long#isZero}.
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.eqz = LongPrototype.isZero;
-		  /**
-		   * Tests if this Long's value is negative.
-		   * @this {!Long}
-		   * @returns {boolean}
-		   */
-		  
-		  LongPrototype.isNegative = function isNegative() {
-		    return !this.unsigned && this.high < 0;
-		  };
-		  /**
-		   * Tests if this Long's value is positive or zero.
-		   * @this {!Long}
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.isPositive = function isPositive() {
-		    return this.unsigned || this.high >= 0;
-		  };
-		  /**
-		   * Tests if this Long's value is odd.
-		   * @this {!Long}
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.isOdd = function isOdd() {
-		    return (this.low & 1) === 1;
-		  };
-		  /**
-		   * Tests if this Long's value is even.
-		   * @this {!Long}
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.isEven = function isEven() {
-		    return (this.low & 1) === 0;
-		  };
-		  /**
-		   * Tests if this Long's value equals the specified's.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.equals = function equals(other) {
-		    if (!isLong(other)) other = fromValue(other);
-		    if (this.unsigned !== other.unsigned && this.high >>> 31 === 1 && other.high >>> 31 === 1) return false;
-		    return this.high === other.high && this.low === other.low;
-		  };
-		  /**
-		   * Tests if this Long's value equals the specified's. This is an alias of {@link Long#equals}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.eq = LongPrototype.equals;
-		  /**
-		   * Tests if this Long's value differs from the specified's.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  LongPrototype.notEquals = function notEquals(other) {
-		    return !this.eq(
-		    /* validates */
-		    other);
-		  };
-		  /**
-		   * Tests if this Long's value differs from the specified's. This is an alias of {@link Long#notEquals}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.neq = LongPrototype.notEquals;
-		  /**
-		   * Tests if this Long's value differs from the specified's. This is an alias of {@link Long#notEquals}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  LongPrototype.ne = LongPrototype.notEquals;
-		  /**
-		   * Tests if this Long's value is less than the specified's.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  LongPrototype.lessThan = function lessThan(other) {
-		    return this.comp(
-		    /* validates */
-		    other) < 0;
-		  };
-		  /**
-		   * Tests if this Long's value is less than the specified's. This is an alias of {@link Long#lessThan}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.lt = LongPrototype.lessThan;
-		  /**
-		   * Tests if this Long's value is less than or equal the specified's.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  LongPrototype.lessThanOrEqual = function lessThanOrEqual(other) {
-		    return this.comp(
-		    /* validates */
-		    other) <= 0;
-		  };
-		  /**
-		   * Tests if this Long's value is less than or equal the specified's. This is an alias of {@link Long#lessThanOrEqual}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.lte = LongPrototype.lessThanOrEqual;
-		  /**
-		   * Tests if this Long's value is less than or equal the specified's. This is an alias of {@link Long#lessThanOrEqual}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  LongPrototype.le = LongPrototype.lessThanOrEqual;
-		  /**
-		   * Tests if this Long's value is greater than the specified's.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  LongPrototype.greaterThan = function greaterThan(other) {
-		    return this.comp(
-		    /* validates */
-		    other) > 0;
-		  };
-		  /**
-		   * Tests if this Long's value is greater than the specified's. This is an alias of {@link Long#greaterThan}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.gt = LongPrototype.greaterThan;
-		  /**
-		   * Tests if this Long's value is greater than or equal the specified's.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  LongPrototype.greaterThanOrEqual = function greaterThanOrEqual(other) {
-		    return this.comp(
-		    /* validates */
-		    other) >= 0;
-		  };
-		  /**
-		   * Tests if this Long's value is greater than or equal the specified's. This is an alias of {@link Long#greaterThanOrEqual}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  
-		  LongPrototype.gte = LongPrototype.greaterThanOrEqual;
-		  /**
-		   * Tests if this Long's value is greater than or equal the specified's. This is an alias of {@link Long#greaterThanOrEqual}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {boolean}
-		   */
-		  
-		  LongPrototype.ge = LongPrototype.greaterThanOrEqual;
-		  /**
-		   * Compares this Long's value with the specified's.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other value
-		   * @returns {number} 0 if they are the same, 1 if the this is greater and -1
-		   *  if the given one is greater
-		   */
-		  
-		  LongPrototype.compare = function compare(other) {
-		    if (!isLong(other)) other = fromValue(other);
-		    if (this.eq(other)) return 0;
-		    var thisNeg = this.isNegative(),
-		        otherNeg = other.isNegative();
-		    if (thisNeg && !otherNeg) return -1;
-		    if (!thisNeg && otherNeg) return 1; // At this point the sign bits are the same
-		  
-		    if (!this.unsigned) return this.sub(other).isNegative() ? -1 : 1; // Both are positive if at least one is unsigned
-		  
-		    return other.high >>> 0 > this.high >>> 0 || other.high === this.high && other.low >>> 0 > this.low >>> 0 ? -1 : 1;
-		  };
-		  /**
-		   * Compares this Long's value with the specified's. This is an alias of {@link Long#compare}.
-		   * @function
-		   * @param {!Long|number|string} other Other value
-		   * @returns {number} 0 if they are the same, 1 if the this is greater and -1
-		   *  if the given one is greater
-		   */
-		  
-		  
-		  LongPrototype.comp = LongPrototype.compare;
-		  /**
-		   * Negates this Long's value.
-		   * @this {!Long}
-		   * @returns {!Long} Negated Long
-		   */
-		  
-		  LongPrototype.negate = function negate() {
-		    if (!this.unsigned && this.eq(MIN_VALUE)) return MIN_VALUE;
-		    return this.not().add(ONE);
-		  };
-		  /**
-		   * Negates this Long's value. This is an alias of {@link Long#negate}.
-		   * @function
-		   * @returns {!Long} Negated Long
-		   */
-		  
-		  
-		  LongPrototype.neg = LongPrototype.negate;
-		  /**
-		   * Returns the sum of this and the specified Long.
-		   * @this {!Long}
-		   * @param {!Long|number|string} addend Addend
-		   * @returns {!Long} Sum
-		   */
-		  
-		  LongPrototype.add = function add(addend) {
-		    if (!isLong(addend)) addend = fromValue(addend); // Divide each number into 4 chunks of 16 bits, and then sum the chunks.
-		  
-		    var a48 = this.high >>> 16;
-		    var a32 = this.high & 0xFFFF;
-		    var a16 = this.low >>> 16;
-		    var a00 = this.low & 0xFFFF;
-		    var b48 = addend.high >>> 16;
-		    var b32 = addend.high & 0xFFFF;
-		    var b16 = addend.low >>> 16;
-		    var b00 = addend.low & 0xFFFF;
-		    var c48 = 0,
-		        c32 = 0,
-		        c16 = 0,
-		        c00 = 0;
-		    c00 += a00 + b00;
-		    c16 += c00 >>> 16;
-		    c00 &= 0xFFFF;
-		    c16 += a16 + b16;
-		    c32 += c16 >>> 16;
-		    c16 &= 0xFFFF;
-		    c32 += a32 + b32;
-		    c48 += c32 >>> 16;
-		    c32 &= 0xFFFF;
-		    c48 += a48 + b48;
-		    c48 &= 0xFFFF;
-		    return fromBits(c16 << 16 | c00, c48 << 16 | c32, this.unsigned);
-		  };
-		  /**
-		   * Returns the difference of this and the specified Long.
-		   * @this {!Long}
-		   * @param {!Long|number|string} subtrahend Subtrahend
-		   * @returns {!Long} Difference
-		   */
-		  
-		  
-		  LongPrototype.subtract = function subtract(subtrahend) {
-		    if (!isLong(subtrahend)) subtrahend = fromValue(subtrahend);
-		    return this.add(subtrahend.neg());
-		  };
-		  /**
-		   * Returns the difference of this and the specified Long. This is an alias of {@link Long#subtract}.
-		   * @function
-		   * @param {!Long|number|string} subtrahend Subtrahend
-		   * @returns {!Long} Difference
-		   */
-		  
-		  
-		  LongPrototype.sub = LongPrototype.subtract;
-		  /**
-		   * Returns the product of this and the specified Long.
-		   * @this {!Long}
-		   * @param {!Long|number|string} multiplier Multiplier
-		   * @returns {!Long} Product
-		   */
-		  
-		  LongPrototype.multiply = function multiply(multiplier) {
-		    if (this.isZero()) return this;
-		    if (!isLong(multiplier)) multiplier = fromValue(multiplier); // use wasm support if present
-		  
-		    if (wasm) {
-		      var low = wasm["mul"](this.low, this.high, multiplier.low, multiplier.high);
-		      return fromBits(low, wasm["get_high"](), this.unsigned);
-		    }
-		  
-		    if (multiplier.isZero()) return this.unsigned ? UZERO : ZERO;
-		    if (this.eq(MIN_VALUE)) return multiplier.isOdd() ? MIN_VALUE : ZERO;
-		    if (multiplier.eq(MIN_VALUE)) return this.isOdd() ? MIN_VALUE : ZERO;
-		  
-		    if (this.isNegative()) {
-		      if (multiplier.isNegative()) return this.neg().mul(multiplier.neg());else return this.neg().mul(multiplier).neg();
-		    } else if (multiplier.isNegative()) return this.mul(multiplier.neg()).neg(); // If both longs are small, use float multiplication
-		  
-		  
-		    if (this.lt(TWO_PWR_24) && multiplier.lt(TWO_PWR_24)) return fromNumber(this.toNumber() * multiplier.toNumber(), this.unsigned); // Divide each long into 4 chunks of 16 bits, and then add up 4x4 products.
-		    // We can skip products that would overflow.
-		  
-		    var a48 = this.high >>> 16;
-		    var a32 = this.high & 0xFFFF;
-		    var a16 = this.low >>> 16;
-		    var a00 = this.low & 0xFFFF;
-		    var b48 = multiplier.high >>> 16;
-		    var b32 = multiplier.high & 0xFFFF;
-		    var b16 = multiplier.low >>> 16;
-		    var b00 = multiplier.low & 0xFFFF;
-		    var c48 = 0,
-		        c32 = 0,
-		        c16 = 0,
-		        c00 = 0;
-		    c00 += a00 * b00;
-		    c16 += c00 >>> 16;
-		    c00 &= 0xFFFF;
-		    c16 += a16 * b00;
-		    c32 += c16 >>> 16;
-		    c16 &= 0xFFFF;
-		    c16 += a00 * b16;
-		    c32 += c16 >>> 16;
-		    c16 &= 0xFFFF;
-		    c32 += a32 * b00;
-		    c48 += c32 >>> 16;
-		    c32 &= 0xFFFF;
-		    c32 += a16 * b16;
-		    c48 += c32 >>> 16;
-		    c32 &= 0xFFFF;
-		    c32 += a00 * b32;
-		    c48 += c32 >>> 16;
-		    c32 &= 0xFFFF;
-		    c48 += a48 * b00 + a32 * b16 + a16 * b32 + a00 * b48;
-		    c48 &= 0xFFFF;
-		    return fromBits(c16 << 16 | c00, c48 << 16 | c32, this.unsigned);
-		  };
-		  /**
-		   * Returns the product of this and the specified Long. This is an alias of {@link Long#multiply}.
-		   * @function
-		   * @param {!Long|number|string} multiplier Multiplier
-		   * @returns {!Long} Product
-		   */
-		  
-		  
-		  LongPrototype.mul = LongPrototype.multiply;
-		  /**
-		   * Returns this Long divided by the specified. The result is signed if this Long is signed or
-		   *  unsigned if this Long is unsigned.
-		   * @this {!Long}
-		   * @param {!Long|number|string} divisor Divisor
-		   * @returns {!Long} Quotient
-		   */
-		  
-		  LongPrototype.divide = function divide(divisor) {
-		    if (!isLong(divisor)) divisor = fromValue(divisor);
-		    if (divisor.isZero()) throw Error('division by zero'); // use wasm support if present
-		  
-		    if (wasm) {
-		      // guard against signed division overflow: the largest
-		      // negative number / -1 would be 1 larger than the largest
-		      // positive number, due to two's complement.
-		      if (!this.unsigned && this.high === -2147483648 && divisor.low === -1 && divisor.high === -1) {
-		        // be consistent with non-wasm code path
-		        return this;
-		      }
-		  
-		      var low = (this.unsigned ? wasm["div_u"] : wasm["div_s"])(this.low, this.high, divisor.low, divisor.high);
-		      return fromBits(low, wasm["get_high"](), this.unsigned);
-		    }
-		  
-		    if (this.isZero()) return this.unsigned ? UZERO : ZERO;
-		    var approx, rem, res;
-		  
-		    if (!this.unsigned) {
-		      // This section is only relevant for signed longs and is derived from the
-		      // closure library as a whole.
-		      if (this.eq(MIN_VALUE)) {
-		        if (divisor.eq(ONE) || divisor.eq(NEG_ONE)) return MIN_VALUE; // recall that -MIN_VALUE == MIN_VALUE
-		        else if (divisor.eq(MIN_VALUE)) return ONE;else {
-		          // At this point, we have |other| >= 2, so |this/other| < |MIN_VALUE|.
-		          var halfThis = this.shr(1);
-		          approx = halfThis.div(divisor).shl(1);
-		  
-		          if (approx.eq(ZERO)) {
-		            return divisor.isNegative() ? ONE : NEG_ONE;
-		          } else {
-		            rem = this.sub(divisor.mul(approx));
-		            res = approx.add(rem.div(divisor));
-		            return res;
-		          }
+		        rem = remDiv;
+		        if (rem.isZero()) return digits + result;
+		        else {
+		          while (digits.length < 6) digits = "0" + digits;
+		          result = "" + digits + result;
 		        }
-		      } else if (divisor.eq(MIN_VALUE)) return this.unsigned ? UZERO : ZERO;
-		  
+		      }
+		    };
+
+		    /**
+		     * Gets the high 32 bits as a signed integer.
+		     * @this {!Long}
+		     * @returns {number} Signed high bits
+		     */
+		    LongPrototype.getHighBits = function getHighBits() {
+		      return this.high;
+		    };
+
+		    /**
+		     * Gets the high 32 bits as an unsigned integer.
+		     * @this {!Long}
+		     * @returns {number} Unsigned high bits
+		     */
+		    LongPrototype.getHighBitsUnsigned = function getHighBitsUnsigned() {
+		      return this.high >>> 0;
+		    };
+
+		    /**
+		     * Gets the low 32 bits as a signed integer.
+		     * @this {!Long}
+		     * @returns {number} Signed low bits
+		     */
+		    LongPrototype.getLowBits = function getLowBits() {
+		      return this.low;
+		    };
+
+		    /**
+		     * Gets the low 32 bits as an unsigned integer.
+		     * @this {!Long}
+		     * @returns {number} Unsigned low bits
+		     */
+		    LongPrototype.getLowBitsUnsigned = function getLowBitsUnsigned() {
+		      return this.low >>> 0;
+		    };
+
+		    /**
+		     * Gets the number of bits needed to represent the absolute value of this Long.
+		     * @this {!Long}
+		     * @returns {number}
+		     */
+		    LongPrototype.getNumBitsAbs = function getNumBitsAbs() {
+		      if (this.isNegative())
+		        // Unsigned Longs are never negative
+		        return this.eq(MIN_VALUE) ? 64 : this.neg().getNumBitsAbs();
+		      var val = this.high != 0 ? this.high : this.low;
+		      for (var bit = 31; bit > 0; bit--) if ((val & (1 << bit)) != 0) break;
+		      return this.high != 0 ? bit + 33 : bit + 1;
+		    };
+
+		    /**
+		     * Tests if this Long can be safely represented as a JavaScript number.
+		     * @this {!Long}
+		     * @returns {boolean}
+		     */
+		    LongPrototype.isSafeInteger = function isSafeInteger() {
+		      // 2^53-1 is the maximum safe value
+		      var top11Bits = this.high >> 21;
+		      // [0, 2^53-1]
+		      if (!top11Bits) return true;
+		      // > 2^53-1
+		      if (this.unsigned) return false;
+		      // [-2^53, -1] except -2^53
+		      return top11Bits === -1 && !(this.low === 0 && this.high === -2097152);
+		    };
+
+		    /**
+		     * Tests if this Long's value equals zero.
+		     * @this {!Long}
+		     * @returns {boolean}
+		     */
+		    LongPrototype.isZero = function isZero() {
+		      return this.high === 0 && this.low === 0;
+		    };
+
+		    /**
+		     * Tests if this Long's value equals zero. This is an alias of {@link Long#isZero}.
+		     * @returns {boolean}
+		     */
+		    LongPrototype.eqz = LongPrototype.isZero;
+
+		    /**
+		     * Tests if this Long's value is negative.
+		     * @this {!Long}
+		     * @returns {boolean}
+		     */
+		    LongPrototype.isNegative = function isNegative() {
+		      return !this.unsigned && this.high < 0;
+		    };
+
+		    /**
+		     * Tests if this Long's value is positive or zero.
+		     * @this {!Long}
+		     * @returns {boolean}
+		     */
+		    LongPrototype.isPositive = function isPositive() {
+		      return this.unsigned || this.high >= 0;
+		    };
+
+		    /**
+		     * Tests if this Long's value is odd.
+		     * @this {!Long}
+		     * @returns {boolean}
+		     */
+		    LongPrototype.isOdd = function isOdd() {
+		      return (this.low & 1) === 1;
+		    };
+
+		    /**
+		     * Tests if this Long's value is even.
+		     * @this {!Long}
+		     * @returns {boolean}
+		     */
+		    LongPrototype.isEven = function isEven() {
+		      return (this.low & 1) === 0;
+		    };
+
+		    /**
+		     * Tests if this Long's value equals the specified's.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.equals = function equals(other) {
+		      if (!isLong(other)) other = fromValue(other);
+		      if (
+		        this.unsigned !== other.unsigned &&
+		        this.high >>> 31 === 1 &&
+		        other.high >>> 31 === 1
+		      )
+		        return false;
+		      return this.high === other.high && this.low === other.low;
+		    };
+
+		    /**
+		     * Tests if this Long's value equals the specified's. This is an alias of {@link Long#equals}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.eq = LongPrototype.equals;
+
+		    /**
+		     * Tests if this Long's value differs from the specified's.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.notEquals = function notEquals(other) {
+		      return !this.eq(/* validates */ other);
+		    };
+
+		    /**
+		     * Tests if this Long's value differs from the specified's. This is an alias of {@link Long#notEquals}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.neq = LongPrototype.notEquals;
+
+		    /**
+		     * Tests if this Long's value differs from the specified's. This is an alias of {@link Long#notEquals}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.ne = LongPrototype.notEquals;
+
+		    /**
+		     * Tests if this Long's value is less than the specified's.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.lessThan = function lessThan(other) {
+		      return this.comp(/* validates */ other) < 0;
+		    };
+
+		    /**
+		     * Tests if this Long's value is less than the specified's. This is an alias of {@link Long#lessThan}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.lt = LongPrototype.lessThan;
+
+		    /**
+		     * Tests if this Long's value is less than or equal the specified's.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.lessThanOrEqual = function lessThanOrEqual(other) {
+		      return this.comp(/* validates */ other) <= 0;
+		    };
+
+		    /**
+		     * Tests if this Long's value is less than or equal the specified's. This is an alias of {@link Long#lessThanOrEqual}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.lte = LongPrototype.lessThanOrEqual;
+
+		    /**
+		     * Tests if this Long's value is less than or equal the specified's. This is an alias of {@link Long#lessThanOrEqual}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.le = LongPrototype.lessThanOrEqual;
+
+		    /**
+		     * Tests if this Long's value is greater than the specified's.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.greaterThan = function greaterThan(other) {
+		      return this.comp(/* validates */ other) > 0;
+		    };
+
+		    /**
+		     * Tests if this Long's value is greater than the specified's. This is an alias of {@link Long#greaterThan}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.gt = LongPrototype.greaterThan;
+
+		    /**
+		     * Tests if this Long's value is greater than or equal the specified's.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.greaterThanOrEqual = function greaterThanOrEqual(other) {
+		      return this.comp(/* validates */ other) >= 0;
+		    };
+
+		    /**
+		     * Tests if this Long's value is greater than or equal the specified's. This is an alias of {@link Long#greaterThanOrEqual}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.gte = LongPrototype.greaterThanOrEqual;
+
+		    /**
+		     * Tests if this Long's value is greater than or equal the specified's. This is an alias of {@link Long#greaterThanOrEqual}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {boolean}
+		     */
+		    LongPrototype.ge = LongPrototype.greaterThanOrEqual;
+
+		    /**
+		     * Compares this Long's value with the specified's.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {number} 0 if they are the same, 1 if the this is greater and -1
+		     *  if the given one is greater
+		     */
+		    LongPrototype.compare = function compare(other) {
+		      if (!isLong(other)) other = fromValue(other);
+		      if (this.eq(other)) return 0;
+		      var thisNeg = this.isNegative(),
+		        otherNeg = other.isNegative();
+		      if (thisNeg && !otherNeg) return -1;
+		      if (!thisNeg && otherNeg) return 1;
+		      // At this point the sign bits are the same
+		      if (!this.unsigned) return this.sub(other).isNegative() ? -1 : 1;
+		      // Both are positive if at least one is unsigned
+		      return other.high >>> 0 > this.high >>> 0 ||
+		        (other.high === this.high && other.low >>> 0 > this.low >>> 0)
+		        ? -1
+		        : 1;
+		    };
+
+		    /**
+		     * Compares this Long's value with the specified's. This is an alias of {@link Long#compare}.
+		     * @function
+		     * @param {!Long|number|bigint|string} other Other value
+		     * @returns {number} 0 if they are the same, 1 if the this is greater and -1
+		     *  if the given one is greater
+		     */
+		    LongPrototype.comp = LongPrototype.compare;
+
+		    /**
+		     * Negates this Long's value.
+		     * @this {!Long}
+		     * @returns {!Long} Negated Long
+		     */
+		    LongPrototype.negate = function negate() {
+		      if (!this.unsigned && this.eq(MIN_VALUE)) return MIN_VALUE;
+		      return this.not().add(ONE);
+		    };
+
+		    /**
+		     * Negates this Long's value. This is an alias of {@link Long#negate}.
+		     * @function
+		     * @returns {!Long} Negated Long
+		     */
+		    LongPrototype.neg = LongPrototype.negate;
+
+		    /**
+		     * Returns the sum of this and the specified Long.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} addend Addend
+		     * @returns {!Long} Sum
+		     */
+		    LongPrototype.add = function add(addend) {
+		      if (!isLong(addend)) addend = fromValue(addend);
+
+		      // Divide each number into 4 chunks of 16 bits, and then sum the chunks.
+
+		      var a48 = this.high >>> 16;
+		      var a32 = this.high & 0xffff;
+		      var a16 = this.low >>> 16;
+		      var a00 = this.low & 0xffff;
+		      var b48 = addend.high >>> 16;
+		      var b32 = addend.high & 0xffff;
+		      var b16 = addend.low >>> 16;
+		      var b00 = addend.low & 0xffff;
+		      var c48 = 0,
+		        c32 = 0,
+		        c16 = 0,
+		        c00 = 0;
+		      c00 += a00 + b00;
+		      c16 += c00 >>> 16;
+		      c00 &= 0xffff;
+		      c16 += a16 + b16;
+		      c32 += c16 >>> 16;
+		      c16 &= 0xffff;
+		      c32 += a32 + b32;
+		      c48 += c32 >>> 16;
+		      c32 &= 0xffff;
+		      c48 += a48 + b48;
+		      c48 &= 0xffff;
+		      return fromBits((c16 << 16) | c00, (c48 << 16) | c32, this.unsigned);
+		    };
+
+		    /**
+		     * Returns the difference of this and the specified Long.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} subtrahend Subtrahend
+		     * @returns {!Long} Difference
+		     */
+		    LongPrototype.subtract = function subtract(subtrahend) {
+		      if (!isLong(subtrahend)) subtrahend = fromValue(subtrahend);
+		      return this.add(subtrahend.neg());
+		    };
+
+		    /**
+		     * Returns the difference of this and the specified Long. This is an alias of {@link Long#subtract}.
+		     * @function
+		     * @param {!Long|number|bigint|string} subtrahend Subtrahend
+		     * @returns {!Long} Difference
+		     */
+		    LongPrototype.sub = LongPrototype.subtract;
+
+		    /**
+		     * Returns the product of this and the specified Long.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} multiplier Multiplier
+		     * @returns {!Long} Product
+		     */
+		    LongPrototype.multiply = function multiply(multiplier) {
+		      if (this.isZero()) return this;
+		      if (!isLong(multiplier)) multiplier = fromValue(multiplier);
+
+		      // use wasm support if present
+		      if (wasm) {
+		        var low = wasm["mul"](
+		          this.low,
+		          this.high,
+		          multiplier.low,
+		          multiplier.high,
+		        );
+		        return fromBits(low, wasm["get_high"](), this.unsigned);
+		      }
+		      if (multiplier.isZero()) return this.unsigned ? UZERO : ZERO;
+		      if (this.eq(MIN_VALUE)) return multiplier.isOdd() ? MIN_VALUE : ZERO;
+		      if (multiplier.eq(MIN_VALUE)) return this.isOdd() ? MIN_VALUE : ZERO;
 		      if (this.isNegative()) {
-		        if (divisor.isNegative()) return this.neg().div(divisor.neg());
-		        return this.neg().div(divisor).neg();
-		      } else if (divisor.isNegative()) return this.div(divisor.neg()).neg();
-		  
-		      res = ZERO;
-		    } else {
-		      // The algorithm below has not been made for unsigned longs. It's therefore
-		      // required to take special care of the MSB prior to running it.
-		      if (!divisor.unsigned) divisor = divisor.toUnsigned();
-		      if (divisor.gt(this)) return UZERO;
-		      if (divisor.gt(this.shru(1))) // 15 >>> 1 = 7 ; with divisor = 8 ; true
-		        return UONE;
-		      res = UZERO;
-		    } // Repeat the following until the remainder is less than other:  find a
-		    // floating-point that approximates remainder / other *from below*, add this
-		    // into the result, and subtract it from the remainder.  It is critical that
-		    // the approximate value is less than or equal to the real value so that the
-		    // remainder never becomes negative.
-		  
-		  
-		    rem = this;
-		  
-		    while (rem.gte(divisor)) {
-		      // Approximate the result of division. This may be a little greater or
-		      // smaller than the actual value.
-		      approx = Math.max(1, Math.floor(rem.toNumber() / divisor.toNumber())); // We will tweak the approximate result by changing it in the 48-th digit or
-		      // the smallest non-fractional digit, whichever is larger.
-		  
-		      var log2 = Math.ceil(Math.log(approx) / Math.LN2),
+		        if (multiplier.isNegative()) return this.neg().mul(multiplier.neg());
+		        else return this.neg().mul(multiplier).neg();
+		      } else if (multiplier.isNegative())
+		        return this.mul(multiplier.neg()).neg();
+
+		      // If both longs are small, use float multiplication
+		      if (this.lt(TWO_PWR_24) && multiplier.lt(TWO_PWR_24))
+		        return fromNumber(
+		          this.toNumber() * multiplier.toNumber(),
+		          this.unsigned,
+		        );
+
+		      // Divide each long into 4 chunks of 16 bits, and then add up 4x4 products.
+		      // We can skip products that would overflow.
+
+		      var a48 = this.high >>> 16;
+		      var a32 = this.high & 0xffff;
+		      var a16 = this.low >>> 16;
+		      var a00 = this.low & 0xffff;
+		      var b48 = multiplier.high >>> 16;
+		      var b32 = multiplier.high & 0xffff;
+		      var b16 = multiplier.low >>> 16;
+		      var b00 = multiplier.low & 0xffff;
+		      var c48 = 0,
+		        c32 = 0,
+		        c16 = 0,
+		        c00 = 0;
+		      c00 += a00 * b00;
+		      c16 += c00 >>> 16;
+		      c00 &= 0xffff;
+		      c16 += a16 * b00;
+		      c32 += c16 >>> 16;
+		      c16 &= 0xffff;
+		      c16 += a00 * b16;
+		      c32 += c16 >>> 16;
+		      c16 &= 0xffff;
+		      c32 += a32 * b00;
+		      c48 += c32 >>> 16;
+		      c32 &= 0xffff;
+		      c32 += a16 * b16;
+		      c48 += c32 >>> 16;
+		      c32 &= 0xffff;
+		      c32 += a00 * b32;
+		      c48 += c32 >>> 16;
+		      c32 &= 0xffff;
+		      c48 += a48 * b00 + a32 * b16 + a16 * b32 + a00 * b48;
+		      c48 &= 0xffff;
+		      return fromBits((c16 << 16) | c00, (c48 << 16) | c32, this.unsigned);
+		    };
+
+		    /**
+		     * Returns the product of this and the specified Long. This is an alias of {@link Long#multiply}.
+		     * @function
+		     * @param {!Long|number|bigint|string} multiplier Multiplier
+		     * @returns {!Long} Product
+		     */
+		    LongPrototype.mul = LongPrototype.multiply;
+
+		    /**
+		     * Returns this Long divided by the specified. The result is signed if this Long is signed or
+		     *  unsigned if this Long is unsigned.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} divisor Divisor
+		     * @returns {!Long} Quotient
+		     */
+		    LongPrototype.divide = function divide(divisor) {
+		      if (!isLong(divisor)) divisor = fromValue(divisor);
+		      if (divisor.isZero()) throw Error("division by zero");
+
+		      // use wasm support if present
+		      if (wasm) {
+		        // guard against signed division overflow: the largest
+		        // negative number / -1 would be 1 larger than the largest
+		        // positive number, due to two's complement.
+		        if (
+		          !this.unsigned &&
+		          this.high === -2147483648 &&
+		          divisor.low === -1 &&
+		          divisor.high === -1
+		        ) {
+		          // be consistent with non-wasm code path
+		          return this;
+		        }
+		        var low = (this.unsigned ? wasm["div_u"] : wasm["div_s"])(
+		          this.low,
+		          this.high,
+		          divisor.low,
+		          divisor.high,
+		        );
+		        return fromBits(low, wasm["get_high"](), this.unsigned);
+		      }
+		      if (this.isZero()) return this.unsigned ? UZERO : ZERO;
+		      var approx, rem, res;
+		      if (!this.unsigned) {
+		        // This section is only relevant for signed longs and is derived from the
+		        // closure library as a whole.
+		        if (this.eq(MIN_VALUE)) {
+		          if (divisor.eq(ONE) || divisor.eq(NEG_ONE))
+		            return MIN_VALUE; // recall that -MIN_VALUE == MIN_VALUE
+		          else if (divisor.eq(MIN_VALUE)) return ONE;
+		          else {
+		            // At this point, we have |other| >= 2, so |this/other| < |MIN_VALUE|.
+		            var halfThis = this.shr(1);
+		            approx = halfThis.div(divisor).shl(1);
+		            if (approx.eq(ZERO)) {
+		              return divisor.isNegative() ? ONE : NEG_ONE;
+		            } else {
+		              rem = this.sub(divisor.mul(approx));
+		              res = approx.add(rem.div(divisor));
+		              return res;
+		            }
+		          }
+		        } else if (divisor.eq(MIN_VALUE)) return this.unsigned ? UZERO : ZERO;
+		        if (this.isNegative()) {
+		          if (divisor.isNegative()) return this.neg().div(divisor.neg());
+		          return this.neg().div(divisor).neg();
+		        } else if (divisor.isNegative()) return this.div(divisor.neg()).neg();
+		        res = ZERO;
+		      } else {
+		        // The algorithm below has not been made for unsigned longs. It's therefore
+		        // required to take special care of the MSB prior to running it.
+		        if (!divisor.unsigned) divisor = divisor.toUnsigned();
+		        if (divisor.gt(this)) return UZERO;
+		        if (divisor.gt(this.shru(1)))
+		          // 15 >>> 1 = 7 ; with divisor = 8 ; true
+		          return UONE;
+		        res = UZERO;
+		      }
+
+		      // Repeat the following until the remainder is less than other:  find a
+		      // floating-point that approximates remainder / other *from below*, add this
+		      // into the result, and subtract it from the remainder.  It is critical that
+		      // the approximate value is less than or equal to the real value so that the
+		      // remainder never becomes negative.
+		      rem = this;
+		      while (rem.gte(divisor)) {
+		        // Approximate the result of division. This may be a little greater or
+		        // smaller than the actual value.
+		        approx = Math.max(1, Math.floor(rem.toNumber() / divisor.toNumber()));
+
+		        // We will tweak the approximate result by changing it in the 48-th digit or
+		        // the smallest non-fractional digit, whichever is larger.
+		        var log2 = Math.ceil(Math.log(approx) / Math.LN2),
 		          delta = log2 <= 48 ? 1 : pow_dbl(2, log2 - 48),
 		          // Decrease the approximation until it is smaller than the remainder.  Note
-		      // that if it is too large, the product overflows and is negative.
-		      approxRes = fromNumber(approx),
+		          // that if it is too large, the product overflows and is negative.
+		          approxRes = fromNumber(approx),
 		          approxRem = approxRes.mul(divisor);
-		  
-		      while (approxRem.isNegative() || approxRem.gt(rem)) {
-		        approx -= delta;
-		        approxRes = fromNumber(approx, this.unsigned);
-		        approxRem = approxRes.mul(divisor);
-		      } // We know the answer can't be zero... and actually, zero would cause
-		      // infinite recursion since we would make no progress.
-		  
-		  
-		      if (approxRes.isZero()) approxRes = ONE;
-		      res = res.add(approxRes);
-		      rem = rem.sub(approxRem);
-		    }
-		  
-		    return res;
-		  };
-		  /**
-		   * Returns this Long divided by the specified. This is an alias of {@link Long#divide}.
-		   * @function
-		   * @param {!Long|number|string} divisor Divisor
-		   * @returns {!Long} Quotient
-		   */
-		  
-		  
-		  LongPrototype.div = LongPrototype.divide;
-		  /**
-		   * Returns this Long modulo the specified.
-		   * @this {!Long}
-		   * @param {!Long|number|string} divisor Divisor
-		   * @returns {!Long} Remainder
-		   */
-		  
-		  LongPrototype.modulo = function modulo(divisor) {
-		    if (!isLong(divisor)) divisor = fromValue(divisor); // use wasm support if present
-		  
-		    if (wasm) {
-		      var low = (this.unsigned ? wasm["rem_u"] : wasm["rem_s"])(this.low, this.high, divisor.low, divisor.high);
-		      return fromBits(low, wasm["get_high"](), this.unsigned);
-		    }
-		  
-		    return this.sub(this.div(divisor).mul(divisor));
-		  };
-		  /**
-		   * Returns this Long modulo the specified. This is an alias of {@link Long#modulo}.
-		   * @function
-		   * @param {!Long|number|string} divisor Divisor
-		   * @returns {!Long} Remainder
-		   */
-		  
-		  
-		  LongPrototype.mod = LongPrototype.modulo;
-		  /**
-		   * Returns this Long modulo the specified. This is an alias of {@link Long#modulo}.
-		   * @function
-		   * @param {!Long|number|string} divisor Divisor
-		   * @returns {!Long} Remainder
-		   */
-		  
-		  LongPrototype.rem = LongPrototype.modulo;
-		  /**
-		   * Returns the bitwise NOT of this Long.
-		   * @this {!Long}
-		   * @returns {!Long}
-		   */
-		  
-		  LongPrototype.not = function not() {
-		    return fromBits(~this.low, ~this.high, this.unsigned);
-		  };
-		  /**
-		   * Returns count leading zeros of this Long.
-		   * @this {!Long}
-		   * @returns {!number}
-		   */
-		  
-		  
-		  LongPrototype.countLeadingZeros = function countLeadingZeros() {
-		    return this.high ? Math.clz32(this.high) : Math.clz32(this.low) + 32;
-		  };
-		  /**
-		   * Returns count leading zeros. This is an alias of {@link Long#countLeadingZeros}.
-		   * @function
-		   * @param {!Long}
-		   * @returns {!number}
-		   */
-		  
-		  
-		  LongPrototype.clz = LongPrototype.countLeadingZeros;
-		  /**
-		   * Returns count trailing zeros of this Long.
-		   * @this {!Long}
-		   * @returns {!number}
-		   */
-		  
-		  LongPrototype.countTrailingZeros = function countTrailingZeros() {
-		    return this.low ? ctz32(this.low) : ctz32(this.high) + 32;
-		  };
-		  /**
-		   * Returns count trailing zeros. This is an alias of {@link Long#countTrailingZeros}.
-		   * @function
-		   * @param {!Long}
-		   * @returns {!number}
-		   */
-		  
-		  
-		  LongPrototype.ctz = LongPrototype.countTrailingZeros;
-		  /**
-		   * Returns the bitwise AND of this Long and the specified.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other Long
-		   * @returns {!Long}
-		   */
-		  
-		  LongPrototype.and = function and(other) {
-		    if (!isLong(other)) other = fromValue(other);
-		    return fromBits(this.low & other.low, this.high & other.high, this.unsigned);
-		  };
-		  /**
-		   * Returns the bitwise OR of this Long and the specified.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other Long
-		   * @returns {!Long}
-		   */
-		  
-		  
-		  LongPrototype.or = function or(other) {
-		    if (!isLong(other)) other = fromValue(other);
-		    return fromBits(this.low | other.low, this.high | other.high, this.unsigned);
-		  };
-		  /**
-		   * Returns the bitwise XOR of this Long and the given one.
-		   * @this {!Long}
-		   * @param {!Long|number|string} other Other Long
-		   * @returns {!Long}
-		   */
-		  
-		  
-		  LongPrototype.xor = function xor(other) {
-		    if (!isLong(other)) other = fromValue(other);
-		    return fromBits(this.low ^ other.low, this.high ^ other.high, this.unsigned);
-		  };
-		  /**
-		   * Returns this Long with bits shifted to the left by the given amount.
-		   * @this {!Long}
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Shifted Long
-		   */
-		  
-		  
-		  LongPrototype.shiftLeft = function shiftLeft(numBits) {
-		    if (isLong(numBits)) numBits = numBits.toInt();
-		    if ((numBits &= 63) === 0) return this;else if (numBits < 32) return fromBits(this.low << numBits, this.high << numBits | this.low >>> 32 - numBits, this.unsigned);else return fromBits(0, this.low << numBits - 32, this.unsigned);
-		  };
-		  /**
-		   * Returns this Long with bits shifted to the left by the given amount. This is an alias of {@link Long#shiftLeft}.
-		   * @function
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Shifted Long
-		   */
-		  
-		  
-		  LongPrototype.shl = LongPrototype.shiftLeft;
-		  /**
-		   * Returns this Long with bits arithmetically shifted to the right by the given amount.
-		   * @this {!Long}
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Shifted Long
-		   */
-		  
-		  LongPrototype.shiftRight = function shiftRight(numBits) {
-		    if (isLong(numBits)) numBits = numBits.toInt();
-		    if ((numBits &= 63) === 0) return this;else if (numBits < 32) return fromBits(this.low >>> numBits | this.high << 32 - numBits, this.high >> numBits, this.unsigned);else return fromBits(this.high >> numBits - 32, this.high >= 0 ? 0 : -1, this.unsigned);
-		  };
-		  /**
-		   * Returns this Long with bits arithmetically shifted to the right by the given amount. This is an alias of {@link Long#shiftRight}.
-		   * @function
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Shifted Long
-		   */
-		  
-		  
-		  LongPrototype.shr = LongPrototype.shiftRight;
-		  /**
-		   * Returns this Long with bits logically shifted to the right by the given amount.
-		   * @this {!Long}
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Shifted Long
-		   */
-		  
-		  LongPrototype.shiftRightUnsigned = function shiftRightUnsigned(numBits) {
-		    if (isLong(numBits)) numBits = numBits.toInt();
-		    if ((numBits &= 63) === 0) return this;
-		    if (numBits < 32) return fromBits(this.low >>> numBits | this.high << 32 - numBits, this.high >>> numBits, this.unsigned);
-		    if (numBits === 32) return fromBits(this.high, 0, this.unsigned);
-		    return fromBits(this.high >>> numBits - 32, 0, this.unsigned);
-		  };
-		  /**
-		   * Returns this Long with bits logically shifted to the right by the given amount. This is an alias of {@link Long#shiftRightUnsigned}.
-		   * @function
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Shifted Long
-		   */
-		  
-		  
-		  LongPrototype.shru = LongPrototype.shiftRightUnsigned;
-		  /**
-		   * Returns this Long with bits logically shifted to the right by the given amount. This is an alias of {@link Long#shiftRightUnsigned}.
-		   * @function
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Shifted Long
-		   */
-		  
-		  LongPrototype.shr_u = LongPrototype.shiftRightUnsigned;
-		  /**
-		   * Returns this Long with bits rotated to the left by the given amount.
-		   * @this {!Long}
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Rotated Long
-		   */
-		  
-		  LongPrototype.rotateLeft = function rotateLeft(numBits) {
-		    var b;
-		    if (isLong(numBits)) numBits = numBits.toInt();
-		    if ((numBits &= 63) === 0) return this;
-		    if (numBits === 32) return fromBits(this.high, this.low, this.unsigned);
-		  
-		    if (numBits < 32) {
+		        while (approxRem.isNegative() || approxRem.gt(rem)) {
+		          approx -= delta;
+		          approxRes = fromNumber(approx, this.unsigned);
+		          approxRem = approxRes.mul(divisor);
+		        }
+
+		        // We know the answer can't be zero... and actually, zero would cause
+		        // infinite recursion since we would make no progress.
+		        if (approxRes.isZero()) approxRes = ONE;
+		        res = res.add(approxRes);
+		        rem = rem.sub(approxRem);
+		      }
+		      return res;
+		    };
+
+		    /**
+		     * Returns this Long divided by the specified. This is an alias of {@link Long#divide}.
+		     * @function
+		     * @param {!Long|number|bigint|string} divisor Divisor
+		     * @returns {!Long} Quotient
+		     */
+		    LongPrototype.div = LongPrototype.divide;
+
+		    /**
+		     * Returns this Long modulo the specified.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} divisor Divisor
+		     * @returns {!Long} Remainder
+		     */
+		    LongPrototype.modulo = function modulo(divisor) {
+		      if (!isLong(divisor)) divisor = fromValue(divisor);
+
+		      // use wasm support if present
+		      if (wasm) {
+		        var low = (this.unsigned ? wasm["rem_u"] : wasm["rem_s"])(
+		          this.low,
+		          this.high,
+		          divisor.low,
+		          divisor.high,
+		        );
+		        return fromBits(low, wasm["get_high"](), this.unsigned);
+		      }
+		      return this.sub(this.div(divisor).mul(divisor));
+		    };
+
+		    /**
+		     * Returns this Long modulo the specified. This is an alias of {@link Long#modulo}.
+		     * @function
+		     * @param {!Long|number|bigint|string} divisor Divisor
+		     * @returns {!Long} Remainder
+		     */
+		    LongPrototype.mod = LongPrototype.modulo;
+
+		    /**
+		     * Returns this Long modulo the specified. This is an alias of {@link Long#modulo}.
+		     * @function
+		     * @param {!Long|number|bigint|string} divisor Divisor
+		     * @returns {!Long} Remainder
+		     */
+		    LongPrototype.rem = LongPrototype.modulo;
+
+		    /**
+		     * Returns the bitwise NOT of this Long.
+		     * @this {!Long}
+		     * @returns {!Long}
+		     */
+		    LongPrototype.not = function not() {
+		      return fromBits(~this.low, ~this.high, this.unsigned);
+		    };
+
+		    /**
+		     * Returns count leading zeros of this Long.
+		     * @this {!Long}
+		     * @returns {!number}
+		     */
+		    LongPrototype.countLeadingZeros = function countLeadingZeros() {
+		      return this.high ? Math.clz32(this.high) : Math.clz32(this.low) + 32;
+		    };
+
+		    /**
+		     * Returns count leading zeros. This is an alias of {@link Long#countLeadingZeros}.
+		     * @function
+		     * @param {!Long}
+		     * @returns {!number}
+		     */
+		    LongPrototype.clz = LongPrototype.countLeadingZeros;
+
+		    /**
+		     * Returns count trailing zeros of this Long.
+		     * @this {!Long}
+		     * @returns {!number}
+		     */
+		    LongPrototype.countTrailingZeros = function countTrailingZeros() {
+		      return this.low ? ctz32(this.low) : ctz32(this.high) + 32;
+		    };
+
+		    /**
+		     * Returns count trailing zeros. This is an alias of {@link Long#countTrailingZeros}.
+		     * @function
+		     * @param {!Long}
+		     * @returns {!number}
+		     */
+		    LongPrototype.ctz = LongPrototype.countTrailingZeros;
+
+		    /**
+		     * Returns the bitwise AND of this Long and the specified.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other Long
+		     * @returns {!Long}
+		     */
+		    LongPrototype.and = function and(other) {
+		      if (!isLong(other)) other = fromValue(other);
+		      return fromBits(
+		        this.low & other.low,
+		        this.high & other.high,
+		        this.unsigned,
+		      );
+		    };
+
+		    /**
+		     * Returns the bitwise OR of this Long and the specified.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other Long
+		     * @returns {!Long}
+		     */
+		    LongPrototype.or = function or(other) {
+		      if (!isLong(other)) other = fromValue(other);
+		      return fromBits(
+		        this.low | other.low,
+		        this.high | other.high,
+		        this.unsigned,
+		      );
+		    };
+
+		    /**
+		     * Returns the bitwise XOR of this Long and the given one.
+		     * @this {!Long}
+		     * @param {!Long|number|bigint|string} other Other Long
+		     * @returns {!Long}
+		     */
+		    LongPrototype.xor = function xor(other) {
+		      if (!isLong(other)) other = fromValue(other);
+		      return fromBits(
+		        this.low ^ other.low,
+		        this.high ^ other.high,
+		        this.unsigned,
+		      );
+		    };
+
+		    /**
+		     * Returns this Long with bits shifted to the left by the given amount.
+		     * @this {!Long}
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Shifted Long
+		     */
+		    LongPrototype.shiftLeft = function shiftLeft(numBits) {
+		      if (isLong(numBits)) numBits = numBits.toInt();
+		      if ((numBits &= 63) === 0) return this;
+		      else if (numBits < 32)
+		        return fromBits(
+		          this.low << numBits,
+		          (this.high << numBits) | (this.low >>> (32 - numBits)),
+		          this.unsigned,
+		        );
+		      else return fromBits(0, this.low << (numBits - 32), this.unsigned);
+		    };
+
+		    /**
+		     * Returns this Long with bits shifted to the left by the given amount. This is an alias of {@link Long#shiftLeft}.
+		     * @function
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Shifted Long
+		     */
+		    LongPrototype.shl = LongPrototype.shiftLeft;
+
+		    /**
+		     * Returns this Long with bits arithmetically shifted to the right by the given amount.
+		     * @this {!Long}
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Shifted Long
+		     */
+		    LongPrototype.shiftRight = function shiftRight(numBits) {
+		      if (isLong(numBits)) numBits = numBits.toInt();
+		      if ((numBits &= 63) === 0) return this;
+		      else if (numBits < 32)
+		        return fromBits(
+		          (this.low >>> numBits) | (this.high << (32 - numBits)),
+		          this.high >> numBits,
+		          this.unsigned,
+		        );
+		      else
+		        return fromBits(
+		          this.high >> (numBits - 32),
+		          this.high >= 0 ? 0 : -1,
+		          this.unsigned,
+		        );
+		    };
+
+		    /**
+		     * Returns this Long with bits arithmetically shifted to the right by the given amount. This is an alias of {@link Long#shiftRight}.
+		     * @function
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Shifted Long
+		     */
+		    LongPrototype.shr = LongPrototype.shiftRight;
+
+		    /**
+		     * Returns this Long with bits logically shifted to the right by the given amount.
+		     * @this {!Long}
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Shifted Long
+		     */
+		    LongPrototype.shiftRightUnsigned = function shiftRightUnsigned(numBits) {
+		      if (isLong(numBits)) numBits = numBits.toInt();
+		      if ((numBits &= 63) === 0) return this;
+		      if (numBits < 32)
+		        return fromBits(
+		          (this.low >>> numBits) | (this.high << (32 - numBits)),
+		          this.high >>> numBits,
+		          this.unsigned,
+		        );
+		      if (numBits === 32) return fromBits(this.high, 0, this.unsigned);
+		      return fromBits(this.high >>> (numBits - 32), 0, this.unsigned);
+		    };
+
+		    /**
+		     * Returns this Long with bits logically shifted to the right by the given amount. This is an alias of {@link Long#shiftRightUnsigned}.
+		     * @function
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Shifted Long
+		     */
+		    LongPrototype.shru = LongPrototype.shiftRightUnsigned;
+
+		    /**
+		     * Returns this Long with bits logically shifted to the right by the given amount. This is an alias of {@link Long#shiftRightUnsigned}.
+		     * @function
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Shifted Long
+		     */
+		    LongPrototype.shr_u = LongPrototype.shiftRightUnsigned;
+
+		    /**
+		     * Returns this Long with bits rotated to the left by the given amount.
+		     * @this {!Long}
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Rotated Long
+		     */
+		    LongPrototype.rotateLeft = function rotateLeft(numBits) {
+		      var b;
+		      if (isLong(numBits)) numBits = numBits.toInt();
+		      if ((numBits &= 63) === 0) return this;
+		      if (numBits === 32) return fromBits(this.high, this.low, this.unsigned);
+		      if (numBits < 32) {
+		        b = 32 - numBits;
+		        return fromBits(
+		          (this.low << numBits) | (this.high >>> b),
+		          (this.high << numBits) | (this.low >>> b),
+		          this.unsigned,
+		        );
+		      }
+		      numBits -= 32;
 		      b = 32 - numBits;
-		      return fromBits(this.low << numBits | this.high >>> b, this.high << numBits | this.low >>> b, this.unsigned);
-		    }
-		  
-		    numBits -= 32;
-		    b = 32 - numBits;
-		    return fromBits(this.high << numBits | this.low >>> b, this.low << numBits | this.high >>> b, this.unsigned);
-		  };
-		  /**
-		   * Returns this Long with bits rotated to the left by the given amount. This is an alias of {@link Long#rotateLeft}.
-		   * @function
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Rotated Long
-		   */
-		  
-		  
-		  LongPrototype.rotl = LongPrototype.rotateLeft;
-		  /**
-		   * Returns this Long with bits rotated to the right by the given amount.
-		   * @this {!Long}
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Rotated Long
-		   */
-		  
-		  LongPrototype.rotateRight = function rotateRight(numBits) {
-		    var b;
-		    if (isLong(numBits)) numBits = numBits.toInt();
-		    if ((numBits &= 63) === 0) return this;
-		    if (numBits === 32) return fromBits(this.high, this.low, this.unsigned);
-		  
-		    if (numBits < 32) {
+		      return fromBits(
+		        (this.high << numBits) | (this.low >>> b),
+		        (this.low << numBits) | (this.high >>> b),
+		        this.unsigned,
+		      );
+		    };
+		    /**
+		     * Returns this Long with bits rotated to the left by the given amount. This is an alias of {@link Long#rotateLeft}.
+		     * @function
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Rotated Long
+		     */
+		    LongPrototype.rotl = LongPrototype.rotateLeft;
+
+		    /**
+		     * Returns this Long with bits rotated to the right by the given amount.
+		     * @this {!Long}
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Rotated Long
+		     */
+		    LongPrototype.rotateRight = function rotateRight(numBits) {
+		      var b;
+		      if (isLong(numBits)) numBits = numBits.toInt();
+		      if ((numBits &= 63) === 0) return this;
+		      if (numBits === 32) return fromBits(this.high, this.low, this.unsigned);
+		      if (numBits < 32) {
+		        b = 32 - numBits;
+		        return fromBits(
+		          (this.high << b) | (this.low >>> numBits),
+		          (this.low << b) | (this.high >>> numBits),
+		          this.unsigned,
+		        );
+		      }
+		      numBits -= 32;
 		      b = 32 - numBits;
-		      return fromBits(this.high << b | this.low >>> numBits, this.low << b | this.high >>> numBits, this.unsigned);
+		      return fromBits(
+		        (this.low << b) | (this.high >>> numBits),
+		        (this.high << b) | (this.low >>> numBits),
+		        this.unsigned,
+		      );
+		    };
+		    /**
+		     * Returns this Long with bits rotated to the right by the given amount. This is an alias of {@link Long#rotateRight}.
+		     * @function
+		     * @param {number|!Long} numBits Number of bits
+		     * @returns {!Long} Rotated Long
+		     */
+		    LongPrototype.rotr = LongPrototype.rotateRight;
+
+		    /**
+		     * Converts this Long to signed.
+		     * @this {!Long}
+		     * @returns {!Long} Signed long
+		     */
+		    LongPrototype.toSigned = function toSigned() {
+		      if (!this.unsigned) return this;
+		      return fromBits(this.low, this.high, false);
+		    };
+
+		    /**
+		     * Converts this Long to unsigned.
+		     * @this {!Long}
+		     * @returns {!Long} Unsigned long
+		     */
+		    LongPrototype.toUnsigned = function toUnsigned() {
+		      if (this.unsigned) return this;
+		      return fromBits(this.low, this.high, true);
+		    };
+
+		    /**
+		     * Converts this Long to its byte representation.
+		     * @param {boolean=} le Whether little or big endian, defaults to big endian
+		     * @this {!Long}
+		     * @returns {!Array.<number>} Byte representation
+		     */
+		    LongPrototype.toBytes = function toBytes(le) {
+		      return le ? this.toBytesLE() : this.toBytesBE();
+		    };
+
+		    /**
+		     * Converts this Long to its little endian byte representation.
+		     * @this {!Long}
+		     * @returns {!Array.<number>} Little endian byte representation
+		     */
+		    LongPrototype.toBytesLE = function toBytesLE() {
+		      var hi = this.high,
+		        lo = this.low;
+		      return [
+		        lo & 0xff,
+		        (lo >>> 8) & 0xff,
+		        (lo >>> 16) & 0xff,
+		        lo >>> 24,
+		        hi & 0xff,
+		        (hi >>> 8) & 0xff,
+		        (hi >>> 16) & 0xff,
+		        hi >>> 24,
+		      ];
+		    };
+
+		    /**
+		     * Converts this Long to its big endian byte representation.
+		     * @this {!Long}
+		     * @returns {!Array.<number>} Big endian byte representation
+		     */
+		    LongPrototype.toBytesBE = function toBytesBE() {
+		      var hi = this.high,
+		        lo = this.low;
+		      return [
+		        hi >>> 24,
+		        (hi >>> 16) & 0xff,
+		        (hi >>> 8) & 0xff,
+		        hi & 0xff,
+		        lo >>> 24,
+		        (lo >>> 16) & 0xff,
+		        (lo >>> 8) & 0xff,
+		        lo & 0xff,
+		      ];
+		    };
+
+		    /**
+		     * Creates a Long from its byte representation.
+		     * @param {!Array.<number>} bytes Byte representation
+		     * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
+		     * @param {boolean=} le Whether little or big endian, defaults to big endian
+		     * @returns {Long} The corresponding Long value
+		     */
+		    Long.fromBytes = function fromBytes(bytes, unsigned, le) {
+		      return le
+		        ? Long.fromBytesLE(bytes, unsigned)
+		        : Long.fromBytesBE(bytes, unsigned);
+		    };
+
+		    /**
+		     * Creates a Long from its little endian byte representation.
+		     * @param {!Array.<number>} bytes Little endian byte representation
+		     * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
+		     * @returns {Long} The corresponding Long value
+		     */
+		    Long.fromBytesLE = function fromBytesLE(bytes, unsigned) {
+		      return new Long(
+		        bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24),
+		        bytes[4] | (bytes[5] << 8) | (bytes[6] << 16) | (bytes[7] << 24),
+		        unsigned,
+		      );
+		    };
+
+		    /**
+		     * Creates a Long from its big endian byte representation.
+		     * @param {!Array.<number>} bytes Big endian byte representation
+		     * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
+		     * @returns {Long} The corresponding Long value
+		     */
+		    Long.fromBytesBE = function fromBytesBE(bytes, unsigned) {
+		      return new Long(
+		        (bytes[4] << 24) | (bytes[5] << 16) | (bytes[6] << 8) | bytes[7],
+		        (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3],
+		        unsigned,
+		      );
+		    };
+
+		    // Support conversion to/from BigInt where available
+		    if (typeof BigInt === "function") {
+		      /**
+		       * Returns a Long representing the given big integer.
+		       * @function
+		       * @param {number} value The big integer value
+		       * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
+		       * @returns {!Long} The corresponding Long value
+		       */
+		      Long.fromBigInt = function fromBigInt(value, unsigned) {
+		        var lowBits = Number(BigInt.asIntN(32, value));
+		        var highBits = Number(BigInt.asIntN(32, value >> BigInt(32)));
+		        return fromBits(lowBits, highBits, unsigned);
+		      };
+
+		      // Override
+		      Long.fromValue = function fromValueWithBigInt(value, unsigned) {
+		        if (typeof value === "bigint") return Long.fromBigInt(value, unsigned);
+		        return fromValue(value, unsigned);
+		      };
+
+		      /**
+		       * Converts the Long to its big integer representation.
+		       * @this {!Long}
+		       * @returns {bigint}
+		       */
+		      LongPrototype.toBigInt = function toBigInt() {
+		        var lowBigInt = BigInt(this.low >>> 0);
+		        var highBigInt = BigInt(this.unsigned ? this.high >>> 0 : this.high);
+		        return (highBigInt << BigInt(32)) | lowBigInt;
+		      };
 		    }
-		  
-		    numBits -= 32;
-		    b = 32 - numBits;
-		    return fromBits(this.low << b | this.high >>> numBits, this.high << b | this.low >>> numBits, this.unsigned);
-		  };
-		  /**
-		   * Returns this Long with bits rotated to the right by the given amount. This is an alias of {@link Long#rotateRight}.
-		   * @function
-		   * @param {number|!Long} numBits Number of bits
-		   * @returns {!Long} Rotated Long
-		   */
-		  
-		  
-		  LongPrototype.rotr = LongPrototype.rotateRight;
-		  /**
-		   * Converts this Long to signed.
-		   * @this {!Long}
-		   * @returns {!Long} Signed long
-		   */
-		  
-		  LongPrototype.toSigned = function toSigned() {
-		    if (!this.unsigned) return this;
-		    return fromBits(this.low, this.high, false);
-		  };
-		  /**
-		   * Converts this Long to unsigned.
-		   * @this {!Long}
-		   * @returns {!Long} Unsigned long
-		   */
-		  
-		  
-		  LongPrototype.toUnsigned = function toUnsigned() {
-		    if (this.unsigned) return this;
-		    return fromBits(this.low, this.high, true);
-		  };
-		  /**
-		   * Converts this Long to its byte representation.
-		   * @param {boolean=} le Whether little or big endian, defaults to big endian
-		   * @this {!Long}
-		   * @returns {!Array.<number>} Byte representation
-		   */
-		  
-		  
-		  LongPrototype.toBytes = function toBytes(le) {
-		    return le ? this.toBytesLE() : this.toBytesBE();
-		  };
-		  /**
-		   * Converts this Long to its little endian byte representation.
-		   * @this {!Long}
-		   * @returns {!Array.<number>} Little endian byte representation
-		   */
-		  
-		  
-		  LongPrototype.toBytesLE = function toBytesLE() {
-		    var hi = this.high,
-		        lo = this.low;
-		    return [lo & 0xff, lo >>> 8 & 0xff, lo >>> 16 & 0xff, lo >>> 24, hi & 0xff, hi >>> 8 & 0xff, hi >>> 16 & 0xff, hi >>> 24];
-		  };
-		  /**
-		   * Converts this Long to its big endian byte representation.
-		   * @this {!Long}
-		   * @returns {!Array.<number>} Big endian byte representation
-		   */
-		  
-		  
-		  LongPrototype.toBytesBE = function toBytesBE() {
-		    var hi = this.high,
-		        lo = this.low;
-		    return [hi >>> 24, hi >>> 16 & 0xff, hi >>> 8 & 0xff, hi & 0xff, lo >>> 24, lo >>> 16 & 0xff, lo >>> 8 & 0xff, lo & 0xff];
-		  };
-		  /**
-		   * Creates a Long from its byte representation.
-		   * @param {!Array.<number>} bytes Byte representation
-		   * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
-		   * @param {boolean=} le Whether little or big endian, defaults to big endian
-		   * @returns {Long} The corresponding Long value
-		   */
-		  
-		  
-		  Long.fromBytes = function fromBytes(bytes, unsigned, le) {
-		    return le ? Long.fromBytesLE(bytes, unsigned) : Long.fromBytesBE(bytes, unsigned);
-		  };
-		  /**
-		   * Creates a Long from its little endian byte representation.
-		   * @param {!Array.<number>} bytes Little endian byte representation
-		   * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
-		   * @returns {Long} The corresponding Long value
-		   */
-		  
-		  
-		  Long.fromBytesLE = function fromBytesLE(bytes, unsigned) {
-		    return new Long(bytes[0] | bytes[1] << 8 | bytes[2] << 16 | bytes[3] << 24, bytes[4] | bytes[5] << 8 | bytes[6] << 16 | bytes[7] << 24, unsigned);
-		  };
-		  /**
-		   * Creates a Long from its big endian byte representation.
-		   * @param {!Array.<number>} bytes Big endian byte representation
-		   * @param {boolean=} unsigned Whether unsigned or not, defaults to signed
-		   * @returns {Long} The corresponding Long value
-		   */
-		  
-		  
-		  Long.fromBytesBE = function fromBytesBE(bytes, unsigned) {
-		    return new Long(bytes[4] << 24 | bytes[5] << 16 | bytes[6] << 8 | bytes[7], bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3], unsigned);
-		  };
-		  
-		  var _default = Long;
-		  exports.default = _default;
-		  return "default" in exports ? exports.default : exports;
-		})({});
-		module.exports = Long; 
-	} (umd));
-	return umd.exports;
+		    (_exports.default = Long);
+		  },
+		); 
+	} (umd$1, umd$1.exports));
+	return umd$1.exports;
 }
 
 var string = {};
@@ -14204,56 +14381,74 @@ function requireBomHandling () {
 	if (hasRequiredBomHandling) return bomHandling;
 	hasRequiredBomHandling = 1;
 
-	var BOMChar = '\uFEFF';
+	var BOMChar = "\uFEFF";
 
 	bomHandling.PrependBOM = PrependBOMWrapper;
-	function PrependBOMWrapper(encoder, options) {
-	    this.encoder = encoder;
-	    this.addBOM = true;
+	function PrependBOMWrapper (encoder, options) {
+	  this.encoder = encoder;
+	  this.addBOM = true;
 	}
 
-	PrependBOMWrapper.prototype.write = function(str) {
-	    if (this.addBOM) {
-	        str = BOMChar + str;
-	        this.addBOM = false;
-	    }
+	PrependBOMWrapper.prototype.write = function (str) {
+	  if (this.addBOM) {
+	    str = BOMChar + str;
+	    this.addBOM = false;
+	  }
 
-	    return this.encoder.write(str);
+	  return this.encoder.write(str)
 	};
 
-	PrependBOMWrapper.prototype.end = function() {
-	    return this.encoder.end();
+	PrependBOMWrapper.prototype.end = function () {
+	  return this.encoder.end()
 	};
 
-
-	//------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	bomHandling.StripBOM = StripBOMWrapper;
-	function StripBOMWrapper(decoder, options) {
-	    this.decoder = decoder;
-	    this.pass = false;
-	    this.options = options || {};
+	function StripBOMWrapper (decoder, options) {
+	  this.decoder = decoder;
+	  this.pass = false;
+	  this.options = options || {};
 	}
 
-	StripBOMWrapper.prototype.write = function(buf) {
-	    var res = this.decoder.write(buf);
-	    if (this.pass || !res)
-	        return res;
+	StripBOMWrapper.prototype.write = function (buf) {
+	  var res = this.decoder.write(buf);
+	  if (this.pass || !res) { return res }
 
-	    if (res[0] === BOMChar) {
-	        res = res.slice(1);
-	        if (typeof this.options.stripBOM === 'function')
-	            this.options.stripBOM();
-	    }
+	  if (res[0] === BOMChar) {
+	    res = res.slice(1);
+	    if (typeof this.options.stripBOM === "function") { this.options.stripBOM(); }
+	  }
 
-	    this.pass = true;
-	    return res;
+	  this.pass = true;
+	  return res
 	};
 
-	StripBOMWrapper.prototype.end = function() {
-	    return this.decoder.end();
+	StripBOMWrapper.prototype.end = function () {
+	  return this.decoder.end()
 	};
 	return bomHandling;
+}
+
+var mergeExports;
+var hasRequiredMergeExports;
+
+function requireMergeExports () {
+	if (hasRequiredMergeExports) return mergeExports;
+	hasRequiredMergeExports = 1;
+
+	var hasOwn = typeof Object.hasOwn === "undefined" ? Function.call.bind(Object.prototype.hasOwnProperty) : Object.hasOwn;
+
+	function mergeModules (target, module) {
+	  for (var key in module) {
+	    if (hasOwn(module, key)) {
+	      target[key] = module[key];
+	    }
+	  }
+	}
+
+	mergeExports = mergeModules;
+	return mergeExports;
 }
 
 var encodings = {};
@@ -14269,197 +14464,217 @@ function requireInternal () {
 	// Export Node.js internal encodings.
 
 	internal = {
-	    // Encodings
-	    utf8:   { type: "_internal", bomAware: true},
-	    cesu8:  { type: "_internal", bomAware: true},
-	    unicode11utf8: "utf8",
+	  // Encodings
+	  utf8: { type: "_internal", bomAware: true },
+	  cesu8: { type: "_internal", bomAware: true },
+	  unicode11utf8: "utf8",
 
-	    ucs2:   { type: "_internal", bomAware: true},
-	    utf16le: "ucs2",
+	  ucs2: { type: "_internal", bomAware: true },
+	  utf16le: "ucs2",
 
-	    binary: { type: "_internal" },
-	    base64: { type: "_internal" },
-	    hex:    { type: "_internal" },
+	  binary: { type: "_internal" },
+	  base64: { type: "_internal" },
+	  hex: { type: "_internal" },
 
-	    // Codec.
-	    _internal: InternalCodec,
+	  // Codec.
+	  _internal: InternalCodec
 	};
 
-	//------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
-	function InternalCodec(codecOptions, iconv) {
-	    this.enc = codecOptions.encodingName;
-	    this.bomAware = codecOptions.bomAware;
+	function InternalCodec (codecOptions, iconv) {
+	  this.enc = codecOptions.encodingName;
+	  this.bomAware = codecOptions.bomAware;
 
-	    if (this.enc === "base64")
-	        this.encoder = InternalEncoderBase64;
-	    else if (this.enc === "cesu8") {
-	        this.enc = "utf8"; // Use utf8 for decoding.
-	        this.encoder = InternalEncoderCesu8;
+	  if (this.enc === "base64") { this.encoder = InternalEncoderBase64; } else if (this.enc === "utf8") { this.encoder = InternalEncoderUtf8; } else if (this.enc === "cesu8") {
+	    this.enc = "utf8"; // Use utf8 for decoding.
+	    this.encoder = InternalEncoderCesu8;
 
-	        // Add decoder for versions of Node not supporting CESU-8
-	        if (Buffer.from('eda0bdedb2a9', 'hex').toString() !== '💩') {
-	            this.decoder = InternalDecoderCesu8;
-	            this.defaultCharUnicode = iconv.defaultCharUnicode;
-	        }
+	    // Add decoder for versions of Node not supporting CESU-8
+	    if (Buffer.from("eda0bdedb2a9", "hex").toString() !== "💩") {
+	      this.decoder = InternalDecoderCesu8;
+	      this.defaultCharUnicode = iconv.defaultCharUnicode;
 	    }
+	  }
 	}
 
 	InternalCodec.prototype.encoder = InternalEncoder;
 	InternalCodec.prototype.decoder = InternalDecoder;
 
-	//------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	// We use node.js internal decoder. Its signature is the same as ours.
 	var StringDecoder = require$$1$3.StringDecoder;
 
-	if (!StringDecoder.prototype.end) // Node v0.8 doesn't have this method.
-	    StringDecoder.prototype.end = function() {};
-
-
-	function InternalDecoder(options, codec) {
-	    this.decoder = new StringDecoder(codec.enc);
+	function InternalDecoder (options, codec) {
+	  this.decoder = new StringDecoder(codec.enc);
 	}
 
-	InternalDecoder.prototype.write = function(buf) {
-	    if (!Buffer.isBuffer(buf)) {
-	        buf = Buffer.from(buf);
-	    }
+	InternalDecoder.prototype.write = function (buf) {
+	  if (!Buffer.isBuffer(buf)) {
+	    buf = Buffer.from(buf);
+	  }
 
-	    return this.decoder.write(buf);
+	  return this.decoder.write(buf)
 	};
 
-	InternalDecoder.prototype.end = function() {
-	    return this.decoder.end();
+	InternalDecoder.prototype.end = function () {
+	  return this.decoder.end()
 	};
 
-
-	//------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 	// Encoder is mostly trivial
 
-	function InternalEncoder(options, codec) {
-	    this.enc = codec.enc;
+	function InternalEncoder (options, codec) {
+	  this.enc = codec.enc;
 	}
 
-	InternalEncoder.prototype.write = function(str) {
-	    return Buffer.from(str, this.enc);
+	InternalEncoder.prototype.write = function (str) {
+	  return Buffer.from(str, this.enc)
 	};
 
-	InternalEncoder.prototype.end = function() {
+	InternalEncoder.prototype.end = function () {
 	};
 
-
-	//------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 	// Except base64 encoder, which must keep its state.
 
-	function InternalEncoderBase64(options, codec) {
-	    this.prevStr = '';
+	function InternalEncoderBase64 (options, codec) {
+	  this.prevStr = "";
 	}
 
-	InternalEncoderBase64.prototype.write = function(str) {
-	    str = this.prevStr + str;
-	    var completeQuads = str.length - (str.length % 4);
-	    this.prevStr = str.slice(completeQuads);
-	    str = str.slice(0, completeQuads);
+	InternalEncoderBase64.prototype.write = function (str) {
+	  str = this.prevStr + str;
+	  var completeQuads = str.length - (str.length % 4);
+	  this.prevStr = str.slice(completeQuads);
+	  str = str.slice(0, completeQuads);
 
-	    return Buffer.from(str, "base64");
+	  return Buffer.from(str, "base64")
 	};
 
-	InternalEncoderBase64.prototype.end = function() {
-	    return Buffer.from(this.prevStr, "base64");
+	InternalEncoderBase64.prototype.end = function () {
+	  return Buffer.from(this.prevStr, "base64")
 	};
 
-
-	//------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 	// CESU-8 encoder is also special.
 
-	function InternalEncoderCesu8(options, codec) {
+	function InternalEncoderCesu8 (options, codec) {
 	}
 
-	InternalEncoderCesu8.prototype.write = function(str) {
-	    var buf = Buffer.alloc(str.length * 3), bufIdx = 0;
-	    for (var i = 0; i < str.length; i++) {
-	        var charCode = str.charCodeAt(i);
-	        // Naive implementation, but it works because CESU-8 is especially easy
-	        // to convert from UTF-16 (which all JS strings are encoded in).
-	        if (charCode < 0x80)
-	            buf[bufIdx++] = charCode;
-	        else if (charCode < 0x800) {
-	            buf[bufIdx++] = 0xC0 + (charCode >>> 6);
-	            buf[bufIdx++] = 0x80 + (charCode & 0x3f);
-	        }
-	        else { // charCode will always be < 0x10000 in javascript.
-	            buf[bufIdx++] = 0xE0 + (charCode >>> 12);
-	            buf[bufIdx++] = 0x80 + ((charCode >>> 6) & 0x3f);
-	            buf[bufIdx++] = 0x80 + (charCode & 0x3f);
-	        }
+	InternalEncoderCesu8.prototype.write = function (str) {
+	  var buf = Buffer.alloc(str.length * 3); var bufIdx = 0;
+	  for (var i = 0; i < str.length; i++) {
+	    var charCode = str.charCodeAt(i);
+	    // Naive implementation, but it works because CESU-8 is especially easy
+	    // to convert from UTF-16 (which all JS strings are encoded in).
+	    if (charCode < 0x80) { buf[bufIdx++] = charCode; } else if (charCode < 0x800) {
+	      buf[bufIdx++] = 0xC0 + (charCode >>> 6);
+	      buf[bufIdx++] = 0x80 + (charCode & 0x3f);
+	    } else { // charCode will always be < 0x10000 in javascript.
+	      buf[bufIdx++] = 0xE0 + (charCode >>> 12);
+	      buf[bufIdx++] = 0x80 + ((charCode >>> 6) & 0x3f);
+	      buf[bufIdx++] = 0x80 + (charCode & 0x3f);
 	    }
-	    return buf.slice(0, bufIdx);
+	  }
+	  return buf.slice(0, bufIdx)
 	};
 
-	InternalEncoderCesu8.prototype.end = function() {
+	InternalEncoderCesu8.prototype.end = function () {
 	};
 
-	//------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 	// CESU-8 decoder is not implemented in Node v4.0+
 
-	function InternalDecoderCesu8(options, codec) {
-	    this.acc = 0;
-	    this.contBytes = 0;
-	    this.accBytes = 0;
-	    this.defaultCharUnicode = codec.defaultCharUnicode;
+	function InternalDecoderCesu8 (options, codec) {
+	  this.acc = 0;
+	  this.contBytes = 0;
+	  this.accBytes = 0;
+	  this.defaultCharUnicode = codec.defaultCharUnicode;
 	}
 
-	InternalDecoderCesu8.prototype.write = function(buf) {
-	    var acc = this.acc, contBytes = this.contBytes, accBytes = this.accBytes, 
-	        res = '';
-	    for (var i = 0; i < buf.length; i++) {
-	        var curByte = buf[i];
-	        if ((curByte & 0xC0) !== 0x80) { // Leading byte
-	            if (contBytes > 0) { // Previous code is invalid
-	                res += this.defaultCharUnicode;
-	                contBytes = 0;
-	            }
+	InternalDecoderCesu8.prototype.write = function (buf) {
+	  var acc = this.acc; var contBytes = this.contBytes; var accBytes = this.accBytes;
+	  var res = "";
+	  for (var i = 0; i < buf.length; i++) {
+	    var curByte = buf[i];
+	    if ((curByte & 0xC0) !== 0x80) { // Leading byte
+	      if (contBytes > 0) { // Previous code is invalid
+	        res += this.defaultCharUnicode;
+	        contBytes = 0;
+	      }
 
-	            if (curByte < 0x80) { // Single-byte code
-	                res += String.fromCharCode(curByte);
-	            } else if (curByte < 0xE0) { // Two-byte code
-	                acc = curByte & 0x1F;
-	                contBytes = 1; accBytes = 1;
-	            } else if (curByte < 0xF0) { // Three-byte code
-	                acc = curByte & 0x0F;
-	                contBytes = 2; accBytes = 1;
-	            } else { // Four or more are not supported for CESU-8.
-	                res += this.defaultCharUnicode;
-	            }
-	        } else { // Continuation byte
-	            if (contBytes > 0) { // We're waiting for it.
-	                acc = (acc << 6) | (curByte & 0x3f);
-	                contBytes--; accBytes++;
-	                if (contBytes === 0) {
-	                    // Check for overlong encoding, but support Modified UTF-8 (encoding NULL as C0 80)
-	                    if (accBytes === 2 && acc < 0x80 && acc > 0)
-	                        res += this.defaultCharUnicode;
-	                    else if (accBytes === 3 && acc < 0x800)
-	                        res += this.defaultCharUnicode;
-	                    else
-	                        // Actually add character.
-	                        res += String.fromCharCode(acc);
-	                }
-	            } else { // Unexpected continuation byte
-	                res += this.defaultCharUnicode;
-	            }
+	      if (curByte < 0x80) { // Single-byte code
+	        res += String.fromCharCode(curByte);
+	      } else if (curByte < 0xE0) { // Two-byte code
+	        acc = curByte & 0x1F;
+	        contBytes = 1; accBytes = 1;
+	      } else if (curByte < 0xF0) { // Three-byte code
+	        acc = curByte & 0x0F;
+	        contBytes = 2; accBytes = 1;
+	      } else { // Four or more are not supported for CESU-8.
+	        res += this.defaultCharUnicode;
+	      }
+	    } else { // Continuation byte
+	      if (contBytes > 0) { // We're waiting for it.
+	        acc = (acc << 6) | (curByte & 0x3f);
+	        contBytes--; accBytes++;
+	        if (contBytes === 0) {
+	          // Check for overlong encoding, but support Modified UTF-8 (encoding NULL as C0 80)
+	          if (accBytes === 2 && acc < 0x80 && acc > 0) {
+	            res += this.defaultCharUnicode;
+	          } else if (accBytes === 3 && acc < 0x800) {
+	            res += this.defaultCharUnicode;
+	          } else {
+	            // Actually add character.
+	            res += String.fromCharCode(acc);
+	          }
 	        }
+	      } else { // Unexpected continuation byte
+	        res += this.defaultCharUnicode;
+	      }
 	    }
-	    this.acc = acc; this.contBytes = contBytes; this.accBytes = accBytes;
-	    return res;
+	  }
+	  this.acc = acc; this.contBytes = contBytes; this.accBytes = accBytes;
+	  return res
 	};
 
-	InternalDecoderCesu8.prototype.end = function() {
-	    var res = 0;
-	    if (this.contBytes > 0)
-	        res += this.defaultCharUnicode;
-	    return res;
+	InternalDecoderCesu8.prototype.end = function () {
+	  var res = 0;
+	  if (this.contBytes > 0) { res += this.defaultCharUnicode; }
+	  return res
+	};
+
+	// ------------------------------------------------------------------------------
+	// check the chunk boundaries for surrogate pair
+
+	function InternalEncoderUtf8 (options, codec) {
+	  this.highSurrogate = "";
+	}
+
+	InternalEncoderUtf8.prototype.write = function (str) {
+	  if (this.highSurrogate) {
+	    str = this.highSurrogate + str;
+	    this.highSurrogate = "";
+	  }
+
+	  if (str.length > 0) {
+	    var charCode = str.charCodeAt(str.length - 1);
+	    if (charCode >= 0xd800 && charCode < 0xdc00) {
+	      this.highSurrogate = str[str.length - 1];
+	      str = str.slice(0, str.length - 1);
+	    }
+	  }
+
+	  return Buffer.from(str, this.enc)
+	};
+
+	InternalEncoderUtf8.prototype.end = function () {
+	  if (this.highSurrogate) {
+	    var str = this.highSurrogate;
+	    this.highSurrogate = "";
+	    return Buffer.from(str, this.enc)
+	  }
 	};
 	return internal;
 }
@@ -14478,179 +14693,169 @@ function requireUtf32 () {
 
 	utf32._utf32 = Utf32Codec;
 
-	function Utf32Codec(codecOptions, iconv) {
-	    this.iconv = iconv;
-	    this.bomAware = true;
-	    this.isLE = codecOptions.isLE;
+	function Utf32Codec (codecOptions, iconv) {
+	  this.iconv = iconv;
+	  this.bomAware = true;
+	  this.isLE = codecOptions.isLE;
 	}
 
-	utf32.utf32le = { type: '_utf32', isLE: true };
-	utf32.utf32be = { type: '_utf32', isLE: false };
+	utf32.utf32le = { type: "_utf32", isLE: true };
+	utf32.utf32be = { type: "_utf32", isLE: false };
 
 	// Aliases
-	utf32.ucs4le = 'utf32le';
-	utf32.ucs4be = 'utf32be';
+	utf32.ucs4le = "utf32le";
+	utf32.ucs4be = "utf32be";
 
 	Utf32Codec.prototype.encoder = Utf32Encoder;
 	Utf32Codec.prototype.decoder = Utf32Decoder;
 
 	// -- Encoding
 
-	function Utf32Encoder(options, codec) {
-	    this.isLE = codec.isLE;
-	    this.highSurrogate = 0;
+	function Utf32Encoder (options, codec) {
+	  this.isLE = codec.isLE;
+	  this.highSurrogate = 0;
 	}
 
-	Utf32Encoder.prototype.write = function(str) {
-	    var src = Buffer.from(str, 'ucs2');
-	    var dst = Buffer.alloc(src.length * 2);
-	    var write32 = this.isLE ? dst.writeUInt32LE : dst.writeUInt32BE;
-	    var offset = 0;
+	Utf32Encoder.prototype.write = function (str) {
+	  var src = Buffer.from(str, "ucs2");
+	  var dst = Buffer.alloc(src.length * 2);
+	  var write32 = this.isLE ? dst.writeUInt32LE : dst.writeUInt32BE;
+	  var offset = 0;
 
-	    for (var i = 0; i < src.length; i += 2) {
-	        var code = src.readUInt16LE(i);
-	        var isHighSurrogate = (0xD800 <= code && code < 0xDC00);
-	        var isLowSurrogate = (0xDC00 <= code && code < 0xE000);
+	  for (var i = 0; i < src.length; i += 2) {
+	    var code = src.readUInt16LE(i);
+	    var isHighSurrogate = (code >= 0xD800 && code < 0xDC00);
+	    var isLowSurrogate = (code >= 0xDC00 && code < 0xE000);
 
-	        if (this.highSurrogate) {
-	            if (isHighSurrogate || !isLowSurrogate) {
-	                // There shouldn't be two high surrogates in a row, nor a high surrogate which isn't followed by a low
-	                // surrogate. If this happens, keep the pending high surrogate as a stand-alone semi-invalid character
-	                // (technically wrong, but expected by some applications, like Windows file names).
-	                write32.call(dst, this.highSurrogate, offset);
-	                offset += 4;
-	            }
-	            else {
-	                // Create 32-bit value from high and low surrogates;
-	                var codepoint = (((this.highSurrogate - 0xD800) << 10) | (code - 0xDC00)) + 0x10000;
+	    if (this.highSurrogate) {
+	      if (isHighSurrogate || !isLowSurrogate) {
+	        // There shouldn't be two high surrogates in a row, nor a high surrogate which isn't followed by a low
+	        // surrogate. If this happens, keep the pending high surrogate as a stand-alone semi-invalid character
+	        // (technically wrong, but expected by some applications, like Windows file names).
+	        write32.call(dst, this.highSurrogate, offset);
+	        offset += 4;
+	      } else {
+	        // Create 32-bit value from high and low surrogates;
+	        var codepoint = (((this.highSurrogate - 0xD800) << 10) | (code - 0xDC00)) + 0x10000;
 
-	                write32.call(dst, codepoint, offset);
-	                offset += 4;
-	                this.highSurrogate = 0;
+	        write32.call(dst, codepoint, offset);
+	        offset += 4;
+	        this.highSurrogate = 0;
 
-	                continue;
-	            }
-	        }
-
-	        if (isHighSurrogate)
-	            this.highSurrogate = code;
-	        else {
-	            // Even if the current character is a low surrogate, with no previous high surrogate, we'll
-	            // encode it as a semi-invalid stand-alone character for the same reasons expressed above for
-	            // unpaired high surrogates.
-	            write32.call(dst, code, offset);
-	            offset += 4;
-	            this.highSurrogate = 0;
-	        }
+	        continue
+	      }
 	    }
 
-	    if (offset < dst.length)
-	        dst = dst.slice(0, offset);
+	    if (isHighSurrogate) { this.highSurrogate = code; } else {
+	      // Even if the current character is a low surrogate, with no previous high surrogate, we'll
+	      // encode it as a semi-invalid stand-alone character for the same reasons expressed above for
+	      // unpaired high surrogates.
+	      write32.call(dst, code, offset);
+	      offset += 4;
+	      this.highSurrogate = 0;
+	    }
+	  }
 
-	    return dst;
+	  if (offset < dst.length) { dst = dst.slice(0, offset); }
+
+	  return dst
 	};
 
-	Utf32Encoder.prototype.end = function() {
-	    // Treat any leftover high surrogate as a semi-valid independent character.
-	    if (!this.highSurrogate)
-	        return;
+	Utf32Encoder.prototype.end = function () {
+	  // Treat any leftover high surrogate as a semi-valid independent character.
+	  if (!this.highSurrogate) { return }
 
-	    var buf = Buffer.alloc(4);
+	  var buf = Buffer.alloc(4);
 
-	    if (this.isLE)
-	        buf.writeUInt32LE(this.highSurrogate, 0);
-	    else
-	        buf.writeUInt32BE(this.highSurrogate, 0);
+	  if (this.isLE) { buf.writeUInt32LE(this.highSurrogate, 0); } else { buf.writeUInt32BE(this.highSurrogate, 0); }
 
-	    this.highSurrogate = 0;
+	  this.highSurrogate = 0;
 
-	    return buf;
+	  return buf
 	};
 
 	// -- Decoding
 
-	function Utf32Decoder(options, codec) {
-	    this.isLE = codec.isLE;
-	    this.badChar = codec.iconv.defaultCharUnicode.charCodeAt(0);
-	    this.overflow = [];
+	function Utf32Decoder (options, codec) {
+	  this.isLE = codec.isLE;
+	  this.badChar = codec.iconv.defaultCharUnicode.charCodeAt(0);
+	  this.overflow = [];
 	}
 
-	Utf32Decoder.prototype.write = function(src) {
-	    if (src.length === 0)
-	        return '';
+	Utf32Decoder.prototype.write = function (src) {
+	  if (src.length === 0) { return "" }
 
-	    var i = 0;
-	    var codepoint = 0;
-	    var dst = Buffer.alloc(src.length + 4);
-	    var offset = 0;
-	    var isLE = this.isLE;
-	    var overflow = this.overflow;
-	    var badChar = this.badChar;
+	  var i = 0;
+	  var codepoint = 0;
+	  var dst = Buffer.alloc(src.length + 4);
+	  var offset = 0;
+	  var isLE = this.isLE;
+	  var overflow = this.overflow;
+	  var badChar = this.badChar;
 
-	    if (overflow.length > 0) {
-	        for (; i < src.length && overflow.length < 4; i++)
-	            overflow.push(src[i]);
-	        
-	        if (overflow.length === 4) {
-	            // NOTE: codepoint is a signed int32 and can be negative.
-	            // NOTE: We copied this block from below to help V8 optimize it (it works with array, not buffer).
-	            if (isLE) {
-	                codepoint = overflow[i] | (overflow[i+1] << 8) | (overflow[i+2] << 16) | (overflow[i+3] << 24);
-	            } else {
-	                codepoint = overflow[i+3] | (overflow[i+2] << 8) | (overflow[i+1] << 16) | (overflow[i] << 24);
-	            }
-	            overflow.length = 0;
+	  if (overflow.length > 0) {
+	    for (; i < src.length && overflow.length < 4; i++) { overflow.push(src[i]); }
 
-	            offset = _writeCodepoint(dst, offset, codepoint, badChar);
-	        }
+	    if (overflow.length === 4) {
+	      // NOTE: codepoint is a signed int32 and can be negative.
+	      // NOTE: We copied this block from below to help V8 optimize it (it works with array, not buffer).
+	      if (isLE) {
+	        codepoint = overflow[i] | (overflow[i + 1] << 8) | (overflow[i + 2] << 16) | (overflow[i + 3] << 24);
+	      } else {
+	        codepoint = overflow[i + 3] | (overflow[i + 2] << 8) | (overflow[i + 1] << 16) | (overflow[i] << 24);
+	      }
+	      overflow.length = 0;
+
+	      offset = _writeCodepoint(dst, offset, codepoint, badChar);
 	    }
+	  }
 
-	    // Main loop. Should be as optimized as possible.
-	    for (; i < src.length - 3; i += 4) {
-	        // NOTE: codepoint is a signed int32 and can be negative.
-	        if (isLE) {
-	            codepoint = src[i] | (src[i+1] << 8) | (src[i+2] << 16) | (src[i+3] << 24);
-	        } else {
-	            codepoint = src[i+3] | (src[i+2] << 8) | (src[i+1] << 16) | (src[i] << 24);
-	        }
-	        offset = _writeCodepoint(dst, offset, codepoint, badChar);
+	  // Main loop. Should be as optimized as possible.
+	  for (; i < src.length - 3; i += 4) {
+	    // NOTE: codepoint is a signed int32 and can be negative.
+	    if (isLE) {
+	      codepoint = src[i] | (src[i + 1] << 8) | (src[i + 2] << 16) | (src[i + 3] << 24);
+	    } else {
+	      codepoint = src[i + 3] | (src[i + 2] << 8) | (src[i + 1] << 16) | (src[i] << 24);
 	    }
+	    offset = _writeCodepoint(dst, offset, codepoint, badChar);
+	  }
 
-	    // Keep overflowing bytes.
-	    for (; i < src.length; i++) {
-	        overflow.push(src[i]);
-	    }
+	  // Keep overflowing bytes.
+	  for (; i < src.length; i++) {
+	    overflow.push(src[i]);
+	  }
 
-	    return dst.slice(0, offset).toString('ucs2');
+	  return dst.slice(0, offset).toString("ucs2")
 	};
 
-	function _writeCodepoint(dst, offset, codepoint, badChar) {
-	    // NOTE: codepoint is signed int32 and can be negative. We keep it that way to help V8 with optimizations.
-	    if (codepoint < 0 || codepoint > 0x10FFFF) {
-	        // Not a valid Unicode codepoint
-	        codepoint = badChar;
-	    } 
+	function _writeCodepoint (dst, offset, codepoint, badChar) {
+	  // NOTE: codepoint is signed int32 and can be negative. We keep it that way to help V8 with optimizations.
+	  if (codepoint < 0 || codepoint > 0x10FFFF) {
+	    // Not a valid Unicode codepoint
+	    codepoint = badChar;
+	  }
 
-	    // Ephemeral Planes: Write high surrogate.
-	    if (codepoint >= 0x10000) {
-	        codepoint -= 0x10000;
+	  // Ephemeral Planes: Write high surrogate.
+	  if (codepoint >= 0x10000) {
+	    codepoint -= 0x10000;
 
-	        var high = 0xD800 | (codepoint >> 10);
-	        dst[offset++] = high & 0xff;
-	        dst[offset++] = high >> 8;
+	    var high = 0xD800 | (codepoint >> 10);
+	    dst[offset++] = high & 0xff;
+	    dst[offset++] = high >> 8;
 
-	        // Low surrogate is written below.
-	        var codepoint = 0xDC00 | (codepoint & 0x3FF);
-	    }
+	    // Low surrogate is written below.
+	    var codepoint = 0xDC00 | (codepoint & 0x3FF);
+	  }
 
-	    // Write BMP char or low surrogate.
-	    dst[offset++] = codepoint & 0xff;
-	    dst[offset++] = codepoint >> 8;
+	  // Write BMP char or low surrogate.
+	  dst[offset++] = codepoint & 0xff;
+	  dst[offset++] = codepoint >> 8;
 
-	    return offset;
+	  return offset
 	}
-	Utf32Decoder.prototype.end = function() {
-	    this.overflow.length = 0;
+	Utf32Decoder.prototype.end = function () {
+	  this.overflow.length = 0;
 	};
 
 	// == UTF-32 Auto codec =============================================================
@@ -14661,10 +14866,10 @@ function requireUtf32 () {
 	// Encoder prepends BOM (which can be overridden with (addBOM: false}).
 
 	utf32.utf32 = Utf32AutoCodec;
-	utf32.ucs4 = 'utf32';
+	utf32.ucs4 = "utf32";
 
-	function Utf32AutoCodec(options, iconv) {
-	    this.iconv = iconv;
+	function Utf32AutoCodec (options, iconv) {
+	  this.iconv = iconv;
 	}
 
 	Utf32AutoCodec.prototype.encoder = Utf32AutoEncoder;
@@ -14672,121 +14877,119 @@ function requireUtf32 () {
 
 	// -- Encoding
 
-	function Utf32AutoEncoder(options, codec) {
-	    options = options || {};
+	function Utf32AutoEncoder (options, codec) {
+	  options = options || {};
 
-	    if (options.addBOM === undefined)
-	        options.addBOM = true;
+	  if (options.addBOM === undefined) {
+	    options.addBOM = true;
+	  }
 
-	    this.encoder = codec.iconv.getEncoder(options.defaultEncoding || 'utf-32le', options);
+	  this.encoder = codec.iconv.getEncoder(options.defaultEncoding || "utf-32le", options);
 	}
 
-	Utf32AutoEncoder.prototype.write = function(str) {
-	    return this.encoder.write(str);
+	Utf32AutoEncoder.prototype.write = function (str) {
+	  return this.encoder.write(str)
 	};
 
-	Utf32AutoEncoder.prototype.end = function() {
-	    return this.encoder.end();
+	Utf32AutoEncoder.prototype.end = function () {
+	  return this.encoder.end()
 	};
 
 	// -- Decoding
 
-	function Utf32AutoDecoder(options, codec) {
-	    this.decoder = null;
-	    this.initialBufs = [];
-	    this.initialBufsLen = 0;
-	    this.options = options || {};
-	    this.iconv = codec.iconv;
+	function Utf32AutoDecoder (options, codec) {
+	  this.decoder = null;
+	  this.initialBufs = [];
+	  this.initialBufsLen = 0;
+	  this.options = options || {};
+	  this.iconv = codec.iconv;
 	}
 
-	Utf32AutoDecoder.prototype.write = function(buf) {
-	    if (!this.decoder) { 
-	        // Codec is not chosen yet. Accumulate initial bytes.
-	        this.initialBufs.push(buf);
-	        this.initialBufsLen += buf.length;
+	Utf32AutoDecoder.prototype.write = function (buf) {
+	  if (!this.decoder) {
+	    // Codec is not chosen yet. Accumulate initial bytes.
+	    this.initialBufs.push(buf);
+	    this.initialBufsLen += buf.length;
 
-	        if (this.initialBufsLen < 32) // We need more bytes to use space heuristic (see below)
-	            return '';
+	    if (this.initialBufsLen < 32) // We need more bytes to use space heuristic (see below)
+	    { return "" }
 
-	        // We have enough bytes -> detect endianness.
-	        var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
-	        this.decoder = this.iconv.getDecoder(encoding, this.options);
+	    // We have enough bytes -> detect endianness.
+	    var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
+	    this.decoder = this.iconv.getDecoder(encoding, this.options);
 
-	        var resStr = '';
-	        for (var i = 0; i < this.initialBufs.length; i++)
-	            resStr += this.decoder.write(this.initialBufs[i]);
+	    var resStr = "";
+	    for (var i = 0; i < this.initialBufs.length; i++) { resStr += this.decoder.write(this.initialBufs[i]); }
 
-	        this.initialBufs.length = this.initialBufsLen = 0;
-	        return resStr;
-	    }
+	    this.initialBufs.length = this.initialBufsLen = 0;
+	    return resStr
+	  }
 
-	    return this.decoder.write(buf);
+	  return this.decoder.write(buf)
 	};
 
-	Utf32AutoDecoder.prototype.end = function() {
-	    if (!this.decoder) {
-	        var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
-	        this.decoder = this.iconv.getDecoder(encoding, this.options);
+	Utf32AutoDecoder.prototype.end = function () {
+	  if (!this.decoder) {
+	    var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
+	    this.decoder = this.iconv.getDecoder(encoding, this.options);
 
-	        var resStr = '';
-	        for (var i = 0; i < this.initialBufs.length; i++)
-	            resStr += this.decoder.write(this.initialBufs[i]);
+	    var resStr = "";
+	    for (var i = 0; i < this.initialBufs.length; i++) { resStr += this.decoder.write(this.initialBufs[i]); }
 
-	        var trail = this.decoder.end();
-	        if (trail)
-	            resStr += trail;
+	    var trail = this.decoder.end();
+	    if (trail) { resStr += trail; }
 
-	        this.initialBufs.length = this.initialBufsLen = 0;
-	        return resStr;
-	    }
+	    this.initialBufs.length = this.initialBufsLen = 0;
+	    return resStr
+	  }
 
-	    return this.decoder.end();
+	  return this.decoder.end()
 	};
 
-	function detectEncoding(bufs, defaultEncoding) {
-	    var b = [];
-	    var charsProcessed = 0;
-	    var invalidLE = 0, invalidBE = 0;   // Number of invalid chars when decoded as LE or BE.
-	    var bmpCharsLE = 0, bmpCharsBE = 0; // Number of BMP chars when decoded as LE or BE.
+	function detectEncoding (bufs, defaultEncoding) {
+	  var b = [];
+	  var charsProcessed = 0;
+	  var invalidLE = 0; var invalidBE = 0;   // Number of invalid chars when decoded as LE or BE.
+	  var bmpCharsLE = 0; var bmpCharsBE = 0; // Number of BMP chars when decoded as LE or BE.
 
-	    outer_loop:
-	    for (var i = 0; i < bufs.length; i++) {
-	        var buf = bufs[i];
-	        for (var j = 0; j < buf.length; j++) {
-	            b.push(buf[j]);
-	            if (b.length === 4) {
-	                if (charsProcessed === 0) {
-	                    // Check BOM first.
-	                    if (b[0] === 0xFF && b[1] === 0xFE && b[2] === 0 && b[3] === 0) {
-	                        return 'utf-32le';
-	                    }
-	                    if (b[0] === 0 && b[1] === 0 && b[2] === 0xFE && b[3] === 0xFF) {
-	                        return 'utf-32be';
-	                    }
-	                }
-
-	                if (b[0] !== 0 || b[1] > 0x10) invalidBE++;
-	                if (b[3] !== 0 || b[2] > 0x10) invalidLE++;
-
-	                if (b[0] === 0 && b[1] === 0 && (b[2] !== 0 || b[3] !== 0)) bmpCharsBE++;
-	                if ((b[0] !== 0 || b[1] !== 0) && b[2] === 0 && b[3] === 0) bmpCharsLE++;
-
-	                b.length = 0;
-	                charsProcessed++;
-
-	                if (charsProcessed >= 100) {
-	                    break outer_loop;
-	                }
-	            }
+	  outerLoop:
+	  for (var i = 0; i < bufs.length; i++) {
+	    var buf = bufs[i];
+	    for (var j = 0; j < buf.length; j++) {
+	      b.push(buf[j]);
+	      if (b.length === 4) {
+	        if (charsProcessed === 0) {
+	          // Check BOM first.
+	          if (b[0] === 0xFF && b[1] === 0xFE && b[2] === 0 && b[3] === 0) {
+	            return "utf-32le"
+	          }
+	          if (b[0] === 0 && b[1] === 0 && b[2] === 0xFE && b[3] === 0xFF) {
+	            return "utf-32be"
+	          }
 	        }
+
+	        if (b[0] !== 0 || b[1] > 0x10) invalidBE++;
+	        if (b[3] !== 0 || b[2] > 0x10) invalidLE++;
+
+	        if (b[0] === 0 && b[1] === 0 && (b[2] !== 0 || b[3] !== 0)) bmpCharsBE++;
+	        if ((b[0] !== 0 || b[1] !== 0) && b[2] === 0 && b[3] === 0) bmpCharsLE++;
+
+	        b.length = 0;
+	        charsProcessed++;
+
+	        if (charsProcessed >= 100) {
+	          break outerLoop
+	        }
+	      }
 	    }
+	  }
 
-	    // Make decisions.
-	    if (bmpCharsBE - invalidBE > bmpCharsLE - invalidLE)  return 'utf-32be';
-	    if (bmpCharsBE - invalidBE < bmpCharsLE - invalidLE)  return 'utf-32le';
+	  // Make decisions.
+	  if (bmpCharsBE - invalidBE > bmpCharsLE - invalidLE) return "utf-32be"
+	  if (bmpCharsBE - invalidBE < bmpCharsLE - invalidLE) return "utf-32le"
 
-	    // Couldn't decide (likely all zeros or not enough data).
-	    return defaultEncoding || 'utf-32le';
+	  // Couldn't decide (likely all zeros or not enough data).
+	  return defaultEncoding || "utf-32le"
 	}
 	return utf32;
 }
@@ -14805,64 +15008,60 @@ function requireUtf16 () {
 	// == UTF16-BE codec. ==========================================================
 
 	utf16.utf16be = Utf16BECodec;
-	function Utf16BECodec() {
+	function Utf16BECodec () {
 	}
 
 	Utf16BECodec.prototype.encoder = Utf16BEEncoder;
 	Utf16BECodec.prototype.decoder = Utf16BEDecoder;
 	Utf16BECodec.prototype.bomAware = true;
 
-
 	// -- Encoding
 
-	function Utf16BEEncoder() {
+	function Utf16BEEncoder () {
 	}
 
-	Utf16BEEncoder.prototype.write = function(str) {
-	    var buf = Buffer.from(str, 'ucs2');
-	    for (var i = 0; i < buf.length; i += 2) {
-	        var tmp = buf[i]; buf[i] = buf[i+1]; buf[i+1] = tmp;
-	    }
-	    return buf;
+	Utf16BEEncoder.prototype.write = function (str) {
+	  var buf = Buffer.from(str, "ucs2");
+	  for (var i = 0; i < buf.length; i += 2) {
+	    var tmp = buf[i]; buf[i] = buf[i + 1]; buf[i + 1] = tmp;
+	  }
+	  return buf
 	};
 
-	Utf16BEEncoder.prototype.end = function() {
+	Utf16BEEncoder.prototype.end = function () {
 	};
-
 
 	// -- Decoding
 
-	function Utf16BEDecoder() {
-	    this.overflowByte = -1;
+	function Utf16BEDecoder () {
+	  this.overflowByte = -1;
 	}
 
-	Utf16BEDecoder.prototype.write = function(buf) {
-	    if (buf.length == 0)
-	        return '';
+	Utf16BEDecoder.prototype.write = function (buf) {
+	  if (buf.length == 0) { return "" }
 
-	    var buf2 = Buffer.alloc(buf.length + 1),
-	        i = 0, j = 0;
+	  var buf2 = Buffer.alloc(buf.length + 1);
+	  var i = 0; var j = 0;
 
-	    if (this.overflowByte !== -1) {
-	        buf2[0] = buf[0];
-	        buf2[1] = this.overflowByte;
-	        i = 1; j = 2;
-	    }
+	  if (this.overflowByte !== -1) {
+	    buf2[0] = buf[0];
+	    buf2[1] = this.overflowByte;
+	    i = 1; j = 2;
+	  }
 
-	    for (; i < buf.length-1; i += 2, j+= 2) {
-	        buf2[j] = buf[i+1];
-	        buf2[j+1] = buf[i];
-	    }
+	  for (; i < buf.length - 1; i += 2, j += 2) {
+	    buf2[j] = buf[i + 1];
+	    buf2[j + 1] = buf[i];
+	  }
 
-	    this.overflowByte = (i == buf.length-1) ? buf[buf.length-1] : -1;
+	  this.overflowByte = (i == buf.length - 1) ? buf[buf.length - 1] : -1;
 
-	    return buf2.slice(0, j).toString('ucs2');
+	  return buf2.slice(0, j).toString("ucs2")
 	};
 
-	Utf16BEDecoder.prototype.end = function() {
-	    this.overflowByte = -1;
+	Utf16BEDecoder.prototype.end = function () {
+	  this.overflowByte = -1;
 	};
-
 
 	// == UTF-16 codec =============================================================
 	// Decoder chooses automatically from UTF-16LE and UTF-16BE using BOM and space-based heuristic.
@@ -14873,124 +15072,120 @@ function requireUtf16 () {
 	// Encoder uses UTF-16LE and prepends BOM (which can be overridden with addBOM: false).
 
 	utf16.utf16 = Utf16Codec;
-	function Utf16Codec(codecOptions, iconv) {
-	    this.iconv = iconv;
+	function Utf16Codec (codecOptions, iconv) {
+	  this.iconv = iconv;
 	}
 
 	Utf16Codec.prototype.encoder = Utf16Encoder;
 	Utf16Codec.prototype.decoder = Utf16Decoder;
 
-
 	// -- Encoding (pass-through)
 
-	function Utf16Encoder(options, codec) {
-	    options = options || {};
-	    if (options.addBOM === undefined)
-	        options.addBOM = true;
-	    this.encoder = codec.iconv.getEncoder('utf-16le', options);
+	function Utf16Encoder (options, codec) {
+	  options = options || {};
+	  if (options.addBOM === undefined) { options.addBOM = true; }
+	  this.encoder = codec.iconv.getEncoder("utf-16le", options);
 	}
 
-	Utf16Encoder.prototype.write = function(str) {
-	    return this.encoder.write(str);
+	Utf16Encoder.prototype.write = function (str) {
+	  return this.encoder.write(str)
 	};
 
-	Utf16Encoder.prototype.end = function() {
-	    return this.encoder.end();
+	Utf16Encoder.prototype.end = function () {
+	  return this.encoder.end()
 	};
-
 
 	// -- Decoding
 
-	function Utf16Decoder(options, codec) {
-	    this.decoder = null;
-	    this.initialBufs = [];
-	    this.initialBufsLen = 0;
+	function Utf16Decoder (options, codec) {
+	  this.decoder = null;
+	  this.initialBufs = [];
+	  this.initialBufsLen = 0;
 
-	    this.options = options || {};
-	    this.iconv = codec.iconv;
+	  this.options = options || {};
+	  this.iconv = codec.iconv;
 	}
 
-	Utf16Decoder.prototype.write = function(buf) {
-	    if (!this.decoder) {
-	        // Codec is not chosen yet. Accumulate initial bytes.
-	        this.initialBufs.push(buf);
-	        this.initialBufsLen += buf.length;
-	        
-	        if (this.initialBufsLen < 16) // We need more bytes to use space heuristic (see below)
-	            return '';
+	Utf16Decoder.prototype.write = function (buf) {
+	  if (!this.decoder) {
+	    // Codec is not chosen yet. Accumulate initial bytes.
+	    this.initialBufs.push(buf);
+	    this.initialBufsLen += buf.length;
 
-	        // We have enough bytes -> detect endianness.
-	        var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
-	        this.decoder = this.iconv.getDecoder(encoding, this.options);
+	    if (this.initialBufsLen < 16) // We need more bytes to use space heuristic (see below)
+	    { return "" }
 
-	        var resStr = '';
-	        for (var i = 0; i < this.initialBufs.length; i++)
-	            resStr += this.decoder.write(this.initialBufs[i]);
+	    // We have enough bytes -> detect endianness.
+	    var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
+	    this.decoder = this.iconv.getDecoder(encoding, this.options);
 
-	        this.initialBufs.length = this.initialBufsLen = 0;
-	        return resStr;
-	    }
+	    var resStr = "";
+	    for (var i = 0; i < this.initialBufs.length; i++) { resStr += this.decoder.write(this.initialBufs[i]); }
 
-	    return this.decoder.write(buf);
+	    this.initialBufs.length = this.initialBufsLen = 0;
+	    return resStr
+	  }
+
+	  return this.decoder.write(buf)
 	};
 
-	Utf16Decoder.prototype.end = function() {
-	    if (!this.decoder) {
-	        var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
-	        this.decoder = this.iconv.getDecoder(encoding, this.options);
+	Utf16Decoder.prototype.end = function () {
+	  if (!this.decoder) {
+	    var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
+	    this.decoder = this.iconv.getDecoder(encoding, this.options);
 
-	        var resStr = '';
-	        for (var i = 0; i < this.initialBufs.length; i++)
-	            resStr += this.decoder.write(this.initialBufs[i]);
+	    var resStr = "";
+	    for (var i = 0; i < this.initialBufs.length; i++) { resStr += this.decoder.write(this.initialBufs[i]); }
 
-	        var trail = this.decoder.end();
-	        if (trail)
-	            resStr += trail;
+	    var trail = this.decoder.end();
+	    if (trail) { resStr += trail; }
 
-	        this.initialBufs.length = this.initialBufsLen = 0;
-	        return resStr;
-	    }
-	    return this.decoder.end();
+	    this.initialBufs.length = this.initialBufsLen = 0;
+	    return resStr
+	  }
+	  return this.decoder.end()
 	};
 
-	function detectEncoding(bufs, defaultEncoding) {
-	    var b = [];
-	    var charsProcessed = 0;
-	    var asciiCharsLE = 0, asciiCharsBE = 0; // Number of ASCII chars when decoded as LE or BE.
+	function detectEncoding (bufs, defaultEncoding) {
+	  var b = [];
+	  var charsProcessed = 0;
+	  // Number of ASCII chars when decoded as LE or BE.
+	  var asciiCharsLE = 0;
+	  var asciiCharsBE = 0;
 
-	    outer_loop:
-	    for (var i = 0; i < bufs.length; i++) {
-	        var buf = bufs[i];
-	        for (var j = 0; j < buf.length; j++) {
-	            b.push(buf[j]);
-	            if (b.length === 2) {
-	                if (charsProcessed === 0) {
-	                    // Check BOM first.
-	                    if (b[0] === 0xFF && b[1] === 0xFE) return 'utf-16le';
-	                    if (b[0] === 0xFE && b[1] === 0xFF) return 'utf-16be';
-	                }
-
-	                if (b[0] === 0 && b[1] !== 0) asciiCharsBE++;
-	                if (b[0] !== 0 && b[1] === 0) asciiCharsLE++;
-
-	                b.length = 0;
-	                charsProcessed++;
-
-	                if (charsProcessed >= 100) {
-	                    break outer_loop;
-	                }
-	            }
+	  outerLoop:
+	  for (var i = 0; i < bufs.length; i++) {
+	    var buf = bufs[i];
+	    for (var j = 0; j < buf.length; j++) {
+	      b.push(buf[j]);
+	      if (b.length === 2) {
+	        if (charsProcessed === 0) {
+	          // Check BOM first.
+	          if (b[0] === 0xFF && b[1] === 0xFE) return "utf-16le"
+	          if (b[0] === 0xFE && b[1] === 0xFF) return "utf-16be"
 	        }
+
+	        if (b[0] === 0 && b[1] !== 0) asciiCharsBE++;
+	        if (b[0] !== 0 && b[1] === 0) asciiCharsLE++;
+
+	        b.length = 0;
+	        charsProcessed++;
+
+	        if (charsProcessed >= 100) {
+	          break outerLoop
+	        }
+	      }
 	    }
+	  }
 
-	    // Make decisions.
-	    // Most of the time, the content has ASCII chars (U+00**), but the opposite (U+**00) is uncommon.
-	    // So, we count ASCII as if it was LE or BE, and decide from that.
-	    if (asciiCharsBE > asciiCharsLE) return 'utf-16be';
-	    if (asciiCharsBE < asciiCharsLE) return 'utf-16le';
+	  // Make decisions.
+	  // Most of the time, the content has ASCII chars (U+00**), but the opposite (U+**00) is uncommon.
+	  // So, we count ASCII as if it was LE or BE, and decide from that.
+	  if (asciiCharsBE > asciiCharsLE) return "utf-16be"
+	  if (asciiCharsBE < asciiCharsLE) return "utf-16le"
 
-	    // Couldn't decide (likely all zeros or not enough data).
-	    return defaultEncoding || 'utf-16le';
+	  // Couldn't decide (likely all zeros or not enough data).
+	  return defaultEncoding || "utf-16le"
 	}
 	return utf16;
 }
@@ -15008,116 +15203,116 @@ function requireUtf7 () {
 	// See also below a UTF-7-IMAP codec, according to http://tools.ietf.org/html/rfc3501#section-5.1.3
 
 	utf7.utf7 = Utf7Codec;
-	utf7.unicode11utf7 = 'utf7'; // Alias UNICODE-1-1-UTF-7
-	function Utf7Codec(codecOptions, iconv) {
-	    this.iconv = iconv;
+	utf7.unicode11utf7 = "utf7"; // Alias UNICODE-1-1-UTF-7
+	function Utf7Codec (codecOptions, iconv) {
+	  this.iconv = iconv;
 	}
 	Utf7Codec.prototype.encoder = Utf7Encoder;
 	Utf7Codec.prototype.decoder = Utf7Decoder;
 	Utf7Codec.prototype.bomAware = true;
 
-
 	// -- Encoding
 
+	// Why scape ()?./?
+	// eslint-disable-next-line no-useless-escape
 	var nonDirectChars = /[^A-Za-z0-9'\(\),-\.\/:\? \n\r\t]+/g;
 
-	function Utf7Encoder(options, codec) {
-	    this.iconv = codec.iconv;
+	function Utf7Encoder (options, codec) {
+	  this.iconv = codec.iconv;
 	}
 
-	Utf7Encoder.prototype.write = function(str) {
-	    // Naive implementation.
-	    // Non-direct chars are encoded as "+<base64>-"; single "+" char is encoded as "+-".
-	    return Buffer.from(str.replace(nonDirectChars, function(chunk) {
-	        return "+" + (chunk === '+' ? '' : 
-	            this.iconv.encode(chunk, 'utf16-be').toString('base64').replace(/=+$/, '')) 
-	            + "-";
-	    }.bind(this)));
+	Utf7Encoder.prototype.write = function (str) {
+	  // Naive implementation.
+	  // Non-direct chars are encoded as "+<base64>-"; single "+" char is encoded as "+-".
+	  return Buffer.from(str.replace(nonDirectChars, function (chunk) {
+	    return "+" + (chunk === "+"
+	      ? ""
+	      : this.iconv.encode(chunk, "utf16-be").toString("base64").replace(/=+$/, "")) +
+	            "-"
+	  }.bind(this)))
 	};
 
-	Utf7Encoder.prototype.end = function() {
+	Utf7Encoder.prototype.end = function () {
 	};
-
 
 	// -- Decoding
 
-	function Utf7Decoder(options, codec) {
-	    this.iconv = codec.iconv;
-	    this.inBase64 = false;
-	    this.base64Accum = '';
+	function Utf7Decoder (options, codec) {
+	  this.iconv = codec.iconv;
+	  this.inBase64 = false;
+	  this.base64Accum = "";
 	}
 
+	// Why scape /?
+	// eslint-disable-next-line no-useless-escape
 	var base64Regex = /[A-Za-z0-9\/+]/;
 	var base64Chars = [];
-	for (var i = 0; i < 256; i++)
-	    base64Chars[i] = base64Regex.test(String.fromCharCode(i));
+	for (var i = 0; i < 256; i++) { base64Chars[i] = base64Regex.test(String.fromCharCode(i)); }
 
-	var plusChar = '+'.charCodeAt(0), 
-	    minusChar = '-'.charCodeAt(0),
-	    andChar = '&'.charCodeAt(0);
+	var plusChar = "+".charCodeAt(0);
+	var minusChar = "-".charCodeAt(0);
+	var andChar = "&".charCodeAt(0);
 
-	Utf7Decoder.prototype.write = function(buf) {
-	    var res = "", lastI = 0,
-	        inBase64 = this.inBase64,
-	        base64Accum = this.base64Accum;
+	Utf7Decoder.prototype.write = function (buf) {
+	  var res = ""; var lastI = 0;
+	  var inBase64 = this.inBase64;
+	  var base64Accum = this.base64Accum;
 
-	    // The decoder is more involved as we must handle chunks in stream.
+	  // The decoder is more involved as we must handle chunks in stream.
 
-	    for (var i = 0; i < buf.length; i++) {
-	        if (!inBase64) { // We're in direct mode.
-	            // Write direct chars until '+'
-	            if (buf[i] == plusChar) {
-	                res += this.iconv.decode(buf.slice(lastI, i), "ascii"); // Write direct chars.
-	                lastI = i+1;
-	                inBase64 = true;
-	            }
-	        } else { // We decode base64.
-	            if (!base64Chars[buf[i]]) { // Base64 ended.
-	                if (i == lastI && buf[i] == minusChar) {// "+-" -> "+"
-	                    res += "+";
-	                } else {
-	                    var b64str = base64Accum + this.iconv.decode(buf.slice(lastI, i), "ascii");
-	                    res += this.iconv.decode(Buffer.from(b64str, 'base64'), "utf16-be");
-	                }
-
-	                if (buf[i] != minusChar) // Minus is absorbed after base64.
-	                    i--;
-
-	                lastI = i+1;
-	                inBase64 = false;
-	                base64Accum = '';
-	            }
+	  for (var i = 0; i < buf.length; i++) {
+	    if (!inBase64) { // We're in direct mode.
+	      // Write direct chars until '+'
+	      if (buf[i] == plusChar) {
+	        res += this.iconv.decode(buf.slice(lastI, i), "ascii"); // Write direct chars.
+	        lastI = i + 1;
+	        inBase64 = true;
+	      }
+	    } else { // We decode base64.
+	      if (!base64Chars[buf[i]]) { // Base64 ended.
+	        if (i == lastI && buf[i] == minusChar) { // "+-" -> "+"
+	          res += "+";
+	        } else {
+	          var b64str = base64Accum + this.iconv.decode(buf.slice(lastI, i), "ascii");
+	          res += this.iconv.decode(Buffer.from(b64str, "base64"), "utf16-be");
 	        }
+
+	        if (buf[i] != minusChar) // Minus is absorbed after base64.
+	        { i--; }
+
+	        lastI = i + 1;
+	        inBase64 = false;
+	        base64Accum = "";
+	      }
 	    }
+	  }
 
-	    if (!inBase64) {
-	        res += this.iconv.decode(buf.slice(lastI), "ascii"); // Write direct chars.
-	    } else {
-	        var b64str = base64Accum + this.iconv.decode(buf.slice(lastI), "ascii");
+	  if (!inBase64) {
+	    res += this.iconv.decode(buf.slice(lastI), "ascii"); // Write direct chars.
+	  } else {
+	    var b64str = base64Accum + this.iconv.decode(buf.slice(lastI), "ascii");
 
-	        var canBeDecoded = b64str.length - (b64str.length % 8); // Minimal chunk: 2 quads -> 2x3 bytes -> 3 chars.
-	        base64Accum = b64str.slice(canBeDecoded); // The rest will be decoded in future.
-	        b64str = b64str.slice(0, canBeDecoded);
+	    var canBeDecoded = b64str.length - (b64str.length % 8); // Minimal chunk: 2 quads -> 2x3 bytes -> 3 chars.
+	    base64Accum = b64str.slice(canBeDecoded); // The rest will be decoded in future.
+	    b64str = b64str.slice(0, canBeDecoded);
 
-	        res += this.iconv.decode(Buffer.from(b64str, 'base64'), "utf16-be");
-	    }
+	    res += this.iconv.decode(Buffer.from(b64str, "base64"), "utf16-be");
+	  }
 
-	    this.inBase64 = inBase64;
-	    this.base64Accum = base64Accum;
+	  this.inBase64 = inBase64;
+	  this.base64Accum = base64Accum;
 
-	    return res;
+	  return res
 	};
 
-	Utf7Decoder.prototype.end = function() {
-	    var res = "";
-	    if (this.inBase64 && this.base64Accum.length > 0)
-	        res = this.iconv.decode(Buffer.from(this.base64Accum, 'base64'), "utf16-be");
+	Utf7Decoder.prototype.end = function () {
+	  var res = "";
+	  if (this.inBase64 && this.base64Accum.length > 0) { res = this.iconv.decode(Buffer.from(this.base64Accum, "base64"), "utf16-be"); }
 
-	    this.inBase64 = false;
-	    this.base64Accum = '';
-	    return res;
+	  this.inBase64 = false;
+	  this.base64Accum = "";
+	  return res
 	};
-
 
 	// UTF-7-IMAP codec.
 	// RFC3501 Sec. 5.1.3 Modified UTF-7 (http://tools.ietf.org/html/rfc3501#section-5.1.3)
@@ -15130,162 +15325,157 @@ function requireUtf7 () {
 	//  * String must end in non-shifted position.
 	//  * "-&" while in base64 is not allowed.
 
-
 	utf7.utf7imap = Utf7IMAPCodec;
-	function Utf7IMAPCodec(codecOptions, iconv) {
-	    this.iconv = iconv;
+	function Utf7IMAPCodec (codecOptions, iconv) {
+	  this.iconv = iconv;
 	}
 	Utf7IMAPCodec.prototype.encoder = Utf7IMAPEncoder;
 	Utf7IMAPCodec.prototype.decoder = Utf7IMAPDecoder;
 	Utf7IMAPCodec.prototype.bomAware = true;
 
-
 	// -- Encoding
 
-	function Utf7IMAPEncoder(options, codec) {
-	    this.iconv = codec.iconv;
-	    this.inBase64 = false;
-	    this.base64Accum = Buffer.alloc(6);
-	    this.base64AccumIdx = 0;
+	function Utf7IMAPEncoder (options, codec) {
+	  this.iconv = codec.iconv;
+	  this.inBase64 = false;
+	  this.base64Accum = Buffer.alloc(6);
+	  this.base64AccumIdx = 0;
 	}
 
-	Utf7IMAPEncoder.prototype.write = function(str) {
-	    var inBase64 = this.inBase64,
-	        base64Accum = this.base64Accum,
-	        base64AccumIdx = this.base64AccumIdx,
-	        buf = Buffer.alloc(str.length*5 + 10), bufIdx = 0;
+	Utf7IMAPEncoder.prototype.write = function (str) {
+	  var inBase64 = this.inBase64;
+	  var base64Accum = this.base64Accum;
+	  var base64AccumIdx = this.base64AccumIdx;
+	  var buf = Buffer.alloc(str.length * 5 + 10); var bufIdx = 0;
 
-	    for (var i = 0; i < str.length; i++) {
-	        var uChar = str.charCodeAt(i);
-	        if (0x20 <= uChar && uChar <= 0x7E) { // Direct character or '&'.
-	            if (inBase64) {
-	                if (base64AccumIdx > 0) {
-	                    bufIdx += buf.write(base64Accum.slice(0, base64AccumIdx).toString('base64').replace(/\//g, ',').replace(/=+$/, ''), bufIdx);
-	                    base64AccumIdx = 0;
-	                }
-
-	                buf[bufIdx++] = minusChar; // Write '-', then go to direct mode.
-	                inBase64 = false;
-	            }
-
-	            if (!inBase64) {
-	                buf[bufIdx++] = uChar; // Write direct character
-
-	                if (uChar === andChar)  // Ampersand -> '&-'
-	                    buf[bufIdx++] = minusChar;
-	            }
-
-	        } else { // Non-direct character
-	            if (!inBase64) {
-	                buf[bufIdx++] = andChar; // Write '&', then go to base64 mode.
-	                inBase64 = true;
-	            }
-	            if (inBase64) {
-	                base64Accum[base64AccumIdx++] = uChar >> 8;
-	                base64Accum[base64AccumIdx++] = uChar & 0xFF;
-
-	                if (base64AccumIdx == base64Accum.length) {
-	                    bufIdx += buf.write(base64Accum.toString('base64').replace(/\//g, ','), bufIdx);
-	                    base64AccumIdx = 0;
-	                }
-	            }
-	        }
-	    }
-
-	    this.inBase64 = inBase64;
-	    this.base64AccumIdx = base64AccumIdx;
-
-	    return buf.slice(0, bufIdx);
-	};
-
-	Utf7IMAPEncoder.prototype.end = function() {
-	    var buf = Buffer.alloc(10), bufIdx = 0;
-	    if (this.inBase64) {
-	        if (this.base64AccumIdx > 0) {
-	            bufIdx += buf.write(this.base64Accum.slice(0, this.base64AccumIdx).toString('base64').replace(/\//g, ',').replace(/=+$/, ''), bufIdx);
-	            this.base64AccumIdx = 0;
+	  for (var i = 0; i < str.length; i++) {
+	    var uChar = str.charCodeAt(i);
+	    if (uChar >= 0x20 && uChar <= 0x7E) { // Direct character or '&'.
+	      if (inBase64) {
+	        if (base64AccumIdx > 0) {
+	          bufIdx += buf.write(base64Accum.slice(0, base64AccumIdx).toString("base64").replace(/\//g, ",").replace(/=+$/, ""), bufIdx);
+	          base64AccumIdx = 0;
 	        }
 
 	        buf[bufIdx++] = minusChar; // Write '-', then go to direct mode.
-	        this.inBase64 = false;
-	    }
+	        inBase64 = false;
+	      }
 
-	    return buf.slice(0, bufIdx);
+	      if (!inBase64) {
+	        buf[bufIdx++] = uChar; // Write direct character
+
+	        if (uChar === andChar)  // Ampersand -> '&-'
+	        { buf[bufIdx++] = minusChar; }
+	      }
+	    } else { // Non-direct character
+	      if (!inBase64) {
+	        buf[bufIdx++] = andChar; // Write '&', then go to base64 mode.
+	        inBase64 = true;
+	      }
+	      if (inBase64) {
+	        base64Accum[base64AccumIdx++] = uChar >> 8;
+	        base64Accum[base64AccumIdx++] = uChar & 0xFF;
+
+	        if (base64AccumIdx == base64Accum.length) {
+	          bufIdx += buf.write(base64Accum.toString("base64").replace(/\//g, ","), bufIdx);
+	          base64AccumIdx = 0;
+	        }
+	      }
+	    }
+	  }
+
+	  this.inBase64 = inBase64;
+	  this.base64AccumIdx = base64AccumIdx;
+
+	  return buf.slice(0, bufIdx)
 	};
 
+	Utf7IMAPEncoder.prototype.end = function () {
+	  var buf = Buffer.alloc(10); var bufIdx = 0;
+	  if (this.inBase64) {
+	    if (this.base64AccumIdx > 0) {
+	      bufIdx += buf.write(this.base64Accum.slice(0, this.base64AccumIdx).toString("base64").replace(/\//g, ",").replace(/=+$/, ""), bufIdx);
+	      this.base64AccumIdx = 0;
+	    }
+
+	    buf[bufIdx++] = minusChar; // Write '-', then go to direct mode.
+	    this.inBase64 = false;
+	  }
+
+	  return buf.slice(0, bufIdx)
+	};
 
 	// -- Decoding
 
-	function Utf7IMAPDecoder(options, codec) {
-	    this.iconv = codec.iconv;
-	    this.inBase64 = false;
-	    this.base64Accum = '';
+	function Utf7IMAPDecoder (options, codec) {
+	  this.iconv = codec.iconv;
+	  this.inBase64 = false;
+	  this.base64Accum = "";
 	}
 
 	var base64IMAPChars = base64Chars.slice();
-	base64IMAPChars[','.charCodeAt(0)] = true;
+	base64IMAPChars[",".charCodeAt(0)] = true;
 
-	Utf7IMAPDecoder.prototype.write = function(buf) {
-	    var res = "", lastI = 0,
-	        inBase64 = this.inBase64,
-	        base64Accum = this.base64Accum;
+	Utf7IMAPDecoder.prototype.write = function (buf) {
+	  var res = ""; var lastI = 0;
+	  var inBase64 = this.inBase64;
+	  var base64Accum = this.base64Accum;
 
-	    // The decoder is more involved as we must handle chunks in stream.
-	    // It is forgiving, closer to standard UTF-7 (for example, '-' is optional at the end).
+	  // The decoder is more involved as we must handle chunks in stream.
+	  // It is forgiving, closer to standard UTF-7 (for example, '-' is optional at the end).
 
-	    for (var i = 0; i < buf.length; i++) {
-	        if (!inBase64) { // We're in direct mode.
-	            // Write direct chars until '&'
-	            if (buf[i] == andChar) {
-	                res += this.iconv.decode(buf.slice(lastI, i), "ascii"); // Write direct chars.
-	                lastI = i+1;
-	                inBase64 = true;
-	            }
-	        } else { // We decode base64.
-	            if (!base64IMAPChars[buf[i]]) { // Base64 ended.
-	                if (i == lastI && buf[i] == minusChar) { // "&-" -> "&"
-	                    res += "&";
-	                } else {
-	                    var b64str = base64Accum + this.iconv.decode(buf.slice(lastI, i), "ascii").replace(/,/g, '/');
-	                    res += this.iconv.decode(Buffer.from(b64str, 'base64'), "utf16-be");
-	                }
-
-	                if (buf[i] != minusChar) // Minus may be absorbed after base64.
-	                    i--;
-
-	                lastI = i+1;
-	                inBase64 = false;
-	                base64Accum = '';
-	            }
+	  for (var i = 0; i < buf.length; i++) {
+	    if (!inBase64) { // We're in direct mode.
+	      // Write direct chars until '&'
+	      if (buf[i] == andChar) {
+	        res += this.iconv.decode(buf.slice(lastI, i), "ascii"); // Write direct chars.
+	        lastI = i + 1;
+	        inBase64 = true;
+	      }
+	    } else { // We decode base64.
+	      if (!base64IMAPChars[buf[i]]) { // Base64 ended.
+	        if (i == lastI && buf[i] == minusChar) { // "&-" -> "&"
+	          res += "&";
+	        } else {
+	          var b64str = base64Accum + this.iconv.decode(buf.slice(lastI, i), "ascii").replace(/,/g, "/");
+	          res += this.iconv.decode(Buffer.from(b64str, "base64"), "utf16-be");
 	        }
+
+	        if (buf[i] != minusChar) // Minus may be absorbed after base64.
+	        { i--; }
+
+	        lastI = i + 1;
+	        inBase64 = false;
+	        base64Accum = "";
+	      }
 	    }
+	  }
 
-	    if (!inBase64) {
-	        res += this.iconv.decode(buf.slice(lastI), "ascii"); // Write direct chars.
-	    } else {
-	        var b64str = base64Accum + this.iconv.decode(buf.slice(lastI), "ascii").replace(/,/g, '/');
+	  if (!inBase64) {
+	    res += this.iconv.decode(buf.slice(lastI), "ascii"); // Write direct chars.
+	  } else {
+	    var b64str = base64Accum + this.iconv.decode(buf.slice(lastI), "ascii").replace(/,/g, "/");
 
-	        var canBeDecoded = b64str.length - (b64str.length % 8); // Minimal chunk: 2 quads -> 2x3 bytes -> 3 chars.
-	        base64Accum = b64str.slice(canBeDecoded); // The rest will be decoded in future.
-	        b64str = b64str.slice(0, canBeDecoded);
+	    var canBeDecoded = b64str.length - (b64str.length % 8); // Minimal chunk: 2 quads -> 2x3 bytes -> 3 chars.
+	    base64Accum = b64str.slice(canBeDecoded); // The rest will be decoded in future.
+	    b64str = b64str.slice(0, canBeDecoded);
 
-	        res += this.iconv.decode(Buffer.from(b64str, 'base64'), "utf16-be");
-	    }
+	    res += this.iconv.decode(Buffer.from(b64str, "base64"), "utf16-be");
+	  }
 
-	    this.inBase64 = inBase64;
-	    this.base64Accum = base64Accum;
+	  this.inBase64 = inBase64;
+	  this.base64Accum = base64Accum;
 
-	    return res;
+	  return res
 	};
 
-	Utf7IMAPDecoder.prototype.end = function() {
-	    var res = "";
-	    if (this.inBase64 && this.base64Accum.length > 0)
-	        res = this.iconv.decode(Buffer.from(this.base64Accum, 'base64'), "utf16-be");
+	Utf7IMAPDecoder.prototype.end = function () {
+	  var res = "";
+	  if (this.inBase64 && this.base64Accum.length > 0) { res = this.iconv.decode(Buffer.from(this.base64Accum, "base64"), "utf16-be"); }
 
-	    this.inBase64 = false;
-	    this.base64Accum = '';
-	    return res;
+	  this.inBase64 = false;
+	  this.base64Accum = "";
+	  return res
 	};
 	return utf7;
 }
@@ -15300,73 +15490,76 @@ function requireSbcsCodec () {
 	var Buffer = requireSafer().Buffer;
 
 	// Single-byte codec. Needs a 'chars' string parameter that contains 256 or 128 chars that
-	// correspond to encoded bytes (if 128 - then lower half is ASCII). 
+	// correspond to encoded bytes (if 128 - then lower half is ASCII).
 
 	sbcsCodec._sbcs = SBCSCodec;
-	function SBCSCodec(codecOptions, iconv) {
-	    if (!codecOptions)
-	        throw new Error("SBCS codec is called without the data.")
-	    
-	    // Prepare char buffer for decoding.
-	    if (!codecOptions.chars || (codecOptions.chars.length !== 128 && codecOptions.chars.length !== 256))
-	        throw new Error("Encoding '"+codecOptions.type+"' has incorrect 'chars' (must be of len 128 or 256)");
-	    
-	    if (codecOptions.chars.length === 128) {
-	        var asciiString = "";
-	        for (var i = 0; i < 128; i++)
-	            asciiString += String.fromCharCode(i);
-	        codecOptions.chars = asciiString + codecOptions.chars;
+	function SBCSCodec (codecOptions, iconv) {
+	  if (!codecOptions) {
+	    throw new Error("SBCS codec is called without the data.")
+	  }
+
+	  // Prepare char buffer for decoding.
+	  if (!codecOptions.chars || (codecOptions.chars.length !== 128 && codecOptions.chars.length !== 256)) {
+	    throw new Error("Encoding '" + codecOptions.type + "' has incorrect 'chars' (must be of len 128 or 256)")
+	  }
+
+	  if (codecOptions.chars.length === 128) {
+	    var asciiString = "";
+	    for (var i = 0; i < 128; i++) {
+	      asciiString += String.fromCharCode(i);
 	    }
+	    codecOptions.chars = asciiString + codecOptions.chars;
+	  }
 
-	    this.decodeBuf = Buffer.from(codecOptions.chars, 'ucs2');
-	    
-	    // Encoding buffer.
-	    var encodeBuf = Buffer.alloc(65536, iconv.defaultCharSingleByte.charCodeAt(0));
+	  this.decodeBuf = Buffer.from(codecOptions.chars, "ucs2");
 
-	    for (var i = 0; i < codecOptions.chars.length; i++)
-	        encodeBuf[codecOptions.chars.charCodeAt(i)] = i;
+	  // Encoding buffer.
+	  var encodeBuf = Buffer.alloc(65536, iconv.defaultCharSingleByte.charCodeAt(0));
 
-	    this.encodeBuf = encodeBuf;
+	  for (var i = 0; i < codecOptions.chars.length; i++) {
+	    encodeBuf[codecOptions.chars.charCodeAt(i)] = i;
+	  }
+
+	  this.encodeBuf = encodeBuf;
 	}
 
 	SBCSCodec.prototype.encoder = SBCSEncoder;
 	SBCSCodec.prototype.decoder = SBCSDecoder;
 
-
-	function SBCSEncoder(options, codec) {
-	    this.encodeBuf = codec.encodeBuf;
+	function SBCSEncoder (options, codec) {
+	  this.encodeBuf = codec.encodeBuf;
 	}
 
-	SBCSEncoder.prototype.write = function(str) {
-	    var buf = Buffer.alloc(str.length);
-	    for (var i = 0; i < str.length; i++)
-	        buf[i] = this.encodeBuf[str.charCodeAt(i)];
-	    
-	    return buf;
+	SBCSEncoder.prototype.write = function (str) {
+	  var buf = Buffer.alloc(str.length);
+	  for (var i = 0; i < str.length; i++) {
+	    buf[i] = this.encodeBuf[str.charCodeAt(i)];
+	  }
+
+	  return buf
 	};
 
-	SBCSEncoder.prototype.end = function() {
+	SBCSEncoder.prototype.end = function () {
 	};
 
-
-	function SBCSDecoder(options, codec) {
-	    this.decodeBuf = codec.decodeBuf;
+	function SBCSDecoder (options, codec) {
+	  this.decodeBuf = codec.decodeBuf;
 	}
 
-	SBCSDecoder.prototype.write = function(buf) {
-	    // Strings are immutable in JS -> we use ucs2 buffer to speed up computations.
-	    var decodeBuf = this.decodeBuf;
-	    var newBuf = Buffer.alloc(buf.length*2);
-	    var idx1 = 0, idx2 = 0;
-	    for (var i = 0; i < buf.length; i++) {
-	        idx1 = buf[i]*2; idx2 = i*2;
-	        newBuf[idx2] = decodeBuf[idx1];
-	        newBuf[idx2+1] = decodeBuf[idx1+1];
-	    }
-	    return newBuf.toString('ucs2');
+	SBCSDecoder.prototype.write = function (buf) {
+	  // Strings are immutable in JS -> we use ucs2 buffer to speed up computations.
+	  var decodeBuf = this.decodeBuf;
+	  var newBuf = Buffer.alloc(buf.length * 2);
+	  var idx1 = 0; var idx2 = 0;
+	  for (var i = 0; i < buf.length; i++) {
+	    idx1 = buf[i] * 2; idx2 = i * 2;
+	    newBuf[idx2] = decodeBuf[idx1];
+	    newBuf[idx2 + 1] = decodeBuf[idx1 + 1];
+	  }
+	  return newBuf.toString("ucs2")
 	};
 
-	SBCSDecoder.prototype.end = function() {
+	SBCSDecoder.prototype.end = function () {
 	};
 	return sbcsCodec;
 }
@@ -15381,178 +15574,178 @@ function requireSbcsData () {
 	// Manually added data to be used by sbcs codec in addition to generated one.
 
 	sbcsData = {
-	    // Not supported by iconv, not sure why.
-	    "10029": "maccenteuro",
-	    "maccenteuro": {
-	        "type": "_sbcs",
-	        "chars": "ÄĀāÉĄÖÜáąČäčĆćéŹźĎíďĒēĖóėôöõúĚěü†°Ę£§•¶ß®©™ę¨≠ģĮįĪ≤≥īĶ∂∑łĻļĽľĹĺŅņŃ¬√ńŇ∆«»… ňŐÕőŌ–—“”‘’÷◊ōŔŕŘ‹›řŖŗŠ‚„šŚśÁŤťÍŽžŪÓÔūŮÚůŰűŲųÝýķŻŁżĢˇ"
-	    },
+	  // Not supported by iconv, not sure why.
+	  10029: "maccenteuro",
+	  maccenteuro: {
+	    type: "_sbcs",
+	    chars: "ÄĀāÉĄÖÜáąČäčĆćéŹźĎíďĒēĖóėôöõúĚěü†°Ę£§•¶ß®©™ę¨≠ģĮįĪ≤≥īĶ∂∑łĻļĽľĹĺŅņŃ¬√ńŇ∆«»… ňŐÕőŌ–—“”‘’÷◊ōŔŕŘ‹›řŖŗŠ‚„šŚśÁŤťÍŽžŪÓÔūŮÚůŰűŲųÝýķŻŁżĢˇ"
+	  },
 
-	    "808": "cp808",
-	    "ibm808": "cp808",
-	    "cp808": {
-	        "type": "_sbcs",
-	        "chars": "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмноп░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀рстуфхцчшщъыьэюяЁёЄєЇїЎў°∙·√№€■ "
-	    },
+	  808: "cp808",
+	  ibm808: "cp808",
+	  cp808: {
+	    type: "_sbcs",
+	    chars: "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмноп░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀рстуфхцчшщъыьэюяЁёЄєЇїЎў°∙·√№€■ "
+	  },
 
-	    "mik": {
-	        "type": "_sbcs",
-	        "chars": "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя└┴┬├─┼╣║╚╔╩╦╠═╬┐░▒▓│┤№§╗╝┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ "
-	    },
+	  mik: {
+	    type: "_sbcs",
+	    chars: "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя└┴┬├─┼╣║╚╔╩╦╠═╬┐░▒▓│┤№§╗╝┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ "
+	  },
 
-	    "cp720": {
-	        "type": "_sbcs",
-	        "chars": "\x80\x81éâ\x84à\x86çêëèïî\x8d\x8e\x8f\x90\u0651\u0652ô¤ـûùءآأؤ£إئابةتثجحخدذرزسشص«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀ضطظعغفµقكلمنهوىي≡\u064b\u064c\u064d\u064e\u064f\u0650≈°∙·√ⁿ²■\u00a0"
-	    },
+	  cp720: {
+	    type: "_sbcs",
+	    chars: "\x80\x81éâ\x84à\x86çêëèïî\x8d\x8e\x8f\x90\u0651\u0652ô¤ـûùءآأؤ£إئابةتثجحخدذرزسشص«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀ضطظعغفµقكلمنهوىي≡\u064b\u064c\u064d\u064e\u064f\u0650≈°∙·√ⁿ²■\u00a0"
+	  },
 
-	    // Aliases of generated encodings.
-	    "ascii8bit": "ascii",
-	    "usascii": "ascii",
-	    "ansix34": "ascii",
-	    "ansix341968": "ascii",
-	    "ansix341986": "ascii",
-	    "csascii": "ascii",
-	    "cp367": "ascii",
-	    "ibm367": "ascii",
-	    "isoir6": "ascii",
-	    "iso646us": "ascii",
-	    "iso646irv": "ascii",
-	    "us": "ascii",
+	  // Aliases of generated encodings.
+	  ascii8bit: "ascii",
+	  usascii: "ascii",
+	  ansix34: "ascii",
+	  ansix341968: "ascii",
+	  ansix341986: "ascii",
+	  csascii: "ascii",
+	  cp367: "ascii",
+	  ibm367: "ascii",
+	  isoir6: "ascii",
+	  iso646us: "ascii",
+	  iso646irv: "ascii",
+	  us: "ascii",
 
-	    "latin1": "iso88591",
-	    "latin2": "iso88592",
-	    "latin3": "iso88593",
-	    "latin4": "iso88594",
-	    "latin5": "iso88599",
-	    "latin6": "iso885910",
-	    "latin7": "iso885913",
-	    "latin8": "iso885914",
-	    "latin9": "iso885915",
-	    "latin10": "iso885916",
+	  latin1: "iso88591",
+	  latin2: "iso88592",
+	  latin3: "iso88593",
+	  latin4: "iso88594",
+	  latin5: "iso88599",
+	  latin6: "iso885910",
+	  latin7: "iso885913",
+	  latin8: "iso885914",
+	  latin9: "iso885915",
+	  latin10: "iso885916",
 
-	    "csisolatin1": "iso88591",
-	    "csisolatin2": "iso88592",
-	    "csisolatin3": "iso88593",
-	    "csisolatin4": "iso88594",
-	    "csisolatincyrillic": "iso88595",
-	    "csisolatinarabic": "iso88596",
-	    "csisolatingreek" : "iso88597",
-	    "csisolatinhebrew": "iso88598",
-	    "csisolatin5": "iso88599",
-	    "csisolatin6": "iso885910",
+	  csisolatin1: "iso88591",
+	  csisolatin2: "iso88592",
+	  csisolatin3: "iso88593",
+	  csisolatin4: "iso88594",
+	  csisolatincyrillic: "iso88595",
+	  csisolatinarabic: "iso88596",
+	  csisolatingreek: "iso88597",
+	  csisolatinhebrew: "iso88598",
+	  csisolatin5: "iso88599",
+	  csisolatin6: "iso885910",
 
-	    "l1": "iso88591",
-	    "l2": "iso88592",
-	    "l3": "iso88593",
-	    "l4": "iso88594",
-	    "l5": "iso88599",
-	    "l6": "iso885910",
-	    "l7": "iso885913",
-	    "l8": "iso885914",
-	    "l9": "iso885915",
-	    "l10": "iso885916",
+	  l1: "iso88591",
+	  l2: "iso88592",
+	  l3: "iso88593",
+	  l4: "iso88594",
+	  l5: "iso88599",
+	  l6: "iso885910",
+	  l7: "iso885913",
+	  l8: "iso885914",
+	  l9: "iso885915",
+	  l10: "iso885916",
 
-	    "isoir14": "iso646jp",
-	    "isoir57": "iso646cn",
-	    "isoir100": "iso88591",
-	    "isoir101": "iso88592",
-	    "isoir109": "iso88593",
-	    "isoir110": "iso88594",
-	    "isoir144": "iso88595",
-	    "isoir127": "iso88596",
-	    "isoir126": "iso88597",
-	    "isoir138": "iso88598",
-	    "isoir148": "iso88599",
-	    "isoir157": "iso885910",
-	    "isoir166": "tis620",
-	    "isoir179": "iso885913",
-	    "isoir199": "iso885914",
-	    "isoir203": "iso885915",
-	    "isoir226": "iso885916",
+	  isoir14: "iso646jp",
+	  isoir57: "iso646cn",
+	  isoir100: "iso88591",
+	  isoir101: "iso88592",
+	  isoir109: "iso88593",
+	  isoir110: "iso88594",
+	  isoir144: "iso88595",
+	  isoir127: "iso88596",
+	  isoir126: "iso88597",
+	  isoir138: "iso88598",
+	  isoir148: "iso88599",
+	  isoir157: "iso885910",
+	  isoir166: "tis620",
+	  isoir179: "iso885913",
+	  isoir199: "iso885914",
+	  isoir203: "iso885915",
+	  isoir226: "iso885916",
 
-	    "cp819": "iso88591",
-	    "ibm819": "iso88591",
+	  cp819: "iso88591",
+	  ibm819: "iso88591",
 
-	    "cyrillic": "iso88595",
+	  cyrillic: "iso88595",
 
-	    "arabic": "iso88596",
-	    "arabic8": "iso88596",
-	    "ecma114": "iso88596",
-	    "asmo708": "iso88596",
+	  arabic: "iso88596",
+	  arabic8: "iso88596",
+	  ecma114: "iso88596",
+	  asmo708: "iso88596",
 
-	    "greek" : "iso88597",
-	    "greek8" : "iso88597",
-	    "ecma118" : "iso88597",
-	    "elot928" : "iso88597",
+	  greek: "iso88597",
+	  greek8: "iso88597",
+	  ecma118: "iso88597",
+	  elot928: "iso88597",
 
-	    "hebrew": "iso88598",
-	    "hebrew8": "iso88598",
+	  hebrew: "iso88598",
+	  hebrew8: "iso88598",
 
-	    "turkish": "iso88599",
-	    "turkish8": "iso88599",
+	  turkish: "iso88599",
+	  turkish8: "iso88599",
 
-	    "thai": "iso885911",
-	    "thai8": "iso885911",
+	  thai: "iso885911",
+	  thai8: "iso885911",
 
-	    "celtic": "iso885914",
-	    "celtic8": "iso885914",
-	    "isoceltic": "iso885914",
+	  celtic: "iso885914",
+	  celtic8: "iso885914",
+	  isoceltic: "iso885914",
 
-	    "tis6200": "tis620",
-	    "tis62025291": "tis620",
-	    "tis62025330": "tis620",
+	  tis6200: "tis620",
+	  tis62025291: "tis620",
+	  tis62025330: "tis620",
 
-	    "10000": "macroman",
-	    "10006": "macgreek",
-	    "10007": "maccyrillic",
-	    "10079": "maciceland",
-	    "10081": "macturkish",
+	  10000: "macroman",
+	  10006: "macgreek",
+	  10007: "maccyrillic",
+	  10079: "maciceland",
+	  10081: "macturkish",
 
-	    "cspc8codepage437": "cp437",
-	    "cspc775baltic": "cp775",
-	    "cspc850multilingual": "cp850",
-	    "cspcp852": "cp852",
-	    "cspc862latinhebrew": "cp862",
-	    "cpgr": "cp869",
+	  cspc8codepage437: "cp437",
+	  cspc775baltic: "cp775",
+	  cspc850multilingual: "cp850",
+	  cspcp852: "cp852",
+	  cspc862latinhebrew: "cp862",
+	  cpgr: "cp869",
 
-	    "msee": "cp1250",
-	    "mscyrl": "cp1251",
-	    "msansi": "cp1252",
-	    "msgreek": "cp1253",
-	    "msturk": "cp1254",
-	    "mshebr": "cp1255",
-	    "msarab": "cp1256",
-	    "winbaltrim": "cp1257",
+	  msee: "cp1250",
+	  mscyrl: "cp1251",
+	  msansi: "cp1252",
+	  msgreek: "cp1253",
+	  msturk: "cp1254",
+	  mshebr: "cp1255",
+	  msarab: "cp1256",
+	  winbaltrim: "cp1257",
 
-	    "cp20866": "koi8r",
-	    "20866": "koi8r",
-	    "ibm878": "koi8r",
-	    "cskoi8r": "koi8r",
+	  cp20866: "koi8r",
+	  20866: "koi8r",
+	  ibm878: "koi8r",
+	  cskoi8r: "koi8r",
 
-	    "cp21866": "koi8u",
-	    "21866": "koi8u",
-	    "ibm1168": "koi8u",
+	  cp21866: "koi8u",
+	  21866: "koi8u",
+	  ibm1168: "koi8u",
 
-	    "strk10482002": "rk1048",
+	  strk10482002: "rk1048",
 
-	    "tcvn5712": "tcvn",
-	    "tcvn57121": "tcvn",
+	  tcvn5712: "tcvn",
+	  tcvn57121: "tcvn",
 
-	    "gb198880": "iso646cn",
-	    "cn": "iso646cn",
+	  gb198880: "iso646cn",
+	  cn: "iso646cn",
 
-	    "csiso14jisc6220ro": "iso646jp",
-	    "jisc62201969ro": "iso646jp",
-	    "jp": "iso646jp",
+	  csiso14jisc6220ro: "iso646jp",
+	  jisc62201969ro: "iso646jp",
+	  jp: "iso646jp",
 
-	    "cshproman8": "hproman8",
-	    "r8": "hproman8",
-	    "roman8": "hproman8",
-	    "xroman8": "hproman8",
-	    "ibm1051": "hproman8",
+	  cshproman8: "hproman8",
+	  r8: "hproman8",
+	  roman8: "hproman8",
+	  xroman8: "hproman8",
+	  ibm1051: "hproman8",
 
-	    "mac": "macintosh",
-	    "csmacintosh": "macintosh",
+	  mac: "macintosh",
+	  csmacintosh: "macintosh"
 	};
 	return sbcsData;
 }
@@ -16031,583 +16224,519 @@ function requireDbcsCodec () {
 
 	dbcsCodec._dbcs = DBCSCodec;
 
-	var UNASSIGNED = -1,
-	    GB18030_CODE = -2,
-	    SEQ_START  = -10,
-	    NODE_START = -1e3,
-	    UNASSIGNED_NODE = new Array(0x100),
-	    DEF_CHAR = -1;
+	var UNASSIGNED = -1;
+	var GB18030_CODE = -2;
+	var SEQ_START = -10;
+	var NODE_START = -1e3;
+	var UNASSIGNED_NODE = new Array(0x100);
+	var DEF_CHAR = -1;
 
-	for (var i = 0; i < 0x100; i++)
-	    UNASSIGNED_NODE[i] = UNASSIGNED;
-
+	for (var i = 0; i < 0x100; i++) { UNASSIGNED_NODE[i] = UNASSIGNED; }
 
 	// Class DBCSCodec reads and initializes mapping tables.
-	function DBCSCodec(codecOptions, iconv) {
-	    this.encodingName = codecOptions.encodingName;
-	    if (!codecOptions)
-	        throw new Error("DBCS codec is called without the data.")
-	    if (!codecOptions.table)
-	        throw new Error("Encoding '" + this.encodingName + "' has no data.");
+	function DBCSCodec (codecOptions, iconv) {
+	  this.encodingName = codecOptions.encodingName;
+	  if (!codecOptions) { throw new Error("DBCS codec is called without the data.") }
+	  if (!codecOptions.table) { throw new Error("Encoding '" + this.encodingName + "' has no data.") }
 
-	    // Load tables.
-	    var mappingTable = codecOptions.table();
+	  // Load tables.
+	  var mappingTable = codecOptions.table();
 
+	  // Decode tables: MBCS -> Unicode.
 
-	    // Decode tables: MBCS -> Unicode.
+	  // decodeTables is a trie, encoded as an array of arrays of integers. Internal arrays are trie nodes and all have len = 256.
+	  // Trie root is decodeTables[0].
+	  // Values: >=  0 -> unicode character code. can be > 0xFFFF
+	  //         == UNASSIGNED -> unknown/unassigned sequence.
+	  //         == GB18030_CODE -> this is the end of a GB18030 4-byte sequence.
+	  //         <= NODE_START -> index of the next node in our trie to process next byte.
+	  //         <= SEQ_START  -> index of the start of a character code sequence, in decodeTableSeq.
+	  this.decodeTables = [];
+	  this.decodeTables[0] = UNASSIGNED_NODE.slice(0); // Create root node.
 
-	    // decodeTables is a trie, encoded as an array of arrays of integers. Internal arrays are trie nodes and all have len = 256.
-	    // Trie root is decodeTables[0].
-	    // Values: >=  0 -> unicode character code. can be > 0xFFFF
-	    //         == UNASSIGNED -> unknown/unassigned sequence.
-	    //         == GB18030_CODE -> this is the end of a GB18030 4-byte sequence.
-	    //         <= NODE_START -> index of the next node in our trie to process next byte.
-	    //         <= SEQ_START  -> index of the start of a character code sequence, in decodeTableSeq.
-	    this.decodeTables = [];
-	    this.decodeTables[0] = UNASSIGNED_NODE.slice(0); // Create root node.
+	  // Sometimes a MBCS char corresponds to a sequence of unicode chars. We store them as arrays of integers here.
+	  this.decodeTableSeq = [];
 
-	    // Sometimes a MBCS char corresponds to a sequence of unicode chars. We store them as arrays of integers here. 
-	    this.decodeTableSeq = [];
+	  // Actual mapping tables consist of chunks. Use them to fill up decode tables.
+	  for (var i = 0; i < mappingTable.length; i++) { this._addDecodeChunk(mappingTable[i]); }
 
-	    // Actual mapping tables consist of chunks. Use them to fill up decode tables.
-	    for (var i = 0; i < mappingTable.length; i++)
-	        this._addDecodeChunk(mappingTable[i]);
+	  // Load & create GB18030 tables when needed.
+	  if (typeof codecOptions.gb18030 === "function") {
+	    this.gb18030 = codecOptions.gb18030(); // Load GB18030 ranges.
 
-	    // Load & create GB18030 tables when needed.
-	    if (typeof codecOptions.gb18030 === 'function') {
-	        this.gb18030 = codecOptions.gb18030(); // Load GB18030 ranges.
+	    // Add GB18030 common decode nodes.
+	    var commonThirdByteNodeIdx = this.decodeTables.length;
+	    this.decodeTables.push(UNASSIGNED_NODE.slice(0));
 
-	        // Add GB18030 common decode nodes.
-	        var commonThirdByteNodeIdx = this.decodeTables.length;
-	        this.decodeTables.push(UNASSIGNED_NODE.slice(0));
+	    var commonFourthByteNodeIdx = this.decodeTables.length;
+	    this.decodeTables.push(UNASSIGNED_NODE.slice(0));
 
-	        var commonFourthByteNodeIdx = this.decodeTables.length;
-	        this.decodeTables.push(UNASSIGNED_NODE.slice(0));
-
-	        // Fill out the tree
-	        var firstByteNode = this.decodeTables[0];
-	        for (var i = 0x81; i <= 0xFE; i++) {
-	            var secondByteNode = this.decodeTables[NODE_START - firstByteNode[i]];
-	            for (var j = 0x30; j <= 0x39; j++) {
-	                if (secondByteNode[j] === UNASSIGNED) {
-	                    secondByteNode[j] = NODE_START - commonThirdByteNodeIdx;
-	                } else if (secondByteNode[j] > NODE_START) {
-	                    throw new Error("gb18030 decode tables conflict at byte 2");
-	                }
-
-	                var thirdByteNode = this.decodeTables[NODE_START - secondByteNode[j]];
-	                for (var k = 0x81; k <= 0xFE; k++) {
-	                    if (thirdByteNode[k] === UNASSIGNED) {
-	                        thirdByteNode[k] = NODE_START - commonFourthByteNodeIdx;
-	                    } else if (thirdByteNode[k] === NODE_START - commonFourthByteNodeIdx) {
-	                        continue;
-	                    } else if (thirdByteNode[k] > NODE_START) {
-	                        throw new Error("gb18030 decode tables conflict at byte 3");
-	                    }
-
-	                    var fourthByteNode = this.decodeTables[NODE_START - thirdByteNode[k]];
-	                    for (var l = 0x30; l <= 0x39; l++) {
-	                        if (fourthByteNode[l] === UNASSIGNED)
-	                            fourthByteNode[l] = GB18030_CODE;
-	                    }
-	                }
-	            }
+	    // Fill out the tree
+	    var firstByteNode = this.decodeTables[0];
+	    for (var i = 0x81; i <= 0xFE; i++) {
+	      var secondByteNode = this.decodeTables[NODE_START - firstByteNode[i]];
+	      for (var j = 0x30; j <= 0x39; j++) {
+	        if (secondByteNode[j] === UNASSIGNED) {
+	          secondByteNode[j] = NODE_START - commonThirdByteNodeIdx;
+	        } else if (secondByteNode[j] > NODE_START) {
+	          throw new Error("gb18030 decode tables conflict at byte 2")
 	        }
-	    }
 
-	    this.defaultCharUnicode = iconv.defaultCharUnicode;
+	        var thirdByteNode = this.decodeTables[NODE_START - secondByteNode[j]];
+	        for (var k = 0x81; k <= 0xFE; k++) {
+	          if (thirdByteNode[k] === UNASSIGNED) {
+	            thirdByteNode[k] = NODE_START - commonFourthByteNodeIdx;
+	          } else if (thirdByteNode[k] === NODE_START - commonFourthByteNodeIdx) {
+	            continue
+	          } else if (thirdByteNode[k] > NODE_START) {
+	            throw new Error("gb18030 decode tables conflict at byte 3")
+	          }
 
-	    
-	    // Encode tables: Unicode -> DBCS.
-
-	    // `encodeTable` is array mapping from unicode char to encoded char. All its values are integers for performance.
-	    // Because it can be sparse, it is represented as array of buckets by 256 chars each. Bucket can be null.
-	    // Values: >=  0 -> it is a normal char. Write the value (if <=256 then 1 byte, if <=65536 then 2 bytes, etc.).
-	    //         == UNASSIGNED -> no conversion found. Output a default char.
-	    //         <= SEQ_START  -> it's an index in encodeTableSeq, see below. The character starts a sequence.
-	    this.encodeTable = [];
-	    
-	    // `encodeTableSeq` is used when a sequence of unicode characters is encoded as a single code. We use a tree of
-	    // objects where keys correspond to characters in sequence and leafs are the encoded dbcs values. A special DEF_CHAR key
-	    // means end of sequence (needed when one sequence is a strict subsequence of another).
-	    // Objects are kept separately from encodeTable to increase performance.
-	    this.encodeTableSeq = [];
-
-	    // Some chars can be decoded, but need not be encoded.
-	    var skipEncodeChars = {};
-	    if (codecOptions.encodeSkipVals)
-	        for (var i = 0; i < codecOptions.encodeSkipVals.length; i++) {
-	            var val = codecOptions.encodeSkipVals[i];
-	            if (typeof val === 'number')
-	                skipEncodeChars[val] = true;
-	            else
-	                for (var j = val.from; j <= val.to; j++)
-	                    skipEncodeChars[j] = true;
+	          var fourthByteNode = this.decodeTables[NODE_START - thirdByteNode[k]];
+	          for (var l = 0x30; l <= 0x39; l++) {
+	            if (fourthByteNode[l] === UNASSIGNED) { fourthByteNode[l] = GB18030_CODE; }
+	          }
 	        }
-	        
-	    // Use decode trie to recursively fill out encode tables.
-	    this._fillEncodeTable(0, 0, skipEncodeChars);
-
-	    // Add more encoding pairs when needed.
-	    if (codecOptions.encodeAdd) {
-	        for (var uChar in codecOptions.encodeAdd)
-	            if (Object.prototype.hasOwnProperty.call(codecOptions.encodeAdd, uChar))
-	                this._setEncodeChar(uChar.charCodeAt(0), codecOptions.encodeAdd[uChar]);
+	      }
 	    }
+	  }
 
-	    this.defCharSB  = this.encodeTable[0][iconv.defaultCharSingleByte.charCodeAt(0)];
-	    if (this.defCharSB === UNASSIGNED) this.defCharSB = this.encodeTable[0]['?'];
-	    if (this.defCharSB === UNASSIGNED) this.defCharSB = "?".charCodeAt(0);
+	  this.defaultCharUnicode = iconv.defaultCharUnicode;
+
+	  // Encode tables: Unicode -> DBCS.
+
+	  // `encodeTable` is array mapping from unicode char to encoded char. All its values are integers for performance.
+	  // Because it can be sparse, it is represented as array of buckets by 256 chars each. Bucket can be null.
+	  // Values: >=  0 -> it is a normal char. Write the value (if <=256 then 1 byte, if <=65536 then 2 bytes, etc.).
+	  //         == UNASSIGNED -> no conversion found. Output a default char.
+	  //         <= SEQ_START  -> it's an index in encodeTableSeq, see below. The character starts a sequence.
+	  this.encodeTable = [];
+
+	  // `encodeTableSeq` is used when a sequence of unicode characters is encoded as a single code. We use a tree of
+	  // objects where keys correspond to characters in sequence and leafs are the encoded dbcs values. A special DEF_CHAR key
+	  // means end of sequence (needed when one sequence is a strict subsequence of another).
+	  // Objects are kept separately from encodeTable to increase performance.
+	  this.encodeTableSeq = [];
+
+	  // Some chars can be decoded, but need not be encoded.
+	  var skipEncodeChars = {};
+	  if (codecOptions.encodeSkipVals) {
+	    for (var i = 0; i < codecOptions.encodeSkipVals.length; i++) {
+	      var val = codecOptions.encodeSkipVals[i];
+	      if (typeof val === "number") { skipEncodeChars[val] = true; } else {
+	        for (var j = val.from; j <= val.to; j++) { skipEncodeChars[j] = true; }
+	      }
+	    }
+	  }
+
+	  // Use decode trie to recursively fill out encode tables.
+	  this._fillEncodeTable(0, 0, skipEncodeChars);
+
+	  // Add more encoding pairs when needed.
+	  if (codecOptions.encodeAdd) {
+	    for (var uChar in codecOptions.encodeAdd) {
+	      if (Object.prototype.hasOwnProperty.call(codecOptions.encodeAdd, uChar)) { this._setEncodeChar(uChar.charCodeAt(0), codecOptions.encodeAdd[uChar]); }
+	    }
+	  }
+
+	  this.defCharSB = this.encodeTable[0][iconv.defaultCharSingleByte.charCodeAt(0)];
+	  if (this.defCharSB === UNASSIGNED) this.defCharSB = this.encodeTable[0]["?"];
+	  if (this.defCharSB === UNASSIGNED) this.defCharSB = "?".charCodeAt(0);
 	}
 
 	DBCSCodec.prototype.encoder = DBCSEncoder;
 	DBCSCodec.prototype.decoder = DBCSDecoder;
 
 	// Decoder helpers
-	DBCSCodec.prototype._getDecodeTrieNode = function(addr) {
-	    var bytes = [];
-	    for (; addr > 0; addr >>>= 8)
-	        bytes.push(addr & 0xFF);
-	    if (bytes.length == 0)
-	        bytes.push(0);
+	DBCSCodec.prototype._getDecodeTrieNode = function (addr) {
+	  var bytes = [];
+	  for (; addr > 0; addr >>>= 8) { bytes.push(addr & 0xFF); }
+	  if (bytes.length == 0) { bytes.push(0); }
 
-	    var node = this.decodeTables[0];
-	    for (var i = bytes.length-1; i > 0; i--) { // Traverse nodes deeper into the trie.
-	        var val = node[bytes[i]];
+	  var node = this.decodeTables[0];
+	  for (var i = bytes.length - 1; i > 0; i--) { // Traverse nodes deeper into the trie.
+	    var val = node[bytes[i]];
 
-	        if (val == UNASSIGNED) { // Create new node.
-	            node[bytes[i]] = NODE_START - this.decodeTables.length;
-	            this.decodeTables.push(node = UNASSIGNED_NODE.slice(0));
-	        }
-	        else if (val <= NODE_START) { // Existing node.
-	            node = this.decodeTables[NODE_START - val];
-	        }
-	        else
-	            throw new Error("Overwrite byte in " + this.encodingName + ", addr: " + addr.toString(16));
-	    }
-	    return node;
+	    if (val == UNASSIGNED) { // Create new node.
+	      node[bytes[i]] = NODE_START - this.decodeTables.length;
+	      this.decodeTables.push(node = UNASSIGNED_NODE.slice(0));
+	    } else if (val <= NODE_START) { // Existing node.
+	      node = this.decodeTables[NODE_START - val];
+	    } else { throw new Error("Overwrite byte in " + this.encodingName + ", addr: " + addr.toString(16)) }
+	  }
+	  return node
 	};
 
+	DBCSCodec.prototype._addDecodeChunk = function (chunk) {
+	  // First element of chunk is the hex mbcs code where we start.
+	  var curAddr = parseInt(chunk[0], 16);
 
-	DBCSCodec.prototype._addDecodeChunk = function(chunk) {
-	    // First element of chunk is the hex mbcs code where we start.
-	    var curAddr = parseInt(chunk[0], 16);
+	  // Choose the decoding node where we'll write our chars.
+	  var writeTable = this._getDecodeTrieNode(curAddr);
+	  curAddr = curAddr & 0xFF;
 
-	    // Choose the decoding node where we'll write our chars.
-	    var writeTable = this._getDecodeTrieNode(curAddr);
-	    curAddr = curAddr & 0xFF;
+	  // Write all other elements of the chunk to the table.
+	  for (var k = 1; k < chunk.length; k++) {
+	    var part = chunk[k];
+	    if (typeof part === "string") { // String, write as-is.
+	      for (var l = 0; l < part.length;) {
+	        var code = part.charCodeAt(l++);
+	        if (code >= 0xD800 && code < 0xDC00) { // Decode surrogate
+	          var codeTrail = part.charCodeAt(l++);
+	          if (codeTrail >= 0xDC00 && codeTrail < 0xE000) { writeTable[curAddr++] = 0x10000 + (code - 0xD800) * 0x400 + (codeTrail - 0xDC00); } else { throw new Error("Incorrect surrogate pair in " + this.encodingName + " at chunk " + chunk[0]) }
+	        } else if (code > 0x0FF0 && code <= 0x0FFF) { // Character sequence (our own encoding used)
+	          var len = 0xFFF - code + 2;
+	          var seq = [];
+	          for (var m = 0; m < len; m++) { seq.push(part.charCodeAt(l++)); } // Simple variation: don't support surrogates or subsequences in seq.
 
-	    // Write all other elements of the chunk to the table.
-	    for (var k = 1; k < chunk.length; k++) {
-	        var part = chunk[k];
-	        if (typeof part === "string") { // String, write as-is.
-	            for (var l = 0; l < part.length;) {
-	                var code = part.charCodeAt(l++);
-	                if (0xD800 <= code && code < 0xDC00) { // Decode surrogate
-	                    var codeTrail = part.charCodeAt(l++);
-	                    if (0xDC00 <= codeTrail && codeTrail < 0xE000)
-	                        writeTable[curAddr++] = 0x10000 + (code - 0xD800) * 0x400 + (codeTrail - 0xDC00);
-	                    else
-	                        throw new Error("Incorrect surrogate pair in "  + this.encodingName + " at chunk " + chunk[0]);
-	                }
-	                else if (0x0FF0 < code && code <= 0x0FFF) { // Character sequence (our own encoding used)
-	                    var len = 0xFFF - code + 2;
-	                    var seq = [];
-	                    for (var m = 0; m < len; m++)
-	                        seq.push(part.charCodeAt(l++)); // Simple variation: don't support surrogates or subsequences in seq.
-
-	                    writeTable[curAddr++] = SEQ_START - this.decodeTableSeq.length;
-	                    this.decodeTableSeq.push(seq);
-	                }
-	                else
-	                    writeTable[curAddr++] = code; // Basic char
-	            }
-	        } 
-	        else if (typeof part === "number") { // Integer, meaning increasing sequence starting with prev character.
-	            var charCode = writeTable[curAddr - 1] + 1;
-	            for (var l = 0; l < part; l++)
-	                writeTable[curAddr++] = charCode++;
-	        }
-	        else
-	            throw new Error("Incorrect type '" + typeof part + "' given in "  + this.encodingName + " at chunk " + chunk[0]);
-	    }
-	    if (curAddr > 0xFF)
-	        throw new Error("Incorrect chunk in "  + this.encodingName + " at addr " + chunk[0] + ": too long" + curAddr);
+	          writeTable[curAddr++] = SEQ_START - this.decodeTableSeq.length;
+	          this.decodeTableSeq.push(seq);
+	        } else { writeTable[curAddr++] = code; } // Basic char
+	      }
+	    } else if (typeof part === "number") { // Integer, meaning increasing sequence starting with prev character.
+	      var charCode = writeTable[curAddr - 1] + 1;
+	      for (var l = 0; l < part; l++) { writeTable[curAddr++] = charCode++; }
+	    } else { throw new Error("Incorrect type '" + typeof part + "' given in " + this.encodingName + " at chunk " + chunk[0]) }
+	  }
+	  if (curAddr > 0xFF) { throw new Error("Incorrect chunk in " + this.encodingName + " at addr " + chunk[0] + ": too long" + curAddr) }
 	};
 
 	// Encoder helpers
-	DBCSCodec.prototype._getEncodeBucket = function(uCode) {
-	    var high = uCode >> 8; // This could be > 0xFF because of astral characters.
-	    if (this.encodeTable[high] === undefined)
-	        this.encodeTable[high] = UNASSIGNED_NODE.slice(0); // Create bucket on demand.
-	    return this.encodeTable[high];
+	DBCSCodec.prototype._getEncodeBucket = function (uCode) {
+	  var high = uCode >> 8; // This could be > 0xFF because of astral characters.
+	  if (this.encodeTable[high] === undefined) {
+	    this.encodeTable[high] = UNASSIGNED_NODE.slice(0);
+	  } // Create bucket on demand.
+	  return this.encodeTable[high]
 	};
 
-	DBCSCodec.prototype._setEncodeChar = function(uCode, dbcsCode) {
-	    var bucket = this._getEncodeBucket(uCode);
-	    var low = uCode & 0xFF;
-	    if (bucket[low] <= SEQ_START)
-	        this.encodeTableSeq[SEQ_START-bucket[low]][DEF_CHAR] = dbcsCode; // There's already a sequence, set a single-char subsequence of it.
-	    else if (bucket[low] == UNASSIGNED)
-	        bucket[low] = dbcsCode;
+	DBCSCodec.prototype._setEncodeChar = function (uCode, dbcsCode) {
+	  var bucket = this._getEncodeBucket(uCode);
+	  var low = uCode & 0xFF;
+	  if (bucket[low] <= SEQ_START) { this.encodeTableSeq[SEQ_START - bucket[low]][DEF_CHAR] = dbcsCode; } // There's already a sequence, set a single-char subsequence of it.
+	  else if (bucket[low] == UNASSIGNED) { bucket[low] = dbcsCode; }
 	};
 
-	DBCSCodec.prototype._setEncodeSequence = function(seq, dbcsCode) {
-	    
-	    // Get the root of character tree according to first character of the sequence.
-	    var uCode = seq[0];
-	    var bucket = this._getEncodeBucket(uCode);
-	    var low = uCode & 0xFF;
+	DBCSCodec.prototype._setEncodeSequence = function (seq, dbcsCode) {
+	  // Get the root of character tree according to first character of the sequence.
+	  var uCode = seq[0];
+	  var bucket = this._getEncodeBucket(uCode);
+	  var low = uCode & 0xFF;
 
-	    var node;
-	    if (bucket[low] <= SEQ_START) {
-	        // There's already a sequence with  - use it.
-	        node = this.encodeTableSeq[SEQ_START-bucket[low]];
-	    }
-	    else {
-	        // There was no sequence object - allocate a new one.
-	        node = {};
-	        if (bucket[low] !== UNASSIGNED) node[DEF_CHAR] = bucket[low]; // If a char was set before - make it a single-char subsequence.
-	        bucket[low] = SEQ_START - this.encodeTableSeq.length;
-	        this.encodeTableSeq.push(node);
-	    }
+	  var node;
+	  if (bucket[low] <= SEQ_START) {
+	    // There's already a sequence with  - use it.
+	    node = this.encodeTableSeq[SEQ_START - bucket[low]];
+	  } else {
+	    // There was no sequence object - allocate a new one.
+	    node = {};
+	    if (bucket[low] !== UNASSIGNED) node[DEF_CHAR] = bucket[low]; // If a char was set before - make it a single-char subsequence.
+	    bucket[low] = SEQ_START - this.encodeTableSeq.length;
+	    this.encodeTableSeq.push(node);
+	  }
 
-	    // Traverse the character tree, allocating new nodes as needed.
-	    for (var j = 1; j < seq.length-1; j++) {
-	        var oldVal = node[uCode];
-	        if (typeof oldVal === 'object')
-	            node = oldVal;
-	        else {
-	            node = node[uCode] = {};
-	            if (oldVal !== undefined)
-	                node[DEF_CHAR] = oldVal;
-	        }
+	  // Traverse the character tree, allocating new nodes as needed.
+	  for (var j = 1; j < seq.length - 1; j++) {
+	    var oldVal = node[uCode];
+	    if (typeof oldVal === "object") { node = oldVal; } else {
+	      node = node[uCode] = {};
+	      if (oldVal !== undefined) { node[DEF_CHAR] = oldVal; }
 	    }
+	  }
 
-	    // Set the leaf to given dbcsCode.
-	    uCode = seq[seq.length-1];
-	    node[uCode] = dbcsCode;
+	  // Set the leaf to given dbcsCode.
+	  uCode = seq[seq.length - 1];
+	  node[uCode] = dbcsCode;
 	};
 
-	DBCSCodec.prototype._fillEncodeTable = function(nodeIdx, prefix, skipEncodeChars) {
-	    var node = this.decodeTables[nodeIdx];
-	    var hasValues = false;
-	    var subNodeEmpty = {};
-	    for (var i = 0; i < 0x100; i++) {
-	        var uCode = node[i];
-	        var mbCode = prefix + i;
-	        if (skipEncodeChars[mbCode])
-	            continue;
+	DBCSCodec.prototype._fillEncodeTable = function (nodeIdx, prefix, skipEncodeChars) {
+	  var node = this.decodeTables[nodeIdx];
+	  var hasValues = false;
+	  var subNodeEmpty = {};
+	  for (var i = 0; i < 0x100; i++) {
+	    var uCode = node[i];
+	    var mbCode = prefix + i;
+	    if (skipEncodeChars[mbCode]) { continue }
 
-	        if (uCode >= 0) {
-	            this._setEncodeChar(uCode, mbCode);
-	            hasValues = true;
-	        } else if (uCode <= NODE_START) {
-	            var subNodeIdx = NODE_START - uCode;
-	            if (!subNodeEmpty[subNodeIdx]) {  // Skip empty subtrees (they are too large in gb18030).
-	                var newPrefix = (mbCode << 8) >>> 0;  // NOTE: '>>> 0' keeps 32-bit num positive.
-	                if (this._fillEncodeTable(subNodeIdx, newPrefix, skipEncodeChars))
-	                    hasValues = true;
-	                else
-	                    subNodeEmpty[subNodeIdx] = true;
-	            }
-	        } else if (uCode <= SEQ_START) {
-	            this._setEncodeSequence(this.decodeTableSeq[SEQ_START - uCode], mbCode);
-	            hasValues = true;
-	        }
+	    if (uCode >= 0) {
+	      this._setEncodeChar(uCode, mbCode);
+	      hasValues = true;
+	    } else if (uCode <= NODE_START) {
+	      var subNodeIdx = NODE_START - uCode;
+	      if (!subNodeEmpty[subNodeIdx]) {  // Skip empty subtrees (they are too large in gb18030).
+	        var newPrefix = (mbCode << 8) >>> 0;  // NOTE: '>>> 0' keeps 32-bit num positive.
+	        if (this._fillEncodeTable(subNodeIdx, newPrefix, skipEncodeChars)) { hasValues = true; } else { subNodeEmpty[subNodeIdx] = true; }
+	      }
+	    } else if (uCode <= SEQ_START) {
+	      this._setEncodeSequence(this.decodeTableSeq[SEQ_START - uCode], mbCode);
+	      hasValues = true;
 	    }
-	    return hasValues;
+	  }
+	  return hasValues
 	};
-
-
 
 	// == Encoder ==================================================================
 
-	function DBCSEncoder(options, codec) {
-	    // Encoder state
-	    this.leadSurrogate = -1;
-	    this.seqObj = undefined;
-	    
-	    // Static data
-	    this.encodeTable = codec.encodeTable;
-	    this.encodeTableSeq = codec.encodeTableSeq;
-	    this.defaultCharSingleByte = codec.defCharSB;
-	    this.gb18030 = codec.gb18030;
+	function DBCSEncoder (options, codec) {
+	  // Encoder state
+	  this.leadSurrogate = -1;
+	  this.seqObj = undefined;
+
+	  // Static data
+	  this.encodeTable = codec.encodeTable;
+	  this.encodeTableSeq = codec.encodeTableSeq;
+	  this.defaultCharSingleByte = codec.defCharSB;
+	  this.gb18030 = codec.gb18030;
 	}
 
-	DBCSEncoder.prototype.write = function(str) {
-	    var newBuf = Buffer.alloc(str.length * (this.gb18030 ? 4 : 3)),
-	        leadSurrogate = this.leadSurrogate,
-	        seqObj = this.seqObj, nextChar = -1,
-	        i = 0, j = 0;
+	DBCSEncoder.prototype.write = function (str) {
+	  var newBuf = Buffer.alloc(str.length * (this.gb18030 ? 4 : 3));
+	  var leadSurrogate = this.leadSurrogate;
+	  var seqObj = this.seqObj;
+	  var nextChar = -1;
+	  var i = 0; var j = 0;
 
-	    while (true) {
-	        // 0. Get next character.
-	        if (nextChar === -1) {
-	            if (i == str.length) break;
-	            var uCode = str.charCodeAt(i++);
-	        }
-	        else {
-	            var uCode = nextChar;
-	            nextChar = -1;    
-	        }
-
-	        // 1. Handle surrogates.
-	        if (0xD800 <= uCode && uCode < 0xE000) { // Char is one of surrogates.
-	            if (uCode < 0xDC00) { // We've got lead surrogate.
-	                if (leadSurrogate === -1) {
-	                    leadSurrogate = uCode;
-	                    continue;
-	                } else {
-	                    leadSurrogate = uCode;
-	                    // Double lead surrogate found.
-	                    uCode = UNASSIGNED;
-	                }
-	            } else { // We've got trail surrogate.
-	                if (leadSurrogate !== -1) {
-	                    uCode = 0x10000 + (leadSurrogate - 0xD800) * 0x400 + (uCode - 0xDC00);
-	                    leadSurrogate = -1;
-	                } else {
-	                    // Incomplete surrogate pair - only trail surrogate found.
-	                    uCode = UNASSIGNED;
-	                }
-	                
-	            }
-	        }
-	        else if (leadSurrogate !== -1) {
-	            // Incomplete surrogate pair - only lead surrogate found.
-	            nextChar = uCode; uCode = UNASSIGNED; // Write an error, then current char.
-	            leadSurrogate = -1;
-	        }
-
-	        // 2. Convert uCode character.
-	        var dbcsCode = UNASSIGNED;
-	        if (seqObj !== undefined && uCode != UNASSIGNED) { // We are in the middle of the sequence
-	            var resCode = seqObj[uCode];
-	            if (typeof resCode === 'object') { // Sequence continues.
-	                seqObj = resCode;
-	                continue;
-
-	            } else if (typeof resCode == 'number') { // Sequence finished. Write it.
-	                dbcsCode = resCode;
-
-	            } else if (resCode == undefined) { // Current character is not part of the sequence.
-
-	                // Try default character for this sequence
-	                resCode = seqObj[DEF_CHAR];
-	                if (resCode !== undefined) {
-	                    dbcsCode = resCode; // Found. Write it.
-	                    nextChar = uCode; // Current character will be written too in the next iteration.
-
-	                }
-	            }
-	            seqObj = undefined;
-	        }
-	        else if (uCode >= 0) {  // Regular character
-	            var subtable = this.encodeTable[uCode >> 8];
-	            if (subtable !== undefined)
-	                dbcsCode = subtable[uCode & 0xFF];
-	            
-	            if (dbcsCode <= SEQ_START) { // Sequence start
-	                seqObj = this.encodeTableSeq[SEQ_START-dbcsCode];
-	                continue;
-	            }
-
-	            if (dbcsCode == UNASSIGNED && this.gb18030) {
-	                // Use GB18030 algorithm to find character(s) to write.
-	                var idx = findIdx(this.gb18030.uChars, uCode);
-	                if (idx != -1) {
-	                    var dbcsCode = this.gb18030.gbChars[idx] + (uCode - this.gb18030.uChars[idx]);
-	                    newBuf[j++] = 0x81 + Math.floor(dbcsCode / 12600); dbcsCode = dbcsCode % 12600;
-	                    newBuf[j++] = 0x30 + Math.floor(dbcsCode / 1260); dbcsCode = dbcsCode % 1260;
-	                    newBuf[j++] = 0x81 + Math.floor(dbcsCode / 10); dbcsCode = dbcsCode % 10;
-	                    newBuf[j++] = 0x30 + dbcsCode;
-	                    continue;
-	                }
-	            }
-	        }
-
-	        // 3. Write dbcsCode character.
-	        if (dbcsCode === UNASSIGNED)
-	            dbcsCode = this.defaultCharSingleByte;
-	        
-	        if (dbcsCode < 0x100) {
-	            newBuf[j++] = dbcsCode;
-	        }
-	        else if (dbcsCode < 0x10000) {
-	            newBuf[j++] = dbcsCode >> 8;   // high byte
-	            newBuf[j++] = dbcsCode & 0xFF; // low byte
-	        }
-	        else if (dbcsCode < 0x1000000) {
-	            newBuf[j++] = dbcsCode >> 16;
-	            newBuf[j++] = (dbcsCode >> 8) & 0xFF;
-	            newBuf[j++] = dbcsCode & 0xFF;
-	        } else {
-	            newBuf[j++] = dbcsCode >>> 24;
-	            newBuf[j++] = (dbcsCode >>> 16) & 0xFF;
-	            newBuf[j++] = (dbcsCode >>> 8) & 0xFF;
-	            newBuf[j++] = dbcsCode & 0xFF;
-	        }
+	  while (true) {
+	    // 0. Get next character.
+	    if (nextChar === -1) {
+	      if (i == str.length) break
+	      var uCode = str.charCodeAt(i++);
+	    } else {
+	      var uCode = nextChar;
+	      nextChar = -1;
 	    }
 
-	    this.seqObj = seqObj;
-	    this.leadSurrogate = leadSurrogate;
-	    return newBuf.slice(0, j);
+	    // 1. Handle surrogates.
+	    if (uCode >= 0xD800 && uCode < 0xE000) { // Char is one of surrogates.
+	      if (uCode < 0xDC00) { // We've got lead surrogate.
+	        if (leadSurrogate === -1) {
+	          leadSurrogate = uCode;
+	          continue
+	        } else {
+	          leadSurrogate = uCode;
+	          // Double lead surrogate found.
+	          uCode = UNASSIGNED;
+	        }
+	      } else { // We've got trail surrogate.
+	        if (leadSurrogate !== -1) {
+	          uCode = 0x10000 + (leadSurrogate - 0xD800) * 0x400 + (uCode - 0xDC00);
+	          leadSurrogate = -1;
+	        } else {
+	          // Incomplete surrogate pair - only trail surrogate found.
+	          uCode = UNASSIGNED;
+	        }
+	      }
+	    } else if (leadSurrogate !== -1) {
+	      // Incomplete surrogate pair - only lead surrogate found.
+	      nextChar = uCode; uCode = UNASSIGNED; // Write an error, then current char.
+	      leadSurrogate = -1;
+	    }
+
+	    // 2. Convert uCode character.
+	    var dbcsCode = UNASSIGNED;
+	    if (seqObj !== undefined && uCode != UNASSIGNED) { // We are in the middle of the sequence
+	      var resCode = seqObj[uCode];
+	      if (typeof resCode === "object") { // Sequence continues.
+	        seqObj = resCode;
+	        continue
+	      } else if (typeof resCode === "number") { // Sequence finished. Write it.
+	        dbcsCode = resCode;
+	      } else if (resCode == undefined) { // Current character is not part of the sequence.
+	        // Try default character for this sequence
+	        resCode = seqObj[DEF_CHAR];
+	        if (resCode !== undefined) {
+	          dbcsCode = resCode; // Found. Write it.
+	          nextChar = uCode; // Current character will be written too in the next iteration.
+	        }
+	      }
+	      seqObj = undefined;
+	    } else if (uCode >= 0) {  // Regular character
+	      var subtable = this.encodeTable[uCode >> 8];
+	      if (subtable !== undefined) { dbcsCode = subtable[uCode & 0xFF]; }
+
+	      if (dbcsCode <= SEQ_START) { // Sequence start
+	        seqObj = this.encodeTableSeq[SEQ_START - dbcsCode];
+	        continue
+	      }
+
+	      if (dbcsCode == UNASSIGNED && this.gb18030) {
+	        // Use GB18030 algorithm to find character(s) to write.
+	        var idx = findIdx(this.gb18030.uChars, uCode);
+	        if (idx != -1) {
+	          var dbcsCode = this.gb18030.gbChars[idx] + (uCode - this.gb18030.uChars[idx]);
+	          newBuf[j++] = 0x81 + Math.floor(dbcsCode / 12600); dbcsCode = dbcsCode % 12600;
+	          newBuf[j++] = 0x30 + Math.floor(dbcsCode / 1260); dbcsCode = dbcsCode % 1260;
+	          newBuf[j++] = 0x81 + Math.floor(dbcsCode / 10); dbcsCode = dbcsCode % 10;
+	          newBuf[j++] = 0x30 + dbcsCode;
+	          continue
+	        }
+	      }
+	    }
+
+	    // 3. Write dbcsCode character.
+	    if (dbcsCode === UNASSIGNED) { dbcsCode = this.defaultCharSingleByte; }
+
+	    if (dbcsCode < 0x100) {
+	      newBuf[j++] = dbcsCode;
+	    } else if (dbcsCode < 0x10000) {
+	      newBuf[j++] = dbcsCode >> 8;   // high byte
+	      newBuf[j++] = dbcsCode & 0xFF; // low byte
+	    } else if (dbcsCode < 0x1000000) {
+	      newBuf[j++] = dbcsCode >> 16;
+	      newBuf[j++] = (dbcsCode >> 8) & 0xFF;
+	      newBuf[j++] = dbcsCode & 0xFF;
+	    } else {
+	      newBuf[j++] = dbcsCode >>> 24;
+	      newBuf[j++] = (dbcsCode >>> 16) & 0xFF;
+	      newBuf[j++] = (dbcsCode >>> 8) & 0xFF;
+	      newBuf[j++] = dbcsCode & 0xFF;
+	    }
+	  }
+
+	  this.seqObj = seqObj;
+	  this.leadSurrogate = leadSurrogate;
+	  return newBuf.slice(0, j)
 	};
 
-	DBCSEncoder.prototype.end = function() {
-	    if (this.leadSurrogate === -1 && this.seqObj === undefined)
-	        return; // All clean. Most often case.
+	DBCSEncoder.prototype.end = function () {
+	  if (this.leadSurrogate === -1 && this.seqObj === undefined) { return } // All clean. Most often case.
 
-	    var newBuf = Buffer.alloc(10), j = 0;
+	  var newBuf = Buffer.alloc(10); var j = 0;
 
-	    if (this.seqObj) { // We're in the sequence.
-	        var dbcsCode = this.seqObj[DEF_CHAR];
-	        if (dbcsCode !== undefined) { // Write beginning of the sequence.
-	            if (dbcsCode < 0x100) {
-	                newBuf[j++] = dbcsCode;
-	            }
-	            else {
-	                newBuf[j++] = dbcsCode >> 8;   // high byte
-	                newBuf[j++] = dbcsCode & 0xFF; // low byte
-	            }
-	        }
-	        this.seqObj = undefined;
+	  if (this.seqObj) { // We're in the sequence.
+	    var dbcsCode = this.seqObj[DEF_CHAR];
+	    if (dbcsCode !== undefined) { // Write beginning of the sequence.
+	      if (dbcsCode < 0x100) {
+	        newBuf[j++] = dbcsCode;
+	      } else {
+	        newBuf[j++] = dbcsCode >> 8;   // high byte
+	        newBuf[j++] = dbcsCode & 0xFF; // low byte
+	      }
 	    }
+	    this.seqObj = undefined;
+	  }
 
-	    if (this.leadSurrogate !== -1) {
-	        // Incomplete surrogate pair - only lead surrogate found.
-	        newBuf[j++] = this.defaultCharSingleByte;
-	        this.leadSurrogate = -1;
-	    }
-	    
-	    return newBuf.slice(0, j);
+	  if (this.leadSurrogate !== -1) {
+	    // Incomplete surrogate pair - only lead surrogate found.
+	    newBuf[j++] = this.defaultCharSingleByte;
+	    this.leadSurrogate = -1;
+	  }
+
+	  return newBuf.slice(0, j)
 	};
 
 	// Export for testing
 	DBCSEncoder.prototype.findIdx = findIdx;
 
-
 	// == Decoder ==================================================================
 
-	function DBCSDecoder(options, codec) {
-	    // Decoder state
-	    this.nodeIdx = 0;
-	    this.prevBytes = [];
+	function DBCSDecoder (options, codec) {
+	  // Decoder state
+	  this.nodeIdx = 0;
+	  this.prevBytes = [];
 
-	    // Static data
-	    this.decodeTables = codec.decodeTables;
-	    this.decodeTableSeq = codec.decodeTableSeq;
-	    this.defaultCharUnicode = codec.defaultCharUnicode;
-	    this.gb18030 = codec.gb18030;
+	  // Static data
+	  this.decodeTables = codec.decodeTables;
+	  this.decodeTableSeq = codec.decodeTableSeq;
+	  this.defaultCharUnicode = codec.defaultCharUnicode;
+	  this.gb18030 = codec.gb18030;
 	}
 
-	DBCSDecoder.prototype.write = function(buf) {
-	    var newBuf = Buffer.alloc(buf.length*2),
-	        nodeIdx = this.nodeIdx, 
-	        prevBytes = this.prevBytes, prevOffset = this.prevBytes.length,
-	        seqStart = -this.prevBytes.length, // idx of the start of current parsed sequence.
-	        uCode;
+	DBCSDecoder.prototype.write = function (buf) {
+	  var newBuf = Buffer.alloc(buf.length * 2);
+	  var nodeIdx = this.nodeIdx;
+	  var prevBytes = this.prevBytes; var prevOffset = this.prevBytes.length;
+	  var seqStart = -this.prevBytes.length; // idx of the start of current parsed sequence.
+	  var uCode;
 
-	    for (var i = 0, j = 0; i < buf.length; i++) {
-	        var curByte = (i >= 0) ? buf[i] : prevBytes[i + prevOffset];
+	  for (var i = 0, j = 0; i < buf.length; i++) {
+	    var curByte = (i >= 0) ? buf[i] : prevBytes[i + prevOffset];
 
-	        // Lookup in current trie node.
-	        var uCode = this.decodeTables[nodeIdx][curByte];
+	    // Lookup in current trie node.
+	    var uCode = this.decodeTables[nodeIdx][curByte];
 
-	        if (uCode >= 0) ;
-	        else if (uCode === UNASSIGNED) { // Unknown char.
-	            // TODO: Callback with seq.
-	            uCode = this.defaultCharUnicode.charCodeAt(0);
-	            i = seqStart; // Skip one byte ('i' will be incremented by the for loop) and try to parse again.
-	        }
-	        else if (uCode === GB18030_CODE) {
-	            if (i >= 3) {
-	                var ptr = (buf[i-3]-0x81)*12600 + (buf[i-2]-0x30)*1260 + (buf[i-1]-0x81)*10 + (curByte-0x30);
-	            } else {
-	                var ptr = (prevBytes[i-3+prevOffset]-0x81)*12600 + 
-	                          (((i-2 >= 0) ? buf[i-2] : prevBytes[i-2+prevOffset])-0x30)*1260 + 
-	                          (((i-1 >= 0) ? buf[i-1] : prevBytes[i-1+prevOffset])-0x81)*10 + 
-	                          (curByte-0x30);
-	            }
-	            var idx = findIdx(this.gb18030.gbChars, ptr);
-	            uCode = this.gb18030.uChars[idx] + ptr - this.gb18030.gbChars[idx];
-	        }
-	        else if (uCode <= NODE_START) { // Go to next trie node.
-	            nodeIdx = NODE_START - uCode;
-	            continue;
-	        }
-	        else if (uCode <= SEQ_START) { // Output a sequence of chars.
-	            var seq = this.decodeTableSeq[SEQ_START - uCode];
-	            for (var k = 0; k < seq.length - 1; k++) {
-	                uCode = seq[k];
-	                newBuf[j++] = uCode & 0xFF;
-	                newBuf[j++] = uCode >> 8;
-	            }
-	            uCode = seq[seq.length-1];
-	        }
-	        else
-	            throw new Error("iconv-lite internal error: invalid decoding table value " + uCode + " at " + nodeIdx + "/" + curByte);
-
-	        // Write the character to buffer, handling higher planes using surrogate pair.
-	        if (uCode >= 0x10000) { 
-	            uCode -= 0x10000;
-	            var uCodeLead = 0xD800 | (uCode >> 10);
-	            newBuf[j++] = uCodeLead & 0xFF;
-	            newBuf[j++] = uCodeLead >> 8;
-
-	            uCode = 0xDC00 | (uCode & 0x3FF);
-	        }
+	    if (uCode >= 0) ; else if (uCode === UNASSIGNED) { // Unknown char.
+	      // TODO: Callback with seq.
+	      uCode = this.defaultCharUnicode.charCodeAt(0);
+	      i = seqStart; // Skip one byte ('i' will be incremented by the for loop) and try to parse again.
+	    } else if (uCode === GB18030_CODE) {
+	      if (i >= 3) {
+	        var ptr = (buf[i - 3] - 0x81) * 12600 + (buf[i - 2] - 0x30) * 1260 + (buf[i - 1] - 0x81) * 10 + (curByte - 0x30);
+	      } else {
+	        var ptr = (prevBytes[i - 3 + prevOffset] - 0x81) * 12600 +
+	                          (((i - 2 >= 0) ? buf[i - 2] : prevBytes[i - 2 + prevOffset]) - 0x30) * 1260 +
+	                          (((i - 1 >= 0) ? buf[i - 1] : prevBytes[i - 1 + prevOffset]) - 0x81) * 10 +
+	                          (curByte - 0x30);
+	      }
+	      var idx = findIdx(this.gb18030.gbChars, ptr);
+	      uCode = this.gb18030.uChars[idx] + ptr - this.gb18030.gbChars[idx];
+	    } else if (uCode <= NODE_START) { // Go to next trie node.
+	      nodeIdx = NODE_START - uCode;
+	      continue
+	    } else if (uCode <= SEQ_START) { // Output a sequence of chars.
+	      var seq = this.decodeTableSeq[SEQ_START - uCode];
+	      for (var k = 0; k < seq.length - 1; k++) {
+	        uCode = seq[k];
 	        newBuf[j++] = uCode & 0xFF;
 	        newBuf[j++] = uCode >> 8;
+	      }
+	      uCode = seq[seq.length - 1];
+	    } else { throw new Error("iconv-lite internal error: invalid decoding table value " + uCode + " at " + nodeIdx + "/" + curByte) }
 
-	        // Reset trie node.
-	        nodeIdx = 0; seqStart = i+1;
+	    // Write the character to buffer, handling higher planes using surrogate pair.
+	    if (uCode >= 0x10000) {
+	      uCode -= 0x10000;
+	      var uCodeLead = 0xD800 | (uCode >> 10);
+	      newBuf[j++] = uCodeLead & 0xFF;
+	      newBuf[j++] = uCodeLead >> 8;
+
+	      uCode = 0xDC00 | (uCode & 0x3FF);
 	    }
+	    newBuf[j++] = uCode & 0xFF;
+	    newBuf[j++] = uCode >> 8;
 
-	    this.nodeIdx = nodeIdx;
-	    this.prevBytes = (seqStart >= 0)
-	        ? Array.prototype.slice.call(buf, seqStart)
-	        : prevBytes.slice(seqStart + prevOffset).concat(Array.prototype.slice.call(buf));
+	    // Reset trie node.
+	    nodeIdx = 0; seqStart = i + 1;
+	  }
 
-	    return newBuf.slice(0, j).toString('ucs2');
+	  this.nodeIdx = nodeIdx;
+	  this.prevBytes = (seqStart >= 0)
+	    ? Array.prototype.slice.call(buf, seqStart)
+	    : prevBytes.slice(seqStart + prevOffset).concat(Array.prototype.slice.call(buf));
+
+	  return newBuf.slice(0, j).toString("ucs2")
 	};
 
-	DBCSDecoder.prototype.end = function() {
-	    var ret = '';
+	DBCSDecoder.prototype.end = function () {
+	  var ret = "";
 
-	    // Try to parse all remaining chars.
-	    while (this.prevBytes.length > 0) {
-	        // Skip 1 character in the buffer.
-	        ret += this.defaultCharUnicode;
-	        var bytesArr = this.prevBytes.slice(1);
+	  // Try to parse all remaining chars.
+	  while (this.prevBytes.length > 0) {
+	    // Skip 1 character in the buffer.
+	    ret += this.defaultCharUnicode;
+	    var bytesArr = this.prevBytes.slice(1);
 
-	        // Parse remaining as usual.
-	        this.prevBytes = [];
-	        this.nodeIdx = 0;
-	        if (bytesArr.length > 0)
-	            ret += this.write(bytesArr);
-	    }
-
+	    // Parse remaining as usual.
 	    this.prevBytes = [];
 	    this.nodeIdx = 0;
-	    return ret;
+	    if (bytesArr.length > 0) { ret += this.write(bytesArr); }
+	  }
+
+	  this.prevBytes = [];
+	  this.nodeIdx = 0;
+	  return ret
 	};
 
 	// Binary search for GB18030. Returns largest i such that table[i] <= val.
-	function findIdx(table, val) {
-	    if (table[0] > val)
-	        return -1;
+	function findIdx (table, val) {
+	  if (table[0] > val) { return -1 }
 
-	    var l = 0, r = table.length;
-	    while (l < r-1) { // always table[l] <= val < table[r]
-	        var mid = l + ((r-l+1) >> 1);
-	        if (table[mid] <= val)
-	            l = mid;
-	        else
-	            r = mid;
-	    }
-	    return l;
+	  var l = 0; var r = table.length;
+	  while (l < r - 1) { // always table[l] <= val < table[r]
+	    var mid = l + ((r - l + 1) >> 1);
+	    if (table[mid] <= val) { l = mid; } else { r = mid; }
+	  }
+	  return l
 	}
 	return dbcsCodec;
 }
@@ -24910,186 +25039,183 @@ function requireDbcsData () {
 	// require()-s are direct to support Browserify.
 
 	dbcsData = {
-	    
-	    // == Japanese/ShiftJIS ====================================================
-	    // All japanese encodings are based on JIS X set of standards:
-	    // JIS X 0201 - Single-byte encoding of ASCII + ¥ + Kana chars at 0xA1-0xDF.
-	    // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes. 
-	    //              Has several variations in 1978, 1983, 1990 and 1997.
-	    // JIS X 0212 - Supplementary plane of 6067 chars in 94x94 plane. 1990. Effectively dead.
-	    // JIS X 0213 - Extension and modern replacement of 0208 and 0212. Total chars: 11233.
-	    //              2 planes, first is superset of 0208, second - revised 0212.
-	    //              Introduced in 2000, revised 2004. Some characters are in Unicode Plane 2 (0x2xxxx)
 
-	    // Byte encodings are:
-	    //  * Shift_JIS: Compatible with 0201, uses not defined chars in top half as lead bytes for double-byte
-	    //               encoding of 0208. Lead byte ranges: 0x81-0x9F, 0xE0-0xEF; Trail byte ranges: 0x40-0x7E, 0x80-0x9E, 0x9F-0xFC.
-	    //               Windows CP932 is a superset of Shift_JIS. Some companies added more chars, notably KDDI.
-	    //  * EUC-JP:    Up to 3 bytes per character. Used mostly on *nixes.
-	    //               0x00-0x7F       - lower part of 0201
-	    //               0x8E, 0xA1-0xDF - upper part of 0201
-	    //               (0xA1-0xFE)x2   - 0208 plane (94x94).
-	    //               0x8F, (0xA1-0xFE)x2 - 0212 plane (94x94).
-	    //  * JIS X 208: 7-bit, direct encoding of 0208. Byte ranges: 0x21-0x7E (94 values). Uncommon.
-	    //               Used as-is in ISO2022 family.
-	    //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII, 
-	    //                0201-1976 Roman, 0208-1978, 0208-1983.
-	    //  * ISO2022-JP-1: Adds esc seq for 0212-1990.
-	    //  * ISO2022-JP-2: Adds esc seq for GB2313-1980, KSX1001-1992, ISO8859-1, ISO8859-7.
-	    //  * ISO2022-JP-3: Adds esc seq for 0201-1976 Kana set, 0213-2000 Planes 1, 2.
-	    //  * ISO2022-JP-2004: Adds 0213-2004 Plane 1.
-	    //
-	    // After JIS X 0213 appeared, Shift_JIS-2004, EUC-JISX0213 and ISO2022-JP-2004 followed, with just changing the planes.
-	    //
-	    // Overall, it seems that it's a mess :( http://www8.plala.or.jp/tkubota1/unicode-symbols-map2.html
+	  // == Japanese/ShiftJIS ====================================================
+	  // All japanese encodings are based on JIS X set of standards:
+	  // JIS X 0201 - Single-byte encoding of ASCII + ¥ + Kana chars at 0xA1-0xDF.
+	  // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes.
+	  //              Has several variations in 1978, 1983, 1990 and 1997.
+	  // JIS X 0212 - Supplementary plane of 6067 chars in 94x94 plane. 1990. Effectively dead.
+	  // JIS X 0213 - Extension and modern replacement of 0208 and 0212. Total chars: 11233.
+	  //              2 planes, first is superset of 0208, second - revised 0212.
+	  //              Introduced in 2000, revised 2004. Some characters are in Unicode Plane 2 (0x2xxxx)
 
-	    'shiftjis': {
-	        type: '_dbcs',
-	        table: function() { return require$$0$1 },
-	        encodeAdd: {'\u00a5': 0x5C, '\u203E': 0x7E},
-	        encodeSkipVals: [{from: 0xED40, to: 0xF940}],
-	    },
-	    'csshiftjis': 'shiftjis',
-	    'mskanji': 'shiftjis',
-	    'sjis': 'shiftjis',
-	    'windows31j': 'shiftjis',
-	    'ms31j': 'shiftjis',
-	    'xsjis': 'shiftjis',
-	    'windows932': 'shiftjis',
-	    'ms932': 'shiftjis',
-	    '932': 'shiftjis',
-	    'cp932': 'shiftjis',
+	  // Byte encodings are:
+	  //  * Shift_JIS: Compatible with 0201, uses not defined chars in top half as lead bytes for double-byte
+	  //               encoding of 0208. Lead byte ranges: 0x81-0x9F, 0xE0-0xEF; Trail byte ranges: 0x40-0x7E, 0x80-0x9E, 0x9F-0xFC.
+	  //               Windows CP932 is a superset of Shift_JIS. Some companies added more chars, notably KDDI.
+	  //  * EUC-JP:    Up to 3 bytes per character. Used mostly on *nixes.
+	  //               0x00-0x7F       - lower part of 0201
+	  //               0x8E, 0xA1-0xDF - upper part of 0201
+	  //               (0xA1-0xFE)x2   - 0208 plane (94x94).
+	  //               0x8F, (0xA1-0xFE)x2 - 0212 plane (94x94).
+	  //  * JIS X 208: 7-bit, direct encoding of 0208. Byte ranges: 0x21-0x7E (94 values). Uncommon.
+	  //               Used as-is in ISO2022 family.
+	  //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII,
+	  //                0201-1976 Roman, 0208-1978, 0208-1983.
+	  //  * ISO2022-JP-1: Adds esc seq for 0212-1990.
+	  //  * ISO2022-JP-2: Adds esc seq for GB2313-1980, KSX1001-1992, ISO8859-1, ISO8859-7.
+	  //  * ISO2022-JP-3: Adds esc seq for 0201-1976 Kana set, 0213-2000 Planes 1, 2.
+	  //  * ISO2022-JP-2004: Adds 0213-2004 Plane 1.
+	  //
+	  // After JIS X 0213 appeared, Shift_JIS-2004, EUC-JISX0213 and ISO2022-JP-2004 followed, with just changing the planes.
+	  //
+	  // Overall, it seems that it's a mess :( http://www8.plala.or.jp/tkubota1/unicode-symbols-map2.html
 
-	    'eucjp': {
-	        type: '_dbcs',
-	        table: function() { return require$$1 },
-	        encodeAdd: {'\u00a5': 0x5C, '\u203E': 0x7E},
-	    },
+	  shiftjis: {
+	    type: "_dbcs",
+	    table: function () { return require$$0$1 },
+	    encodeAdd: { "\u00a5": 0x5C, "\u203E": 0x7E },
+	    encodeSkipVals: [{ from: 0xED40, to: 0xF940 }]
+	  },
+	  csshiftjis: "shiftjis",
+	  mskanji: "shiftjis",
+	  sjis: "shiftjis",
+	  windows31j: "shiftjis",
+	  ms31j: "shiftjis",
+	  xsjis: "shiftjis",
+	  windows932: "shiftjis",
+	  ms932: "shiftjis",
+	  932: "shiftjis",
+	  cp932: "shiftjis",
 
-	    // TODO: KDDI extension to Shift_JIS
-	    // TODO: IBM CCSID 942 = CP932, but F0-F9 custom chars and other char changes.
-	    // TODO: IBM CCSID 943 = Shift_JIS = CP932 with original Shift_JIS lower 128 chars.
+	  eucjp: {
+	    type: "_dbcs",
+	    table: function () { return require$$1 },
+	    encodeAdd: { "\u00a5": 0x5C, "\u203E": 0x7E }
+	  },
 
+	  // TODO: KDDI extension to Shift_JIS
+	  // TODO: IBM CCSID 942 = CP932, but F0-F9 custom chars and other char changes.
+	  // TODO: IBM CCSID 943 = Shift_JIS = CP932 with original Shift_JIS lower 128 chars.
 
-	    // == Chinese/GBK ==========================================================
-	    // http://en.wikipedia.org/wiki/GBK
-	    // We mostly implement W3C recommendation: https://www.w3.org/TR/encoding/#gbk-encoder
+	  // == Chinese/GBK ==========================================================
+	  // http://en.wikipedia.org/wiki/GBK
+	  // We mostly implement W3C recommendation: https://www.w3.org/TR/encoding/#gbk-encoder
 
-	    // Oldest GB2312 (1981, ~7600 chars) is a subset of CP936
-	    'gb2312': 'cp936',
-	    'gb231280': 'cp936',
-	    'gb23121980': 'cp936',
-	    'csgb2312': 'cp936',
-	    'csiso58gb231280': 'cp936',
-	    'euccn': 'cp936',
+	  // Oldest GB2312 (1981, ~7600 chars) is a subset of CP936
+	  gb2312: "cp936",
+	  gb231280: "cp936",
+	  gb23121980: "cp936",
+	  csgb2312: "cp936",
+	  csiso58gb231280: "cp936",
+	  euccn: "cp936",
 
-	    // Microsoft's CP936 is a subset and approximation of GBK.
-	    'windows936': 'cp936',
-	    'ms936': 'cp936',
-	    '936': 'cp936',
-	    'cp936': {
-	        type: '_dbcs',
-	        table: function() { return require$$2 },
-	    },
+	  // Microsoft's CP936 is a subset and approximation of GBK.
+	  windows936: "cp936",
+	  ms936: "cp936",
+	  936: "cp936",
+	  cp936: {
+	    type: "_dbcs",
+	    table: function () { return require$$2 }
+	  },
 
-	    // GBK (~22000 chars) is an extension of CP936 that added user-mapped chars and some other.
-	    'gbk': {
-	        type: '_dbcs',
-	        table: function() { return require$$2.concat(require$$3) },
-	    },
-	    'xgbk': 'gbk',
-	    'isoir58': 'gbk',
+	  // GBK (~22000 chars) is an extension of CP936 that added user-mapped chars and some other.
+	  gbk: {
+	    type: "_dbcs",
+	    table: function () { return require$$2.concat(require$$3) }
+	  },
+	  xgbk: "gbk",
+	  isoir58: "gbk",
 
-	    // GB18030 is an algorithmic extension of GBK.
-	    // Main source: https://www.w3.org/TR/encoding/#gbk-encoder
-	    // http://icu-project.org/docs/papers/gb18030.html
-	    // http://source.icu-project.org/repos/icu/data/trunk/charset/data/xml/gb-18030-2000.xml
-	    // http://www.khngai.com/chinese/charmap/tblgbk.php?page=0
-	    'gb18030': {
-	        type: '_dbcs',
-	        table: function() { return require$$2.concat(require$$3) },
-	        gb18030: function() { return require$$4 },
-	        encodeSkipVals: [0x80],
-	        encodeAdd: {'€': 0xA2E3},
-	    },
+	  // GB18030 is an algorithmic extension of GBK.
+	  // Main source: https://www.w3.org/TR/encoding/#gbk-encoder
+	  // http://icu-project.org/docs/papers/gb18030.html
+	  // http://source.icu-project.org/repos/icu/data/trunk/charset/data/xml/gb-18030-2000.xml
+	  // http://www.khngai.com/chinese/charmap/tblgbk.php?page=0
+	  gb18030: {
+	    type: "_dbcs",
+	    table: function () { return require$$2.concat(require$$3) },
+	    gb18030: function () { return require$$4 },
+	    encodeSkipVals: [0x80],
+	    encodeAdd: { "€": 0xA2E3 }
+	  },
 
-	    'chinese': 'gb18030',
+	  chinese: "gb18030",
 
+	  // == Korean ===============================================================
+	  // EUC-KR, KS_C_5601 and KS X 1001 are exactly the same.
+	  windows949: "cp949",
+	  ms949: "cp949",
+	  949: "cp949",
+	  cp949: {
+	    type: "_dbcs",
+	    table: function () { return require$$5 }
+	  },
 
-	    // == Korean ===============================================================
-	    // EUC-KR, KS_C_5601 and KS X 1001 are exactly the same.
-	    'windows949': 'cp949',
-	    'ms949': 'cp949',
-	    '949': 'cp949',
-	    'cp949': {
-	        type: '_dbcs',
-	        table: function() { return require$$5 },
-	    },
+	  cseuckr: "cp949",
+	  csksc56011987: "cp949",
+	  euckr: "cp949",
+	  isoir149: "cp949",
+	  korean: "cp949",
+	  ksc56011987: "cp949",
+	  ksc56011989: "cp949",
+	  ksc5601: "cp949",
 
-	    'cseuckr': 'cp949',
-	    'csksc56011987': 'cp949',
-	    'euckr': 'cp949',
-	    'isoir149': 'cp949',
-	    'korean': 'cp949',
-	    'ksc56011987': 'cp949',
-	    'ksc56011989': 'cp949',
-	    'ksc5601': 'cp949',
+	  // == Big5/Taiwan/Hong Kong ================================================
+	  // There are lots of tables for Big5 and cp950. Please see the following links for history:
+	  // http://moztw.org/docs/big5/  http://www.haible.de/bruno/charsets/conversion-tables/Big5.html
+	  // Variations, in roughly number of defined chars:
+	  //  * Windows CP 950: Microsoft variant of Big5. Canonical: http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP950.TXT
+	  //  * Windows CP 951: Microsoft variant of Big5-HKSCS-2001. Seems to be never public. http://me.abelcheung.org/articles/research/what-is-cp951/
+	  //  * Big5-2003 (Taiwan standard) almost superset of cp950.
+	  //  * Unicode-at-on (UAO) / Mozilla 1.8. Falling out of use on the Web. Not supported by other browsers.
+	  //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard.
+	  //    many unicode code points moved from PUA to Supplementary plane (U+2XXXX) over the years.
+	  //    Plus, it has 4 combining sequences.
+	  //    Seems that Mozilla refused to support it for 10 yrs. https://bugzilla.mozilla.org/show_bug.cgi?id=162431 https://bugzilla.mozilla.org/show_bug.cgi?id=310299
+	  //    because big5-hkscs is the only encoding to include astral characters in non-algorithmic way.
+	  //    Implementations are not consistent within browsers; sometimes labeled as just big5.
+	  //    MS Internet Explorer switches from big5 to big5-hkscs when a patch applied.
+	  //    Great discussion & recap of what's going on https://bugzilla.mozilla.org/show_bug.cgi?id=912470#c31
+	  //    In the encoder, it might make sense to support encoding old PUA mappings to Big5 bytes seq-s.
+	  //    Official spec: http://www.ogcio.gov.hk/en/business/tech_promotion/ccli/terms/doc/2003cmp_2008.txt
+	  //                   http://www.ogcio.gov.hk/tc/business/tech_promotion/ccli/terms/doc/hkscs-2008-big5-iso.txt
+	  //
+	  // Current understanding of how to deal with Big5(-HKSCS) is in the Encoding Standard, http://encoding.spec.whatwg.org/#big5-encoder
+	  // Unicode mapping (http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/OTHER/BIG5.TXT) is said to be wrong.
 
+	  windows950: "cp950",
+	  ms950: "cp950",
+	  950: "cp950",
+	  cp950: {
+	    type: "_dbcs",
+	    table: function () { return require$$6 }
+	  },
 
-	    // == Big5/Taiwan/Hong Kong ================================================
-	    // There are lots of tables for Big5 and cp950. Please see the following links for history:
-	    // http://moztw.org/docs/big5/  http://www.haible.de/bruno/charsets/conversion-tables/Big5.html
-	    // Variations, in roughly number of defined chars:
-	    //  * Windows CP 950: Microsoft variant of Big5. Canonical: http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP950.TXT
-	    //  * Windows CP 951: Microsoft variant of Big5-HKSCS-2001. Seems to be never public. http://me.abelcheung.org/articles/research/what-is-cp951/
-	    //  * Big5-2003 (Taiwan standard) almost superset of cp950.
-	    //  * Unicode-at-on (UAO) / Mozilla 1.8. Falling out of use on the Web. Not supported by other browsers.
-	    //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard. 
-	    //    many unicode code points moved from PUA to Supplementary plane (U+2XXXX) over the years.
-	    //    Plus, it has 4 combining sequences.
-	    //    Seems that Mozilla refused to support it for 10 yrs. https://bugzilla.mozilla.org/show_bug.cgi?id=162431 https://bugzilla.mozilla.org/show_bug.cgi?id=310299
-	    //    because big5-hkscs is the only encoding to include astral characters in non-algorithmic way.
-	    //    Implementations are not consistent within browsers; sometimes labeled as just big5.
-	    //    MS Internet Explorer switches from big5 to big5-hkscs when a patch applied.
-	    //    Great discussion & recap of what's going on https://bugzilla.mozilla.org/show_bug.cgi?id=912470#c31
-	    //    In the encoder, it might make sense to support encoding old PUA mappings to Big5 bytes seq-s.
-	    //    Official spec: http://www.ogcio.gov.hk/en/business/tech_promotion/ccli/terms/doc/2003cmp_2008.txt
-	    //                   http://www.ogcio.gov.hk/tc/business/tech_promotion/ccli/terms/doc/hkscs-2008-big5-iso.txt
-	    // 
-	    // Current understanding of how to deal with Big5(-HKSCS) is in the Encoding Standard, http://encoding.spec.whatwg.org/#big5-encoder
-	    // Unicode mapping (http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/OTHER/BIG5.TXT) is said to be wrong.
+	  // Big5 has many variations and is an extension of cp950. We use Encoding Standard's as a consensus.
+	  big5: "big5hkscs",
+	  big5hkscs: {
+	    type: "_dbcs",
+	    table: function () { return require$$6.concat(require$$7) },
+	    encodeSkipVals: [
+	      // Although Encoding Standard says we should avoid encoding to HKSCS area (See Step 1 of
+	      // https://encoding.spec.whatwg.org/#index-big5-pointer), we still do it to increase compatibility with ICU.
+	      // But if a single unicode point can be encoded both as HKSCS and regular Big5, we prefer the latter.
+	      0x8e69, 0x8e6f, 0x8e7e, 0x8eab, 0x8eb4, 0x8ecd, 0x8ed0, 0x8f57, 0x8f69, 0x8f6e, 0x8fcb, 0x8ffe,
+	      0x906d, 0x907a, 0x90c4, 0x90dc, 0x90f1, 0x91bf, 0x92af, 0x92b0, 0x92b1, 0x92b2, 0x92d1, 0x9447, 0x94ca,
+	      0x95d9, 0x96fc, 0x9975, 0x9b76, 0x9b78, 0x9b7b, 0x9bc6, 0x9bde, 0x9bec, 0x9bf6, 0x9c42, 0x9c53, 0x9c62,
+	      0x9c68, 0x9c6b, 0x9c77, 0x9cbc, 0x9cbd, 0x9cd0, 0x9d57, 0x9d5a, 0x9dc4, 0x9def, 0x9dfb, 0x9ea9, 0x9eef,
+	      0x9efd, 0x9f60, 0x9fcb, 0xa077, 0xa0dc, 0xa0df, 0x8fcc, 0x92c8, 0x9644, 0x96ed,
 
-	    'windows950': 'cp950',
-	    'ms950': 'cp950',
-	    '950': 'cp950',
-	    'cp950': {
-	        type: '_dbcs',
-	        table: function() { return require$$6 },
-	    },
+	      // Step 2 of https://encoding.spec.whatwg.org/#index-big5-pointer: Use last pointer for U+2550, U+255E, U+2561, U+256A, U+5341, or U+5345
+	      0xa2a4, 0xa2a5, 0xa2a7, 0xa2a6, 0xa2cc, 0xa2ce
+	    ]
+	  },
 
-	    // Big5 has many variations and is an extension of cp950. We use Encoding Standard's as a consensus.
-	    'big5': 'big5hkscs',
-	    'big5hkscs': {
-	        type: '_dbcs',
-	        table: function() { return require$$6.concat(require$$7) },
-	        encodeSkipVals: [
-	            // Although Encoding Standard says we should avoid encoding to HKSCS area (See Step 1 of
-	            // https://encoding.spec.whatwg.org/#index-big5-pointer), we still do it to increase compatibility with ICU.
-	            // But if a single unicode point can be encoded both as HKSCS and regular Big5, we prefer the latter.
-	            0x8e69, 0x8e6f, 0x8e7e, 0x8eab, 0x8eb4, 0x8ecd, 0x8ed0, 0x8f57, 0x8f69, 0x8f6e, 0x8fcb, 0x8ffe,
-	            0x906d, 0x907a, 0x90c4, 0x90dc, 0x90f1, 0x91bf, 0x92af, 0x92b0, 0x92b1, 0x92b2, 0x92d1, 0x9447, 0x94ca,
-	            0x95d9, 0x96fc, 0x9975, 0x9b76, 0x9b78, 0x9b7b, 0x9bc6, 0x9bde, 0x9bec, 0x9bf6, 0x9c42, 0x9c53, 0x9c62,
-	            0x9c68, 0x9c6b, 0x9c77, 0x9cbc, 0x9cbd, 0x9cd0, 0x9d57, 0x9d5a, 0x9dc4, 0x9def, 0x9dfb, 0x9ea9, 0x9eef,
-	            0x9efd, 0x9f60, 0x9fcb, 0xa077, 0xa0dc, 0xa0df, 0x8fcc, 0x92c8, 0x9644, 0x96ed,
-
-	            // Step 2 of https://encoding.spec.whatwg.org/#index-big5-pointer: Use last pointer for U+2550, U+255E, U+2561, U+256A, U+5341, or U+5345
-	            0xa2a4, 0xa2a5, 0xa2a7, 0xa2a6, 0xa2cc, 0xa2ce,
-	        ],
-	    },
-
-	    'cnbig5': 'big5hkscs',
-	    'csbig5': 'big5hkscs',
-	    'xxbig5': 'big5hkscs',
+	  cnbig5: "big5hkscs",
+	  csbig5: "big5hkscs",
+	  xxbig5: "big5hkscs"
 	};
 	return dbcsData;
 }
@@ -25099,28 +25225,28 @@ var hasRequiredEncodings;
 function requireEncodings () {
 	if (hasRequiredEncodings) return encodings;
 	hasRequiredEncodings = 1;
-	(function (exports) {
+	(function (exports$1) {
+
+		var mergeModules = requireMergeExports();
 
 		// Update this array if you add/rename/remove files in this directory.
 		// We support Browserify by skipping automatic module discovery and requiring modules directly.
 		var modules = [
-		    requireInternal(),
-		    requireUtf32(),
-		    requireUtf16(),
-		    requireUtf7(),
-		    requireSbcsCodec(),
-		    requireSbcsData(),
-		    requireSbcsDataGenerated(),
-		    requireDbcsCodec(),
-		    requireDbcsData(),
+		  requireInternal(),
+		  requireUtf32(),
+		  requireUtf16(),
+		  requireUtf7(),
+		  requireSbcsCodec(),
+		  requireSbcsData(),
+		  requireSbcsDataGenerated(),
+		  requireDbcsCodec(),
+		  requireDbcsData()
 		];
 
 		// Put all encoding/alias/codec definitions to single object and export it.
 		for (var i = 0; i < modules.length; i++) {
-		    var module = modules[i];
-		    for (var enc in module)
-		        if (Object.prototype.hasOwnProperty.call(module, enc))
-		            exports[enc] = module[enc];
+		  var module = modules[i];
+		  mergeModules(exports$1, module);
 		} 
 	} (encodings));
 	return encodings;
@@ -25135,110 +25261,106 @@ function requireStreams () {
 
 	var Buffer = requireSafer().Buffer;
 
-	// NOTE: Due to 'stream' module being pretty large (~100Kb, significant in browser environments), 
+	// NOTE: Due to 'stream' module being pretty large (~100Kb, significant in browser environments),
 	// we opt to dependency-inject it instead of creating a hard dependency.
-	streams = function(stream_module) {
-	    var Transform = stream_module.Transform;
+	streams = function (streamModule) {
+	  var Transform = streamModule.Transform;
 
-	    // == Encoder stream =======================================================
+	  // == Encoder stream =======================================================
 
-	    function IconvLiteEncoderStream(conv, options) {
-	        this.conv = conv;
-	        options = options || {};
-	        options.decodeStrings = false; // We accept only strings, so we don't need to decode them.
-	        Transform.call(this, options);
+	  function IconvLiteEncoderStream (conv, options) {
+	    this.conv = conv;
+	    options = options || {};
+	    options.decodeStrings = false; // We accept only strings, so we don't need to decode them.
+	    Transform.call(this, options);
+	  }
+
+	  IconvLiteEncoderStream.prototype = Object.create(Transform.prototype, {
+	    constructor: { value: IconvLiteEncoderStream }
+	  });
+
+	  IconvLiteEncoderStream.prototype._transform = function (chunk, encoding, done) {
+	    if (typeof chunk !== "string") {
+	      return done(new Error("Iconv encoding stream needs strings as its input."))
 	    }
 
-	    IconvLiteEncoderStream.prototype = Object.create(Transform.prototype, {
-	        constructor: { value: IconvLiteEncoderStream }
-	    });
-
-	    IconvLiteEncoderStream.prototype._transform = function(chunk, encoding, done) {
-	        if (typeof chunk != 'string')
-	            return done(new Error("Iconv encoding stream needs strings as its input."));
-	        try {
-	            var res = this.conv.write(chunk);
-	            if (res && res.length) this.push(res);
-	            done();
-	        }
-	        catch (e) {
-	            done(e);
-	        }
-	    };
-
-	    IconvLiteEncoderStream.prototype._flush = function(done) {
-	        try {
-	            var res = this.conv.end();
-	            if (res && res.length) this.push(res);
-	            done();
-	        }
-	        catch (e) {
-	            done(e);
-	        }
-	    };
-
-	    IconvLiteEncoderStream.prototype.collect = function(cb) {
-	        var chunks = [];
-	        this.on('error', cb);
-	        this.on('data', function(chunk) { chunks.push(chunk); });
-	        this.on('end', function() {
-	            cb(null, Buffer.concat(chunks));
-	        });
-	        return this;
-	    };
-
-
-	    // == Decoder stream =======================================================
-
-	    function IconvLiteDecoderStream(conv, options) {
-	        this.conv = conv;
-	        options = options || {};
-	        options.encoding = this.encoding = 'utf8'; // We output strings.
-	        Transform.call(this, options);
+	    try {
+	      var res = this.conv.write(chunk);
+	      if (res && res.length) this.push(res);
+	      done();
+	    } catch (e) {
+	      done(e);
 	    }
+	  };
 
-	    IconvLiteDecoderStream.prototype = Object.create(Transform.prototype, {
-	        constructor: { value: IconvLiteDecoderStream }
+	  IconvLiteEncoderStream.prototype._flush = function (done) {
+	    try {
+	      var res = this.conv.end();
+	      if (res && res.length) this.push(res);
+	      done();
+	    } catch (e) {
+	      done(e);
+	    }
+	  };
+
+	  IconvLiteEncoderStream.prototype.collect = function (cb) {
+	    var chunks = [];
+	    this.on("error", cb);
+	    this.on("data", function (chunk) { chunks.push(chunk); });
+	    this.on("end", function () {
+	      cb(null, Buffer.concat(chunks));
 	    });
+	    return this
+	  };
 
-	    IconvLiteDecoderStream.prototype._transform = function(chunk, encoding, done) {
-	        if (!Buffer.isBuffer(chunk) && !(chunk instanceof Uint8Array))
-	            return done(new Error("Iconv decoding stream needs buffers as its input."));
-	        try {
-	            var res = this.conv.write(chunk);
-	            if (res && res.length) this.push(res, this.encoding);
-	            done();
-	        }
-	        catch (e) {
-	            done(e);
-	        }
-	    };
+	  // == Decoder stream =======================================================
 
-	    IconvLiteDecoderStream.prototype._flush = function(done) {
-	        try {
-	            var res = this.conv.end();
-	            if (res && res.length) this.push(res, this.encoding);                
-	            done();
-	        }
-	        catch (e) {
-	            done(e);
-	        }
-	    };
+	  function IconvLiteDecoderStream (conv, options) {
+	    this.conv = conv;
+	    options = options || {};
+	    options.encoding = this.encoding = "utf8"; // We output strings.
+	    Transform.call(this, options);
+	  }
 
-	    IconvLiteDecoderStream.prototype.collect = function(cb) {
-	        var res = '';
-	        this.on('error', cb);
-	        this.on('data', function(chunk) { res += chunk; });
-	        this.on('end', function() {
-	            cb(null, res);
-	        });
-	        return this;
-	    };
+	  IconvLiteDecoderStream.prototype = Object.create(Transform.prototype, {
+	    constructor: { value: IconvLiteDecoderStream }
+	  });
 
-	    return {
-	        IconvLiteEncoderStream: IconvLiteEncoderStream,
-	        IconvLiteDecoderStream: IconvLiteDecoderStream,
-	    };
+	  IconvLiteDecoderStream.prototype._transform = function (chunk, encoding, done) {
+	    if (!Buffer.isBuffer(chunk) && !(chunk instanceof Uint8Array)) { return done(new Error("Iconv decoding stream needs buffers as its input.")) }
+	    try {
+	      var res = this.conv.write(chunk);
+	      if (res && res.length) this.push(res, this.encoding);
+	      done();
+	    } catch (e) {
+	      done(e);
+	    }
+	  };
+
+	  IconvLiteDecoderStream.prototype._flush = function (done) {
+	    try {
+	      var res = this.conv.end();
+	      if (res && res.length) this.push(res, this.encoding);
+	      done();
+	    } catch (e) {
+	      done(e);
+	    }
+	  };
+
+	  IconvLiteDecoderStream.prototype.collect = function (cb) {
+	    var res = "";
+	    this.on("error", cb);
+	    this.on("data", function (chunk) { res += chunk; });
+	    this.on("end", function () {
+	      cb(null, res);
+	    });
+	    return this
+	  };
+
+	  return {
+	    IconvLiteEncoderStream: IconvLiteEncoderStream,
+	    IconvLiteDecoderStream: IconvLiteDecoderStream
+	  }
 	};
 	return streams;
 }
@@ -25252,54 +25374,56 @@ function requireLib () {
 
 		var Buffer = requireSafer().Buffer;
 
-		var bomHandling = requireBomHandling(),
-		    iconv = module.exports;
+		var bomHandling = requireBomHandling();
+		var mergeModules = requireMergeExports();
+		var iconv = module.exports;
 
 		// All codecs and aliases are kept here, keyed by encoding name/alias.
 		// They are lazy loaded in `iconv.getCodec` from `encodings/index.js`.
+		// Cannot initialize with { __proto__: null } because Boolean({ __proto__: null }) === true
 		iconv.encodings = null;
 
 		// Characters emitted in case of error.
-		iconv.defaultCharUnicode = '�';
-		iconv.defaultCharSingleByte = '?';
+		iconv.defaultCharUnicode = "�";
+		iconv.defaultCharSingleByte = "?";
 
 		// Public API.
-		iconv.encode = function encode(str, encoding, options) {
-		    str = "" + (str || ""); // Ensure string.
+		iconv.encode = function encode (str, encoding, options) {
+		  str = "" + (str || ""); // Ensure string.
 
-		    var encoder = iconv.getEncoder(encoding, options);
+		  var encoder = iconv.getEncoder(encoding, options);
 
-		    var res = encoder.write(str);
-		    var trail = encoder.end();
-		    
-		    return (trail && trail.length > 0) ? Buffer.concat([res, trail]) : res;
+		  var res = encoder.write(str);
+		  var trail = encoder.end();
+
+		  return (trail && trail.length > 0) ? Buffer.concat([res, trail]) : res
 		};
 
-		iconv.decode = function decode(buf, encoding, options) {
-		    if (typeof buf === 'string') {
-		        if (!iconv.skipDecodeWarning) {
-		            console.error('Iconv-lite warning: decode()-ing strings is deprecated. Refer to https://github.com/ashtuchkin/iconv-lite/wiki/Use-Buffers-when-decoding');
-		            iconv.skipDecodeWarning = true;
-		        }
-
-		        buf = Buffer.from("" + (buf || ""), "binary"); // Ensure buffer.
+		iconv.decode = function decode (buf, encoding, options) {
+		  if (typeof buf === "string") {
+		    if (!iconv.skipDecodeWarning) {
+		      console.error("Iconv-lite warning: decode()-ing strings is deprecated. Refer to https://github.com/ashtuchkin/iconv-lite/wiki/Use-Buffers-when-decoding");
+		      iconv.skipDecodeWarning = true;
 		    }
 
-		    var decoder = iconv.getDecoder(encoding, options);
+		    buf = Buffer.from("" + (buf || ""), "binary"); // Ensure buffer.
+		  }
 
-		    var res = decoder.write(buf);
-		    var trail = decoder.end();
+		  var decoder = iconv.getDecoder(encoding, options);
 
-		    return trail ? (res + trail) : res;
+		  var res = decoder.write(buf);
+		  var trail = decoder.end();
+
+		  return trail ? (res + trail) : res
 		};
 
-		iconv.encodingExists = function encodingExists(enc) {
-		    try {
-		        iconv.getCodec(enc);
-		        return true;
-		    } catch (e) {
-		        return false;
-		    }
+		iconv.encodingExists = function encodingExists (enc) {
+		  try {
+		    iconv.getCodec(enc);
+		    return true
+		  } catch (e) {
+		    return false
+		  }
 		};
 
 		// Legacy aliases to convert functions
@@ -25307,78 +25431,79 @@ function requireLib () {
 		iconv.fromEncoding = iconv.decode;
 
 		// Search for a codec in iconv.encodings. Cache codec data in iconv._codecDataCache.
-		iconv._codecDataCache = {};
-		iconv.getCodec = function getCodec(encoding) {
-		    if (!iconv.encodings)
-		        iconv.encodings = requireEncodings(); // Lazy load all encoding definitions.
-		    
-		    // Canonicalize encoding name: strip all non-alphanumeric chars and appended year.
-		    var enc = iconv._canonicalizeEncoding(encoding);
+		iconv._codecDataCache = { __proto__: null };
 
-		    // Traverse iconv.encodings to find actual codec.
-		    var codecOptions = {};
-		    while (true) {
-		        var codec = iconv._codecDataCache[enc];
-		        if (codec)
-		            return codec;
+		iconv.getCodec = function getCodec (encoding) {
+		  if (!iconv.encodings) {
+		    var raw = requireEncodings();
+		    // TODO: In future versions when old nodejs support is removed can use object.assign
+		    iconv.encodings = { __proto__: null }; // Initialize as empty object.
+		    mergeModules(iconv.encodings, raw);
+		  }
 
-		        var codecDef = iconv.encodings[enc];
+		  // Canonicalize encoding name: strip all non-alphanumeric chars and appended year.
+		  var enc = iconv._canonicalizeEncoding(encoding);
 
-		        switch (typeof codecDef) {
-		            case "string": // Direct alias to other encoding.
-		                enc = codecDef;
-		                break;
+		  // Traverse iconv.encodings to find actual codec.
+		  var codecOptions = {};
+		  while (true) {
+		    var codec = iconv._codecDataCache[enc];
 
-		            case "object": // Alias with options. Can be layered.
-		                for (var key in codecDef)
-		                    codecOptions[key] = codecDef[key];
+		    if (codec) { return codec }
 
-		                if (!codecOptions.encodingName)
-		                    codecOptions.encodingName = enc;
-		                
-		                enc = codecDef.type;
-		                break;
+		    var codecDef = iconv.encodings[enc];
 
-		            case "function": // Codec itself.
-		                if (!codecOptions.encodingName)
-		                    codecOptions.encodingName = enc;
+		    switch (typeof codecDef) {
+		      case "string": // Direct alias to other encoding.
+		        enc = codecDef;
+		        break
 
-		                // The codec function must load all tables and return object with .encoder and .decoder methods.
-		                // It'll be called only once (for each different options object).
-		                codec = new codecDef(codecOptions, iconv);
+		      case "object": // Alias with options. Can be layered.
+		        for (var key in codecDef) { codecOptions[key] = codecDef[key]; }
 
-		                iconv._codecDataCache[codecOptions.encodingName] = codec; // Save it to be reused later.
-		                return codec;
+		        if (!codecOptions.encodingName) { codecOptions.encodingName = enc; }
 
-		            default:
-		                throw new Error("Encoding not recognized: '" + encoding + "' (searched as: '"+enc+"')");
-		        }
+		        enc = codecDef.type;
+		        break
+
+		      case "function": // Codec itself.
+		        if (!codecOptions.encodingName) { codecOptions.encodingName = enc; }
+
+		        // The codec function must load all tables and return object with .encoder and .decoder methods.
+		        // It'll be called only once (for each different options object).
+		        //
+		        codec = new codecDef(codecOptions, iconv);
+
+		        iconv._codecDataCache[codecOptions.encodingName] = codec; // Save it to be reused later.
+		        return codec
+
+		      default:
+		        throw new Error("Encoding not recognized: '" + encoding + "' (searched as: '" + enc + "')")
 		    }
+		  }
 		};
 
-		iconv._canonicalizeEncoding = function(encoding) {
-		    // Canonicalize encoding name: strip all non-alphanumeric chars and appended year.
-		    return (''+encoding).toLowerCase().replace(/:\d{4}$|[^0-9a-z]/g, "");
+		iconv._canonicalizeEncoding = function (encoding) {
+		  // Canonicalize encoding name: strip all non-alphanumeric chars and appended year.
+		  return ("" + encoding).toLowerCase().replace(/:\d{4}$|[^0-9a-z]/g, "")
 		};
 
-		iconv.getEncoder = function getEncoder(encoding, options) {
-		    var codec = iconv.getCodec(encoding),
-		        encoder = new codec.encoder(options, codec);
+		iconv.getEncoder = function getEncoder (encoding, options) {
+		  var codec = iconv.getCodec(encoding);
+		  var encoder = new codec.encoder(options, codec);
 
-		    if (codec.bomAware && options && options.addBOM)
-		        encoder = new bomHandling.PrependBOM(encoder, options);
+		  if (codec.bomAware && options && options.addBOM) { encoder = new bomHandling.PrependBOM(encoder, options); }
 
-		    return encoder;
+		  return encoder
 		};
 
-		iconv.getDecoder = function getDecoder(encoding, options) {
-		    var codec = iconv.getCodec(encoding),
-		        decoder = new codec.decoder(options, codec);
+		iconv.getDecoder = function getDecoder (encoding, options) {
+		  var codec = iconv.getCodec(encoding);
+		  var decoder = new codec.decoder(options, codec);
 
-		    if (codec.bomAware && !(options && options.stripBOM === false))
-		        decoder = new bomHandling.StripBOM(decoder, options);
+		  if (codec.bomAware && !(options && options.stripBOM === false)) { decoder = new bomHandling.StripBOM(decoder, options); }
 
-		    return decoder;
+		  return decoder
 		};
 
 		// Streaming API
@@ -25386,43 +25511,41 @@ function requireLib () {
 		// up to 100Kb to the output bundle. To avoid unnecessary code bloat, we don't enable Streaming API in browser by default.
 		// If you would like to enable it explicitly, please add the following code to your app:
 		// > iconv.enableStreamingAPI(require('stream'));
-		iconv.enableStreamingAPI = function enableStreamingAPI(stream_module) {
-		    if (iconv.supportsStreams)
-		        return;
+		iconv.enableStreamingAPI = function enableStreamingAPI (streamModule) {
+		  if (iconv.supportsStreams) { return }
 
-		    // Dependency-inject stream module to create IconvLite stream classes.
-		    var streams = requireStreams()(stream_module);
+		  // Dependency-inject stream module to create IconvLite stream classes.
+		  var streams = requireStreams()(streamModule);
 
-		    // Not public API yet, but expose the stream classes.
-		    iconv.IconvLiteEncoderStream = streams.IconvLiteEncoderStream;
-		    iconv.IconvLiteDecoderStream = streams.IconvLiteDecoderStream;
+		  // Not public API yet, but expose the stream classes.
+		  iconv.IconvLiteEncoderStream = streams.IconvLiteEncoderStream;
+		  iconv.IconvLiteDecoderStream = streams.IconvLiteDecoderStream;
 
-		    // Streaming API.
-		    iconv.encodeStream = function encodeStream(encoding, options) {
-		        return new iconv.IconvLiteEncoderStream(iconv.getEncoder(encoding, options), options);
-		    };
+		  // Streaming API.
+		  iconv.encodeStream = function encodeStream (encoding, options) {
+		    return new iconv.IconvLiteEncoderStream(iconv.getEncoder(encoding, options), options)
+		  };
 
-		    iconv.decodeStream = function decodeStream(encoding, options) {
-		        return new iconv.IconvLiteDecoderStream(iconv.getDecoder(encoding, options), options);
-		    };
+		  iconv.decodeStream = function decodeStream (encoding, options) {
+		    return new iconv.IconvLiteDecoderStream(iconv.getDecoder(encoding, options), options)
+		  };
 
-		    iconv.supportsStreams = true;
+		  iconv.supportsStreams = true;
 		};
 
 		// Enable Streaming API automatically if 'stream' module is available and non-empty (the majority of environments).
-		var stream_module;
+		var streamModule;
 		try {
-		    stream_module = require("stream");
+		  streamModule = require("stream");
 		} catch (e) {}
 
-		if (stream_module && stream_module.Transform) {
-		    iconv.enableStreamingAPI(stream_module);
-
+		if (streamModule && streamModule.Transform) {
+		  iconv.enableStreamingAPI(streamModule);
 		} else {
-		    // In rare cases where 'stream' module is not available by default, throw a helpful exception.
-		    iconv.encodeStream = iconv.decodeStream = function() {
-		        throw new Error("iconv-lite Streaming API is not enabled. Use iconv.enableStreamingAPI(require('stream')); to enable it.");
-		    };
+		  // In rare cases where 'stream' module is not available by default, throw a helpful exception.
+		  iconv.encodeStream = iconv.decodeStream = function () {
+		    throw new Error("iconv-lite Streaming API is not enabled. Use iconv.enableStreamingAPI(require('stream')); to enable it.")
+		  };
 		}
 	} (lib));
 	return lib.exports;
@@ -27058,7 +27181,7 @@ var hasRequiredAuth_41;
 function requireAuth_41 () {
 	if (hasRequiredAuth_41) return auth_41;
 	hasRequiredAuth_41 = 1;
-	(function (exports) {
+	(function (exports$1) {
 
 		/*
 		4.1 authentication: (http://bazaar.launchpad.net/~mysql/mysql-server/5.5/view/head:/sql/password.c)
@@ -27108,17 +27231,17 @@ function requireAuth_41 () {
 		  return result;
 		}
 
-		exports.xor = xor;
+		exports$1.xor = xor;
 
 		function token(password, scramble1, scramble2) {
 		  if (!password) {
 		    return Buffer.alloc(0);
 		  }
 		  const stage1 = sha1(password);
-		  return exports.calculateTokenFromPasswordSha(stage1, scramble1, scramble2);
+		  return exports$1.calculateTokenFromPasswordSha(stage1, scramble1, scramble2);
 		}
 
-		exports.calculateTokenFromPasswordSha = function (
+		exports$1.calculateTokenFromPasswordSha = function (
 		  passwordSha,
 		  scramble1,
 		  scramble2
@@ -27131,15 +27254,15 @@ function requireAuth_41 () {
 		  return xor(stage3, passwordSha);
 		};
 
-		exports.calculateToken = token;
+		exports$1.calculateToken = token;
 
-		exports.verifyToken = function (publicSeed1, publicSeed2, token, doubleSha) {
+		exports$1.verifyToken = function (publicSeed1, publicSeed2, token, doubleSha) {
 		  const hashStage1 = xor(token, sha1(publicSeed1, publicSeed2, doubleSha));
 		  const candidateHash2 = sha1(hashStage1);
 		  return candidateHash2.compare(doubleSha) === 0;
 		};
 
-		exports.doubleSha1 = function (password) {
+		exports$1.doubleSha1 = function (password) {
 		  return sha1(sha1(password));
 		};
 
@@ -27152,7 +27275,7 @@ function requireAuth_41 () {
 		  }
 		  return result;
 		}
-		exports.xorRotating = xorRotating; 
+		exports$1.xorRotating = xorRotating; 
 	} (auth_41));
 	return auth_41;
 }
@@ -28702,17 +28825,17 @@ var hasRequiredSession_track;
 function requireSession_track () {
 	if (hasRequiredSession_track) return session_track;
 	hasRequiredSession_track = 1;
-	(function (exports) {
+	(function (exports$1) {
 
-		exports.SYSTEM_VARIABLES = 0;
-		exports.SCHEMA = 1;
-		exports.STATE_CHANGE = 2;
-		exports.STATE_GTIDS = 3;
-		exports.TRANSACTION_CHARACTERISTICS = 4;
-		exports.TRANSACTION_STATE = 5;
+		exports$1.SYSTEM_VARIABLES = 0;
+		exports$1.SCHEMA = 1;
+		exports$1.STATE_CHANGE = 2;
+		exports$1.STATE_GTIDS = 3;
+		exports$1.TRANSACTION_CHARACTERISTICS = 4;
+		exports$1.TRANSACTION_STATE = 5;
 
-		exports.FIRST_KEY = exports.SYSTEM_VARIABLES;
-		exports.LAST_KEY = exports.TRANSACTION_STATE; 
+		exports$1.FIRST_KEY = exports$1.SYSTEM_VARIABLES;
+		exports$1.LAST_KEY = exports$1.TRANSACTION_STATE; 
 	} (session_track));
 	return session_track;
 }
@@ -28940,7 +29063,7 @@ var hasRequiredPackets;
 function requirePackets () {
 	if (hasRequiredPackets) return packets.exports;
 	hasRequiredPackets = 1;
-	(function (module, exports) {
+	(function (module, exports$1) {
 
 		const process = require$$0$8;
 
@@ -29002,7 +29125,7 @@ function requirePackets () {
 
 		// simple packets:
 		const Packet = requirePacket();
-		exports.Packet = Packet;
+		exports$1.Packet = Packet;
 
 		class OK {
 		  static toPacket(args, encoding) {
@@ -29030,7 +29153,7 @@ function requirePackets () {
 		  }
 		}
 
-		exports.OK = OK;
+		exports$1.OK = OK;
 
 		// warnings, statusFlags
 		class EOF {
@@ -29051,7 +29174,7 @@ function requirePackets () {
 		  }
 		}
 
-		exports.EOF = EOF;
+		exports$1.EOF = EOF;
 
 		class Error {
 		  static toPacket(args, encoding) {
@@ -29082,7 +29205,7 @@ function requirePackets () {
 		  }
 		}
 
-		exports.Error = Error; 
+		exports$1.Error = Error; 
 	} (packets, packets.exports));
 	return packets.exports;
 }
@@ -29159,6 +29282,7 @@ function requireSha256_password () {
 	const PLUGIN_NAME = 'sha256_password';
 	const crypto = require$$0$7;
 	const { xorRotating } = requireAuth_41();
+	const Tls = require$$1$5;
 
 	const REQUEST_SERVER_KEY_PACKET = Buffer.from([1]);
 
@@ -29188,6 +29312,14 @@ function requireSha256_password () {
 	    return (data) => {
 	      switch (state) {
 	        case STATE_INITIAL:
+	          if (
+	            connection.stream instanceof Tls.TLSSocket &&
+	            connection.stream.encrypted === true
+	          ) {
+	            // We don't need to encrypt passwords over TLS connection
+	            return Buffer.from(`${password}\0`, 'utf8');
+	          }
+
 	          scramble = data.slice(0, 20);
 	          // if client provides key we can save one extra roundrip on first connection
 	          if (pluginOptions.serverPublicKey) {
@@ -31281,30 +31413,67 @@ function requireQuery () {
 	  }
 
 	  stream(options) {
-	    options = options || {};
+	    options = options || Object.create(null);
 	    options.objectMode = true;
-	    const stream = new Readable(options);
-	    stream._read = () => {
-	      this._connection && this._connection.resume();
-	    };
-	    this.on('result', (row, resultSetIndex) => {
-	      if (!stream.push(row)) {
-	        this._connection.pause();
+
+	    const stream = new Readable({
+	      ...options,
+	      emitClose: true,
+	      autoDestroy: true,
+	      read: () => {
+	        this._connection && this._connection.resume();
+	      },
+	    });
+
+	    // Prevent a breaking change for users that rely on `end` event
+	    stream.once('close', () => {
+	      if (!stream.readableEnded) {
+	        stream.emit('end');
 	      }
-	      stream.emit('result', row, resultSetIndex); // replicate old emitter
 	    });
-	    this.on('error', (err) => {
-	      stream.emit('error', err); // Pass on any errors
-	    });
-	    this.on('end', () => {
-	      stream.push(null); // pushing null, indicating EOF
-	    });
-	    this.on('fields', (fields) => {
+
+	    const onResult = (row, index) => {
+	      if (stream.destroyed) return;
+
+	      if (!stream.push(row)) {
+	        this._connection && this._connection.pause();
+	      }
+
+	      stream.emit('result', row, index); // replicate old emitter
+	    };
+
+	    const onFields = (fields) => {
+	      if (stream.destroyed) return;
+
 	      stream.emit('fields', fields); // replicate old emitter
-	    });
-	    stream.on('end', () => {
-	      stream.emit('close');
-	    });
+	    };
+
+	    const onEnd = () => {
+	      if (stream.destroyed) return;
+
+	      stream.push(null); // pushing null, indicating EOF
+	    };
+
+	    const onError = (err) => {
+	      stream.destroy(err);
+	    };
+
+	    stream._destroy = (err, cb) => {
+	      this._connection && this._connection.resume();
+
+	      this.removeListener('result', onResult);
+	      this.removeListener('fields', onFields);
+	      this.removeListener('end', onEnd);
+	      this.removeListener('error', onError);
+
+	      cb(err); // Pass on any errors
+	    };
+
+	    this.on('result', onResult);
+	    this.on('fields', onFields);
+	    this.on('end', onEnd);
+	    this.on('error', onError);
+
 	    return stream;
 	  }
 
@@ -34321,7 +34490,9 @@ function requireConnection$2 () {
 	    });
 	    const rejectUnauthorized = this.config.ssl.rejectUnauthorized;
 	    const verifyIdentity = this.config.ssl.verifyIdentity;
-	    const servername = this.config.host;
+	    const servername = Net.isIP(this.config.host)
+	      ? undefined
+	      : this.config.host;
 
 	    let secureEstablished = false;
 	    this.stream.removeAllListeners('data');
@@ -34368,7 +34539,7 @@ function requireConnection$2 () {
 	    secureSocket.on('data', (data) => {
 	      this.packetParser.execute(data);
 	    });
-	    this.write = (buffer) => secureSocket.write(buffer);
+	    this.stream = secureSocket;
 	  }
 
 	  protocolError(message, code) {
@@ -35329,6 +35500,13 @@ function requirePool_connection$2 () {
 	  }
 
 	  end() {
+	    if (this.config.gracefulEnd) {
+	      this._removeFromPool();
+	      super.end();
+
+	      return;
+	    }
+
 	    const err = new Error(
 	      'Calling conn.end() to release a pooled connection is ' +
 	        'deprecated. In next version calling conn.end() will be ' +
@@ -35617,7 +35795,11 @@ function requirePool$2 () {
 	            Date.now() - this._freeConnections.get(0).lastActiveTime >
 	              this.config.idleTimeout)
 	        ) {
-	          this._freeConnections.get(0).destroy();
+	          if (this.config.connectionConfig.gracefulEnd) {
+	            this._freeConnections.get(0).end();
+	          } else {
+	            this._freeConnections.get(0).destroy();
+	          }
 	        }
 	      } finally {
 	        this._removeIdleTimeoutConnections();
@@ -36371,7 +36553,7 @@ var hasRequiredPromise;
 function requirePromise () {
 	if (hasRequiredPromise) return promise;
 	hasRequiredPromise = 1;
-	(function (exports) {
+	(function (exports$1) {
 
 		const SqlString = requireSqlstring();
 		const EventEmitter = require$$0$9.EventEmitter;
@@ -36545,32 +36727,32 @@ function requirePromise () {
 		  return new PromisePoolCluster(corePoolCluster, thePromise);
 		}
 
-		exports.createConnection = createConnectionPromise;
-		exports.createPool = createPromisePool;
-		exports.createPoolCluster = createPromisePoolCluster;
-		exports.escape = SqlString.escape;
-		exports.escapeId = SqlString.escapeId;
-		exports.format = SqlString.format;
-		exports.raw = SqlString.raw;
-		exports.PromisePool = PromisePool;
-		exports.PromiseConnection = PromiseConnection;
-		exports.PromisePoolConnection = PromisePoolConnection;
+		exports$1.createConnection = createConnectionPromise;
+		exports$1.createPool = createPromisePool;
+		exports$1.createPoolCluster = createPromisePoolCluster;
+		exports$1.escape = SqlString.escape;
+		exports$1.escapeId = SqlString.escapeId;
+		exports$1.format = SqlString.format;
+		exports$1.raw = SqlString.raw;
+		exports$1.PromisePool = PromisePool;
+		exports$1.PromiseConnection = PromiseConnection;
+		exports$1.PromisePoolConnection = PromisePoolConnection;
 
-		exports.__defineGetter__('Types', () => requireTypes());
+		exports$1.__defineGetter__('Types', () => requireTypes());
 
-		exports.__defineGetter__('Charsets', () =>
+		exports$1.__defineGetter__('Charsets', () =>
 		  requireCharsets()
 		);
 
-		exports.__defineGetter__('CharsetToEncoding', () =>
+		exports$1.__defineGetter__('CharsetToEncoding', () =>
 		  requireCharset_encodings()
 		);
 
-		exports.setMaxParserCache = function (max) {
+		exports$1.setMaxParserCache = function (max) {
 		  parserCache.setMaxCache(max);
 		};
 
-		exports.clearParserCache = function () {
+		exports$1.clearParserCache = function () {
 		  parserCache.clearCache();
 		}; 
 	} (promise));
@@ -36582,7 +36764,7 @@ var hasRequiredMysql2;
 function requireMysql2 () {
 	if (hasRequiredMysql2) return mysql2$1;
 	hasRequiredMysql2 = 1;
-	(function (exports) {
+	(function (exports$1) {
 
 		const SqlString = requireSqlstring();
 
@@ -36591,27 +36773,27 @@ function requireMysql2 () {
 
 		const Connection = requireConnection();
 
-		exports.createConnection = requireCreate_connection();
-		exports.connect = exports.createConnection;
-		exports.Connection = Connection;
-		exports.ConnectionConfig = ConnectionConfig;
+		exports$1.createConnection = requireCreate_connection();
+		exports$1.connect = exports$1.createConnection;
+		exports$1.Connection = Connection;
+		exports$1.ConnectionConfig = ConnectionConfig;
 
 		const Pool = requirePool();
 		const PoolCluster = requirePool_cluster$1();
 		const createPool = requireCreate_pool();
 		const createPoolCluster = requireCreate_pool_cluster();
 
-		exports.createPool = createPool;
+		exports$1.createPool = createPool;
 
-		exports.createPoolCluster = createPoolCluster;
+		exports$1.createPoolCluster = createPoolCluster;
 
-		exports.createQuery = Connection.createQuery;
+		exports$1.createQuery = Connection.createQuery;
 
-		exports.Pool = Pool;
+		exports$1.Pool = Pool;
 
-		exports.PoolCluster = PoolCluster;
+		exports$1.PoolCluster = PoolCluster;
 
-		exports.createServer = function (handler) {
+		exports$1.createServer = function (handler) {
 		  const Server = requireServer();
 		  const s = new Server();
 		  if (handler) {
@@ -36620,43 +36802,43 @@ function requireMysql2 () {
 		  return s;
 		};
 
-		exports.PoolConnection = requirePool_connection();
-		exports.authPlugins = requireAuth_plugins();
-		exports.escape = SqlString.escape;
-		exports.escapeId = SqlString.escapeId;
-		exports.format = SqlString.format;
-		exports.raw = SqlString.raw;
+		exports$1.PoolConnection = requirePool_connection();
+		exports$1.authPlugins = requireAuth_plugins();
+		exports$1.escape = SqlString.escape;
+		exports$1.escapeId = SqlString.escapeId;
+		exports$1.format = SqlString.format;
+		exports$1.raw = SqlString.raw;
 
-		exports.__defineGetter__(
+		exports$1.__defineGetter__(
 		  'createConnectionPromise',
 		  () => requirePromise().createConnection
 		);
 
-		exports.__defineGetter__(
+		exports$1.__defineGetter__(
 		  'createPoolPromise',
 		  () => requirePromise().createPool
 		);
 
-		exports.__defineGetter__(
+		exports$1.__defineGetter__(
 		  'createPoolClusterPromise',
 		  () => requirePromise().createPoolCluster
 		);
 
-		exports.__defineGetter__('Types', () => requireTypes());
+		exports$1.__defineGetter__('Types', () => requireTypes());
 
-		exports.__defineGetter__('Charsets', () =>
+		exports$1.__defineGetter__('Charsets', () =>
 		  requireCharsets()
 		);
 
-		exports.__defineGetter__('CharsetToEncoding', () =>
+		exports$1.__defineGetter__('CharsetToEncoding', () =>
 		  requireCharset_encodings()
 		);
 
-		exports.setMaxParserCache = function (max) {
+		exports$1.setMaxParserCache = function (max) {
 		  parserCache.setMaxCache(max);
 		};
 
-		exports.clearParserCache = function () {
+		exports$1.clearParserCache = function () {
 		  parserCache.clearCache();
 		}; 
 	} (mysql2$1));
@@ -36668,8 +36850,8 @@ var mysql2Exports = requireMysql2();
 const data = mysql2Exports.createPool({
     host: 'localhost',
     user: 'root',
-    database: 'redstar',
-    password: 'Patriot8680',
+    database: 'realrp',
+    password: 'Real#PR86',
     port: 3306
 });
 const mysql2 = {
@@ -37053,19 +37235,17 @@ function truncates(password) {
 }
 
 /**
- * Continues with the callback on the next tick.
+ * Continues with the callback after yielding to the event loop.
  * @function
  * @param {function(...[*])} callback Callback to execute
  * @inner
  */
 var nextTick =
-  typeof process !== "undefined" &&
-  process &&
-  typeof process.nextTick === "function"
-    ? typeof setImmediate === "function"
-      ? setImmediate
-      : process.nextTick
-    : setTimeout;
+  typeof setImmediate === "function"
+    ? setImmediate
+    : typeof scheduler === "object" && typeof scheduler.postTask === "function"
+      ? scheduler.postTask.bind(scheduler)
+      : setTimeout;
 
 /** Calculates the byte length of a string encoded as UTF8. */
 function utf8Length(string) {
@@ -38903,7 +39083,18 @@ const updateStatuses = (trade) => {
         rce.triggerClient(player, 'execute', `window.App.inventoryReducer.setTradeStatus('${status}')`);
     });
 };
-const cancelTrade = (key, reason) => {
+const returnItems = async (player, offers) => {
+    const uid = connectedUsers.getField(player.id, 'uid');
+    if (!uid)
+        return;
+    for (const offer of offers) {
+        if (offer) {
+            await addItemToInventory(uid, offer.id, offer.quantity);
+        }
+    }
+    await sendInventoryToCef(player, uid);
+};
+const cancelTrade = async (key, reason) => {
     const trade = activeTrades.get(key);
     if (!trade)
         return;
@@ -38911,6 +39102,9 @@ const cancelTrade = (key, reason) => {
         clearTimeout(trade.confirmTimer);
         trade.confirmTimer = null;
     }
+    const { player1, player2, offers1, offers2 } = trade;
+    await returnItems(player1, offers1);
+    await returnItems(player2, offers2);
     activeTrades.delete(key);
     [trade.player1, trade.player2].forEach((player) => {
         if (player && mp.players.exists(player)) {
@@ -38939,37 +39133,98 @@ const executeTrade = async (key) => {
     }
     const itemsTo1 = offers2.filter((i) => i !== null);
     const itemsTo2 = offers1.filter((i) => i !== null);
-    let canGiveTo1 = true;
-    for (const item of itemsTo1) {
-        const check = await canAddItemInventory(uid1, item.id, item.quantity);
-        if (!check.canAdd) {
-            canGiveTo1 = false;
-            break;
+    // Функция проверки возможности добавления всех предметов
+    async function canAddAllItems(uid, items) {
+        const inventory = await getPlayerInventory(uid);
+        if (!inventory)
+            return false;
+        // 1. Проверка веса
+        let totalWeight = 0;
+        for (const item of items) {
+            const itemData = getItemById(item.id);
+            if (!itemData)
+                return false;
+            totalWeight += itemData.weight * item.quantity;
         }
-    }
-    let canGiveTo2 = true;
-    for (const item of itemsTo2) {
-        const check = await canAddItemInventory(uid2, item.id, item.quantity);
-        if (!check.canAdd) {
-            canGiveTo2 = false;
-            break;
+        if (inventory.weight + totalWeight > inventory.maxweight)
+            return false;
+        // 2. Проверка слотов (симуляция добавления)
+        const mainSlots = normalizeSlots(JSON.parse(inventory.mainslots));
+        const donatData = JSON.parse(inventory.donatslots);
+        const donatSlots = donatData.have ? normalizeSlots(donatData.slots || [], 15) : [];
+        const bagData = await getEquippedBag(uid);
+        const bagSlots = bagData ? normalizeSlots(JSON.parse(bagData.items)) : [];
+        // Вспомогательная функция для попытки разместить предмет в слотах
+        const tryAddItem = (slots, item, itemData) => {
+            // Сначала пытаемся стакать с существующими
+            for (let i = 0; i < slots.length; i++) {
+                const slot = slots[i];
+                if (slot && slot.id === item.id && itemData.stackable) {
+                    if (slot.quantity + item.quantity <= itemData.maxStack) {
+                        slots[i] = { ...slot, quantity: slot.quantity + item.quantity };
+                        return true;
+                    }
+                }
+            }
+            // Ищем пустой слот
+            const freeIdx = slots.findIndex(s => s === null);
+            if (freeIdx !== -1) {
+                slots[freeIdx] = { id: item.id, quantity: item.quantity };
+                return true;
+            }
+            return false;
+        };
+        // Перебираем все предметы
+        for (const item of items) {
+            const itemData = getItemById(item.id);
+            if (!itemData)
+                return false;
+            // Пытаемся разместить в main, затем в donat, затем в bag
+            if (tryAddItem(mainSlots, item, itemData))
+                continue;
+            if (tryAddItem(donatSlots, item, itemData))
+                continue;
+            if (tryAddItem(bagSlots, item, itemData))
+                continue;
+            // Не удалось разместить
+            return false;
         }
+        return true;
     }
-    if (!canGiveTo1 || !canGiveTo2) {
+    const can1 = await canAddAllItems(uid1, itemsTo1);
+    const can2 = await canAddAllItems(uid2, itemsTo2);
+    if (!can1 || !can2) {
         [player1, player2].forEach((player) => {
             rce.triggerClient(player, 'sendNotify', 'err', 'У одного из игроков недостаточно места в инвентаре', 4500, 'bottom');
         });
+        // Сбрасываем готовность, предметы остаются в трейдовых слотах
         trade.ready1 = false;
         trade.ready2 = false;
         updateStatuses(trade);
         return;
     }
+    // Выполняем обмен
     for (const item of itemsTo1) {
-        await addItemToInventory(uid1, item.id, item.quantity);
+        const result = await addItemToInventory(uid1, item.id, item.quantity);
+        if (!result.success) {
+            console.log(chalk.red('[EXECUTE TRADE] Ошибка при добавлении предмета игроку 1, отмена'));
+            await returnItems(player1, offers1);
+            await returnItems(player2, offers2);
+            activeTrades.delete(key);
+            return;
+        }
     }
     for (const item of itemsTo2) {
-        await addItemToInventory(uid2, item.id, item.quantity);
+        const result = await addItemToInventory(uid2, item.id, item.quantity);
+        if (!result.success) {
+            console.log(chalk.red('[EXECUTE TRADE] Ошибка при добавлении предмета игроку 2, отмена'));
+            await returnItems(player1, offers1);
+            await returnItems(player2, offers2);
+            activeTrades.delete(key);
+            return;
+        }
     }
+    // Очищаем трейд и обновляем инвентари
     activeTrades.delete(key);
     await sendInventoryToCef(player1, uid1);
     await sendInventoryToCef(player2, uid2);
@@ -38987,7 +39242,7 @@ const acceptTrade = (player, requestorId) => {
         rce.triggerClient(player, 'sendNotify', 'err', 'Трейд уже активен', 3000, 'bottom');
         return;
     }
-    activeTrades.set(key, {
+    const trade = {
         player1: requestor,
         player2: player,
         offers1: Array(5).fill(null),
@@ -38995,9 +39250,11 @@ const acceptTrade = (player, requestorId) => {
         ready1: false,
         ready2: false,
         confirmTimer: null
-    });
+    };
+    activeTrades.set(key, trade);
     rce.triggerClient(requestor, 'showInventory', true);
     rce.triggerClient(player, 'showInventory', true);
+    updateStatuses(trade);
 };
 // -----------
 // Events
@@ -40459,21 +40716,133 @@ const processInventoryMove = async (uid, sourceSection, sourceSlot, targetSectio
         const player = mp.players.at(connectedUsers.getPlayerIdByUid(uid));
         if (!player)
             return false;
+        /*if (sourceSection === 'trade' || targetSection === 'trade' || sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
+          if (sourceSection === 'returnTrade' || targetSection === 'returnTrade') return false
+    
+          const tradeInfo = getTradeForPlayer(player)
+          if (!tradeInfo) return false
+    
+          const { trade } = tradeInfo
+          const myReady = player === trade.player1 ? trade.ready1 : trade.ready2
+          if (myReady) return false
+    
+          let myOffers = getMyOffers(trade, player)
+          let sourceSlots: any[] = myOffers
+          let targetSlots: any[] = myOffers
+    
+          let sourceRealSection = sourceSection
+          let targetRealSection = targetSection
+    
+          if (sourceSection !== 'trade') {
+            switch (sourceSection) {
+              case 'main':
+                sourceSlots = normalizeSlots(JSON.parse(inventory.mainslots))
+                break
+              case 'donat':
+                const donat = JSON.parse(inventory.donatslots)
+                sourceSlots = normalizeSlots(donat.slots || [], 15)
+                break
+              case 'bag':
+                const bag = await getEquippedBag(uid)
+                if (!bag) return false
+                sourceSlots = normalizeSlots(JSON.parse(bag.items || '[]'))
+                break
+              case 'clothes':
+                sourceSlots = normalizeSlots(JSON.parse(inventory.clothesslots))
+                break
+              default:
+                return false
+            }
+            sourceRealSection = sourceSection
+          }
+    
+          if (targetSection !== 'trade') {
+            switch (targetSection) {
+              case 'main':
+                targetSlots = normalizeSlots(JSON.parse(inventory.mainslots))
+                break
+              case 'donat':
+                const donat = JSON.parse(inventory.donatslots)
+                targetSlots = normalizeSlots(donat.slots || [], 15)
+                break
+              case 'bag':
+                const bag = await getEquippedBag(uid)
+                if (!bag) return false
+                targetSlots = normalizeSlots(JSON.parse(bag.items || '[]'))
+                break
+              case 'clothes':
+                targetSlots = normalizeSlots(JSON.parse(inventory.clothesslots))
+                break
+              default:
+                return false
+            }
+            targetRealSection = targetSection
+          }
+    
+          const { newSourceSlots, newTargetSlots } = moveItemSlots(sourceSlots, sourceSlot, targetSlots, targetSlot)
+    
+          if (sourceSection === 'trade' && targetSection === 'trade') {
+            if (player === trade.player1) trade.offers1 = newSourceSlots
+            else trade.offers2 = newSourceSlots
+          } else if (sourceSection !== 'trade' && targetSection === 'trade') {
+            if (player === trade.player1) trade.offers1 = newSourceSlots
+            else trade.offers2 = newSourceSlots
+    
+            if (sourceRealSection === 'bag') {
+              const bagItem = JSON.parse(inventory.clothesslots)[10]
+              if (bagItem) {
+                await handleBagOperations(uid, 'update', bagItem.id, newSourceSlots)
+              }
+            } else {
+              await updateSlotsArray(uid, sourceRealSection, newSourceSlots)
+            }
+          } else if (sourceSection ===  'trade' && targetSection !== 'trade') {
+            if (player === trade.player1) trade.offers1 = newSourceSlots
+            else trade.offers2 = newSourceSlots
+    
+            if (targetRealSection === 'bag') {
+              const bagItem = JSON.parse(inventory.clothesslots)[10]
+              if (bagItem) {
+                await handleBagOperations(uid, 'update', bagItem.id, newTargetSlots)
+              }
+            } else {
+              await updateSlotsArray(uid, targetRealSection, newTargetSlots)
+            }
+          }
+    
+          await updateTotalWeightInventory(uid)
+    
+          const partner = player === trade.player1 ? trade.player2 : trade.player1
+          const uidPartner = connectedUsers.getField(partner.id, 'uid')
+    
+          await sendInventoryToCef(player, uid)
+          if (partner && uidPartner) sendInventoryToCef(partner, uidPartner)
+    
+          return true
+        }*/
         if (sourceSection === 'trade' || targetSection === 'trade' || sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
-            if (sourceSection === 'returnTrade' || targetSection === 'returnTrade')
+            if (sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
+                console.log(chalk.yellow('[TRADE] Попытка изменить returnTrade — запрещено'));
                 return false;
+            }
             const tradeInfo = getTradeForPlayer(player);
-            if (!tradeInfo)
+            if (!tradeInfo) {
+                console.log(chalk.yellow('[TRADE] Перемещение в trade, но трейд не активен'));
                 return false;
+            }
             const { trade } = tradeInfo;
             const myReady = player === trade.player1 ? trade.ready1 : trade.ready2;
-            if (myReady)
+            if (myReady) {
+                console.log(chalk.yellow('[TRADE] Нельзя менять слоты после нажатия "Обменяться"'));
                 return false;
+            }
             let myOffers = getMyOffers(trade, player);
-            let sourceSlots = myOffers;
-            let targetSlots = myOffers;
-            let sourceRealSection = sourceSection;
-            let targetRealSection = targetSection;
+            let sourceSlots = (sourceSection === 'trade') ? myOffers : [];
+            let targetSlots = (targetSection === 'trade') ? myOffers : [];
+            let sourceIsBag = false;
+            let targetIsBag = false;
+            let sourceBagUid = null;
+            let targetBagUid = null;
             if (sourceSection !== 'trade') {
                 switch (sourceSection) {
                     case 'main':
@@ -40488,14 +40857,19 @@ const processInventoryMove = async (uid, sourceSection, sourceSlot, targetSectio
                         if (!bag)
                             return false;
                         sourceSlots = normalizeSlots(JSON.parse(bag.items || '[]'));
+                        sourceIsBag = true;
+                        const clothes = JSON.parse(inventory.clothesslots);
+                        sourceBagUid = clothes[10]?.id || null;
                         break;
                     case 'clothes':
                         sourceSlots = normalizeSlots(JSON.parse(inventory.clothesslots));
                         break;
+                    case 'fast':
+                        sourceSlots = normalizeFastSlots(JSON.parse(inventory.fastslots || '[]'));
+                        break;
                     default:
                         return false;
                 }
-                sourceRealSection = sourceSection;
             }
             if (targetSection !== 'trade') {
                 switch (targetSection) {
@@ -40511,58 +40885,72 @@ const processInventoryMove = async (uid, sourceSection, sourceSlot, targetSectio
                         if (!bag)
                             return false;
                         targetSlots = normalizeSlots(JSON.parse(bag.items || '[]'));
+                        targetIsBag = true;
+                        const clothes = JSON.parse(inventory.clothesslots);
+                        targetBagUid = clothes[10]?.id || null;
                         break;
                     case 'clothes':
                         targetSlots = normalizeSlots(JSON.parse(inventory.clothesslots));
                         break;
+                    case 'fast':
+                        targetSlots = normalizeFastSlots(JSON.parse(inventory.fastslots || '[]'));
+                        break;
                     default:
                         return false;
                 }
-                targetRealSection = targetSection;
             }
             const { newSourceSlots, newTargetSlots } = moveItemSlots(sourceSlots, sourceSlot, targetSlots, targetSlot);
+            // Обновляем trade offers и инвентарь
             if (sourceSection === 'trade' && targetSection === 'trade') {
+                // Внутри trade — просто обновляем offers
                 if (player === trade.player1)
-                    trade.offers1 = newSourceSlots;
+                    trade.offers1 = newTargetSlots; // или newSourceSlots, т.к. один массив
                 else
-                    trade.offers2 = newSourceSlots;
+                    trade.offers2 = newTargetSlots;
             }
             else if (sourceSection !== 'trade' && targetSection === 'trade') {
+                // Из инвентаря в trade
                 if (player === trade.player1)
-                    trade.offers1 = newSourceSlots;
+                    trade.offers1 = newTargetSlots;
                 else
-                    trade.offers2 = newSourceSlots;
-                if (sourceRealSection === 'bag') {
-                    const bagItem = JSON.parse(inventory.clothesslots)[10];
-                    if (bagItem) {
-                        await handleBagOperations(uid, 'update', bagItem.id, newSourceSlots);
-                    }
+                    trade.offers2 = newTargetSlots;
+                // Обновляем оригинальный инвентарь удаляем предм
+                if (sourceIsBag && sourceBagUid) {
+                    await handleBagOperations(uid, 'update', sourceBagUid, newSourceSlots);
                 }
                 else {
-                    await updateSlotsArray(uid, sourceRealSection, newSourceSlots);
+                    await updateSlotsArray(uid, sourceSection, newSourceSlots);
                 }
             }
             else if (sourceSection === 'trade' && targetSection !== 'trade') {
+                // Из trade обратно в инвентарь
                 if (player === trade.player1)
                     trade.offers1 = newSourceSlots;
                 else
                     trade.offers2 = newSourceSlots;
-                if (targetRealSection === 'bag') {
-                    const bagItem = JSON.parse(inventory.clothesslots)[10];
-                    if (bagItem) {
-                        await handleBagOperations(uid, 'update', bagItem.id, newTargetSlots);
-                    }
+                // Обновляем инвентарь (добавляем предмет)
+                if (targetIsBag && targetBagUid) {
+                    await handleBagOperations(uid, 'update', targetBagUid, newTargetSlots);
                 }
                 else {
-                    await updateSlotsArray(uid, targetRealSection, newTargetSlots);
+                    await updateSlotsArray(uid, targetSection, newTargetSlots);
                 }
             }
             await updateTotalWeightInventory(uid);
+            // Обновляем CEF для обоих
             const partner = player === trade.player1 ? trade.player2 : trade.player1;
-            const uidPartner = connectedUsers.getField(partner.id, 'uid');
+            const uidPartner = connectedUsers.getField(partner?.id, 'uid');
             await sendInventoryToCef(player, uid);
-            if (partner && uidPartner)
-                sendInventoryToCef(partner, uidPartner);
+            if (partner && mp.players.exists(partner) && uidPartner) {
+                await sendInventoryToCef(partner, uidPartner);
+            }
+            updateStatuses(trade);
+            // Если перемещение после ready — сбросить статусы
+            if (trade.ready1 || trade.ready2) {
+                trade.ready1 = false;
+                trade.ready2 = false;
+                updateStatuses(trade);
+            }
             return true;
         }
         if (targetSection === 'bag') {
@@ -41046,10 +41434,12 @@ const findFreeSlotsInInventory = async (uid) => {
     if (freeSlot !== -1)
         return { section: 'main', slot: freeSlot };
     const donatData = JSON.parse(inventory.donatslots);
-    const donatSlots = normalizeSlots(donatData.slots || [], 15);
-    freeSlot = donatSlots.findIndex(slot => slot === null);
-    if (freeSlot !== -1)
-        return { section: 'donat', slot: freeSlot };
+    if (donatData.have) {
+        const donatSlots = normalizeSlots(donatData.slots || [], 15);
+        freeSlot = donatSlots.findIndex(slot => slot === null);
+        if (freeSlot !== -1)
+            return { section: 'donat', slot: freeSlot };
+    }
     const bagData = await getEquippedBag(uid);
     if (bagData) {
         const bagSlots = normalizeSlots(JSON.parse(bagData.items));
@@ -42162,31 +42552,6 @@ const getBagWeight = async (uid, bagUid) => {
         });
     });
 };
-const canAddItemInventory = async (uid, itemId, quantity = 1) => {
-    try {
-        const inventory = await getPlayerInventory(uid);
-        if (!inventory) {
-            return { canAdd: false, reason: 'Инвентарь не найден' };
-        }
-        const itemData = getItemById(itemId);
-        if (!itemData) {
-            return { canAdd: false, reason: 'Предмет не найден' };
-        }
-        const additionalWeight = itemData.weight * quantity;
-        const currentWeight = inventory.weight || 0;
-        const maxWeight = inventory.maxweight || 20;
-        if ((currentWeight + additionalWeight) > maxWeight) {
-            return {
-                canAdd: false,
-                reason: `Недостаточно места. Вес: ${currentWeight}/${maxWeight}, нужно: ${additionalWeight}`
-            };
-        }
-        return { canAdd: true };
-    }
-    catch (e) {
-        console.log(chalk.bgRed('• CHECK WEIGHT •') + chalk.red(` ${e}`));
-    }
-};
 const calcWeightSlots = (slots) => {
     let totalWeight = 0;
     slots.forEach((slot) => {
@@ -42286,8 +42651,8 @@ const sendInventoryToCef = async (player, uid) => {
             const { trade } = tradeInfo;
             const myOffers = getMyOffers(trade, player);
             const partnerOffers = getPartnerOffers(trade, player);
-            tradeSlotsForCef = convertSlots(myOffers);
-            returnTradeSlotsForCef = convertSlots(partnerOffers);
+            tradeSlotsForCef = convertSlots(normalizeSlots(myOffers, 5));
+            returnTradeSlotsForCef = convertSlots(normalizeSlots(partnerOffers, 5));
         }
         // Проверяем, надета ли сумка
         const bagItem = clothesSlotsData[10];
@@ -43641,7 +44006,7 @@ function requireCookies () {
 }
 
 var name = "nodemailer";
-var version = "7.0.5";
+var version = "7.0.10";
 var homepage = "https://nodemailer.com/";
 var require$$9 = {
 	name: name,
@@ -43786,7 +44151,13 @@ function requireFetch () {
 	        });
 	    }
 
-	    if (parsed.protocol === 'https:' && parsed.hostname && parsed.hostname !== reqOptions.host && !net.isIP(parsed.hostname) && !reqOptions.servername) {
+	    if (
+	        parsed.protocol === 'https:' &&
+	        parsed.hostname &&
+	        parsed.hostname !== reqOptions.host &&
+	        !net.isIP(parsed.hostname) &&
+	        !reqOptions.servername
+	    ) {
 	        reqOptions.servername = parsed.hostname;
 	    }
 
@@ -43947,11 +44318,19 @@ function requireShared () {
 		const os = require$$0$4;
 
 		const DNS_TTL = 5 * 60 * 1000;
+		const CACHE_CLEANUP_INTERVAL = 30 * 1000; // Minimum 30 seconds between cleanups
+		const MAX_CACHE_SIZE = 1000; // Maximum number of entries in cache
+
+		let lastCacheCleanup = 0;
+		module.exports._lastCacheCleanup = () => lastCacheCleanup;
+		module.exports._resetCacheCleanup = () => {
+		    lastCacheCleanup = 0;
+		};
 
 		let networkInterfaces;
 		try {
 		    networkInterfaces = os.networkInterfaces();
-		} catch (err) {
+		} catch (_err) {
 		    // fails on some systems
 		}
 
@@ -44017,8 +44396,8 @@ function requireShared () {
 		                !value.addresses || !value.addresses.length
 		                    ? null
 		                    : value.addresses.length === 1
-		                    ? value.addresses[0]
-		                    : value.addresses[Math.floor(Math.random() * value.addresses.length)]
+		                      ? value.addresses[0]
+		                      : value.addresses[Math.floor(Math.random() * value.addresses.length)]
 		        },
 		        extra || {}
 		    );
@@ -44049,7 +44428,27 @@ function requireShared () {
 		    if (dnsCache.has(options.host)) {
 		        cached = dnsCache.get(options.host);
 
-		        if (!cached.expires || cached.expires >= Date.now()) {
+		        // Lazy cleanup with time throttling
+		        const now = Date.now();
+		        if (now - lastCacheCleanup > CACHE_CLEANUP_INTERVAL) {
+		            lastCacheCleanup = now;
+
+		            // Clean up expired entries
+		            for (const [host, entry] of dnsCache.entries()) {
+		                if (entry.expires && entry.expires < now) {
+		                    dnsCache.delete(host);
+		                }
+		            }
+
+		            // If cache is still too large, remove oldest entries
+		            if (dnsCache.size > MAX_CACHE_SIZE) {
+		                const toDelete = Math.floor(MAX_CACHE_SIZE * 0.1); // Remove 10% of entries
+		                const keys = Array.from(dnsCache.keys()).slice(0, toDelete);
+		                keys.forEach(key => dnsCache.delete(key));
+		            }
+		        }
+
+		        if (!cached.expires || cached.expires >= now) {
 		            return callback(
 		                null,
 		                formatDNSValue(cached.value, {
@@ -44062,7 +44461,11 @@ function requireShared () {
 		    resolver(4, options.host, options, (err, addresses) => {
 		        if (err) {
 		            if (cached) {
-		                // ignore error, use expired value
+		                dnsCache.set(options.host, {
+		                    value: cached.value,
+		                    expires: Date.now() + (options.dnsTtl || DNS_TTL)
+		                });
+
 		                return callback(
 		                    null,
 		                    formatDNSValue(cached.value, {
@@ -44096,7 +44499,11 @@ function requireShared () {
 		        resolver(6, options.host, options, (err, addresses) => {
 		            if (err) {
 		                if (cached) {
-		                    // ignore error, use expired value
+		                    dnsCache.set(options.host, {
+		                        value: cached.value,
+		                        expires: Date.now() + (options.dnsTtl || DNS_TTL)
+		                    });
+
 		                    return callback(
 		                        null,
 		                        formatDNSValue(cached.value, {
@@ -44131,7 +44538,11 @@ function requireShared () {
 		                dns.lookup(options.host, { all: true }, (err, addresses) => {
 		                    if (err) {
 		                        if (cached) {
-		                            // ignore error, use expired value
+		                            dnsCache.set(options.host, {
+		                                value: cached.value,
+		                                expires: Date.now() + (options.dnsTtl || DNS_TTL)
+		                            });
+
 		                            return callback(
 		                                null,
 		                                formatDNSValue(cached.value, {
@@ -44182,9 +44593,13 @@ function requireShared () {
 		                        })
 		                    );
 		                });
-		            } catch (err) {
+		            } catch (_err) {
 		                if (cached) {
-		                    // ignore error, use expired value
+		                    dnsCache.set(options.host, {
+		                        value: cached.value,
+		                        expires: Date.now() + (options.dnsTtl || DNS_TTL)
+		                    });
+
 		                    return callback(
 		                        null,
 		                        formatDNSValue(cached.value, {
@@ -44355,52 +44770,74 @@ function requireShared () {
 		    };
 
 		module.exports.parseDataURI = uri => {
-		    let input = uri;
-		    let commaPos = input.indexOf(',');
-		    if (!commaPos) {
-		        return uri;
+		    if (typeof uri !== 'string') {
+		        return null;
 		    }
 
-		    let data = input.substring(commaPos + 1);
-		    let metaStr = input.substring('data:'.length, commaPos);
+		    // Early return for non-data URIs to avoid unnecessary processing
+		    if (!uri.startsWith('data:')) {
+		        return null;
+		    }
+
+		    // Find the first comma safely - this prevents ReDoS
+		    const commaPos = uri.indexOf(',');
+		    if (commaPos === -1) {
+		        return null;
+		    }
+
+		    const data = uri.substring(commaPos + 1);
+		    const metaStr = uri.substring('data:'.length, commaPos);
 
 		    let encoding;
+		    const metaEntries = metaStr.split(';');
 
-		    let metaEntries = metaStr.split(';');
-		    let lastMetaEntry = metaEntries.length > 1 ? metaEntries[metaEntries.length - 1] : false;
-		    if (lastMetaEntry && lastMetaEntry.indexOf('=') < 0) {
-		        encoding = lastMetaEntry.toLowerCase();
-		        metaEntries.pop();
-		    }
-
-		    let contentType = metaEntries.shift() || 'application/octet-stream';
-		    let params = {};
-		    for (let entry of metaEntries) {
-		        let sep = entry.indexOf('=');
-		        if (sep >= 0) {
-		            let key = entry.substring(0, sep);
-		            let value = entry.substring(sep + 1);
-		            params[key] = value;
+		    if (metaEntries.length > 0) {
+		        const lastEntry = metaEntries[metaEntries.length - 1].toLowerCase().trim();
+		        // Only recognize valid encoding types to prevent manipulation
+		        if (['base64', 'utf8', 'utf-8'].includes(lastEntry) && lastEntry.indexOf('=') === -1) {
+		            encoding = lastEntry;
+		            metaEntries.pop();
 		        }
 		    }
 
-		    switch (encoding) {
-		        case 'base64':
-		            data = Buffer.from(data, 'base64');
-		            break;
-		        case 'utf8':
-		            data = Buffer.from(data);
-		            break;
-		        default:
-		            try {
-		                data = Buffer.from(decodeURIComponent(data));
-		            } catch (err) {
-		                data = Buffer.from(data);
+		    const contentType = metaEntries.length > 0 ? metaEntries.shift() : 'application/octet-stream';
+		    const params = {};
+
+		    for (let i = 0; i < metaEntries.length; i++) {
+		        const entry = metaEntries[i];
+		        const sepPos = entry.indexOf('=');
+		        if (sepPos > 0) {
+		            // Ensure there's a key before the '='
+		            const key = entry.substring(0, sepPos).trim();
+		            const value = entry.substring(sepPos + 1).trim();
+		            if (key) {
+		                params[key] = value;
 		            }
-		            data = Buffer.from(data);
+		        }
 		    }
 
-		    return { data, encoding, contentType, params };
+		    // Decode data based on encoding with proper error handling
+		    let bufferData;
+		    try {
+		        if (encoding === 'base64') {
+		            bufferData = Buffer.from(data, 'base64');
+		        } else {
+		            try {
+		                bufferData = Buffer.from(decodeURIComponent(data));
+		            } catch (_decodeError) {
+		                bufferData = Buffer.from(data);
+		            }
+		        }
+		    } catch (_bufferError) {
+		        bufferData = Buffer.alloc(0);
+		    }
+
+		    return {
+		        data: bufferData,
+		        encoding: encoding || null,
+		        contentType: contentType || 'application/octet-stream',
+		        params
+		    };
 		};
 
 		/**
@@ -45735,7 +46172,10 @@ function requireMimeTypes () {
 	    ['bdm', 'application/vnd.syncml.dm+wbxml'],
 	    ['bed', 'application/vnd.realvnc.bed'],
 	    ['bh2', 'application/vnd.fujitsu.oasysprs'],
-	    ['bin', ['application/octet-stream', 'application/mac-binary', 'application/macbinary', 'application/x-macbinary', 'application/x-binary']],
+	    [
+	        'bin',
+	        ['application/octet-stream', 'application/mac-binary', 'application/macbinary', 'application/x-macbinary', 'application/x-binary']
+	    ],
 	    ['bm', 'image/bmp'],
 	    ['bmi', 'application/vnd.bmi'],
 	    ['bmp', ['image/bmp', 'image/x-windows-bmp']],
@@ -45780,7 +46220,10 @@ function requireMimeTypes () {
 	    ['cii', 'application/vnd.anser-web-certificate-issue-initiation'],
 	    ['cil', 'application/vnd.ms-artgalry'],
 	    ['cla', 'application/vnd.claymore'],
-	    ['class', ['application/octet-stream', 'application/java', 'application/java-byte-code', 'application/java-vm', 'application/x-java-class']],
+	    [
+	        'class',
+	        ['application/octet-stream', 'application/java', 'application/java-byte-code', 'application/java-vm', 'application/x-java-class']
+	    ],
 	    ['clkk', 'application/vnd.crick.clicker.keyboard'],
 	    ['clkp', 'application/vnd.crick.clicker.palette'],
 	    ['clkt', 'application/vnd.crick.clicker.template'],
@@ -46385,7 +46828,10 @@ function requireMimeTypes () {
 	    ['sbml', 'application/sbml+xml'],
 	    ['sc', 'application/vnd.ibm.secure-container'],
 	    ['scd', 'application/x-msschedule'],
-	    ['scm', ['application/vnd.lotus-screencam', 'video/x-scm', 'text/x-script.guile', 'application/x-lotusscreencam', 'text/x-script.scheme']],
+	    [
+	        'scm',
+	        ['application/vnd.lotus-screencam', 'video/x-scm', 'text/x-script.guile', 'application/x-lotusscreencam', 'text/x-script.scheme']
+	    ],
 	    ['scq', 'application/scvp-cv-request'],
 	    ['scs', 'application/scvp-cv-response'],
 	    ['sct', 'text/scriptlet'],
@@ -47247,15 +47693,12 @@ function requireBase64 () {
 	    let pos = 0;
 	    let chunkLength = lineLength * 1024;
 	    while (pos < str.length) {
-	        let wrappedLines = str
-	            .substr(pos, chunkLength)
-	            .replace(new RegExp('.{' + lineLength + '}', 'g'), '$&\r\n')
-	            .trim();
+	        let wrappedLines = str.substr(pos, chunkLength).replace(new RegExp('.{' + lineLength + '}', 'g'), '$&\r\n');
 	        result.push(wrappedLines);
 	        pos += chunkLength;
 	    }
 
-	    return result.join('\r\n').trim();
+	    return result.join('');
 	}
 
 	/**
@@ -47268,7 +47711,6 @@ function requireBase64 () {
 	class Encoder extends Transform {
 	    constructor(options) {
 	        super();
-	        // init Transform
 	        this.options = options || {};
 
 	        if (this.options.lineLength !== false) {
@@ -47310,17 +47752,20 @@ function requireBase64 () {
 	        if (this.options.lineLength) {
 	            b64 = wrap(b64, this.options.lineLength);
 
-	            // remove last line as it is still most probably incomplete
 	            let lastLF = b64.lastIndexOf('\n');
 	            if (lastLF < 0) {
 	                this._curLine = b64;
 	                b64 = '';
-	            } else if (lastLF === b64.length - 1) {
-	                this._curLine = '';
 	            } else {
-	                this._curLine = b64.substr(lastLF + 1);
-	                b64 = b64.substr(0, lastLF + 1);
+	                this._curLine = b64.substring(lastLF + 1);
+	                b64 = b64.substring(0, lastLF + 1);
+
+	                if (b64 && !b64.endsWith('\r\n')) {
+	                    b64 += '\r\n';
+	                }
 	            }
+	        } else {
+	            this._curLine = '';
 	        }
 
 	        if (b64) {
@@ -47337,16 +47782,14 @@ function requireBase64 () {
 	        }
 
 	        if (this._curLine) {
-	            this._curLine = wrap(this._curLine, this.options.lineLength);
 	            this.outputBytes += this._curLine.length;
-	            this.push(this._curLine, 'ascii');
+	            this.push(Buffer.from(this._curLine, 'ascii'));
 	            this._curLine = '';
 	        }
 	        done();
 	    }
 	}
 
-	// expose to the world
 	base64 = {
 	    encode,
 	    wrap,
@@ -47390,7 +47833,10 @@ function requireQp () {
 	    for (let i = 0, len = buffer.length; i < len; i++) {
 	        ord = buffer[i];
 	        // if the char is in allowed range, then keep as is, unless it is a WS in the end of a line
-	        if (checkRanges(ord, ranges) && !((ord === 0x20 || ord === 0x09) && (i === len - 1 || buffer[i + 1] === 0x0a || buffer[i + 1] === 0x0d))) {
+	        if (
+	            checkRanges(ord, ranges) &&
+	            !((ord === 0x20 || ord === 0x09) && (i === len - 1 || buffer[i + 1] === 0x0a || buffer[i + 1] === 0x0d))
+	        ) {
 	            result += String.fromCharCode(ord);
 	            continue;
 	        }
@@ -47452,7 +47898,12 @@ function requireQp () {
 	            }
 
 	            // ensure that utf-8 sequences are not split
-	            while (line.length > 3 && line.length < len - pos && !line.match(/^(?:=[\da-f]{2}){1,4}$/i) && (match = line.match(/[=][\da-f]{2}$/gi))) {
+	            while (
+	                line.length > 3 &&
+	                line.length < len - pos &&
+	                !line.match(/^(?:=[\da-f]{2}){1,4}$/i) &&
+	                (match = line.match(/[=][\da-f]{2}$/gi))
+	            ) {
 	                code = parseInt(match[0].substr(1, 2), 16);
 	                if (code < 128) {
 	                    break;
@@ -47858,7 +48309,7 @@ function requireMimeFuncs () {
 
 	            // first line includes the charset and language info and needs to be encoded
 	            // even if it does not contain any unicode characters
-	            line = 'utf-8\x27\x27';
+	            line = "utf-8''";
 	            let encoded = true;
 	            startPos = 0;
 
@@ -48203,7 +48654,7 @@ function requireMimeFuncs () {
 	        try {
 	            // might throw if we try to encode invalid sequences, eg. partial emoji
 	            str = encodeURIComponent(str);
-	        } catch (E) {
+	        } catch (_E) {
 	            // should never run
 	            return str.replace(/[^\x00-\x1F *'()<>@,;:\\"[\]?=\u007F-\uFFFF]+/g, '');
 	        }
@@ -48237,10 +48688,12 @@ function requireAddressparser () {
 	        address: [],
 	        comment: [],
 	        group: [],
-	        text: []
+	        text: [],
+	        textWasQuoted: [] // Track which text tokens came from inside quotes
 	    };
 	    let i;
 	    let len;
+	    let insideQuotes = false; // Track if we're currently inside a quoted string
 
 	    // Filter out <addresses>, (comments) and regular text
 	    for (i = 0, len = tokens.length; i < len; i++) {
@@ -48250,16 +48703,25 @@ function requireAddressparser () {
 	            switch (token.value) {
 	                case '<':
 	                    state = 'address';
+	                    insideQuotes = false;
 	                    break;
 	                case '(':
 	                    state = 'comment';
+	                    insideQuotes = false;
 	                    break;
 	                case ':':
 	                    state = 'group';
 	                    isGroup = true;
+	                    insideQuotes = false;
+	                    break;
+	                case '"':
+	                    // Track quote state for text tokens
+	                    insideQuotes = !insideQuotes;
+	                    state = 'text';
 	                    break;
 	                default:
 	                    state = 'text';
+	                    insideQuotes = false;
 	                    break;
 	            }
 	        } else if (token.value) {
@@ -48273,8 +48735,14 @@ function requireAddressparser () {
 	            if (prevToken && prevToken.noBreak && data[state].length) {
 	                // join values
 	                data[state][data[state].length - 1] += token.value;
+	                if (state === 'text' && insideQuotes) {
+	                    data.textWasQuoted[data.textWasQuoted.length - 1] = true;
+	                }
 	            } else {
 	                data[state].push(token.value);
+	                if (state === 'text') {
+	                    data.textWasQuoted.push(insideQuotes);
+	                }
 	            }
 	        }
 	    }
@@ -48288,16 +48756,36 @@ function requireAddressparser () {
 	    if (isGroup) {
 	        // http://tools.ietf.org/html/rfc2822#appendix-A.1.3
 	        data.text = data.text.join(' ');
+
+	        // Parse group members, but flatten any nested groups (RFC 5322 doesn't allow nesting)
+	        let groupMembers = [];
+	        if (data.group.length) {
+	            let parsedGroup = addressparser(data.group.join(','));
+	            // Flatten: if any member is itself a group, extract its members into the sequence
+	            parsedGroup.forEach(member => {
+	                if (member.group) {
+	                    // Nested group detected - flatten it by adding its members directly
+	                    groupMembers = groupMembers.concat(member.group);
+	                } else {
+	                    groupMembers.push(member);
+	                }
+	            });
+	        }
+
 	        addresses.push({
 	            name: data.text || (address && address.name),
-	            group: data.group.length ? addressparser(data.group.join(',')) : []
+	            group: groupMembers
 	        });
 	    } else {
 	        // If no address was found, try to detect one from regular text
 	        if (!data.address.length && data.text.length) {
 	            for (i = data.text.length - 1; i >= 0; i--) {
-	                if (data.text[i].match(/^[^@\s]+@[^@\s]+$/)) {
+	                // Security fix: Do not extract email addresses from quoted strings
+	                // RFC 5321 allows @ inside quoted local-parts like "user@domain"@example.com
+	                // Extracting emails from quoted text leads to misrouting vulnerabilities
+	                if (!data.textWasQuoted[i] && data.text[i].match(/^[^@\s]+@[^@\s]+$/)) {
 	                    data.address = data.text.splice(i, 1);
+	                    data.textWasQuoted.splice(i, 1);
 	                    break;
 	                }
 	            }
@@ -48314,10 +48802,13 @@ function requireAddressparser () {
 	            // still no address
 	            if (!data.address.length) {
 	                for (i = data.text.length - 1; i >= 0; i--) {
-	                    // fixed the regex to parse email address correctly when email address has more than one @
-	                    data.text[i] = data.text[i].replace(/\s*\b[^@\s]+@[^\s]+\b\s*/, _regexHandler).trim();
-	                    if (data.address.length) {
-	                        break;
+	                    // Security fix: Do not extract email addresses from quoted strings
+	                    if (!data.textWasQuoted[i]) {
+	                        // fixed the regex to parse email address correctly when email address has more than one @
+	                        data.text[i] = data.text[i].replace(/\s*\b[^@\s]+@[^\s]+\b\s*/, _regexHandler).trim();
+	                        if (data.address.length) {
+	                            break;
+	                        }
 	                    }
 	                }
 	            }
@@ -49259,7 +49750,11 @@ function requireMimeNode () {
 
 	                    this._handleContentType(structured);
 
-	                    if (structured.value.match(/^text\/plain\b/) && typeof this.content === 'string' && /[\u0080-\uFFFF]/.test(this.content)) {
+	                    if (
+	                        structured.value.match(/^text\/plain\b/) &&
+	                        typeof this.content === 'string' &&
+	                        /[\u0080-\uFFFF]/.test(this.content)
+	                    ) {
 	                        structured.params.charset = 'utf-8';
 	                    }
 
@@ -49670,8 +50165,8 @@ function requireMimeNode () {
 	            setImmediate(() => {
 	                try {
 	                    contentStream.end(content._resolvedValue);
-	                } catch (err) {
-	                    contentStream.emit('error', err);
+	                } catch (_err) {
+	                    contentStream.emit('error', _err);
 	                }
 	            });
 
@@ -49702,8 +50197,8 @@ function requireMimeNode () {
 	            setImmediate(() => {
 	                try {
 	                    contentStream.end(content || '');
-	                } catch (err) {
-	                    contentStream.emit('error', err);
+	                } catch (_err) {
+	                    contentStream.emit('error', _err);
 	                }
 	            });
 	            return contentStream;
@@ -49721,7 +50216,6 @@ function requireMimeNode () {
 	        return [].concat.apply(
 	            [],
 	            [].concat(addresses).map(address => {
-	                // eslint-disable-line prefer-spread
 	                if (address && address.address) {
 	                    address.address = this._normalizeAddress(address.address);
 	                    address.name = address.name || '';
@@ -49820,7 +50314,6 @@ function requireMimeNode () {
 	                    .apply(
 	                        [],
 	                        [].concat(value || '').map(elm => {
-	                            // eslint-disable-line prefer-spread
 	                            elm = (elm || '')
 	                                .toString()
 	                                .replace(/\r?\n|\r/g, ' ')
@@ -49926,7 +50419,7 @@ function requireMimeNode () {
 
 	        try {
 	            encodedDomain = punycode.toASCII(domain.toLowerCase());
-	        } catch (err) {
+	        } catch (_err) {
 	            // keep as is?
 	        }
 
@@ -49989,7 +50482,7 @@ function requireMimeNode () {
 	            // count latin alphabet symbols and 8-bit range symbols + control symbols
 	            // if there are more latin characters, then use quoted-printable
 	            // encoding, otherwise use base64
-	            nonLatinLen = (value.match(/[\x00-\x08\x0B\x0C\x0E-\x1F\u0080-\uFFFF]/g) || []).length; // eslint-disable-line no-control-regex
+	            nonLatinLen = (value.match(/[\x00-\x08\x0B\x0C\x0E-\x1F\u0080-\uFFFF]/g) || []).length;
 	            latinLen = (value.match(/[a-z]/gi) || []).length;
 	            // if there are more latin symbols than binary/unicode, then prefer Q, otherwise B
 	            encoding = nonLatinLen < latinLen ? 'Q' : 'B';
@@ -50120,12 +50613,14 @@ function requireMailComposer () {
 	                attachment = this._processDataUrl(attachment);
 	            }
 
-	            let contentType = attachment.contentType || mimeFuncs.detectMimeType(attachment.filename || attachment.path || attachment.href || 'bin');
+	            let contentType =
+	                attachment.contentType || mimeFuncs.detectMimeType(attachment.filename || attachment.path || attachment.href || 'bin');
 
 	            let isImage = /^image\//i.test(contentType);
 	            let isMessageNode = /^message\//i.test(contentType);
 
-	            let contentDisposition = attachment.contentDisposition || (isMessageNode || (isImage && attachment.cid) ? 'inline' : 'attachment');
+	            let contentDisposition =
+	                attachment.contentDisposition || (isMessageNode || (isImage && attachment.cid) ? 'inline' : 'attachment');
 
 	            let contentTransferEncoding;
 	            if ('contentTransferEncoding' in attachment) {
@@ -50241,7 +50736,10 @@ function requireMailComposer () {
 	            eventObject;
 
 	        if (this.mail.text) {
-	            if (typeof this.mail.text === 'object' && (this.mail.text.content || this.mail.text.path || this.mail.text.href || this.mail.text.raw)) {
+	            if (
+	                typeof this.mail.text === 'object' &&
+	                (this.mail.text.content || this.mail.text.path || this.mail.text.href || this.mail.text.raw)
+	            ) {
 	                text = this.mail.text;
 	            } else {
 	                text = {
@@ -50266,7 +50764,10 @@ function requireMailComposer () {
 	        }
 
 	        if (this.mail.amp) {
-	            if (typeof this.mail.amp === 'object' && (this.mail.amp.content || this.mail.amp.path || this.mail.amp.href || this.mail.amp.raw)) {
+	            if (
+	                typeof this.mail.amp === 'object' &&
+	                (this.mail.amp.content || this.mail.amp.path || this.mail.amp.href || this.mail.amp.raw)
+	            ) {
 	                amp = this.mail.amp;
 	            } else {
 	                amp = {
@@ -50301,14 +50802,18 @@ function requireMailComposer () {
 	            }
 
 	            eventObject.filename = false;
-	            eventObject.contentType = 'text/calendar; charset=utf-8; method=' + (eventObject.method || 'PUBLISH').toString().trim().toUpperCase();
+	            eventObject.contentType =
+	                'text/calendar; charset=utf-8; method=' + (eventObject.method || 'PUBLISH').toString().trim().toUpperCase();
 	            if (!eventObject.headers) {
 	                eventObject.headers = {};
 	            }
 	        }
 
 	        if (this.mail.html) {
-	            if (typeof this.mail.html === 'object' && (this.mail.html.content || this.mail.html.path || this.mail.html.href || this.mail.html.raw)) {
+	            if (
+	                typeof this.mail.html === 'object' &&
+	                (this.mail.html.content || this.mail.html.path || this.mail.html.href || this.mail.html.raw)
+	            ) {
 	                html = this.mail.html;
 	            } else {
 	                html = {
@@ -50333,7 +50838,9 @@ function requireMailComposer () {
 	                }
 
 	                data = {
-	                    contentType: alternative.contentType || mimeFuncs.detectMimeType(alternative.filename || alternative.path || alternative.href || 'txt'),
+	                    contentType:
+	                        alternative.contentType ||
+	                        mimeFuncs.detectMimeType(alternative.filename || alternative.path || alternative.href || 'txt'),
 	                    contentTransferEncoding: alternative.contentTransferEncoding
 	                };
 
@@ -50579,9 +51086,46 @@ function requireMailComposer () {
 	     * @return {Object} Parsed element
 	     */
 	    _processDataUrl(element) {
+	        const dataUrl = element.path || element.href;
+
+	        // Early validation to prevent ReDoS
+	        if (!dataUrl || typeof dataUrl !== 'string') {
+	            return element;
+	        }
+
+	        if (!dataUrl.startsWith('data:')) {
+	            return element;
+	        }
+
+	        if (dataUrl.length > 52428800) {
+	            // 52428800 chars = 50MB limit for data URL string (~37.5MB decoded image)
+	            // Extract content type before rejecting to preserve MIME type
+	            let detectedType = 'application/octet-stream';
+	            const commaPos = dataUrl.indexOf(',');
+
+	            if (commaPos > 0 && commaPos < 200) {
+	                // Parse header safely with size limit
+	                const header = dataUrl.substring(5, commaPos); // skip 'data:'
+	                const parts = header.split(';');
+	                if (parts[0] && parts[0].includes('/')) {
+	                    detectedType = parts[0].trim();
+	                }
+	            }
+
+	            // Return empty content for excessively long data URLs
+	            return Object.assign({}, element, {
+	                path: false,
+	                href: false,
+	                content: Buffer.alloc(0),
+	                contentType: element.contentType || detectedType
+	            });
+	        }
+
 	        let parsedDataUri;
-	        if ((element.path || element.href).match(/^data:/)) {
-	            parsedDataUri = parseDataURI(element.path || element.href);
+	        try {
+	            parsedDataUri = parseDataURI(dataUrl);
+	        } catch (_err) {
+	            return element;
 	        }
 
 	        if (!parsedDataUri) {
@@ -50977,7 +51521,7 @@ function requireSign () {
 	    signer.update(canonicalizedHeaderData.headers);
 	    try {
 	        signature = signer.sign(options.privateKey, 'base64');
-	    } catch (E) {
+	    } catch (_E) {
 	        return false;
 	    }
 
@@ -51103,7 +51647,9 @@ function requireDkim () {
 	        this.chunks = [];
 	        this.chunklen = 0;
 	        this.readPos = 0;
-	        this.cachePath = this.cacheDir ? path$1.join(this.cacheDir, 'message.' + Date.now() + '-' + crypto.randomBytes(14).toString('hex')) : false;
+	        this.cachePath = this.cacheDir
+	            ? path$1.join(this.cacheDir, 'message.' + Date.now() + '-' + crypto.randomBytes(14).toString('hex'))
+	            : false;
 	        this.cache = false;
 
 	        this.headers = false;
@@ -51371,7 +51917,7 @@ function requireHttpProxyClient () {
 	        finished = true;
 	        try {
 	            socket.destroy();
-	        } catch (E) {
+	        } catch (_E) {
 	            // ignore
 	        }
 	        callback(err);
@@ -51438,7 +51984,7 @@ function requireHttpProxyClient () {
 	                if (!match || (match[1] || '').charAt(0) !== '2') {
 	                    try {
 	                        socket.destroy();
-	                    } catch (E) {
+	                    } catch (_E) {
 	                        // ignore
 	                    }
 	                    return callback(new Error('Invalid response from proxy' + ((match && ': ' + match[1]) || '')));
@@ -51535,7 +52081,8 @@ function requireMailMessage () {
 	        if (this.data.attachments && this.data.attachments.length) {
 	            this.data.attachments.forEach((attachment, i) => {
 	                if (!attachment.filename) {
-	                    attachment.filename = (attachment.path || attachment.href || '').split('/').pop().split('?').shift() || 'attachment-' + (i + 1);
+	                    attachment.filename =
+	                        (attachment.path || attachment.href || '').split('/').pop().split('?').shift() || 'attachment-' + (i + 1);
 	                    if (attachment.filename.indexOf('.') < 0) {
 	                        attachment.filename += '.' + mimeFuncs.detectExtension(attachment.contentType);
 	                    }
@@ -52034,7 +52581,14 @@ function requireMailer () {
 	    }
 
 	    getVersionString() {
-	        return util.format('%s (%s; +%s; %s/%s)', packageData.name, packageData.version, packageData.homepage, this.transporter.name, this.transporter.version);
+	        return util.format(
+	            '%s (%s; +%s; %s/%s)',
+	            packageData.name,
+	            packageData.version,
+	            packageData.homepage,
+	            this.transporter.name,
+	            this.transporter.version
+	        );
 	    }
 
 	    _processPlugins(step, mail, callback) {
@@ -52766,7 +53320,7 @@ function requireSmtpConnection () {
 	        if (socket && !socket.destroyed) {
 	            try {
 	                socket[closeMethod]();
-	            } catch (E) {
+	            } catch (_E) {
 	                // just ignore
 	            }
 	        }
@@ -53498,8 +54052,8 @@ function requireSmtpConnection () {
 	            }
 	            notify = notify.map(n => n.trim().toUpperCase());
 	            let validNotify = ['NEVER', 'SUCCESS', 'FAILURE', 'DELAY'];
-	            let invaliNotify = notify.filter(n => !validNotify.includes(n));
-	            if (invaliNotify.length || (notify.length > 1 && notify.includes('NEVER'))) {
+	            let invalidNotify = notify.filter(n => !validNotify.includes(n));
+	            if (invalidNotify.length || (notify.length > 1 && notify.includes('NEVER'))) {
 	                throw new Error('notify: ' + JSON.stringify(notify.join(',')));
 	            }
 	            notify = notify.join(',');
@@ -53645,7 +54199,12 @@ function requireSmtpConnection () {
 
 	        if (str.charAt(0) !== '2') {
 	            if (this.options.requireTLS) {
-	                this._onError(new Error('EHLO failed but HELO does not support required STARTTLS. response=' + str), 'ECONNECTION', str, 'EHLO');
+	                this._onError(
+	                    new Error('EHLO failed but HELO does not support required STARTTLS. response=' + str),
+	                    'ECONNECTION',
+	                    str,
+	                    'EHLO'
+	                );
 	                return;
 	            }
 
@@ -53827,7 +54386,9 @@ function requireSmtpConnection () {
 	        let challengeString = '';
 
 	        if (!challengeMatch) {
-	            return callback(this._formatError('Invalid login sequence while waiting for server challenge string', 'EAUTH', str, 'AUTH CRAM-MD5'));
+	            return callback(
+	                this._formatError('Invalid login sequence while waiting for server challenge string', 'EAUTH', str, 'AUTH CRAM-MD5')
+	            );
 	        } else {
 	            challengeString = challengeMatch[1];
 	        }
@@ -53970,7 +54531,7 @@ function requireSmtpConnection () {
 	        }
 
 	        if (!this._envelope.rcptQueue.length) {
-	            return callback(this._formatError('Can\x27t send mail - no recipients defined', 'EENVELOPE', false, 'API'));
+	            return callback(this._formatError("Can't send mail - no recipients defined", 'EENVELOPE', false, 'API'));
 	        } else {
 	            this._recipientQueue = [];
 
@@ -54026,7 +54587,7 @@ function requireSmtpConnection () {
 	                });
 	                this._sendCommand('DATA');
 	            } else {
-	                err = this._formatError('Can\x27t send mail - all recipients were rejected', 'EENVELOPE', str, 'RCPT TO');
+	                err = this._formatError("Can't send mail - all recipients were rejected", 'EENVELOPE', str, 'RCPT TO');
 	                err.rejected = this._envelope.rejected;
 	                err.rejectedErrors = this._envelope.rejectedErrors;
 	                return callback(err);
@@ -54165,7 +54726,7 @@ function requireSmtpConnection () {
 	        let defaultHostname;
 	        try {
 	            defaultHostname = os.hostname() || '';
-	        } catch (err) {
+	        } catch (_err) {
 	            // fails on windows 7
 	            defaultHostname = 'localhost';
 	        }
@@ -54267,6 +54828,9 @@ function requireXoauth2 () {
 	            let timeout = Math.max(Number(this.options.timeout) || 0, 0);
 	            this.expires = (timeout && Date.now() + timeout * 1000) || 0;
 	        }
+
+	        this.renewing = false; // Track if renewal is in progress
+	        this.renewalQueue = []; // Queue for pending requests during renewal
 	    }
 
 	    /**
@@ -54277,14 +54841,61 @@ function requireXoauth2 () {
 	     */
 	    getToken(renew, callback) {
 	        if (!renew && this.accessToken && (!this.expires || this.expires > Date.now())) {
+	            this.logger.debug(
+	                {
+	                    tnx: 'OAUTH2',
+	                    user: this.options.user,
+	                    action: 'reuse'
+	                },
+	                'Reusing existing access token for %s',
+	                this.options.user
+	            );
 	            return callback(null, this.accessToken);
 	        }
 
-	        let generateCallback = (...args) => {
-	            if (args[0]) {
+	        // check if it is possible to renew, if not, return the current token or error
+	        if (!this.provisionCallback && !this.options.refreshToken && !this.options.serviceClient) {
+	            if (this.accessToken) {
+	                this.logger.debug(
+	                    {
+	                        tnx: 'OAUTH2',
+	                        user: this.options.user,
+	                        action: 'reuse'
+	                    },
+	                    'Reusing existing access token (no refresh capability) for %s',
+	                    this.options.user
+	                );
+	                return callback(null, this.accessToken);
+	            }
+	            this.logger.error(
+	                {
+	                    tnx: 'OAUTH2',
+	                    user: this.options.user,
+	                    action: 'renew'
+	                },
+	                'Cannot renew access token for %s: No refresh mechanism available',
+	                this.options.user
+	            );
+	            return callback(new Error("Can't create new access token for user"));
+	        }
+
+	        // If renewal already in progress, queue this request instead of starting another
+	        if (this.renewing) {
+	            return this.renewalQueue.push({ renew, callback });
+	        }
+
+	        this.renewing = true;
+
+	        // Handles token renewal completion - processes queued requests and cleans up
+	        const generateCallback = (err, accessToken) => {
+	            this.renewalQueue.forEach(item => item.callback(err, accessToken));
+	            this.renewalQueue = [];
+	            this.renewing = false;
+
+	            if (err) {
 	                this.logger.error(
 	                    {
-	                        err: args[0],
+	                        err,
 	                        tnx: 'OAUTH2',
 	                        user: this.options.user,
 	                        action: 'renew'
@@ -54303,7 +54914,8 @@ function requireXoauth2 () {
 	                    this.options.user
 	                );
 	            }
-	            callback(...args);
+	            // Complete original request
+	            callback(err, accessToken);
 	        };
 
 	        if (this.provisionCallback) {
@@ -54361,8 +54973,8 @@ function requireXoauth2 () {
 	            let token;
 	            try {
 	                token = this.jwtSignRS256(tokenData);
-	            } catch (err) {
-	                return callback(new Error('Can\x27t generate token. Check your auth options'));
+	            } catch (_err) {
+	                return callback(new Error("Can't generate token. Check your auth options"));
 	            }
 
 	            urlOptions = {
@@ -54376,7 +54988,7 @@ function requireXoauth2 () {
 	            };
 	        } else {
 	            if (!this.options.refreshToken) {
-	                return callback(new Error('Can\x27t create new access token for user'));
+	                return callback(new Error("Can't create new access token for user"));
 	            }
 
 	            // web app - https://developers.google.com/identity/protocols/OAuth2WebServer
@@ -54602,7 +55214,8 @@ function requirePoolResource () {
 	            switch ((this.options.auth.type || '').toString().toUpperCase()) {
 	                case 'OAUTH2': {
 	                    let oauth2 = new XOAuth2(this.options.auth, this.logger);
-	                    oauth2.provisionCallback = (this.pool.mailer && this.pool.mailer.get('oauth2_provision_cb')) || oauth2.provisionCallback;
+	                    oauth2.provisionCallback =
+	                        (this.pool.mailer && this.pool.mailer.get('oauth2_provision_cb')) || oauth2.provisionCallback;
 	                    this.auth = {
 	                        type: 'OAUTH2',
 	                        user: this.options.auth.user,
@@ -54706,7 +55319,7 @@ function requirePoolResource () {
 
 	                try {
 	                    timer.unref();
-	                } catch (E) {
+	                } catch (_E) {
 	                    // Ignore. Happens on envs with non-node timer implementation
 	                }
 	            });
@@ -54856,6 +55469,20 @@ var AOL = {
 	host: "smtp.aol.com",
 	port: 587
 };
+var Aruba = {
+	description: "Aruba PEC (Italian email provider)",
+	domains: [
+		"aruba.it",
+		"pec.aruba.it"
+	],
+	aliases: [
+		"Aruba PEC"
+	],
+	host: "smtps.aruba.it",
+	port: 465,
+	secure: true,
+	authMethod: "LOGIN"
+};
 var Bluewin = {
 	description: "Bluewin (Swiss email provider)",
 	host: "smtpauths.bluewin.ch",
@@ -54864,10 +55491,29 @@ var Bluewin = {
 	],
 	port: 465
 };
+var BOL = {
+	description: "BOL Mail (Brazilian provider)",
+	domains: [
+		"bol.com.br"
+	],
+	host: "smtp.bol.com.br",
+	port: 587,
+	requireTLS: true
+};
 var DebugMail = {
 	description: "DebugMail (email testing service)",
 	host: "debugmail.io",
 	port: 25
+};
+var Disroot = {
+	description: "Disroot (privacy-focused provider)",
+	domains: [
+		"disroot.org"
+	],
+	host: "disroot.org",
+	port: 587,
+	secure: false,
+	authMethod: "LOGIN"
 };
 var DynectEmail = {
 	description: "Dyn Email Delivery",
@@ -54986,6 +55632,19 @@ var Infomaniak = {
 		"etik.com"
 	],
 	port: 587
+};
+var KolabNow = {
+	description: "KolabNow (secure email service)",
+	domains: [
+		"kolabnow.com"
+	],
+	aliases: [
+		"Kolab"
+	],
+	host: "smtp.kolabnow.com",
+	port: 465,
+	secure: true,
+	authMethod: "LOGIN"
 };
 var Loopia = {
 	description: "Loopia (Swedish hosting provider)",
@@ -55119,6 +55778,15 @@ var Resend = {
 	port: 465,
 	secure: true
 };
+var Runbox = {
+	description: "Runbox (Norwegian email provider)",
+	domains: [
+		"runbox.com"
+	],
+	host: "smtp.runbox.com",
+	port: 465,
+	secure: true
+};
 var SendCloud = {
 	description: "SendCloud (Chinese email delivery)",
 	host: "smtp.sendcloud.net",
@@ -55217,6 +55885,15 @@ var Yandex = {
 	port: 465,
 	secure: true
 };
+var Zimbra = {
+	description: "Zimbra Mail Server",
+	aliases: [
+		"Zimbra Collaboration"
+	],
+	host: "smtp.zimbra.com",
+	port: 587,
+	requireTLS: true
+};
 var Zoho = {
 	description: "Zoho Mail",
 	host: "smtp.zoho.com",
@@ -55247,8 +55924,11 @@ var require$$0 = {
 	Aliyun: Aliyun,
 	AliyunQiye: AliyunQiye,
 	AOL: AOL,
+	Aruba: Aruba,
 	Bluewin: Bluewin,
+	BOL: BOL,
 	DebugMail: DebugMail,
+	Disroot: Disroot,
 	DynectEmail: DynectEmail,
 	ElasticEmail: ElasticEmail,
 	Ethereal: Ethereal,
@@ -55292,6 +55972,7 @@ var require$$0 = {
 	Hotmail: Hotmail,
 	iCloud: iCloud,
 	Infomaniak: Infomaniak,
+	KolabNow: KolabNow,
 	Loopia: Loopia,
 	Loops: Loops,
 	"mail.ee": {
@@ -55332,6 +56013,7 @@ var require$$0 = {
 	QQ: QQ,
 	QQex: QQex,
 	Resend: Resend,
+	Runbox: Runbox,
 	SendCloud: SendCloud,
 	SendGrid: SendGrid,
 	SendinBlue: SendinBlue,
@@ -55458,6 +56140,7 @@ var require$$0 = {
 	Tutanota: Tutanota,
 	Yahoo: Yahoo,
 	Yandex: Yandex,
+	Zimbra: Zimbra,
 	Zoho: Zoho
 };
 
@@ -56380,7 +57063,7 @@ function requireSmtpTransport () {
 
 	                try {
 	                    timer.unref();
-	                } catch (E) {
+	                } catch (_E) {
 	                    // Ignore. Happens on envs with non-node timer implementation
 	                }
 	            });
@@ -57334,7 +58017,9 @@ function requireNodemailer () {
 	            transporter = new JSONTransport(options);
 	        } else if (options.SES) {
 	            if (options.SES.ses && options.SES.aws) {
-	                let error = new Error('Using legacy SES configuration, expecting @aws-sdk/client-sesv2, see https://nodemailer.com/transports/ses/');
+	                let error = new Error(
+	                    'Using legacy SES configuration, expecting @aws-sdk/client-sesv2, see https://nodemailer.com/transports/ses/'
+	                );
 	                error.code = 'LegacyConfig';
 	                throw error;
 	            }
@@ -58618,6 +59303,7 @@ rce.registerClient('handleInteractionPlayer', async (player, action, targetId) =
     }
 });
 
+//import './whitelist/index'
 //mp.world.weather = 'XMAS'
 const setCustomizationChar = (player, dataChar) => {
     try {
