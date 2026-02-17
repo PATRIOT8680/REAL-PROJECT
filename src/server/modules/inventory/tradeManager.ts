@@ -1,6 +1,9 @@
 import { rce } from "../../utils/rce";
 import { connectedUsers } from "../../data/dataConnectedUser";
-import { getPlayerInventory, addItemToInventory, canAddItemInventory, sendInventoryToCef } from "./inventoryHandlers";
+import { getPlayerInventory, addItemToInventory, canAddItemInventory, sendInventoryToCef, getEquippedBag } from "./inventoryHandlers";
+import { normalizeSlots,  } from "./inventoryMove";
+import { getItemById } from "./items";
+import chalk from "chalk";
 
 interface ITradeOffer {
   id: number,
@@ -122,27 +125,60 @@ export const executeTrade = async (key: string) => {
   const itemsTo1 = offers2.filter((i): i is ITradeOffer => i !== null)
   const itemsTo2 = offers1.filter((i): i is ITradeOffer => i !== null)
 
-  let canGiveTo1 = true
-  for (const item of itemsTo1) {
-    const check = await canAddItemInventory(uid1, item.id, item.quantity)
+  async function canAddAllItems(uid: number, items: ITradeOffer[]): Promise<boolean> {
+    const inventory = await getPlayerInventory(uid)
+    if (!inventory) return false
 
-    if (!check.canAdd) {
-      canGiveTo1 = false
-      break
+    let totalWeight = 0
+    for (const item of items) {
+      const itemData = getItemById(item.id)
+      if (!itemData) return false
+      totalWeight += itemData.weight * item.quantity
     }
+    if (inventory.weight + totalWeight > inventory.maxweight) return false
+
+    const mainSlots = normalizeSlots(JSON.parse(inventory.mainslots))
+    const donatData = JSON.parse(inventory.donatslots)
+    const donatSlots = donatData.have ? normalizeSlots(donatData.slots || [], 15) : []
+    const bagData = await getEquippedBag(uid)
+    const bagSlots = bagData ? normalizeSlots(JSON.parse(bagData.items)) : []
+
+    const tryAddItem = (slots: any[], item: ITradeOffer, itemData: any): boolean => {
+      for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i]
+        if (slot && slot.id === item.id && itemData.stackable) {
+          if (slot.quantity + item.quantity <= itemData.maxStack) {
+            slots[i] = { ...slot, quantity: slot.quantity + item.quantity }
+            return true
+          }
+        }
+      }
+
+      const freeIdx = slots.findIndex(s => s === null)
+      if (freeIdx !== -1) {
+        slots[freeIdx] = { id: item.id, quantity: item.quantity }
+        return true
+      }
+      return false
+    }
+
+    for (const item of items) {
+      const itemData = getItemById(item.id)
+      if (!itemData) return false
+
+      if (tryAddItem(mainSlots, item, itemData)) continue
+      if (tryAddItem(donatSlots, item, itemData)) continue
+      if (tryAddItem(bagSlots, item, itemData)) continue
+
+      return false
+    }
+    return true
   }
 
-  let canGiveTo2 = true
-  for (const item of itemsTo2) {
-    const check = await canAddItemInventory(uid2, item.id, item.quantity)
+  const can1 = await canAddAllItems(uid1, itemsTo1)
+  const can2 = await canAddAllItems(uid2, itemsTo2)
 
-    if (!check.canAdd) {
-      canGiveTo2 = false
-      break
-    }
-  }
-
-  if (!canGiveTo1 || !canGiveTo2) {
+  if (!can1 || !can2) {
     [player1, player2].forEach((player: PlayerMp) => {
       rce.triggerClient(player, 'sendNotify', 'err', 'У одного из игроков недостаточно места в инвентаре', 4500, 'bottom')
     })
@@ -150,19 +186,27 @@ export const executeTrade = async (key: string) => {
     trade.ready1 = false
     trade.ready2 = false
     updateStatuses(trade)
-
-    await returnItems(player1, offers1)
-    await returnItems(player2, offers2)
-
     return
   }
 
   for (const item of itemsTo1) {
-    await addItemToInventory(uid1, item.id, item.quantity)
+    const result = await addItemToInventory(uid1, item.id, item.quantity)
+    if (!result.success) {
+      await returnItems(player1, offers1)
+      await returnItems(player2, offers2)
+      activeTrades.delete(key)
+      return
+    }
   }
 
   for (const item of itemsTo2) {
-    await addItemToInventory(uid2, item.id, item.quantity)
+    const result = await addItemToInventory(uid2, item.id, item.quantity)
+    if (!result.success) {
+      await returnItems(player1, offers1)
+      await returnItems(player2, offers2)
+      activeTrades.delete(key)
+      return
+    }
   }
 
   activeTrades.delete(key)
