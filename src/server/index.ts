@@ -1,4 +1,4 @@
-import './whitelist/index'
+//import './whitelist/index'
 import './player/spawn'
 import './player/playerCmd'
 import './admin/adminCmd'

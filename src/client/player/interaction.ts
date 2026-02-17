@@ -10,16 +10,16 @@ const RAY_LENGTH = 15
 let openedInteraction: boolean = false
 
 mp.events.add('render', () => {
-  const hit = checkCenterScreenHit(RAY_LENGTH, HIT_MAX_DIST, 2);
+  const hit = checkCenterScreenHit(RAY_LENGTH, HIT_MAX_DIST, 8);
   const changedHit = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId
 
-  if (openedInteraction && (hit.type !== 'ped' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST)) {
+  if (openedInteraction && (hit.type !== 'player' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST)) {
     openedInteraction = false;
     gui.execute(`window.App.interactionReducer.hideInteraction()`)
     mp.gui.cursor.visible = false;
   }
 
-  if (hit.type === 'ped' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST && !mp.players.local.vehicle) {
+  if (hit.type === 'player' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST && !mp.players.local.vehicle) {
     const target = mp.players.atRemoteId(hit.remoteId)
     if (target && !mp.players.local.vehicle) {
       const posTarget = target.position
@@ -40,7 +40,7 @@ mp.events.add('render', () => {
       gui.execute(`window.App.hoverInteractionReducer.setHover()`)
     }
   } else {
-    if (changedHit && lastHit.type === 'ped') {
+    if (changedHit && lastHit.type === 'player') {
       gui.execute(`window.App.hoverInteractionReducer.removeHover()`)
     }
   }
@@ -60,7 +60,7 @@ mp.keys.bind(Keys.VK_E, false, async () => {
   const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent']
   const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu))
 
-  if (lastHit.type === 'ped' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST && !hasSpecialOpen) {
+  if (lastHit.type === 'player' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST && !hasSpecialOpen) {
     openedInteraction = true
     mp.console.logWarning(`Взаимодействуете с ID: ${lastHit.remoteId}`)
     gui.execute(`window.App.interactionReducer.showInteraction('player', ${lastHit.remoteId})`)
