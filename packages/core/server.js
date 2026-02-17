@@ -38903,7 +38903,18 @@ const updateStatuses = (trade) => {
         rce.triggerClient(player, 'execute', `window.App.inventoryReducer.setTradeStatus('${status}')`);
     });
 };
-const cancelTrade = (key, reason) => {
+const returnItems = async (player, offers) => {
+    const uid = connectedUsers.getField(player.id, 'uid');
+    if (!uid)
+        return;
+    for (const offer of offers) {
+        if (offer) {
+            await addItemToInventory(uid, offer.id, offer.quantity);
+        }
+    }
+    await sendInventoryToCef(player, uid);
+};
+const cancelTrade = async (key, reason) => {
     const trade = activeTrades.get(key);
     if (!trade)
         return;
@@ -38911,6 +38922,9 @@ const cancelTrade = (key, reason) => {
         clearTimeout(trade.confirmTimer);
         trade.confirmTimer = null;
     }
+    const { player1, player2, offers1, offers2 } = trade;
+    await returnItems(player1, offers1);
+    await returnItems(player2, offers2);
     activeTrades.delete(key);
     [trade.player1, trade.player2].forEach((player) => {
         if (player && mp.players.exists(player)) {
@@ -38962,6 +38976,8 @@ const executeTrade = async (key) => {
         trade.ready1 = false;
         trade.ready2 = false;
         updateStatuses(trade);
+        await returnItems(player1, offers1);
+        await returnItems(player2, offers2);
         return;
     }
     for (const item of itemsTo1) {
@@ -38987,7 +39003,7 @@ const acceptTrade = (player, requestorId) => {
         rce.triggerClient(player, 'sendNotify', 'err', 'Трейд уже активен', 3000, 'bottom');
         return;
     }
-    activeTrades.set(key, {
+    const trade = {
         player1: requestor,
         player2: player,
         offers1: Array(5).fill(null),
@@ -38995,9 +39011,11 @@ const acceptTrade = (player, requestorId) => {
         ready1: false,
         ready2: false,
         confirmTimer: null
-    });
+    };
+    activeTrades.set(key, trade);
     rce.triggerClient(requestor, 'showInventory', true);
     rce.triggerClient(player, 'showInventory', true);
+    updateStatuses(trade);
 };
 // -----------
 // Events
@@ -40459,21 +40477,133 @@ const processInventoryMove = async (uid, sourceSection, sourceSlot, targetSectio
         const player = mp.players.at(connectedUsers.getPlayerIdByUid(uid));
         if (!player)
             return false;
+        /*if (sourceSection === 'trade' || targetSection === 'trade' || sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
+          if (sourceSection === 'returnTrade' || targetSection === 'returnTrade') return false
+    
+          const tradeInfo = getTradeForPlayer(player)
+          if (!tradeInfo) return false
+    
+          const { trade } = tradeInfo
+          const myReady = player === trade.player1 ? trade.ready1 : trade.ready2
+          if (myReady) return false
+    
+          let myOffers = getMyOffers(trade, player)
+          let sourceSlots: any[] = myOffers
+          let targetSlots: any[] = myOffers
+    
+          let sourceRealSection = sourceSection
+          let targetRealSection = targetSection
+    
+          if (sourceSection !== 'trade') {
+            switch (sourceSection) {
+              case 'main':
+                sourceSlots = normalizeSlots(JSON.parse(inventory.mainslots))
+                break
+              case 'donat':
+                const donat = JSON.parse(inventory.donatslots)
+                sourceSlots = normalizeSlots(donat.slots || [], 15)
+                break
+              case 'bag':
+                const bag = await getEquippedBag(uid)
+                if (!bag) return false
+                sourceSlots = normalizeSlots(JSON.parse(bag.items || '[]'))
+                break
+              case 'clothes':
+                sourceSlots = normalizeSlots(JSON.parse(inventory.clothesslots))
+                break
+              default:
+                return false
+            }
+            sourceRealSection = sourceSection
+          }
+    
+          if (targetSection !== 'trade') {
+            switch (targetSection) {
+              case 'main':
+                targetSlots = normalizeSlots(JSON.parse(inventory.mainslots))
+                break
+              case 'donat':
+                const donat = JSON.parse(inventory.donatslots)
+                targetSlots = normalizeSlots(donat.slots || [], 15)
+                break
+              case 'bag':
+                const bag = await getEquippedBag(uid)
+                if (!bag) return false
+                targetSlots = normalizeSlots(JSON.parse(bag.items || '[]'))
+                break
+              case 'clothes':
+                targetSlots = normalizeSlots(JSON.parse(inventory.clothesslots))
+                break
+              default:
+                return false
+            }
+            targetRealSection = targetSection
+          }
+    
+          const { newSourceSlots, newTargetSlots } = moveItemSlots(sourceSlots, sourceSlot, targetSlots, targetSlot)
+    
+          if (sourceSection === 'trade' && targetSection === 'trade') {
+            if (player === trade.player1) trade.offers1 = newSourceSlots
+            else trade.offers2 = newSourceSlots
+          } else if (sourceSection !== 'trade' && targetSection === 'trade') {
+            if (player === trade.player1) trade.offers1 = newSourceSlots
+            else trade.offers2 = newSourceSlots
+    
+            if (sourceRealSection === 'bag') {
+              const bagItem = JSON.parse(inventory.clothesslots)[10]
+              if (bagItem) {
+                await handleBagOperations(uid, 'update', bagItem.id, newSourceSlots)
+              }
+            } else {
+              await updateSlotsArray(uid, sourceRealSection, newSourceSlots)
+            }
+          } else if (sourceSection ===  'trade' && targetSection !== 'trade') {
+            if (player === trade.player1) trade.offers1 = newSourceSlots
+            else trade.offers2 = newSourceSlots
+    
+            if (targetRealSection === 'bag') {
+              const bagItem = JSON.parse(inventory.clothesslots)[10]
+              if (bagItem) {
+                await handleBagOperations(uid, 'update', bagItem.id, newTargetSlots)
+              }
+            } else {
+              await updateSlotsArray(uid, targetRealSection, newTargetSlots)
+            }
+          }
+    
+          await updateTotalWeightInventory(uid)
+    
+          const partner = player === trade.player1 ? trade.player2 : trade.player1
+          const uidPartner = connectedUsers.getField(partner.id, 'uid')
+    
+          await sendInventoryToCef(player, uid)
+          if (partner && uidPartner) sendInventoryToCef(partner, uidPartner)
+    
+          return true
+        }*/
         if (sourceSection === 'trade' || targetSection === 'trade' || sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
-            if (sourceSection === 'returnTrade' || targetSection === 'returnTrade')
+            if (sourceSection === 'returnTrade' || targetSection === 'returnTrade') {
+                console.log(chalk.yellow('[TRADE] Попытка изменить returnTrade — запрещено'));
                 return false;
+            }
             const tradeInfo = getTradeForPlayer(player);
-            if (!tradeInfo)
+            if (!tradeInfo) {
+                console.log(chalk.yellow('[TRADE] Перемещение в trade, но трейд не активен'));
                 return false;
+            }
             const { trade } = tradeInfo;
             const myReady = player === trade.player1 ? trade.ready1 : trade.ready2;
-            if (myReady)
+            if (myReady) {
+                console.log(chalk.yellow('[TRADE] Нельзя менять слоты после нажатия "Обменяться"'));
                 return false;
+            }
             let myOffers = getMyOffers(trade, player);
-            let sourceSlots = myOffers;
-            let targetSlots = myOffers;
-            let sourceRealSection = sourceSection;
-            let targetRealSection = targetSection;
+            let sourceSlots = (sourceSection === 'trade') ? myOffers : [];
+            let targetSlots = (targetSection === 'trade') ? myOffers : [];
+            let sourceIsBag = false;
+            let targetIsBag = false;
+            let sourceBagUid = null;
+            let targetBagUid = null;
             if (sourceSection !== 'trade') {
                 switch (sourceSection) {
                     case 'main':
@@ -40488,14 +40618,19 @@ const processInventoryMove = async (uid, sourceSection, sourceSlot, targetSectio
                         if (!bag)
                             return false;
                         sourceSlots = normalizeSlots(JSON.parse(bag.items || '[]'));
+                        sourceIsBag = true;
+                        const clothes = JSON.parse(inventory.clothesslots);
+                        sourceBagUid = clothes[10]?.id || null;
                         break;
                     case 'clothes':
                         sourceSlots = normalizeSlots(JSON.parse(inventory.clothesslots));
                         break;
+                    case 'fast':
+                        sourceSlots = normalizeFastSlots(JSON.parse(inventory.fastslots || '[]'));
+                        break;
                     default:
                         return false;
                 }
-                sourceRealSection = sourceSection;
             }
             if (targetSection !== 'trade') {
                 switch (targetSection) {
@@ -40511,58 +40646,72 @@ const processInventoryMove = async (uid, sourceSection, sourceSlot, targetSectio
                         if (!bag)
                             return false;
                         targetSlots = normalizeSlots(JSON.parse(bag.items || '[]'));
+                        targetIsBag = true;
+                        const clothes = JSON.parse(inventory.clothesslots);
+                        targetBagUid = clothes[10]?.id || null;
                         break;
                     case 'clothes':
                         targetSlots = normalizeSlots(JSON.parse(inventory.clothesslots));
                         break;
+                    case 'fast':
+                        targetSlots = normalizeFastSlots(JSON.parse(inventory.fastslots || '[]'));
+                        break;
                     default:
                         return false;
                 }
-                targetRealSection = targetSection;
             }
             const { newSourceSlots, newTargetSlots } = moveItemSlots(sourceSlots, sourceSlot, targetSlots, targetSlot);
+            // Обновляем trade offers и инвентарь
             if (sourceSection === 'trade' && targetSection === 'trade') {
+                // Внутри trade — просто обновляем offers
                 if (player === trade.player1)
-                    trade.offers1 = newSourceSlots;
+                    trade.offers1 = newTargetSlots; // или newSourceSlots, т.к. один массив
                 else
-                    trade.offers2 = newSourceSlots;
+                    trade.offers2 = newTargetSlots;
             }
             else if (sourceSection !== 'trade' && targetSection === 'trade') {
+                // Из инвентаря в trade
                 if (player === trade.player1)
-                    trade.offers1 = newSourceSlots;
+                    trade.offers1 = newTargetSlots;
                 else
-                    trade.offers2 = newSourceSlots;
-                if (sourceRealSection === 'bag') {
-                    const bagItem = JSON.parse(inventory.clothesslots)[10];
-                    if (bagItem) {
-                        await handleBagOperations(uid, 'update', bagItem.id, newSourceSlots);
-                    }
+                    trade.offers2 = newTargetSlots;
+                // Обновляем оригинальный инвентарь удаляем предм
+                if (sourceIsBag && sourceBagUid) {
+                    await handleBagOperations(uid, 'update', sourceBagUid, newSourceSlots);
                 }
                 else {
-                    await updateSlotsArray(uid, sourceRealSection, newSourceSlots);
+                    await updateSlotsArray(uid, sourceSection, newSourceSlots);
                 }
             }
             else if (sourceSection === 'trade' && targetSection !== 'trade') {
+                // Из trade обратно в инвентарь
                 if (player === trade.player1)
                     trade.offers1 = newSourceSlots;
                 else
                     trade.offers2 = newSourceSlots;
-                if (targetRealSection === 'bag') {
-                    const bagItem = JSON.parse(inventory.clothesslots)[10];
-                    if (bagItem) {
-                        await handleBagOperations(uid, 'update', bagItem.id, newTargetSlots);
-                    }
+                // Обновляем инвентарь (добавляем предмет)
+                if (targetIsBag && targetBagUid) {
+                    await handleBagOperations(uid, 'update', targetBagUid, newTargetSlots);
                 }
                 else {
-                    await updateSlotsArray(uid, targetRealSection, newTargetSlots);
+                    await updateSlotsArray(uid, targetSection, newTargetSlots);
                 }
             }
             await updateTotalWeightInventory(uid);
+            // Обновляем CEF для обоих
             const partner = player === trade.player1 ? trade.player2 : trade.player1;
-            const uidPartner = connectedUsers.getField(partner.id, 'uid');
+            const uidPartner = connectedUsers.getField(partner?.id, 'uid');
             await sendInventoryToCef(player, uid);
-            if (partner && uidPartner)
-                sendInventoryToCef(partner, uidPartner);
+            if (partner && mp.players.exists(partner) && uidPartner) {
+                await sendInventoryToCef(partner, uidPartner);
+            }
+            updateStatuses(trade);
+            // Если перемещение после ready — сбросить статусы
+            if (trade.ready1 || trade.ready2) {
+                trade.ready1 = false;
+                trade.ready2 = false;
+                updateStatuses(trade);
+            }
             return true;
         }
         if (targetSection === 'bag') {
@@ -41046,10 +41195,12 @@ const findFreeSlotsInInventory = async (uid) => {
     if (freeSlot !== -1)
         return { section: 'main', slot: freeSlot };
     const donatData = JSON.parse(inventory.donatslots);
-    const donatSlots = normalizeSlots(donatData.slots || [], 15);
-    freeSlot = donatSlots.findIndex(slot => slot === null);
-    if (freeSlot !== -1)
-        return { section: 'donat', slot: freeSlot };
+    if (donatData.have) {
+        const donatSlots = normalizeSlots(donatData.slots || [], 15);
+        freeSlot = donatSlots.findIndex(slot => slot === null);
+        if (freeSlot !== -1)
+            return { section: 'donat', slot: freeSlot };
+    }
     const bagData = await getEquippedBag(uid);
     if (bagData) {
         const bagSlots = normalizeSlots(JSON.parse(bagData.items));
@@ -42286,8 +42437,8 @@ const sendInventoryToCef = async (player, uid) => {
             const { trade } = tradeInfo;
             const myOffers = getMyOffers(trade, player);
             const partnerOffers = getPartnerOffers(trade, player);
-            tradeSlotsForCef = convertSlots(myOffers);
-            returnTradeSlotsForCef = convertSlots(partnerOffers);
+            tradeSlotsForCef = convertSlots(normalizeSlots(myOffers, 5));
+            returnTradeSlotsForCef = convertSlots(normalizeSlots(partnerOffers, 5));
         }
         // Проверяем, надета ли сумка
         const bagItem = clothesSlotsData[10];
