@@ -1,6 +1,7 @@
 import { initTimeSystem } from "../world/time";
 import { initItems } from "../modules/inventory/items";
 import { loadItems } from "../modules/inventory/itemsObject";
+import { loadRentPoints } from "../modules/rent";
 import { data } from "../database/mysql";
 import { rce } from "../utils/rce";
 import chalk from "chalk";
@@ -12,6 +13,7 @@ mp.events.add('packagesLoaded', () => {
   setTimeout(async () => {
     await waitForDatabase()
     loadItems()
+    loadRentPoints()
   }, 2000)
 })
 

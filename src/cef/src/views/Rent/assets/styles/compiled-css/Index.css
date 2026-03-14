@@ -7,48 +7,267 @@
   flex-direction: column;
   gap: 2.75rem;
   -webkit-user-drag: none;
+  animation: fadeInRent 0.5s ease;
 }
-.rent .left-section {
+.rent .sections-rent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 13.5rem;
+  height: 100%;
+}
+.rent .sections-rent .left-section {
   display: flex;
   flex-direction: column;
+  width: 40%;
+  height: 100%;
   gap: 1rem;
 }
-.rent .left-section .type-vehs {
+.rent .sections-rent .left-section .type-vehs {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 2rem;
   user-select: none;
 }
-.rent .left-section .type-vehs .type {
+.rent .sections-rent .left-section .type-vehs .type {
   font-size: 1rem;
   font-family: "Druk Wide Cyr", sans-serif;
   text-transform: uppercase;
-  color: #585858;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
   cursor: pointer;
 }
-.rent .left-section .type-vehs .type.active {
+.rent .sections-rent .left-section .type-vehs .type:hover:not(.active) {
+  color: rgba(255, 255, 255, 0.5);
+}
+.rent .sections-rent .left-section .type-vehs .type.active {
   color: #ffca58;
   transition: all 0.3s ease;
 }
-.rent .left-section .list-vehicles {
+.rent .sections-rent .left-section .list-vehicles {
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  padding: 0.5rem;
+  padding-right: 1rem;
+  margin: -0.5rem;
+  height: 90%;
+  width: 100%;
   gap: 1rem;
 }
-.rent .left-section .list-vehicles .item-veh {
+.rent .sections-rent .left-section .list-vehicles::-webkit-scrollbar {
+  width: 0.3rem;
+}
+.rent .sections-rent .left-section .list-vehicles::-webkit-scrollbar-track {
+  opacity: 1;
+  background-color: rgba(205, 205, 205, 0.03);
+  border-radius: 1px;
+}
+.rent .sections-rent .left-section .list-vehicles::-webkit-scrollbar-thumb {
+  cursor: grabbing;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 1px;
+}
+.rent .sections-rent .left-section .list-vehicles::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(255, 202, 88);
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  margin: 0.25rem 0;
+  background: rgba(39, 35, 42, 0.3);
+  border-radius: 2px;
+  box-sizing: border-box;
+  padding: 1rem 1rem;
+  transition: all 0.3s ease;
+  user-select: none;
   gap: 1rem;
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh.selected {
+  outline: 2px solid #ffca58;
+  box-shadow: 0 2px 40px 0 rgba(255, 202, 88, 0.1);
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh.selected .info-veh .header-info .fullname-veh {
+  opacity: 1;
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh.selected .info-veh .price-hour {
+  color: #ffca58;
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh.selected img {
+  opacity: 1;
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh:hover {
+  transition: all 0.3s ease;
+  background: rgba(39, 35, 42, 0.95);
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh .info-veh {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh .info-veh .header-info {
+  display: flex;
+  flex-direction: column;
+  font-family: "Montserrat", sans-serif;
+  gap: 0.45rem;
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh .info-veh .header-info .fullname-veh {
+  font-weight: 700;
+  white-space: wrap;
+  text-transform: uppercase;
+  font-size: 1.35rem;
+  color: #ffffff;
+  opacity: 0.85;
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh .info-veh .header-info .type-fuel {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.3);
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh .info-veh .price-hour {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh .info-veh .price-hour span {
+  font-size: 0.9rem;
+}
+.rent .sections-rent .left-section .list-vehicles .item-veh img {
+  width: 14.5rem;
+  border-radius: 2px;
+  opacity: 0.85;
+}
+.rent .sections-rent .right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 35%;
+  gap: 3.5rem;
+}
+.rent .sections-rent .right-section .info-veh {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+.rent .sections-rent .right-section .info-veh .img-selected-veh {
+  width: 15rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 45px 0 rgba(255, 255, 255, 0.12);
+}
+.rent .sections-rent .right-section .info-veh .text-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+.rent .sections-rent .right-section .info-veh .text-block .header-tb {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+.rent .sections-rent .right-section .info-veh .text-block .header-tb .description {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+.rent .sections-rent .right-section .info-veh .text-block .header-tb .fullname-veh {
+  font-family: "Druk Wide Cyr", sans-serif;
+  text-transform: uppercase;
+  font-size: 1.35rem;
+  color: #ffffff;
+}
+.rent .sections-rent .right-section .info-veh .text-block .type-fuel {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.rent .sections-rent .right-section .colors-veh {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+.rent .sections-rent .right-section .colors-veh .title {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+}
+.rent .sections-rent .right-section .colors-veh .colors {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.2rem;
+}
+.rent .sections-rent .right-section .colors-veh .colors .circle-color {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 100%;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+.rent .sections-rent .right-section .colors-veh .colors .circle-color.selected {
+  transition: all 0.3s ease;
+  border: 3px solid #ffca58;
+}
+.rent .sections-rent .right-section .final-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+}
+.rent .sections-rent .right-section .final-info .block-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+.rent .sections-rent .right-section .final-info .block-info .descr {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+.rent .sections-rent .right-section .final-info .block-info .value {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 1.7rem;
+  color: #ffca58;
+}
+.rent .sections-rent .right-section .final-info #total-amount .value {
+  text-shadow: 0 0 50px rgba(255, 202, 88, 0.5);
+}
+.rent .sections-rent .right-section .cancel-rent {
+  padding: 1.2rem 2.2rem;
+  font-family: "Druk Wide Cyr", sans-serif;
+  text-transform: uppercase;
+  font-size: 1rem;
+  color: #6d6a70;
+  background: none;
+  border: 3.85px solid #6d6a70;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.rent .sections-rent .right-section .cancel-rent:hover {
+  transition: all 0.3s ease;
+  color: #fa0622;
+  border-color: #fa0622;
+  box-shadow: 0 0 30px 0 rgba(250, 6, 34, 0.2), inset 0 0 30px 0 rgba(250, 6, 34, 0.2);
 }
 
 @keyframes fadeInRent {
   from {
-    top: 150%;
+    opacity: 0;
   }
   to {
-    top: 50%;
+    opacity: 1;
   }
 }
 

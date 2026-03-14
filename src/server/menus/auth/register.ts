@@ -69,7 +69,7 @@ export const registerUser = (player: PlayerMp, login: string, email: string, pas
           listLoginAccs.set(player.id, { sid, login })
           player.setVariable('login_player', login)
           selectChar(player)
-          connectedUsers.setUser(player.id, { login: login, sid: sid })
+          connectedUsers.setUser(player.id, { login: login, sid: sid, donatcoins: 0 })
           rce.triggerClient(player, 'server:auth:saveLogin', login)
           rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 4000, 'bottom')
           rce.triggerCef(player, 'server:authSuccess')

@@ -41,6 +41,7 @@ import Inventory from "./views/Inventory/Index.tsx";
 import WaitingLoader from "./views/WaitingLoader/Index.tsx";
 import Interaction from './views/Interaction/Index.tsx'
 import Offer from './views/Offer/Index.tsx'
+import DevMenus from "./views/DevMenus/Index.tsx";
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -69,6 +70,7 @@ const App = () => {
   const spawnVisible = useSelector((state: RootState) => state.spawnReducer.isVisible)
   const inventoryState = useSelector((state: RootState) => state.inventoryReducer)
   const interactionVisible = useSelector((state: RootState) => state.interactionReducer.isVisible)
+  const devMenusVisible = useSelector((state: RootState) => state.devMenusReducer.isVisible)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -178,6 +180,7 @@ const App = () => {
       <WaitingLoader />
       { interactionVisible && <Interaction /> }
       <Offer />
+      { devMenusVisible && <DevMenus /> }
 
       {/*<div className="language_ambients">*/}
       {/*  /!*{ shouldChangeLanguage && <ChangeLanguage /> }*!/*/}

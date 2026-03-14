@@ -1,6 +1,7 @@
 import { gui } from "../global";
 import { rce } from "../../utils/rce";
 import Keys from "../../utils/keys";
+import { showHud } from "./hud";
 
 let inventoryVisible: boolean = false
 
@@ -25,7 +26,7 @@ const hideInventory = () => {
 
   setTimeout(() => {
     gui.execute(`window.App.inventoryReducer.hideInventory()`)
-    gui.execute(`window.App.hudReducer.showHud()`)
+    showHud()
     gui.execute(`window.App.chatReducer.showChat()`)
 
     mp.game.ui.displayRadar(true)

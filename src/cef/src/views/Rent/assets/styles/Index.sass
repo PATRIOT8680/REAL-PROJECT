@@ -10,43 +10,266 @@ $Montserrat: "Montserrat", sans-serif
   flex-direction: column
   gap: 2.75rem
   -webkit-user-drag: none
+  animation: fadeInRent .5s ease
 
-  .left-section
+  .sections-rent
     display: flex
-    flex-direction: column
-    gap: 1rem
+    flex-direction: row
+    align-items: center
+    gap: 13.5rem
+    height: 100%
 
-    .type-vehs
+    .left-section
       display: flex
-      flex-direction: row
-      align-items: center
-      gap: 2rem
-      user-select: none
+      flex-direction: column
+      width: 40%
+      height: 100%
+      gap: 1rem
 
-      .type
-        font-size: 1rem
+      .type-vehs
+        display: flex
+        flex-direction: row
+        align-items: center
+        gap: 2rem
+        user-select: none
+
+        .type
+          font-size: 1rem
+          font-family: $Druk
+          text-transform: uppercase
+          white-space: nowrap
+          color: rgba(255, 255, 255, 0.3)
+          transition: all .3s ease
+          cursor: pointer
+
+          &:hover:not(.active)
+            color: rgba(255, 255, 255, 0.5)
+
+          &.active
+            color: #ffca58
+            transition: all .3s ease
+
+      .list-vehicles
+        display: flex
+        flex-direction: column
+        overflow-y: auto
+        padding: 0.5rem
+        padding-right: 1rem
+        margin: -0.5rem
+        height: 90%
+        width: 100%
+        gap: 1rem
+
+        &::-webkit-scrollbar
+          width: 0.3rem
+
+        &::-webkit-scrollbar-track
+          opacity: 1
+          background-color: rgba(205, 205, 205, 0.03)
+          border-radius: 1px
+
+        &::-webkit-scrollbar-thumb
+          cursor: grabbing
+          background-color: rgba(255, 255, 255, 0.1)
+          border-radius: 1px
+
+          &:hover
+            background-color: rgba(255, 202, 88)
+
+        .item-veh
+          display: flex
+          flex-direction: row
+          justify-content: space-between
+          position: relative
+          margin: 0.25rem 0
+          background: rgba(39, 35, 42, 0.3)
+          border-radius: 2px
+          box-sizing: border-box
+          padding: 1rem 1rem
+          transition: all .3s ease
+          user-select: none
+          gap: 1rem
+
+          &.selected
+            outline: 2px solid #ffca58
+            box-shadow: 0 2px 40px 0 rgba(255, 202, 88, 0.1)
+
+            .info-veh
+              .header-info
+                .fullname-veh
+                  opacity: 1
+
+              .price-hour
+                color: #ffca58
+
+            img
+              opacity: 1
+
+          &:hover
+            transition: all .3s ease
+            background: rgba(39, 35, 42, 0.95)
+
+          .info-veh
+            display: flex
+            flex-direction: column
+            justify-content: space-between
+
+            .header-info
+              display: flex
+              flex-direction: column
+              font-family: $Montserrat
+              gap: .45rem
+
+              .fullname-veh
+                font-weight: 700
+                white-space: wrap
+                text-transform: uppercase
+                font-size: 1.35rem
+                color: #ffffff
+                opacity: .85
+
+              .type-fuel
+                font-weight: 400
+                color: rgba(255, 255, 255, 0.3)
+
+            .price-hour
+              font-family: $Druk
+              font-size: 1.2rem
+              color: rgba(255, 255, 255, 0.4)
+
+              span
+                font-size: .9rem
+
+          img
+            width: 14.5rem
+            border-radius: 2px
+            opacity: 0.85
+
+    .right-section
+      display: flex
+      flex-direction: column
+      align-items: flex-start
+      width: 35%
+      gap: 3.5rem
+
+      .info-veh
+        display: flex
+        flex-direction: row
+        align-items: center
+        gap: 2rem
+
+        .img-selected-veh
+          width: 15rem
+          border-radius: 4px
+          box-shadow: 0 4px 45px 0 rgba(255, 255, 255, 0.12)
+
+        .text-block
+          display: flex
+          flex-direction: column
+          align-items: flex-start
+          gap: .85rem
+
+          .header-tb
+            display: flex
+            flex-direction: column
+            align-items: flex-start
+            gap: .3rem
+
+            .description
+              font-family: $Montserrat
+              font-size: .7rem
+              color: rgba(255, 255, 255, 0.4)
+
+            .fullname-veh
+              font-family: $Druk
+              text-transform: uppercase
+              font-size: 1.35rem
+              color: #ffffff
+
+          .type-fuel
+            font-family: $Montserrat
+            font-weight: 500
+            font-size: .85rem
+            text-transform: uppercase
+            color: rgba(255, 255, 255, 0.5)
+
+      .colors-veh
+        display: flex
+        flex-direction: column
+        align-items: flex-start
+        gap: .85rem
+
+        .title
+          font-family: $Montserrat
+          font-weight: 400
+          color: rgba(255, 255, 255, 0.5)
+
+        .colors
+          display: flex
+          flex-direction: row
+          align-items: center
+          gap: 1.2rem
+
+          .circle-color
+            width: 1.8rem
+            height: 1.8rem
+            border-radius: 100%
+            cursor: pointer
+            border: 1px solid rgba(255, 255, 255, 0.1)
+            transition: all .3s ease
+
+            &.selected
+              transition: all .3s ease
+              border: 3px solid #ffca58
+
+      .final-info
+        display: flex
+        flex-direction: row
+        align-items: center
+        gap: 3rem
+
+        .block-info
+          display: flex
+          flex-direction: column
+          align-items: flex-start
+          gap: 0.4rem
+
+          .descr
+            font-family: $Montserrat
+            font-weight: 400
+            font-size: 1.1rem
+            color: rgba(255, 255, 255, 0.7)
+
+          .value
+            font-family: $Druk
+            font-size: 1.7rem
+            color: #ffca58
+
+        #total-amount
+          .value
+            text-shadow: 0 0 50px rgba(255, 202, 88, 0.5)
+
+      .cancel-rent
+        padding: 1.2rem 2.2rem
         font-family: $Druk
         text-transform: uppercase
-        color: #585858
+        font-size: 1rem
+        color: #6d6a70
+        background: none
+        border: 3.85px solid #6d6a70
+        border-radius: 4px
         transition: all .3s ease
         cursor: pointer
 
-        &.active
-          color: #ffca58
+        &:hover
           transition: all .3s ease
+          color: #fa0622
+          border-color: #fa0622
+          box-shadow: 0 0 30px 0 rgba(250, 6, 34, 0.2), inset 0 0 30px 0 rgba(250, 6, 34, 0.2)
 
-    .list-vehicles
-      display: flex
-      flex-direction: column
-      gap: 1rem
-
-      .item-veh
-        display: flex
-        flex-direction: row
-        gap: 1rem
 
 @keyframes fadeInRent
   from
-    top: 150%
+    opacity: 0
   to
-    top: 50%
+    opacity: 1

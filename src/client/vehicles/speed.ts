@@ -1,16 +1,17 @@
 import { gui } from "../menus/global"
+import { rce } from "../utils/rce";
 
 let localplayer = mp.players.local
 
 mp.events.add('playerEnterVehicle', (vehicle: VehicleMp, seat: number)=> {
   if (vehicle && seat === -1) {
-    gui.execute('window.App.hudReducer.showHud(true)')
+    gui.execute(`window.App.hudReducer.showHud(true)`)
   }
 })
 
 mp.events.add('playerLeaveVehicle', (vehicle: VehicleMp, seat: number)=> {
   if (vehicle && seat === -1) {
-    gui.execute('window.App.hudReducer.showHud(false)')
+    gui.execute(`window.App.hudReducer.showHud(false)`)
   }
 })
 

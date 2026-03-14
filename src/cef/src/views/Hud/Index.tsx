@@ -1,21 +1,22 @@
-import { memo } from "react";
+import './assets/styles/compiled-css/Index.css'
+import { memo, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers/rootReducer.ts";
 
-import NearMinimap from "./components/NearMinimap.tsx";
+import OverMinimap from "./components/OverMinimap.tsx";
 import HoverInteraction from "./components/HoverInteraction.tsx";
 import Speedometer from "./components/Speedometer.tsx";
 
 const Hud = memo(() => {
-  const { speedometerVisible } = useSelector((state: RootState) => state.hudReducer)
+  const hudState = useSelector((state: RootState) => state.hudReducer)
   const hoverVisible = useSelector((state: RootState) => state.hoverInteractionReducer.isVisible)
 
   return (
     <>
       <div className="hud">
-        <NearMinimap />
+        <OverMinimap />
         { hoverVisible && <HoverInteraction /> }
-        { speedometerVisible && <Speedometer /> }
+        { hudState.speedometerVisible && <Speedometer /> }
       </div>
     </>
   )

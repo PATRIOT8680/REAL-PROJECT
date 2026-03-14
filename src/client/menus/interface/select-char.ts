@@ -3,6 +3,7 @@ import { rce } from "../../utils/rce";
 import { gui } from "../global";
 import { createCamera, destroyCamera } from "../../utils/switchCamera";
 import { createChar } from "./create-char";
+import { showHud } from "./hud";
 
 const scenarios = [
   "WORLD_HUMAN_AA_COFFEE",
@@ -171,7 +172,7 @@ rce.registerServer('closeSelectChar', () => {
 
   setTimeout(() => {
     gui.execute('window.App.chatReducer.showChat()')
-    gui.execute('window.App.hudReducer.showHud()')
+    showHud()
     mp.players.local.freezePosition(false)
     mp.game.ui.displayRadar(true)
   }, 1000)

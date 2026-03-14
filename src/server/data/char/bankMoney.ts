@@ -1,5 +1,6 @@
 import { data } from '../../database/mysql'
 import { rce } from "../../utils/rce";
+import { connectedUsers } from "../dataConnectedUser";
 import chalk from "chalk";
 
 export const getBankMoney = (uid: number): Promise<number> => {
@@ -15,6 +16,7 @@ export const getBankMoney = (uid: number): Promise<number> => {
 export const addBankMoney = (player: PlayerMp, uid: number, amount: number): Promise<boolean> => {
   try {
     const sql = 'UPDATE chars SET bankmoney = bankmoney + ? WHERE uid = ?'
+    const currentBankMoney = connectedUsers.getField(player.id, 'bankmoney')
 
     return new Promise((resolve, reject) => {
       data.query(sql, [amount, uid], (err, result: any) => {
@@ -25,6 +27,7 @@ export const addBankMoney = (player: PlayerMp, uid: number, amount: number): Pro
         }
 
         if (result.affectedRows > 0) {
+          connectedUsers.setUser(player.id, { bankmoney: currentBankMoney + amount })
           rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.addBankMoney(${amount})`)
           resolve(true)
         } else {
@@ -40,6 +43,7 @@ export const addBankMoney = (player: PlayerMp, uid: number, amount: number): Pro
 export const decrementBankMoney = async (player: PlayerMp, uid: number, amount: number): Promise<boolean | string> => {
   try {
     const checkSql = 'SELECT bankmoney FROM chars WHERE uid = ?'
+    const cbankmoney = connectedUsers.getField(player.id, 'bankmoney')
 
     return new Promise((resolve, reject) => {
       data.query(checkSql, [uid], async (err, result: any) => {
@@ -74,6 +78,7 @@ export const decrementBankMoney = async (player: PlayerMp, uid: number, amount: 
           }
 
           if (result.affectedRows > 0) {
+            connectedUsers.setUser(player.id, { bankmoney: cbankmoney - amount })
             rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.decrementBankMoney(${amount})`)
             resolve(true)
           } else {
