@@ -291,7 +291,6 @@ export const getBagMaxWeight = (itemId: number): number => {
 
 export const getItemImageIdForCef = (item: ServerItem): number => {
   if (item.type === 'clothes' && item.clothesData) {
-    // Используем обновленный CLOTHES_IMAGE_IDS
     return CLOTHES_IMAGE_IDS[item.clothesData.slot as keyof typeof CLOTHES_IMAGE_IDS] || 0
   }
   return item.imageId

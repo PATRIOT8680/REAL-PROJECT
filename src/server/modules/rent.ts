@@ -1,20 +1,32 @@
-import {registerCMD, send} from "../menus/chat";
 import { rce } from "../utils/rce"
 import { data } from "../database/mysql"
 import chalk from "chalk"
-import { setDataAccount } from "../data/setDataAccount";
 import { decrementCash, getCash } from "../data/char/cash";
 import { decrementBankMoney } from "../data/char/bankMoney";
 import { getDataAccount } from "../data/getDataAccount";
+import { connectedUsers } from "../data/dataConnectedUser";
+import { ICarData } from "../../shared/types/rent";
+import { vehicles } from "../configs/vehicles";
 
-let rentsData = []
+interface IRentsData {
+  id: number,
+  pedName: string,
+  modelName: string,
+  pedPos: { x, y, z, heading },
+  vehiclesData?: any,
+  colshapeId?: number
+}
+
+const db = data.promise()
+
+let rentsData: IRentsData[] = []
 const MAX_RETRIES = 10
 const RETRY_DELAY = 2000
 
 const playerRentData = new Map<number, {
   isTakenRent: boolean,
   vehicleRent: VehicleMp | null,
-  isWithdrawal: NodeJS.Timeout | null
+  isWithdrawal: number | null
 }>()
 
 rce.register('charSpawned', async (player: PlayerMp) => {
@@ -27,150 +39,238 @@ rce.register('charSpawned', async (player: PlayerMp) => {
   })
 
   rentsData.forEach(rent => {
-    rce.triggerClient(player, 'createPed', rent.pedName, 'Местный арендатор', rent.modelName, [Number(rent.pedPos.x), Number(rent.pedPos.y), Number(rent.pedPos.z), Number(rent.pedPos.heading)], { isVisible: true, id: 811, color: 44 })
+    rce.triggerClients('createPed',
+      rent.pedName, 'Местный арендодатель', rent.modelName,
+      [rent.pedPos.x, rent.pedPos.y, rent.pedPos.z, rent.pedPos.heading],
+      { isVisible: true, id: 811, color: 46 }
+    )
   })
-})
 
-mp.events.add('playerQuit', async (player: PlayerMp) => {
-  const uid = await getDataAccount(player, 'uid', player.id)
-  const rentData = playerRentData.get(uid)
-
-  if (rentData) {
-    if (rentData.isWithdrawal) clearTimeout(rentData.isWithdrawal)
-    if (rentData.vehicleRent && mp.vehicles.exists(rentData.vehicleRent)) {
-      rentData.vehicleRent.destroy()
-    }
-  }
-
-  playerRentData.delete(uid)
-})
-
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-const loadRent = async (retryCount = 0) => {
   try {
-    const connection = await data.promise().getConnection()
+    const [rows]: any = await db.query(`SELECT rent_data FROM chars WHERE uid = ?`, [uid])
+    if (rows.length === 0 || !rows[0].rent_data) return
 
+    let rentInfo
     try {
-      const [rows]: any = await connection.execute('SELECT id, pedname, modelname, pedpos, vehiclesdata FROM rent')
+      rentInfo = JSON.parse(rows[0].rent_data)
+    } catch (e) {
+      console.log(chalk.red('[SPAWN RENT VEH]') + ` Ошибка парсинга: ${e}`)
+      await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid])
+      return
+    }
 
-      if (rows.length === 0) {
-        return console.log(chalk.bgYellow("RENT") + chalk.yellow(" Таблица rents пустая!"))
-      }
+    const timeLeft = rentInfo.timeLeft
 
-      rentsData = []
+    if (timeLeft <= 0) {
+      await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid])
+      rce.triggerClient(player, 'sendNotify', 'warning', 'Срок вашей предыдущей аренды истёк!', 3200, 'bottom')
+      return
+    }
 
-      rows.forEach((row: any) => {
-        let parsedPedpos = null
-        let vehiclesData = []
+    const spawnPos = new mp.Vector3(
+      rentInfo.position.x,
+      rentInfo.position.y,
+      rentInfo.position.z,
+    )
 
-        if (row.pedpos) {
-          try {
-            parsedPedpos = JSON.parse(row.pedpos)
-          } catch (e) {
-            console.log(chalk.bgRed('RENT' + chalk.red(` Ошибка парсинга pedpos: ${e}`)));
-          }
-        }
+    const vehicle = mp.vehicles.new(mp.joaat(rentInfo.keyNameVeh), spawnPos, {
+      heading: rentInfo.heading,
+      color: [rentInfo.color, rentInfo.color],
+      dimension: player.dimension,
+      engine: true,
+      locked: false,
+      numberPlate: 'RENT'
+    })
 
-        if (row.vehiclesdata) {
-          try {
-            vehiclesData = JSON.parse(row.vehiclesdata)
-          } catch (e) {
-            console.log(chalk.bgRed('RENT' + chalk.red(` Ошибка парсинга vehiclesdata: ${e}`)));
-          }
-        }
+    const playerData = playerRentData.get(uid)
+    if (playerData) {
+      playerData.isTakenRent = true
+      playerData.vehicleRent = vehicle
+      playerData.isWithdrawal = timeLeft
 
-        const colshape = mp.colshapes.newSphere(
-          Number(parsedPedpos.x),
-          Number(parsedPedpos.y),
-          Number(parsedPedpos.z),
-          3,
-          0
-        )
-
-        const rentData = {
-          id: row.id,
-          pedName: row.pedname,
-          modelName: row.modelname,
-          pedPos: parsedPedpos,
-          vehiclesData: vehiclesData,
-          colshape: colshape
-        }
-
-        rentsData.push(rentData)
-      })
-
-      console.log(chalk.bgGreenBright("RENT") + chalk.greenBright(` Загружено ${rows.length} точек аренды`))
-    } finally {
-      await connection.release()
+      rce.triggerClient(player, 'startRentTimer', timeLeft)
     }
 
   } catch (e) {
-    if (e.code === 'ETIMEDOUT' && retryCount < MAX_RETRIES) {
-      console.log(chalk.bgYellow("RENT") + chalk.yellow(` Попытка подключения ${retryCount + 1}/${MAX_RETRIES}, повтор через ${RETRY_DELAY/1000} сек...`));
-      await delay(RETRY_DELAY);
-      return loadRent(retryCount + 1);
+    console.log(chalk.red('[SPAWN RENT VEH]') + ` Ошибка получения информации с БД: ${e}`)
+  }
+})
+
+rce.registerCef('createNpcForRent', async (player: PlayerMp, npcModel: string, npcName: string) => {
+  const playerAdmLvl = connectedUsers.getField(player.id, 'adminLvl')
+
+  if (playerAdmLvl === 0) {
+    rce.triggerClient(player, 'sendNotify', 'err', 'Доступ запрещен!', 3200, 'top')
+    return
+  }
+
+  if (!npcModel.trim() || !npcName.trim()) {
+    rce.triggerClient(player, 'sendNotify', 'err', 'Данные с моделью или именем NPC не должны быть пустыми!', 3200, 'top')
+    return
+  }
+
+  try {
+    const [rows]: any = await db.query(`
+      SELECT COALESCE(MAX(id), 0) AS maxId
+      FROM rent
+    `)
+
+    const maxId = Number(rows[0].maxId)
+    const newId = maxId + 1
+
+    const pedpos = {
+      x: player.position.x,
+      y: player.position.y,
+      z: player.position.z,
+      heading: player.heading,
     }
 
-    console.error(chalk.bgRed('RENT' + chalk.red(` Ошибка после ${retryCount} попыток: ${e.message}`)));
-  }
-}
+    await db.query(
+      `INSERT INTO rent (id, pedname, modelname, pedpos) VALUES (?, ?, ?, ?)`,
+      [newId, npcName, npcModel, JSON.stringify(pedpos)]
+    )
 
-mp.events.add('playerEnterColshape', async (player: PlayerMp, shape: ColshapeMp) => {
+    const coordZ: number = await rce.callClient(player, 'getGroundZ')
+
+    const colshape = mp.colshapes.newSphere(
+      pedpos.x, pedpos.y, coordZ, 4.0, player.dimension
+    )
+
+    rentsData.push({
+      id: newId,
+      pedName: npcName.trim(),
+      modelName: npcModel.trim(),
+      pedPos: pedpos,
+      vehiclesData: [],
+      colshapeId: colshape.id
+    })
+
+    rce.triggerClients('createPed',
+      npcName.trim(), 'Местный арендодатель', npcModel.trim(),
+      [pedpos.x, pedpos.y, pedpos.z, pedpos.heading],
+      { isVisible: true, id: 811, color: 46 }
+    )
+
+    rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно добавили арендодателя ${npcName.trim()} (#${newId})`, 4500, 'top')
+  } catch (e) {
+    console.log(chalk.red('[CREATE PED FOR RENT]') + ` Ошибка создания: ${e}`)
+  }
+})
+
+rce.registerCef('addVehInRent', async (
+  player: PlayerMp, rentId: number, typeVeh: 'car' | 'moto', vehModel: string, priceVeh: number
+) => {
+  const playerAdmLvl = connectedUsers.getField(player.id, 'adminLvl')
+
+  if (playerAdmLvl === 0) {
+    rce.triggerClient(player, 'sendNotify', 'err', 'Доступ запрещен!', 3200, 'top')
+    return
+  }
+
   if (!player.vehicle) {
-    const uid = await getDataAccount(player, 'uid', player.id)
-    const rentData = rentsData.find(rent => rent.colshape === shape)
-    const playerData = playerRentData.get(uid)
-
-    if (rentData && playerData) {
-      const filteredVehiclesData = rentData.vehiclesData.map(vehicle => ({
-        nameCar: vehicle.vehName,
-        price: vehicle.price
-      }))
-
-      rce.triggerClient(player, 'rentColshape', 'enabled', {
-        id: rentData.id,
-        isTakenRent: playerData.isTakenRent,
-        data: filteredVehiclesData
-      });
-    }
+    rce.triggerClient(player, 'sendNotify', 'err', 'Вы не в транспорте!', 3200, 'top')
+    return
   }
-});
 
-rce.registerCef('cef:handleRentCar', async (player: PlayerMp, id: number, nameCar: string, price: number, hours: number) => {
-  const uid = await getDataAccount(player, 'uid', player.id)
-  const rentData = rentsData.find(rent => rent.id === id)
+  if (!rentId || !typeVeh.trim() || !vehModel.trim() || !priceVeh) {
+    rce.triggerClient(player, 'sendNotify', 'err', 'Данные о т/с не должны быть пустыми!', 3200, 'top')
+    return
+  }
+
+  const veh = player.vehicle
+  const vehPos = veh.position
+  const vehRot = veh.heading
+
+  try {
+    const [checkRows]: any = await db.query(`SELECT COUNT(*) AS cnt FROM rent WHERE id = ?`, [rentId])
+
+    const exist = checkRows[0].cnt > 0
+
+    if (!exist) {
+      rce.triggerClient(player, 'sendNotify', 'err', `Аренда #${rentId} не найдена!`, 3200, 'top')
+      return
+    }
+
+    let vehiclesData = []
+    const [rows]: any = await db.query(`SELECT vehiclesdata FROM rent WHERE id = ?`, [rentId])
+
+    if (rows[0].vehiclesdata) {
+      try {
+        vehiclesData = JSON.parse(rows[0].vehiclesdata)
+      } catch (e) {
+        console.log(chalk.red('[ADD VEH IN RENT]') + ` Err JSON parsing: ${e}`)
+      }
+    }
+
+    const vehiclesInfo = {
+      vehName: vehModel,
+      type: typeVeh,
+      price: Number(priceVeh),
+      x: Number(vehPos.x.toFixed(3)),
+      y: Number(vehPos.y.toFixed(3)),
+      z: Number(vehPos.z.toFixed(3)),
+      heading: Number(vehRot.toFixed(3))
+    }
+
+    const existingIndex = vehiclesData.findIndex((item: any) => item.vehName === vehModel)
+
+    if (existingIndex !== -1) {
+      vehiclesData[existingIndex] = vehiclesInfo
+    } else {
+      vehiclesData.push(vehiclesInfo)
+    }
+
+    await db.query(
+      `UPDATE rent SET vehiclesdata = ? WHERE id = ?`,
+      [JSON.stringify(vehiclesData), rentId]
+    )
+
+    const rentIndex = rentsData.findIndex(r => r.id === rentId)
+    if (rentIndex !== -1) {
+      rentsData[rentIndex].vehiclesData = vehiclesData
+    }
+
+    rce.triggerClient(player, 'sendNotify', 'success', `Транспорт был добавлен в аренду #${rentId}`, 3500, 'top')
+  } catch (e) {
+    console.log(chalk.red('[ADD VEH IN RENT]') + ` Ошибка добавления: ${e}`)
+  }
+})
+
+rce.registerCef('cef:handleRentVeh', async (
+  player: PlayerMp, rentId: number, method: 'cash' | 'bank', selectedVeh: ICarData, color: Array3d, time: number
+) => {
+  if (!mp.players.exists(player)) return
+
+  const currentCash = connectedUsers.getField(player.id, 'cash')
+  const currentBankMoney = connectedUsers.getField(player.id, 'bankmoney')
+  const uid = connectedUsers.getField(player.id, 'uid')
+  const rentData = rentsData.find(rent => rentId === rent.id)
   const playerData = playerRentData.get(uid)
 
   if (!rentData || !playerData) return
 
-  const vehInfo = rentData.vehiclesData.find((veh) => veh.vehName === nameCar)
-
-  if (!vehInfo) {
-    return console.log(chalk.bgRed('• RENT •') + chalk.red('Транспорт не найден!'))
+  const money = method === 'cash' ? currentCash : currentBankMoney
+  if (money < selectedVeh.price * (time / 60)) {
+    rce.triggerClient(player, 'sendNotify', 'err', 'Недостаточно средств!', 3200, 'top')
+    return
   }
 
   if (playerData.isTakenRent) {
-    rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('err', 'У вас уже есть транспорт в аренде. Отмените предыдушую аренду.', 4000, 'bottom')`)
+    rce.triggerClient(player, 'sendNotify', 'err', 'У вас уже есть транспорт в аренде. Чтобы оформить новую, отмените предыдущую!', 4700, 'top')
     return
   }
 
-  const cashResult = await decrementCash(player, uid, price)
-  const cashNow = await getCash(uid)
+  const vehInfo = rentData.vehiclesData.find(veh => veh.vehName === selectedVeh.keyNameCar)
+  const vehPos = new mp.Vector3(vehInfo.x, vehInfo.y, vehInfo.z)
 
-  if (cashResult === 'noCash') {
-    rce.triggerClient(player, 'sendNotify', 'err', `Недостаточно средств! Тебе не хватает $${price - cashNow}`, 3200, 'bottom')
-    return
-  }
-
-  const vehPos = new mp.Vector3(Number(vehInfo.x), Number(vehInfo.y), Number(vehInfo.z))
   try {
     playerData.isTakenRent = true
     playerData.vehicleRent = mp.vehicles.new(
-      mp.joaat(vehInfo.vehName),
+      mp.joaat(selectedVeh.keyNameCar),
       vehPos,
       {
-        color: [[255, 255, 255], [255, 255, 255]],
-        dimension: 0,
+        color: [color, color],
+        dimension: player.dimension,
         engine: true,
         heading: vehInfo.heading,
         locked: false,
@@ -179,84 +279,188 @@ rce.registerCef('cef:handleRentCar', async (player: PlayerMp, id: number, nameCa
     )
 
     player.putIntoVehicle(playerData.vehicleRent, 0)
-    rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('success', 'Вы взяли в аренду ${nameCar} на ${hours} ч. (-$${price})'), 4500, 'bottom'`)
+    playerData.isWithdrawal = time
 
-    const rentTime = hours * 60 * 60 * 1000
-
-    setTimeout(async () => {
-      rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('warning', 'Внимание! Через 3 минуты срок аренды закончится и транспорт будет изъят!', 6000, 'bottom')`)
-
-      setTimeout(() => {
-        if (playerData.vehicleRent && playerData.vehicleRent && mp.vehicles.exists(playerData.vehicleRent)) {
-          if (playerData.isWithdrawal) {
-            clearTimeout(playerData.isWithdrawal)
-            playerData.isWithdrawal = null
-          }
-          playerData.isTakenRent = false
-          playerData.vehicleRent.destroy()
-          rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Срок аренды закончился!', 4000, 'bottom')`)
-        }
-      }, 3 * 60 * 1000)
-    }, rentTime - (3 * 60 * 1000))
-  } catch (e) {
-    console.log(chalk.bgRed('• RENT •') + chalk.red(JSON.stringify(e)))
-  }
-})
-
-rce.registerCef('cef:cancelRentCar', async (player: PlayerMp) => {
-  const uid = await getDataAccount(player, 'uid', player.id)
-  const playerData = playerRentData.get(uid)
-  if (!playerData || !playerData.vehicleRent) return
-
-  if (playerData.isWithdrawal) {
-    clearTimeout(playerData.isWithdrawal)
-    playerData.isWithdrawal = null
-  }
-  playerData.vehicleRent.destroy()
-  playerData.isTakenRent = false
-  rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Вы отменили аренду транспорта!', 3000, 'bottom')`)
-})
-
-mp.events.add('playerExitVehicle', async (player: PlayerMp, vehicle: VehicleMp) => {
-  const uid = await getDataAccount(player, 'uid', player.id)
-  const playerData = playerRentData.get(uid)
-  if (!playerData || !playerData.vehicleRent || vehicle !== playerData.vehicleRent || !playerData.isTakenRent) return
-
-  rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('warning', 'Аренда будет завершена через 3 минуты!', 4500, 'bottom')`)
-
-  if (playerData.isWithdrawal) clearTimeout(playerData.isWithdrawal)
-
-  playerData.isWithdrawal = setTimeout(() => {
-    if (mp.players.exists(player) && playerData.vehicleRent && mp.vehicles.exists(playerData.vehicleRent)) {
-      rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Аренда закончилась, транспорт был изъят!', 4500, 'bottom')`)
-      playerData.vehicleRent.destroy()
-      playerData.vehicleRent = null
-      playerData.isTakenRent = false
-      playerData.isWithdrawal = null
+    const rentInfo = {
+      keyNameVeh: selectedVeh.keyNameCar,
+      color: color,
+      position: {
+        x: Number(vehPos.x),
+        y: Number(vehPos.y),
+        z: Number(vehPos.z),
+      },
+      heading: Number(vehInfo.heading),
+      timeLeft: time
     }
-  }, 180000)
 
+    if (method === 'cash') {
+      decrementCash(player, uid, selectedVeh.price * (time / 60))
+    } else {
+      decrementBankMoney(player, uid, selectedVeh.price * (time / 60))
+    }
+
+    await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid])
+    rce.triggerClient(player, 'startRentTimer', playerData.vehicleRent.id, time)
+  } catch (e) {
+    console.log(chalk.red('[RENT VEH]') + ` Ошибка при аренде т/с: ${e}`)
+  }
 })
 
-mp.events.add('playerEnterVehicle', async (player: PlayerMp, vehicle: VehicleMp) => {
-  const uid = await getDataAccount(player, 'uid', player.id)
+rce.registerClient('rentOver', async (player: PlayerMp) => {
+  const uid = connectedUsers.getField(player.id, 'uid')
   const playerData = playerRentData.get(uid)
 
-  if (!playerData || !playerData.vehicleRent || vehicle !== playerData.vehicleRent || !playerData.isWithdrawal) return
+  await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid])
 
-  clearTimeout(playerData.isWithdrawal)
+  playerData.isTakenRent = false
   playerData.isWithdrawal = null
-  rce.triggerClient(player, 'execute', `window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена!', 2500, 'bottom')`)
+  playerData.vehicleRent.destroy()
 })
 
-mp.events.add('playerExitColshape', (player: PlayerMp, shape: ColshapeMp) => {
-  const rentData = rentsData.find(rent => rent.colshape === shape)
+mp.events.add('playerEnterColshape', (player: PlayerMp, colshape: ColshapeMp) => {
+  if (!player.vehicle) {
+    const uid: number = connectedUsers.getField(player.id, 'uid')
+    const rentData: IRentsData = rentsData.find(rent => rent.colshapeId === colshape.id)
+    const playerData = playerRentData.get(uid)
+
+    if (rentData && playerData) {
+      const filteredVehiclesData = rentData.vehiclesData.map(veh => {
+        const vehicleConfig = vehicles.find(v => v.short === veh.vehName)
+
+        return {
+          fullNameCar: vehicleConfig ? vehicleConfig.full : veh.vehName,
+          keyNameCar: veh.vehName,
+          type: veh.type,
+          price: veh.price,
+          typeFuel: vehicleConfig ? vehicleConfig.fuel : 'gas'
+        }
+      })
+
+      rce.triggerClient(player, 'rentColshape', 'enabled', {
+        id: rentData.id,
+        isTakenRent: playerData.isTakenRent,
+        data: filteredVehiclesData
+      })
+    }
+  }
+})
+
+mp.events.add('playerExitColshape', (player: PlayerMp, colshape: ColshapeMp) => {
+  const rentData = rentsData.find(rent => colshape.id === rent.colshapeId)
 
   if (rentData) {
     rce.triggerClient(player, 'rentColshape', 'disabled', {})
   }
 })
 
-mp.events.add("packagesLoaded", () => {
-  loadRent()
+rce.registerClient('rentPlayerQuit', async (player: PlayerMp, timeLeft: number) => {
+  const uid = await getDataAccount(player, 'uid', player.id)
+  const rentData = playerRentData.get(uid)
+  const vehPos = rentData.vehicleRent.position
+  const vehRot = rentData.vehicleRent.heading
+
+  const rentInfo = {
+    keyNameVeh: rentData.vehicleRent.model,
+    color: rentData.vehicleRent.getColorRGB(0),
+    position: {
+      x: Number(vehPos.x),
+      y: Number(vehPos.y),
+      z: Number(vehPos.z),
+    },
+    heading: Number(vehRot),
+    timeLeft: Number(timeLeft)
+  }
+
+  if (rentData.isTakenRent && rentData.vehicleRent && mp.vehicles.exists(rentData.vehicleRent)) {
+    const vehPos = rentData.vehicleRent.position
+    const vehRot = rentData.vehicleRent.heading
+
+    const rentInfo = {
+      keyNameVeh: rentData.vehicleRent.model,
+      color: rentData.vehicleRent.getColorRGB(0),
+      position: {
+        x: Number(vehPos.x),
+        y: Number(vehPos.y),
+        z: Number(vehPos.z),
+      },
+      heading: Number(vehRot),
+      timeLeft: Number(timeLeft)
+    }
+
+    await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid])
+    rentData.vehicleRent.destroy()
+  }
+
+  if (rentData.isWithdrawal) clearTimeout(rentData.isWithdrawal)
+  playerRentData.delete(uid)
 })
+
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+export const loadRentPoints = async (retryCount: number = 0) => {
+  try {
+    const [rows]: any = await db.query(`SELECT * FROM rent`)
+
+    if (rows.length === 0) return
+
+    rentsData = []
+    for (const row of rows) {
+      let pedPos = null
+      let vehiclesData: any[] = []
+
+      if (row.pedpos) {
+        try {
+          pedPos = JSON.parse(row.pedpos)
+          if (!pedPos?.x || !pedPos?.y || !pedPos?.z) pedPos = null
+        } catch (e) {
+          console.log(chalk.red('[LOADING RENT]') + ` Ошибка парсинга pedPos #${row.id}: ${e}`)
+        }
+      }
+
+      if (row.vehiclesdata) {
+        try {
+          vehiclesData = JSON.parse(row.vehiclesdata)
+          if (!Array.isArray(vehiclesData)) vehiclesData = []
+        } catch (e) {
+          console.log(chalk.red('[LOADING RENT]') + ` Ошибка парсинга vehiclesdata #${row.id}: ${e}`)
+        }
+      }
+
+      let colshapeId: number | undefined
+      if (pedPos) {
+        const colshape = mp.colshapes.newSphere(
+          pedPos.x, pedPos.y, pedPos.z, 4.0, 0
+        )
+        colshapeId = colshape.id
+      }
+
+      rentsData.push({
+        id: row.id,
+        pedName: row.pedname,
+        modelName: row.modelname,
+        pedPos,
+        vehiclesData,
+        colshapeId
+      })
+
+      rentsData.forEach((rent: IRentsData) => {
+        if (rent.pedPos) {
+          rce.triggerClients('createPed',
+            rent.pedName, 'Местный арендодатель', rent.modelName,
+            [rent.pedPos.x, rent.pedPos.y, rent.pedPos.z, rent.pedPos.heading ?? 0],
+            { isVisible: true, id: 811, color: 46 }
+          )
+        }
+      })
+
+      console.log(chalk.green('[UPLOADED RENT]') + ` Загружено ${rentsData.length} точек аренды`)
+    }
+  } catch (e) {
+    if (e.code === 'ETIMEDOUT' && retryCount < MAX_RETRIES) {
+      console.log(chalk.yellow('[LOADING RENT]') + ` Попытка ${retryCount + 1}/${MAX_RETRIES}. Повтор через ${RETRY_DELAY/1000} сек...`)
+      await delay(RETRY_DELAY)
+      return loadRentPoints(retryCount + 1)
+    }
+
+    console.log(chalk.red('[LOADING RENT]') + ` Ошибка загрузки после ${retryCount} попыток: ${e}`)
+  }
+}

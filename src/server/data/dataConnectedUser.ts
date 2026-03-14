@@ -10,6 +10,7 @@ export interface IConnectedUser {
   age?: number | null,
   cash?: number | null,
   bankmoney?: number | null,
+  donatcoins?: number | null,
   lvl?: number | null,
   exp?: number | null,
   unique_quest?: string | null

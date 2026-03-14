@@ -188,6 +188,17 @@ registerACommand(
     }
 )
 
+registerACommand(
+  'newrent',
+  'Открыть меню для создания аренды',
+  [], 10,
+
+  (player: PlayerMp) => {
+    rce.triggerClient(player, 'closeAMenu')
+    rce.triggerClient(player, 'execute', 'window.App.devMenusReducer.showNewRent()')
+  }
+)
+
 registerCMD('veh', (player: PlayerMp, [target, model, r, g, b, numberPlate]) => {
   try {
     // Проверка обязательных аргументов
@@ -266,125 +277,6 @@ registerCMD('allclearchat', (player: PlayerMp) => {
     send(p, '<b>Чат был очищен у всех!</b>', false, 'ADMIN')
   })
 })
-
-
-registerCMD('vehposrent', async (player: PlayerMp, [vehModel, price, idColumn]) => {
-  if (!player.vehicle) {
-    return rce.triggerClient(player, 'sendNotify', 'err', 'Игрок не находится в транспортном средстве!', 5000, 'bottom')
-  }
-
-  if (!vehModel || !idColumn || !price) {
-    return send(player, 'Используйте: /vehposrent [модель т/с] [цена] [id колонки]', false, 'SERVER')
-  }
-
-  const vehicle = player.vehicle
-  const vehPos = vehicle.position
-  const vehRot = vehicle.heading
-  const vehName = vehicle.model
-
-  try {
-    const connection = await data.promise().getConnection()
-
-    try {
-      const [checkRows]: any = await connection.execute(
-          'SELECT id FROM rent WHERE id = ?',
-          [Number(idColumn)]
-      )
-
-      if (checkRows.length === 0) {
-        return rce.triggerClient(player, 'sendNotify', 'err', 'Запись в БД с указанным ID не существует!', 3000, 'bottom')
-      }
-
-      const [rows]: any = await connection.execute(
-          'SELECT vehiclesdata FROM rent WHERE id = ?',
-          [Number(idColumn)]
-      )
-
-      let vehiclesData = []
-
-      if (rows[0].vehiclesdata) {
-        try {
-          vehiclesData = JSON.parse(rows[0].vehiclesdata)
-        } catch (e) {
-          console.error(`${chalk.bgRed('RENT')} Error JSON parsing: ${e}`)
-        }
-      }
-
-      const vehiclesInfo = {
-        vehName: vehModel,
-        price: Number(price),
-        x: vehPos.x.toFixed(3),
-        y: vehPos.y.toFixed(3),
-        z: vehPos.z.toFixed(3),
-        heading: vehRot.toFixed(3)
-      }
-
-      const existingIndex = vehiclesData.indexOf((idx: any) => idx.name === vehName)
-      if (existingIndex !== -1) {
-        vehiclesData[existingIndex] = vehiclesInfo
-      } else {
-        vehiclesData.push(vehiclesInfo)
-      }
-
-      await connection.execute(
-          'UPDATE rent SET vehiclesdata = ? WHERE id = ?',
-          [JSON.stringify(vehiclesData), Number(idColumn)]
-      )
-
-      rce.triggerClient(player, 'sendNotify', 'success', 'Позиция т/с сохранена в БД!', 5000, 'bottom');
-    } finally {
-      connection.release()
-    }
-  } catch (e) {
-    console.error(`${chalk.bgRed('RENT')} ${e}`)
-  }
-})
-
-
-registerCMD('pedposrent', async (player: PlayerMp, [idColumn, modelName, ...pedName]) => {
-  const fullPedName = pedName.join(' ')
-
-  if (!pedName || !idColumn || !modelName) {
-    return send(player, `Используйте: /pedposrent [id колонки] [название модели] [имя Ped'a]`, false, 'SERVER')
-  }
-
-  const pedPos = player.position
-  const pedRot = player.heading
-
-  try {
-    const connection = await data.promise().getConnection()
-
-    try {
-      const [checkRows]: any = await connection.execute(
-          'SELECT id FROM rent WHERE id = ?',
-        [Number(idColumn)]
-      )
-
-      if (checkRows.length === 0) {
-        return rce.triggerClient(player, 'sendNotify', 'err', 'Запись в БД с указанным ID не существует!', 3000, 'bottom')
-      }
-
-      const pedData = {
-        x: pedPos.x.toFixed(3),
-        y: pedPos.y.toFixed(3),
-        z: pedPos.z.toFixed(3),
-        heading: pedRot.toFixed(3)
-      }
-
-      await connection.execute(
-          'UPDATE rent SET pedname = ?, modelname = ?, pedpos = ? WHERE id = ?',
-        [fullPedName, modelName, JSON.stringify(pedData), Number(idColumn)]
-      )
-
-      rce.triggerClient(player, 'sendNotify', 'success', `Позиция Ped'a сохранена в БД!`, 5000, 'bottom')
-    } finally {
-      connection.release()
-    }
-  } catch (e) {
-    console.error(`${chalk.bgRed('RENT')} ${e}`)
-  }
-})
-
 
 registerCMD('setdim', (player: PlayerMp, [targetID, dimension]) => {
   if (!targetID || !dimension)

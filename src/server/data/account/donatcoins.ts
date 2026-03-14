@@ -1,6 +1,7 @@
 import { data } from "../../database/mysql";
 import chalk from "chalk";
-import {rce} from "../../utils/rce";
+import { connectedUsers } from "../dataConnectedUser";
+import { rce } from "../../utils/rce";
 
 export const getDonatCoins = (sid: number): Promise<number> => {
   return new Promise((resolve, reject) => {
@@ -15,6 +16,7 @@ export const getDonatCoins = (sid: number): Promise<number> => {
 export const addDonatCoins = async (player: PlayerMp, sid: number, amount: number): Promise<boolean> => {
   try {
     const sql = 'UPDATE accounts SET donatcoins = donatcoins + ? WHERE sid = ?'
+    const currentDC = connectedUsers.getField(player.id, 'donatcoins')
 
     return new Promise((resolve, reject) => {
       data.query(sql, [amount, sid], (err, result: any) => {

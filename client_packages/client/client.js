@@ -678,7 +678,44 @@ rce.registerAll('chat:pushMsg', (name, text, showTime, tile) => {
 rce.registerAll('chat:pushLine', (text, showTime, tile) => {
     pushLine(text, showTime, tile);
 });
-pushLine(`Ваше приключение начинается на ⚡️ {FCD53F}<b>REAL ROLEPLAY!</b>`, false, 'hello');
+pushLine(`<b>Ваше приключение начинается на ⚡️ {FCD53F}REAL ROLEPLAY!</b>`, false, 'hello');
+
+const showHud = () => {
+    const pl = mp.players.local;
+    const minimap = getMinimapAnchor();
+    const isDriver = !!(pl.vehicle && pl.vehicle.getPedInSeat(-1) === pl.handle);
+    gui.execute(`
+    window.App.hudReducer.showHud(
+      ${isDriver},
+      ${minimap.rightX * 100}, ${minimap.leftX * 10},
+      ${minimap.topY * 100}, ${minimap.bottomY * 10},
+      ${minimap.width * 100}, ${minimap.height * 100}
+    )
+  `);
+};
+rce.registerAll('showHud', () => {
+    showHud();
+});
+const getMinimapAnchor = () => {
+    let sfX = 1.0 / 20.0;
+    let sfY = 1.0 / 20.0;
+    let safeZone = mp.game.graphics.getSafeZoneSize();
+    let aspectRatio = mp.game.graphics.getScreenAspectRatio(false);
+    let resolution = mp.game.graphics.getScreenActiveResolution(0, 0);
+    let scaleX = 1.0 / resolution.x;
+    let scaleY = 1.0 / resolution.y;
+    let minimap = {
+        width: scaleX * (resolution.x / (4 * aspectRatio)),
+        height: scaleY * (resolution.y / 5.674),
+        scaleX: scaleX,
+        scaleY: scaleY,
+        leftX: scaleX * (resolution.x * (sfX * (Math.abs(safeZone - 1.0) * 10))),
+        bottomY: 1.0 - scaleY * (resolution.y * (sfY * (Math.abs(safeZone - 1.0) * 10))),
+    };
+    minimap.rightX = minimap.leftX + minimap.width;
+    minimap.topY = minimap.bottomY - minimap.height;
+    return minimap;
+};
 
 let visibleAMenu$1 = false;
 const plLocal = mp.players.local;
@@ -715,7 +752,7 @@ rce.registerAll('closeAMenu', () => {
     visibleAMenu$1 = false;
     gui.execute(`window.App.adminMenuReducer.hideAdminMenu()`);
     gui.execute(`window.App.chatReducer.showChat()`);
-    gui.execute(`window.App.hudReducer.showHud()`);
+    showHud();
     mp.game.ui.displayRadar(true);
     mp.game.ui.setPauseMenuActive(true);
     mp.gui.cursor.show(false, false);
@@ -745,7 +782,7 @@ rce.registerAll('cef:closeReportMenu', () => {
     visibleAMenu = false;
     gui.execute(`window.App.playerReportsReducer.hidePlayerReports()`);
     gui.execute(`window.App.chatReducer.showChat()`);
-    gui.execute(`window.App.hudReducer.showHud()`);
+    showHud();
     mp.game.ui.displayRadar(true);
     mp.game.ui.setPauseMenuActive(true);
     mp.gui.cursor.show(false, false);
@@ -768,7 +805,7 @@ const hideInventory = () => {
     rce.triggerCef('fadeCloseInventory');
     setTimeout(() => {
         gui.execute(`window.App.inventoryReducer.hideInventory()`);
-        gui.execute(`window.App.hudReducer.showHud()`);
+        showHud();
         gui.execute(`window.App.chatReducer.showChat()`);
         mp.game.ui.displayRadar(true);
         mp.gui.cursor.visible = false;
@@ -1250,14 +1287,16 @@ rce.registerAll('createPed', (pedName, pedRole, modelName, pedPos, blip) => {
 
 let keyDownE = 'disabled';
 let rentData = null;
+let isWithdrawal = null;
+let penaltyTimer = null;
+let rentFromPlayer = null;
 rce.registerServer('rentColshape', (status, data) => {
     if (status === 'enabled') {
         keyDownE = 'enabled';
         rentData = data;
     }
     else {
-        gui.execute(`window.App.rentReducer.hideRent()`);
-        mp.gui.cursor.show(false, false);
+        handleHideRent();
         keyDownE = 'disabled';
         rentData = null;
     }
@@ -1265,14 +1304,94 @@ rce.registerServer('rentColshape', (status, data) => {
 rce.registerServer('closeRent', () => {
     handleHideRent();
 });
+rce.registerServer('startRentTimer', (vehId, time) => {
+    rentFromPlayer = {
+        vehId: vehId,
+        rentEndTime: Date.now() + (time * 60 * 1000)
+    };
+    let warningRentOver = setTimeout(() => {
+        gui.execute(`window.App.sendNotifyReducer.sendNotify('warning', 'Внимание! Аренда транспорта завершится через ${time} минут', 4000, 'bottom')`);
+    }, (time * 60 * 1000) / 4);
+    isWithdrawal = setTimeout(() => {
+        rce.triggerServer('rentOver');
+        clearTimeout(isWithdrawal);
+        clearTimeout(warningRentOver);
+        isWithdrawal = null;
+        warningRentOver = null;
+        rentFromPlayer = {
+            vehId: null,
+            rentEndTime: null
+        };
+        gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда завершена. Транспорт был изъят', 4000, 'bottom')`);
+    }, time * 60 * 1000);
+});
+rce.registerAll('cef:cancelRentCar', () => {
+    rce.triggerServer('rentOver');
+    if (isWithdrawal)
+        clearTimeout(isWithdrawal);
+    if (penaltyTimer)
+        clearTimeout(penaltyTimer);
+    isWithdrawal = null;
+    penaltyTimer = null;
+    rentFromPlayer = { vehId: null, rentEndTime: null };
+    gui.execute(`window.App.sendNotifyReducer.sendNotify('success', 'Аренда была завершена!', 3200, 'bottom')`);
+});
+mp.events.add('playerQuit', () => {
+    let remainingMins = 0;
+    if (rentFromPlayer !== null && rentFromPlayer.rentEndTime !== null) {
+        let remainingMs = rentFromPlayer.rentEndTime - Date.now();
+        if (remainingMs < 0)
+            remainingMs = 0;
+        remainingMins = Math.ceil(remainingMs / 60000);
+    }
+    rce.triggerServer('rentPlayerQuit', remainingMins);
+    if (isWithdrawal)
+        clearTimeout(isWithdrawal);
+    if (penaltyTimer)
+        clearTimeout(penaltyTimer);
+    isWithdrawal = null;
+    penaltyTimer = null;
+    rentFromPlayer = null;
+});
+mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
+    if (!rentFromPlayer || vehicle.remoteId !== rentFromPlayer.vehId)
+        return;
+    gui.execute(`window.App.sendNotifyReducer.sendNotify('warning', 'Аренда завершится через 10 минут!', 3500, 'bottom')`);
+    penaltyTimer = setTimeout(() => {
+        rce.triggerServer('rentOver');
+        if (isWithdrawal)
+            clearTimeout(isWithdrawal);
+        if (penaltyTimer)
+            clearTimeout(penaltyTimer);
+        isWithdrawal = null;
+        penaltyTimer = null;
+        rentFromPlayer = null;
+        gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Вы не вернулись в арендованное т/с. Транспорт был изъят', 4000, 'bottom')`);
+    }, 600000);
+});
+mp.events.add('playerEnterVehicle', (vehicle, seat) => {
+    if (!rentFromPlayer || vehicle.remoteId !== rentFromPlayer.vehId)
+        return;
+    if (penaltyTimer) {
+        clearTimeout(penaltyTimer);
+        penaltyTimer = null;
+        const remainingMs = rentFromPlayer.rentEndTime - Date.now();
+        const remainingMins = Math.ceil(remainingMs / 60000);
+        gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена. Осталось ${remainingMins} мин до окончания', 4000, 'bottom')`);
+    }
+});
 const handleShowRent = () => {
     mp.gui.cursor.show(true, true);
+    gui.execute('window.App.hudReducer.hideHud()');
+    gui.execute('window.App.chatReducer.hideChat()');
     gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`);
 };
 const handleHideRent = () => {
     mp.game.ui.setPauseMenuActive(false);
     mp.gui.cursor.show(false, false);
     gui.execute(`window.App.rentReducer.hideRent()`);
+    showHud();
+    gui.execute('window.App.chatReducer.showChat()');
     setTimeout(() => {
         mp.game.ui.setPauseMenuActive(true);
     }, 300);
@@ -1283,6 +1402,9 @@ mp.keys.bind(Keys.VK_E, false, () => {
     }
 });
 mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    handleHideRent();
+});
+rce.registerAll('closeRentMenu', () => {
     handleHideRent();
 });
 
@@ -1686,10 +1808,10 @@ rce.registerServer('closeCreateChar', () => {
     mp.gui.cursor.visible = false;
     setTimeout(() => {
         gui.execute('window.App.chatReducer.showChat()');
-        gui.execute('window.App.hudReducer.showHud()');
+        showHud();
         mp.players.local.freezePosition(false);
         mp.game.ui.displayRadar(true);
-    }, 4000);
+    }, 2500);
 });
 
 const scenarios = [
@@ -1820,7 +1942,7 @@ rce.registerServer('closeSelectChar', () => {
     mp.gui.cursor.show(false, false);
     setTimeout(() => {
         gui.execute('window.App.chatReducer.showChat()');
-        gui.execute('window.App.hudReducer.showHud()');
+        showHud();
         mp.players.local.freezePosition(false);
         mp.game.ui.displayRadar(true);
     }, 1000);
@@ -2066,12 +2188,12 @@ mp.keys.bind(Keys.VK_E, false, async () => {
 let localplayer = mp.players.local;
 mp.events.add('playerEnterVehicle', (vehicle, seat) => {
     if (vehicle && seat === -1) {
-        gui.execute('window.App.hudReducer.showHud(true)');
+        gui.execute(`window.App.hudReducer.showHud(true)`);
     }
 });
 mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
     if (vehicle && seat === -1) {
-        gui.execute('window.App.hudReducer.showHud(false)');
+        gui.execute(`window.App.hudReducer.showHud(false)`);
     }
 });
 mp.events.add('render', () => {

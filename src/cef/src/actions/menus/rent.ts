@@ -1,9 +1,4 @@
-export interface ICarData {
-  fullNameCar: string,
-  keyNameCar: string,
-  type: string,
-  price: number
-}
+import { ICarData } from "../../../../shared/types/rent.ts";
 
 export interface IRentData {
   id: number,

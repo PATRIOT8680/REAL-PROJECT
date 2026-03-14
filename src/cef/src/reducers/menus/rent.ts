@@ -1,4 +1,4 @@
-import { ICarData } from "../../actions/menus/rent.ts";
+import { ICarData } from "../../../../shared/types/rent.ts";
 
 export interface IRentData {
   isVisible: boolean,
@@ -10,31 +10,77 @@ export interface IRentData {
 const initialState = {
   isVisible: false,
   id: 0,
-  isTakenRent: false,
+  isTakenRent: true,
   data: [
     {
       fullNameCar: 'Nero test',
       keyNameCar: 'nero2',
       type: 'car',
-      price: 100
+      price: 100,
+      typeFuel: 'gas',
     },
     {
       fullNameCar: 'Zentorno',
       keyNameCar: 'zentorno',
       type: 'car',
-      price: 150
+      price: 150,
+      typeFuel: 'gas',
+    },
+    {
+      fullNameCar: 'Zentorno',
+      keyNameCar: 'zentorno',
+      type: 'car',
+      price: 150,
+      typeFuel: 'gas',
+    },
+    {
+      fullNameCar: 'Zentorno',
+      keyNameCar: 'zentorno',
+      type: 'car',
+      price: 150,
+      typeFuel: 'gas',
+    },
+    {
+      fullNameCar: 'Zentorno',
+      keyNameCar: 'zentorno',
+      type: 'car',
+      price: 150,
+      typeFuel: 'gas',
+    },
+    {
+      fullNameCar: 'Zentorno',
+      keyNameCar: 'zentorno',
+      type: 'car',
+      price: 150,
+      typeFuel: 'gas',
+    },
+    {
+      fullNameCar: 'Zentorno',
+      keyNameCar: 'zentorno',
+      type: 'car',
+      price: 150,
+      typeFuel: 'gas',
+    },
+    {
+      fullNameCar: 'Zentorno',
+      keyNameCar: 'zentorno',
+      type: 'car',
+      price: 150,
+      typeFuel: 'gas',
     },
     {
       fullNameCar: 'Faggio test',
       keyNameCar: 'faggio',
       type: 'moto',
-      price: 1200
+      price: 1200,
+      typeFuel: 'electro',
     },
     {
       fullNameCar: 'Faggio 2 test',
       keyNameCar: 'faggio2',
       type: 'moto',
-      price: 480
+      price: 480,
+      typeFuel: 'electro',
     },
   ]
 }

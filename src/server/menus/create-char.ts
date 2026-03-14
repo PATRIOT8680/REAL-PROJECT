@@ -41,7 +41,8 @@ const closeCreateChar = async (player: PlayerMp, dataChar) => {
   const bankmoney = connectedUsers.getField(player.id, 'bankmoney')
   const nickname = connectedUsers.getField(player.id, 'nickName')
 
-  player.spawn(new mp.Vector3(1948.4307861328125, 3916.800048828125, 37.333740234375))
+  player.spawn(new mp.Vector3(-1050.2455, -2739.7385, 14.5978))
+  player.heading = -29.5
   player.dimension = 0
 
   rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)

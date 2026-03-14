@@ -1,6 +1,7 @@
 import Keys from "../../utils/keys";
 import {gui} from "../global";
 import {rce} from "../../utils/rce";
+import { showHud } from "./hud";
 
 let visibleAMenu = false
 
@@ -30,7 +31,7 @@ rce.registerAll('cef:closeReportMenu', () => {
   visibleAMenu = false
   gui.execute(`window.App.playerReportsReducer.hidePlayerReports()`)
   gui.execute(`window.App.chatReducer.showChat()`)
-  gui.execute(`window.App.hudReducer.showHud()`)
+  showHud()
   mp.game.ui.displayRadar(true)
   mp.game.ui.setPauseMenuActive(true)
   mp.gui.cursor.show(false, false)

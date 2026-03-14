@@ -3,6 +3,7 @@ import { gui } from "../global";
 import { createCamera, destroyCamera } from "../../utils/switchCamera"
 import { playAnim } from "../../utils/playAnim";
 import { cameraRotator } from "../../utils/cameraRotate";
+import { showHud } from "./hud";
 
 const Natives = {
   SWITCH_OUT_PLAYER: '0xAAB3200ED59016BC',
@@ -263,8 +264,8 @@ rce.registerServer('closeCreateChar', () => {
 
   setTimeout(() => {
     gui.execute('window.App.chatReducer.showChat()')
-    gui.execute('window.App.hudReducer.showHud()')
+    showHud()
     mp.players.local.freezePosition(false)
     mp.game.ui.displayRadar(true)
-  }, 4000)
+  }, 2500)
 })

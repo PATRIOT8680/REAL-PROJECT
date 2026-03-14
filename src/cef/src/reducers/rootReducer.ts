@@ -19,6 +19,7 @@ import { inventoryReducer } from "./menus/inventory.ts";
 import { waitingLoaderReducer } from "./menus/waitingLoader.ts";
 import { interactionReducer } from "./menus/interaction.ts";
 import { offerReducer } from "./menus/offer.ts";
+import { devMenusReducer } from "./menus/dev-menus.ts";
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
@@ -49,6 +50,7 @@ export type RootState = {
   waitingLoaderReducer: ReturnType<typeof waitingLoaderReducer>
   interactionReducer: ReturnType<typeof interactionReducer>
   offerReducer: ReturnType<typeof offerReducer>
+  devMenusReducer: ReturnType<typeof devMenusReducer>
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
@@ -80,6 +82,7 @@ export const rootReducer = combineReducers({
   waitingLoaderReducer,
   interactionReducer,
   offerReducer,
+  devMenusReducer,
 
   // Elements
   sendNotifyReducer,

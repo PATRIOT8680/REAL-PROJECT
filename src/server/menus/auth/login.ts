@@ -56,9 +56,11 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
                 !char.firstname && !char.lastname && !char.age
               )
 
+              const donatcoins = await getDataAccount(player, 'donatcoins', player.id)
+              connectedUsers.setUser(player.id, { donatcoins: donatcoins })
+
               if (emptyChar) {
                 const sid = await getDataAccount(player, 'sid', player.id)
-                const donatcoins = await getDataAccount(player, 'donatcoins', player.id)
                 const sql = 'SELECT unique_quest FROM chars WHERE sid = ? AND numberslot = ?'
 
                 data.query(sql, [sid, charResults[0].numberslot], (err, charResults) => {

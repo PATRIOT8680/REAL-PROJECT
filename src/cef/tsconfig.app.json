@@ -30,6 +30,7 @@
   },
   "include": [
     "./",
+    "../shared/types",
     "../shared/CustomEventBase.ts"
   ]
 }

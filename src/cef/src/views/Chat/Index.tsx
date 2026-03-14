@@ -1,12 +1,13 @@
+import './assets/style/compiled-css/Index.css'
 import { useState, useRef, useEffect, FormEvent, useCallback } from 'react'
 import type { KeyboardEvent } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from '../../reducers/rootReducer'
-import { rce } from "../../modules/rce.ts";
-import './assets/style/compiled-css/Index.css'
+import { CustomEventHandler } from "../../../../shared/CustomEventBase.ts"
+import { rce } from "../../modules/rce.ts"
 
-import chat_svg from './assets/img/chat.svg'
-import {CustomEventHandler} from "../../../../shared/CustomEventBase.ts";
+import arrow_svg from './assets/img/arrow.svg'
+import send_svg from './assets/img/send.svg'
 
 const Chat = () => {
   let ev: CustomEventHandler
@@ -65,14 +66,13 @@ const Chat = () => {
   }, [])
 
   useEffect(() => {
-    if (chatboxRef.current && blurRef.current) {
+    if (chatboxRef.current) {
       if (chatActive) {
         chatboxRef.current.classList.add('active')
-        blurRef.current.classList.add('active')
-
+        if (blurRef.current) blurRef.current.classList.add('active')
         if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-          timeoutRef.current = null;
+          clearTimeout(timeoutRef.current)
+          timeoutRef.current = null
         }
       } else {
         timeoutRef.current = setTimeout(() => {
@@ -297,9 +297,9 @@ const Chat = () => {
 
   const handleActionInput = (action: string) => {
     if (action === '') {
-      setInputValue('');
+      setInputValue('')
     } else {
-      setInputValue(action + ' ');
+      setInputValue(action + ' ')
     }
 
     if (inputTextRef.current) {
@@ -309,38 +309,40 @@ const Chat = () => {
 
   ev = rce.register('chatActive', (isActive: boolean) => {
     setChatActive(isActive)
-  });
+  })
+
   ev = rce.register('addString', (text: string, showTime: boolean, tile: string) =>
       addString(colorify(text), showTime, tile)
-  );
-  ev = rce.register('addMsg', addMsg);
-  ev = rce.register('openChat', openChat);
-  ev = rce.register('closeChat', closeChat);
+  )
+
+  ev = rce.register('addMsg', addMsg)
+  ev = rce.register('openChat', openChat)
+  ev = rce.register('closeChat', closeChat)
+
   ev = rce.register('client:clearChat', () => {
     setBuffer([])
     if (msgRef.current) {
       msgRef.current.innerHTML = ''
     }
-  });
+  })
 
   return (
 		<>
-			<div className='div-effect' ref={blurRef}></div>
+			{/*<div className='div-effect' ref={blurRef}></div>*/}
 			<div className='chatbox' ref={chatboxRef}>
-        <span className='title'>Игровой чат</span>
 				<div className='msgList' ref={msgListRef} tabIndex={0}>
 					<div className='messages' ref={msgRef}>
-						{/*<p><span className="tile" id='hello'>HELLO</span> <b>Ваше приключение начинается на X REDSTAR ROLEPLAY</b></p>
-            <p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.
-Создавайте его с умом, так как потом не изменить!</p>
-            <p>Чтобы продолжить игру, введите свои данные от аккаунты</p>
-            <p>Создавая персонажа, учитывайте, что больше изменить внешность не сможете, за исключением покупки за RED COINS</p>
-            <p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.
-Создавайте его с умом, так как потом не изменить!</p>
-<p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.
-Создавайте его с умом, так как потом не изменить!</p>
-<p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.
-Создавайте его с умом, так как потом не изменить!</p>*/}
+{/*						<p><span className="tile" id='hello'>HELLO</span> <b>Ваше приключение начинается на X REDSTAR ROLEPLAY</b></p>*/}
+{/*            <p><span className="time">22:06</span>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.*/}
+{/*Создавайте его с умом, так как потом не изменить!</p>*/}
+{/*            <p>Чтобы продолжить игру, введите свои данные от аккаунты</p>*/}
+{/*            <p>Создавая персонажа, учитывайте, что больше изменить внешность не сможете, за исключением покупки за RED COINS</p>*/}
+{/*            <p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.*/}
+{/*Создавайте его с умом, так как потом не изменить!</p>*/}
+{/*<p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.*/}
+{/*Создавайте его с умом, так как потом не изменить!</p>*/}
+{/*<p>Этот слот пустой! Создайте нового персонажа и начните новую жизнь с чистого листа.*/}
+{/*Создавайте его с умом, так как потом не изменить!</p>*/}
 					</div>
 				</div>
 				<div
@@ -350,7 +352,8 @@ const Chat = () => {
 				>
 					<form id='message' onSubmit={handleSubmit}>
 						<div className='input-block'>
-							<img src={chat_svg} />
+							<img className='arrow-svg' src={arrow_svg} />
+              <img className='send-svg' src={send_svg} />
 							<input
 								type='text'
 								spellCheck='false'
@@ -370,7 +373,6 @@ const Chat = () => {
 							<button className='action' type='button' onClick={() => handleActionInput('/todo')}>TODO</button>
               <button className='action' type='button' onClick={() => handleActionInput('')}>IC</button>
 						</div>
-            {/*<span className='help-action'><span>TAB</span> <span>быстрая смена команды</span></span>*/}
 					</form>
 				</div>
 			</div>
