@@ -101,11 +101,10 @@ export const connectedUsers = {
   }
 }
 
-rce.registerClientCef('dataOnlineUser:getField', (player: PlayerMp, field: keyof IConnectedUser) => {
-  if (!player) {
+rce.registerClientCef('dataOnlineUser:getField', (player: PlayerMp, targetId: number, field: keyof IConnectedUser) => {
+  if (!mp.players.at(targetId)) {
     return `Игрок (ID: ${player.id}) не в сети!`
   }
 
-  console.log(`Отправляем запрошенные данные: ${connectedUsers.getField(player.id, field)}`)
-  return connectedUsers.getField(player.id, field)
+  return connectedUsers.getField(targetId, field)
 })

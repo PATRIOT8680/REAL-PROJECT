@@ -10,7 +10,7 @@ export interface IRentData {
 const initialState = {
   isVisible: false,
   id: 0,
-  isTakenRent: true,
+  isTakenRent: false,
   data: [
     {
       fullNameCar: 'Nero test',
@@ -93,6 +93,11 @@ export const rentReducer = (state: IRentData = initialState, action: any) => {
         id: action.rentData.id,
         isTakenRent: action.rentData.isTakenRent,
         data: action.rentData.data
+      }
+    case 'SET_IS_TAKEN_RENT':
+      return {
+        ...state,
+        isTakenRent: action.state
       }
     case 'HIDE_RENT':
       return { isVisible: false }

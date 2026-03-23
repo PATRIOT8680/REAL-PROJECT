@@ -1,10 +1,11 @@
 export interface IDeathPlayer {
   isVisible: boolean,
-  fate: 'ems' | 'death' | null,
-  instant: 'finish' | 'reborn' | null
+  fate: 'medic' | 'death' | 'chance' | null,
+  instant: 'finish' | 'reborn' | null,
+  killer: string,
 }
 
-export const deathReducer = (state: IDeathPlayer = { isVisible: false, fate: null, instant: null }, action: any) => {
+export const deathReducer = (state: IDeathPlayer = { isVisible: false, fate: null, instant: null, killer: '' }, action: any) => {
   switch (action.type) {
     case 'SHOW_DEATH':
       return {

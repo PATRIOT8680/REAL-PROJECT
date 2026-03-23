@@ -1,5 +1,6 @@
 import { data } from "../database/mysql";
 import { getDataAccount } from "../data/getDataAccount";
+import { savingPlayerRents } from "../modules/rent";
 import chalk from "chalk";
 
 const savedCoordQuit = async () => {
@@ -49,6 +50,7 @@ const savedCoordQuit = async () => {
 mp.events.add("serverShutdown", async () => {
   mp.events.delayShutdown = true
   await savedCoordQuit()
+  await savingPlayerRents()
 
   setTimeout(() => {
     mp.events.delayShutdown = false

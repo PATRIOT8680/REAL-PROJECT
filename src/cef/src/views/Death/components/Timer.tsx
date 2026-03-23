@@ -1,6 +1,6 @@
 import '../assets/styles/compiled-css/Timer.css'
 
-import { FC, useRef, useEffect, memo } from 'react'
+import { FC, useRef, useEffect, useState, memo } from 'react'
 import { Howl } from 'howler'
 import { sys } from '../../../../shared/sys'
 
@@ -8,49 +8,57 @@ import tickTimer from '../assets/audio/tick-timer.mp3'
 import endTimerSound from '../assets/audio/end-timer.mp3'
 
 interface ITimer {
-  timeLeft: number,
-  setTimeLeft: (seconds: number | ((prev: number) => number)) => void
+  initialSeconds: number
+  onTick?: (remaining: number) => void
+  onTimeUp?: () => void
+  autoStart?: boolean
 }
 
-const Timer: FC<ITimer> = ({ timeLeft, setTimeLeft }) => {
+const Timer= ({ initialSeconds, onTick, onTimeUp, autoStart = true }: ITimer) => {
   const timerRef = useRef<NodeJS.Timeout>()
-  
-  const soundTick = useRef<Howl>(new Howl({
-    src: [tickTimer],
-    volume: 0.1,
-  }))
-
-  const soundEnd = useRef<Howl>(new Howl({
-    src: [endTimerSound],
-    volume: 0.25,
-  }))
+  const soundTick = useRef<Howl>(new Howl({ src: [tickTimer], volume: 0.1 }))
+  const soundEnd  = useRef<Howl>(new Howl({ src: [endTimerSound], volume: 0.25 }))
+  const [seconds, setSeconds] = useState(initialSeconds)
 
   useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setTimeLeft((prev: number) => {
-        const newTime = prev - 1
+    setSeconds(initialSeconds)
+  }, [initialSeconds])
 
-        if (newTime < 10) soundTick.current.play()
-        if (newTime <= 0) {
+  useEffect(() => {
+    if (!autoStart) return
+
+    timerRef.current = setInterval(() => {
+      setSeconds(prev => {
+        const next = prev - 1
+        onTick?.(next)
+
+        if (next < 10 && next > 0) {
+          soundTick.current.play()
+        }
+
+        if (next <= 0) {
           soundEnd.current.play()
           clearInterval(timerRef.current)
+          onTimeUp?.()
+          return 0
         }
-        return newTime
+
+        return next
       })
     }, 1000)
 
     return () => {
+      clearInterval(timerRef.current)
       soundTick.current.unload()
       soundEnd.current.unload()
-      if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [])
+  }, [onTick, autoStart, onTimeUp])
 
   return (
     <>
       <div className="timer">
-        <span className="timeout-text">{sys.getStringTimeInMinutes(timeLeft)}</span>
-        <span className="descr">Время до реанимации</span>
+        <span className="timeout-text">{sys.getStringTimeInMinutes(seconds)}</span>
+        <span className="descr">Осталось до смерти</span>
       </div>
     </>
   )

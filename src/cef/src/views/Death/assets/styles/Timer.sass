@@ -1,30 +1,35 @@
-$Bellflower: "Bellflower", sans-serif
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
 
 .death-player
   .timer
     display: flex
     flex-direction: column
-    align-items: flex-end
-    font-family: $Bellflower
+    align-items: center
+    font-family: $Druk
     user-select: none
+    gap: 1rem
     animation: fadeInTimer 0.7s ease forwards
+    z-index: 1
 
     .timeout-text
       font-weight: 400
-      font-size: 3.75rem
+      font-size: 5.5rem
       letter-spacing: 0.06em
       text-transform: uppercase
-      color: #fff
+      color: #ff4848
 
     .descr
       font-weight: 400
-      font-size: 1.125rem
-      text-transform: uppercase
-      color: rgba(255, 255, 255, 0.8)
+      font-size: 1rem
+      color: rgba(244, 245, 248, 0.8)
+      font-family: $Montserrat
 
 
 @keyframes fadeInTimer
   from
-    transform: translate(10rem, -10rem)
+    opacity: 0
+    transform: scale(.8)
   to
-    transform: translate(0, 0)
+    opacity: 1
+    transform: scale(1)

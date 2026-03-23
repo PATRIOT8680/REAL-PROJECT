@@ -1,0 +1,96 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+.warning-screen
+  position: relative
+  top: 45%
+  left: 50%
+  transform: translate(-50%, -50%)
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 1.5rem
+  user-select: none
+  -webkit-user-drag: none
+
+  &.exit
+    opacity: 0
+    transition: opacity 1s ease
+
+  *
+    z-index: 1
+
+  .bg-blur-svg
+    position: absolute
+    top: 50%
+    left: 50%
+    width: 90rem
+    opacity: .4
+    filter: blur(12rem)
+    animation: fadeInBlurWDeath 2.5s ease forwards
+    z-index: 0
+
+  .death-icon
+    margin-bottom: 2rem
+    animation: fadeInDeathIcon .7s cubic-bezier(0.19,-0.2, 1,-0.06)
+
+  .title
+    font-family: $Druk
+    font-size: 3.5rem
+    text-transform: uppercase
+    color: #ff4646
+    opacity: 0
+    animation: fadeInDeathTitle .6s cubic-bezier(0.19,-0.2, 1,-0.06) forwards, fadeInTextShadowTitleDeath 1s ease forwards
+    animation-delay: .6s, 1.2s
+
+  .subtitle
+    font-family: $Montserrat
+    font-weight: 400
+    color: rgba(244, 245, 248, 0.5)
+    line-height: 150%
+    width: 30rem
+    opacity: 0
+    text-align: center
+    animation: fadeInSubtitleDeath .7s ease forwards
+    animation-delay: 1.7s
+
+@keyframes fadeInBlurWDeath
+  from
+    opacity: .1
+    transform: translate(-50%, -50%) scale(0.7)
+  to
+    opacity: .4
+    transform: translate(-50%, -50%) scale(1)
+
+@keyframes fadeInDeathIcon
+  from
+    opacity: 0
+    //transform: scale(.6)
+    margin-bottom: 6rem
+  to
+    opacity: 1
+    //transform: scale(1)
+    margin-bottom: 2rem
+
+@keyframes fadeInDeathTitle
+  from
+    opacity: 0
+    transform: scale(.6)
+    //text-shadow: 0 0 0 rgba(255, 70, 70, 0.1)
+  to
+    opacity: 1
+    transform: scale(1)
+    //text-shadow: 0 -24px 0 rgba(255, 70, 70, 0.1)
+
+@keyframes fadeInTextShadowTitleDeath
+  from
+    text-shadow: 0 0 0 rgba(255, 70, 70, 0)
+  to
+    text-shadow: 0 -24px 0 rgba(255, 70, 70, 0.1)
+
+@keyframes fadeInSubtitleDeath
+  from
+    opacity: 0
+  to
+    opacity: 1

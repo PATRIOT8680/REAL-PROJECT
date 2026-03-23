@@ -1,24 +1,80 @@
 .death-player {
   width: 100%;
   height: 100%;
+  animation: fadeInDeathScreen 1s ease;
 }
 .death-player.null {
-  -webkit-box-shadow: inset 0 0 249px 300px rgba(9, 12, 19, 0.7);
-          box-shadow: inset 0 0 249px 300px rgba(9, 12, 19, 0.7);
-  background: rgba(9, 12, 19, 0.15);
+  box-shadow: inset 0 0 249px 300px rgba(36, 25, 26, 0.6);
+  background: rgba(36, 25, 26, 0.8);
+}
+.death-player.exit {
+  transition: all 1s ease;
+  box-shadow: inset 0 0 350px 500px rgba(36, 25, 26, 0.8);
+  background: rgb(36, 25, 26);
 }
 .death-player .titles_timer {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rem;
   position: relative;
   top: 0;
   padding: 2rem 2.5rem;
 }
+.death-player .titles_timer .blur-bg {
+  opacity: 0.2;
+  position: absolute;
+  width: 45rem;
+  top: -30rem;
+  filter: blur(15rem);
+  animation: pulseBgBlur 3.5s ease infinite;
+  z-index: 0;
+}
+.death-player .btns-outcome {
+  position: absolute;
+  width: 99%;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 12rem;
+  bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  animation: fadeInBtnsOutcome 0.6s ease;
+  gap: 0.3rem;
+}
+.death-player .btns-outcome button {
+  width: 100%;
+}
+
+@keyframes fadeInDeathScreen {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeInBtnsOutcome {
+  from {
+    opacity: 0;
+    bottom: -15rem;
+  }
+  to {
+    opacity: 1;
+    bottom: 0.5rem;
+  }
+}
+@keyframes pulseBgBlur {
+  0% {
+    filter: blur(15rem);
+  }
+  50% {
+    opacity: 0.05;
+    filter: blur(8rem);
+  }
+  100% {
+    filter: blur(15rem);
+  }
+}
+
+/*# sourceMappingURL=Index.css.map */

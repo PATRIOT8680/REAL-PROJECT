@@ -909,25 +909,62 @@ const gui = {
     }
 };
 
+const lcplayer = mp.players.local;
 mp.keys.bind(Keys.VK_F7, true, () => {
     mp.players.local.setArmour(100);
 });
 const getRandomChance = () => {
-    const percent = Math.floor(Math.random() * 66);
+    const percent = Math.floor(Math.random() * 40);
     const luck = Math.random() * 100 < percent;
     return [percent, luck];
 };
 mp.events.add('playerDeath', async (player, reason, killer) => {
     const [chance, luck] = getRandomChance();
-    rce.triggerServer('playerKnockout');
-    gui.execute(`window.App.deathReducer.showDeath('Здесь будет никнейм', null)`);
-    gui.execute(`window.App.chatReducer.hideChat()`);
-    rce.triggerCef('client:chanceReborn', chance, luck);
-    const playerPos = mp.players.local.position;
+    let killerName = null;
+    let killerSid = null;
+    const playerPos = lcplayer.position;
     const getGroundZ = mp.game.gameplay.getGroundZFor3dCoord(playerPos.x, playerPos.y, playerPos.z, true, false);
+    if (killer) {
+        killerName = await rce.callServer('dataOnlineUser:getField', killer.id, 'nickName');
+        killerSid = await rce.callServer('dataOnlineUser:getField', killer.id, 'sid');
+    }
+    rce.triggerServer('playerKnockout');
     rce.triggerServer('client:playerDeath', [player.position.x, player.position.y, getGroundZ]);
+    const killerInfo = (killerName && killerSid) !== null ? `${killerName} #${killerSid}` : '';
+    gui.execute(`window.App.deathReducer.showDeath('${killerInfo}', null)`);
+    gui.execute(`window.App.chatReducer.hideChat()`);
+    gui.execute(`window.App.hudReducer.hideHud()`);
+    rce.triggerCef('client:chanceReborn', chance, luck);
+    if (!lcplayer.vehicle)
+        lcplayer.setCollision(false, false);
+    lcplayer.freezePosition(true);
+    lcplayer.setInvincible(true);
+    mp.gui.cursor.visible = true;
+    mp.game.ui.setPauseMenuActive(false);
+    mp.game.ui.displayRadar(false);
+    mp.game.graphics.startScreenEffect('DeathFailMPIn', 0, true);
 });
-rce.registerAll('cef:death:selectedFate', (timeLeft) => {
+const playerRevive = (type) => {
+    if (type === 'reborn')
+        rce.triggerServer('playerReborn');
+    else
+        rce.triggerServer('playerKill');
+    gui.execute(`window.App.chatReducer.showChat()`);
+    gui.execute(`window.App.deathReducer.hideDeath()`);
+    lcplayer.freezePosition(false);
+    lcplayer.setInvincible(false);
+    mp.gui.cursor.visible = false;
+    mp.game.ui.setPauseMenuActive(true);
+    mp.game.ui.displayRadar(true);
+    mp.game.graphics.stopAllScreenEffects();
+    showHud();
+    if (lcplayer.isCollisonDisabled())
+        lcplayer.setCollision(true, true);
+};
+rce.registerAll('playerRevive', (type) => {
+    playerRevive(type);
+});
+rce.registerAll('cef:death:selectedFate', () => {
     mp.gui.cursor.visible = false;
 });
 
@@ -1289,6 +1326,7 @@ let keyDownE = 'disabled';
 let rentData = null;
 let isWithdrawal = null;
 let penaltyTimer = null;
+let warningRentOver = null;
 let rentFromPlayer = null;
 rce.registerServer('rentColshape', (status, data) => {
     if (status === 'enabled') {
@@ -1309,7 +1347,7 @@ rce.registerServer('startRentTimer', (vehId, time) => {
         vehId: vehId,
         rentEndTime: Date.now() + (time * 60 * 1000)
     };
-    let warningRentOver = setTimeout(() => {
+    warningRentOver = setTimeout(() => {
         gui.execute(`window.App.sendNotifyReducer.sendNotify('warning', 'Внимание! Аренда транспорта завершится через ${time} минут', 4000, 'bottom')`);
     }, (time * 60 * 1000) / 4);
     isWithdrawal = setTimeout(() => {
@@ -1327,14 +1365,29 @@ rce.registerServer('startRentTimer', (vehId, time) => {
 });
 rce.registerAll('cef:cancelRentCar', () => {
     rce.triggerServer('rentOver');
+    if (rentData) {
+        rentData.isTakenRent = false;
+    }
     if (isWithdrawal)
         clearTimeout(isWithdrawal);
     if (penaltyTimer)
         clearTimeout(penaltyTimer);
+    if (warningRentOver)
+        clearTimeout(warningRentOver);
     isWithdrawal = null;
     penaltyTimer = null;
+    warningRentOver = null;
     rentFromPlayer = { vehId: null, rentEndTime: null };
+    gui.execute(`window.App.rentReducer.setIsTakenRent(false)`);
     gui.execute(`window.App.sendNotifyReducer.sendNotify('success', 'Аренда была завершена!', 3200, 'bottom')`);
+});
+rce.registerServer('rent:getTimeLeft', () => {
+    if (!rentFromPlayer || !rentFromPlayer.rentEndTime) {
+        return 0;
+    }
+    const remainingMs = rentFromPlayer.rentEndTime - Date.now();
+    const remainingMinutes = Math.max(0, Math.ceil(remainingMs / 60000));
+    return remainingMinutes;
 });
 mp.events.add('playerQuit', () => {
     let remainingMins = 0;
@@ -1349,8 +1402,11 @@ mp.events.add('playerQuit', () => {
         clearTimeout(isWithdrawal);
     if (penaltyTimer)
         clearTimeout(penaltyTimer);
+    if (warningRentOver)
+        clearTimeout(warningRentOver);
     isWithdrawal = null;
     penaltyTimer = null;
+    warningRentOver = null;
     rentFromPlayer = null;
 });
 mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
@@ -1363,8 +1419,11 @@ mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
             clearTimeout(isWithdrawal);
         if (penaltyTimer)
             clearTimeout(penaltyTimer);
+        if (warningRentOver)
+            clearTimeout(warningRentOver);
         isWithdrawal = null;
         penaltyTimer = null;
+        warningRentOver = null;
         rentFromPlayer = null;
         gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Вы не вернулись в арендованное т/с. Транспорт был изъят', 4000, 'bottom')`);
     }, 600000);
@@ -1372,11 +1431,14 @@ mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
 mp.events.add('playerEnterVehicle', (vehicle, seat) => {
     if (!rentFromPlayer || vehicle.remoteId !== rentFromPlayer.vehId)
         return;
+    const remainingMs = rentFromPlayer.rentEndTime - Date.now();
+    const remainingMins = Math.ceil(remainingMs / 60000);
     if (penaltyTimer) {
         clearTimeout(penaltyTimer);
         penaltyTimer = null;
-        const remainingMs = rentFromPlayer.rentEndTime - Date.now();
-        const remainingMins = Math.ceil(remainingMs / 60000);
+        gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена. Осталось ${remainingMins} мин до окончания', 4000, 'bottom')`);
+    }
+    else {
         gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена. Осталось ${remainingMins} мин до окончания', 4000, 'bottom')`);
     }
 });

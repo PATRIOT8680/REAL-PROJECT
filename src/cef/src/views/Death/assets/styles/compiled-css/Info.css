@@ -1,129 +1,119 @@
 .death-player .info-death {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 2rem 2.5rem;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: "Montserrat", sans-serif;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  gap: 1.5rem;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  -webkit-animation: fadeInInfo 0.7s ease forwards;
-          animation: fadeInInfo 0.7s ease forwards;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  user-select: none;
+  animation: fadeInInfoDeath 0.7s ease;
+}
+.death-player .info-death hr {
+  width: 100%;
+  animation: fadeInHRDeath 2s ease;
+  opacity: 0.2;
 }
 .death-player .info-death .header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  gap: 0.3125rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
 }
-.death-player .info-death .header .title {
-  font-size: 1.2rem;
+.death-player .info-death .header .title-block {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.death-player .info-death .header .title-block .icon-outcome {
+  width: 1.7rem;
+}
+.death-player .info-death .header .title-block .title {
+  font-size: 1.05rem;
   font-weight: 600;
   text-transform: uppercase;
+  font-family: "Druk Wide Cyr", sans-serif;
 }
-.death-player .info-death .header #ems-title {
+.death-player .info-death .header #medic-tb path {
+  fill: #0AFFA7;
+}
+.death-player .info-death .header #medic-tb .title {
   color: #0AFFA7;
-  text-shadow: 0 0 30px rgba(10, 255, 167, 0.5);
+  text-shadow: 0 0 50px rgba(10, 255, 167, 0.35);
 }
-.death-player .info-death .header #death-title {
-  color: #ff680a;
-  text-shadow: 0 0 50px rgba(255, 104, 10, 0.5);
+.death-player .info-death .header #death-tb path {
+  fill: #FF283E;
+}
+.death-player .info-death .header #death-tb .title {
+  color: #FF283E;
+  text-shadow: 0 0 50px rgba(255, 40, 62, 0.35);
+}
+.death-player .info-death .header #chance-tb path {
+  fill: #ffca58;
+}
+.death-player .info-death .header #chance-tb .title {
+  color: #ffca58;
+  text-shadow: 0 0 50px rgba(255, 202, 88, 0.35);
 }
 .death-player .info-death .header .descr {
-  font-size: 0.9rem;
-  font-weight: 500;
-  width: 17rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  width: 25rem;
+  text-align: center;
   color: rgba(255, 255, 255, 0.7);
 }
 .death-player .info-death .death-info {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 1.1rem;
+  width: 100%;
 }
 .death-player .info-death .death-info .line {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  align-items: flex-end;
+  width: 100%;
   gap: 0.5rem;
 }
 .death-player .info-death .death-info .line span {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  height: 3rem;
-  padding: 0 1rem 0 1rem;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 0.3125rem;
+  padding: 0 1rem 1rem 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  word-break: normal;
+  white-space: nowrap;
+  outline: none;
   color: white;
-  font-weight: 600;
-  font-size: 1rem;
-  -webkit-transition: all 0.3s;
+  font-weight: 400;
+  font-size: 0.9rem;
   transition: all 0.3s;
-}
-.death-player .info-death .death-info .line span:hover {
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  background: white;
-  color: #161523;
+  width: 100%;
 }
 .death-player .info-death .chance-reborn {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  gap: 0.6875rem;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.3rem;
   width: 100%;
 }
 .death-player .info-death .chance-reborn .text-line {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: space-between;
+  align-items: center;
   font-size: 1rem;
 }
 .death-player .info-death .chance-reborn .text-line .title {
-  color: white;
-  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  font-size: 0.8rem;
 }
 .death-player .info-death .chance-reborn .text-line .chance {
-  color: #ff7c4c;
-  font-weight: 600;
+  color: #ffca58;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 .death-player .info-death .chance-reborn .line-chance {
   width: 100%;
@@ -133,26 +123,17 @@
 .death-player .info-death .chance-reborn .line-chance .bg-line {
   width: 100%;
   height: 0.5rem;
-  border-radius: 10px;
   background: rgba(255, 255, 255, 0.15);
 }
 .death-player .info-death .chance-reborn .line-chance .active-line {
   height: 0.5rem;
   top: 0;
   left: 0;
+  width: 0%;
   position: absolute;
-  background: #ff7c4c;
-  -webkit-box-shadow: 0 0 15px 1px rgba(255, 124, 76, 0.45);
-          box-shadow: 0 0 15px 1px rgba(255, 124, 76, 0.45);
-  border-radius: 10px;
-  -webkit-animation: fadeInLineReborn 2s ease;
-          animation: fadeInLineReborn 2s ease;
-}
-
-@-webkit-keyframes fadeInLineReborn {
-  0% {
-    width: 0%;
-  }
+  background: #ffca58;
+  box-shadow: 0 0 15px 1px rgba(255, 202, 88, 0.45);
+  animation: fadeInLineReborn 2s ease;
 }
 
 @keyframes fadeInLineReborn {
@@ -160,23 +141,23 @@
     width: 0%;
   }
 }
-@-webkit-keyframes fadeInInfo {
-  from {
-    -webkit-transform: translate(-10rem, 10rem);
-            transform: translate(-10rem, 10rem);
+@keyframes fadeInHRDeath {
+  0% {
+    width: 0%;
   }
-  to {
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
+  100% {
+    width: 100%;
   }
 }
-@keyframes fadeInInfo {
+@keyframes fadeInInfoDeath {
   from {
-    -webkit-transform: translate(-10rem, 10rem);
-            transform: translate(-10rem, 10rem);
+    opacity: 0;
+    bottom: -5rem;
   }
   to {
-    -webkit-transform: translate(0, 0);
-            transform: translate(0, 0);
+    opacity: 1;
+    bottom: 1.5rem;
   }
 }
+
+/*# sourceMappingURL=Info.css.map */
