@@ -7,6 +7,7 @@ import { getDataAccount } from "../data/getDataAccount";
 import { connectedUsers } from "../data/dataConnectedUser";
 import { ICarData } from "../../shared/types/rent";
 import { vehicles } from "../configs/vehicles";
+import { normalizeHeading } from "../utils/normalizeHeading";
 
 interface IRentsData {
   id: number,
@@ -32,11 +33,18 @@ const playerRentData = new Map<number, {
 rce.register('charSpawned', async (player: PlayerMp) => {
   const uid = await getDataAccount(player, 'uid', player.id)
 
-  playerRentData.set(uid, {
+  const oldData = playerRentData.get(uid)
+
+  const playerData: {
+    isTakenRent: boolean,
+    vehicleRent: VehicleMp | null,
+    isWithdrawal: number | null
+  } = {
     isTakenRent: false,
     vehicleRent: null,
-    isWithdrawal: null,
-  })
+    isWithdrawal: null
+  }
+  playerRentData.set(uid, playerData)
 
   rentsData.forEach(rent => {
     rce.triggerClients('createPed',
@@ -67,30 +75,44 @@ rce.register('charSpawned', async (player: PlayerMp) => {
       return
     }
 
-    const spawnPos = new mp.Vector3(
-      rentInfo.position.x,
-      rentInfo.position.y,
-      rentInfo.position.z,
-    )
-
-    const vehicle = mp.vehicles.new(mp.joaat(rentInfo.keyNameVeh), spawnPos, {
-      heading: rentInfo.heading,
-      color: [rentInfo.color, rentInfo.color],
-      dimension: player.dimension,
-      engine: true,
-      locked: false,
-      numberPlate: 'RENT'
-    })
-
-    const playerData = playerRentData.get(uid)
-    if (playerData) {
-      playerData.isTakenRent = true
-      playerData.vehicleRent = vehicle
-      playerData.isWithdrawal = timeLeft
-
-      rce.triggerClient(player, 'startRentTimer', timeLeft)
+    let vehicleToUse = null
+    if (player.vehicle && player.vehicle.model === mp.joaat(rentInfo.keyNameVeh)) {
+      vehicleToUse = player.vehicle
     }
 
+    if (!vehicleToUse) {
+      const spawnPos = new mp.Vector3(
+        rentInfo.position.x,
+        rentInfo.position.y,
+        rentInfo.position.z,
+      )
+      vehicleToUse = mp.vehicles.new(mp.joaat(rentInfo.keyNameVeh), spawnPos, {
+        heading: rentInfo.heading,
+        color: [rentInfo.color, rentInfo.color],
+        dimension: player.dimension,
+        engine: true,
+        locked: false,
+        numberPlate: 'RENT'
+      })
+    }
+
+    if (oldData && oldData.vehicleRent && mp.vehicles.exists(oldData.vehicleRent) && oldData.vehicleRent !== vehicleToUse) {
+      oldData.vehicleRent.destroy()
+    }
+
+    playerData.vehicleRent = vehicleToUse
+    playerData.isTakenRent = true
+    playerData.isWithdrawal = timeLeft
+
+    if (!player.vehicle || player.vehicle !== vehicleToUse) {
+      setTimeout(() => {
+        if (mp.players.exists(player) && mp.vehicles.exists(vehicleToUse)) {
+          player.putIntoVehicle(vehicleToUse, 0)
+        }
+      }, 500)
+    }
+
+    rce.triggerClient(player, 'startRentTimer', vehicleToUse.id, timeLeft)
   } catch (e) {
     console.log(chalk.red('[SPAWN RENT VEH]') + ` Ошибка получения информации с БД: ${e}`)
   }
@@ -263,6 +285,8 @@ rce.registerCef('cef:handleRentVeh', async (
   const vehInfo = rentData.vehiclesData.find(veh => veh.vehName === selectedVeh.keyNameCar)
   const vehPos = new mp.Vector3(vehInfo.x, vehInfo.y, vehInfo.z)
 
+  console.log(`vehInfo: ${JSON.stringify(vehInfo)}`)
+
   try {
     playerData.isTakenRent = true
     playerData.vehicleRent = mp.vehicles.new(
@@ -278,8 +302,14 @@ rce.registerCef('cef:handleRentVeh', async (
       }
     )
 
-    player.putIntoVehicle(playerData.vehicleRent, 0)
+    setTimeout(() => {
+      player.putIntoVehicle(playerData.vehicleRent, 0)
+    }, 200)
     playerData.isWithdrawal = time
+
+    setTimeout(() => {
+      console.log(`Heading rveh: ${playerData.vehicleRent.heading} | ${typeof playerData.vehicleRent.heading}`)
+    }, 3000)
 
     const rentInfo = {
       keyNameVeh: selectedVeh.keyNameCar,
@@ -289,7 +319,7 @@ rce.registerCef('cef:handleRentVeh', async (
         y: Number(vehPos.y),
         z: Number(vehPos.z),
       },
-      heading: Number(vehInfo.heading),
+      heading: vehInfo.heading,
       timeLeft: time
     }
 
@@ -315,6 +345,10 @@ rce.registerClient('rentOver', async (player: PlayerMp) => {
   playerData.isTakenRent = false
   playerData.isWithdrawal = null
   playerData.vehicleRent.destroy()
+})
+
+rce.registerClient('rentPlayerQuit', async (player: PlayerMp, timeLeft: number) => {
+  rentPlayerQuit(player, timeLeft)
 })
 
 mp.events.add('playerEnterColshape', (player: PlayerMp, colshape: ColshapeMp) => {
@@ -353,37 +387,23 @@ mp.events.add('playerExitColshape', (player: PlayerMp, colshape: ColshapeMp) => 
   }
 })
 
-rce.registerClient('rentPlayerQuit', async (player: PlayerMp, timeLeft: number) => {
+const rentPlayerQuit = async (player: PlayerMp, timeLeft: number) => {
   const uid = await getDataAccount(player, 'uid', player.id)
   const rentData = playerRentData.get(uid)
-  const vehPos = rentData.vehicleRent.position
-  const vehRot = rentData.vehicleRent.heading
-
-  const rentInfo = {
-    keyNameVeh: rentData.vehicleRent.model,
-    color: rentData.vehicleRent.getColorRGB(0),
-    position: {
-      x: Number(vehPos.x),
-      y: Number(vehPos.y),
-      z: Number(vehPos.z),
-    },
-    heading: Number(vehRot),
-    timeLeft: Number(timeLeft)
-  }
 
   if (rentData.isTakenRent && rentData.vehicleRent && mp.vehicles.exists(rentData.vehicleRent)) {
     const vehPos = rentData.vehicleRent.position
     const vehRot = rentData.vehicleRent.heading
 
     const rentInfo = {
-      keyNameVeh: rentData.vehicleRent.model,
+      keyNameVeh: typeof rentData.vehicleRent.model === 'string' ? rentData.vehicleRent.model : mp.joaat(rentData.vehicleRent.model.toString()),
       color: rentData.vehicleRent.getColorRGB(0),
       position: {
         x: Number(vehPos.x),
         y: Number(vehPos.y),
         z: Number(vehPos.z),
       },
-      heading: Number(vehRot),
+      heading: Number(vehRot.toFixed(3)),
       timeLeft: Number(timeLeft)
     }
 
@@ -391,9 +411,13 @@ rce.registerClient('rentPlayerQuit', async (player: PlayerMp, timeLeft: number) 
     rentData.vehicleRent.destroy()
   }
 
+  if (rentData && rentData.isWithdrawal) {
+    clearTimeout(rentData.isWithdrawal)
+  }
+
   if (rentData.isWithdrawal) clearTimeout(rentData.isWithdrawal)
   playerRentData.delete(uid)
-})
+}
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 export const loadRentPoints = async (retryCount: number = 0) => {
@@ -462,5 +486,38 @@ export const loadRentPoints = async (retryCount: number = 0) => {
     }
 
     console.log(chalk.red('[LOADING RENT]') + ` Ошибка загрузки после ${retryCount} попыток: ${e}`)
+  }
+}
+
+export const savingPlayerRents = async () => {
+  mp.events.delayShutdown = true
+  let savedCount: number = 0
+
+  for (const [uid, data] of playerRentData.entries()) {
+    const player = connectedUsers.getPlayerByUid(uid)
+
+    if (!data.isTakenRent || !data.vehicleRent || !mp.vehicles.exists(data.vehicleRent)) {
+      continue
+    }
+
+    let timeLeft: number
+
+    if (player && mp.players.exists(player)) {
+      timeLeft = await Promise.race([
+        rce.callClient(player, 'rent:getTimeLeft'),
+        new Promise<number>((resolve) => setTimeout(() => resolve(-1), 4000))
+      ])
+    }
+
+    try {
+      await rentPlayerQuit(player, timeLeft)
+      savedCount++
+    } catch (e) {
+      console.log(chalk.red('[SAVING RENT]') + ` Ошибка сохранения аренды при отключении сервера: ${e}`)
+    }
+  }
+
+  if (savedCount > 0) {
+    console.log(chalk.green('[SAVED RENT]') + ` Сохранено ${savedCount} активных аренд`)
   }
 }

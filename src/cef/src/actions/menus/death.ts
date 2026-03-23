@@ -6,7 +6,7 @@ export const hideDeath = () => {
 	return { type: 'HIDE_DEATH' }
 }
 
-export const selectFateDeath = (fate: 'ems' | 'death' | null) => {
+export const selectFateDeath = (fate: 'medic' | 'death' | 'chance' | null) => {
   return { type: 'SELECT_FATE', fate }
 }
 

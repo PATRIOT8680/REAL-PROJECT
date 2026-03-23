@@ -7,6 +7,7 @@ let keyDownE = 'disabled'
 let rentData = null
 let isWithdrawal: NodeJS.Timeout | null = null
 let penaltyTimer: NodeJS.Timeout | null = null
+let warningRentOver: NodeJS.Timeout | null = null
 let rentFromPlayer: {
   vehId: number,
   rentEndTime: number,
@@ -33,7 +34,7 @@ rce.registerServer('startRentTimer', (vehId: number, time: number) => {
     rentEndTime: Date.now() + (time * 60 * 1000)
   }
 
-  let warningRentOver = setTimeout(() => {
+  warningRentOver = setTimeout(() => {
     gui.execute(`window.App.sendNotifyReducer.sendNotify('warning', 'Внимание! Аренда транспорта завершится через ${time} минут', 4000, 'bottom')`)
   }, (time * 60 * 1000) / 4)
 
@@ -57,14 +58,32 @@ rce.registerServer('startRentTimer', (vehId: number, time: number) => {
 rce.registerAll('cef:cancelRentCar', () => {
   rce.triggerServer('rentOver')
 
+  if (rentData) {
+    rentData.isTakenRent = false
+  }
+
   if (isWithdrawal) clearTimeout(isWithdrawal)
   if (penaltyTimer) clearTimeout(penaltyTimer)
+  if (warningRentOver) clearTimeout(warningRentOver)
 
   isWithdrawal = null
   penaltyTimer = null
+  warningRentOver = null
   rentFromPlayer = { vehId: null, rentEndTime: null }
 
+  gui.execute(`window.App.rentReducer.setIsTakenRent(false)`)
   gui.execute(`window.App.sendNotifyReducer.sendNotify('success', 'Аренда была завершена!', 3200, 'bottom')`)
+})
+
+rce.registerServer('rent:getTimeLeft', () => {
+  if (!rentFromPlayer || !rentFromPlayer.rentEndTime) {
+    return 0
+  }
+
+  const remainingMs = rentFromPlayer.rentEndTime - Date.now()
+  const remainingMinutes = Math.max(0, Math.ceil(remainingMs / 60000))
+
+  return remainingMinutes
 })
 
 mp.events.add('playerQuit', () => {
@@ -80,9 +99,11 @@ mp.events.add('playerQuit', () => {
 
   if (isWithdrawal) clearTimeout(isWithdrawal)
   if (penaltyTimer) clearTimeout(penaltyTimer)
+  if (warningRentOver) clearTimeout(warningRentOver)
 
   isWithdrawal = null
   penaltyTimer = null
+  warningRentOver = null
   rentFromPlayer = null
 })
 
@@ -96,9 +117,11 @@ mp.events.add('playerLeaveVehicle', (vehicle: VehicleMp, seat: number) => {
 
     if (isWithdrawal) clearTimeout(isWithdrawal)
     if (penaltyTimer) clearTimeout(penaltyTimer)
+    if (warningRentOver) clearTimeout(warningRentOver)
 
     isWithdrawal = null
     penaltyTimer = null
+    warningRentOver = null
     rentFromPlayer = null
 
     gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Вы не вернулись в арендованное т/с. Транспорт был изъят', 4000, 'bottom')`)
@@ -108,12 +131,15 @@ mp.events.add('playerLeaveVehicle', (vehicle: VehicleMp, seat: number) => {
 mp.events.add('playerEnterVehicle', (vehicle: VehicleMp, seat: number) => {
   if (!rentFromPlayer || vehicle.remoteId !== rentFromPlayer.vehId) return
 
+  const remainingMs = rentFromPlayer.rentEndTime - Date.now()
+  const remainingMins = Math.ceil(remainingMs / 60000)
+
   if (penaltyTimer) {
     clearTimeout(penaltyTimer)
     penaltyTimer = null
 
-    const remainingMs = rentFromPlayer.rentEndTime - Date.now()
-    const remainingMins = Math.ceil(remainingMs / 60000)
+    gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена. Осталось ${remainingMins} мин до окончания', 4000, 'bottom')`)
+  } else {
     gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена. Осталось ${remainingMins} мин до окончания', 4000, 'bottom')`)
   }
 })

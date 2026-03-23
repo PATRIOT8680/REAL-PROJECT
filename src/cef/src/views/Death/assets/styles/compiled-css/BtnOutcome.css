@@ -1,0 +1,126 @@
+.btn-outcome {
+  height: 100%;
+  background: rgba(37, 26, 26, 0.85);
+  border: 1px solid #3b3939;
+  border-radius: 0.25rem;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
+  cursor: pointer;
+}
+.btn-outcome .blur-bg-btn {
+  position: absolute;
+  top: -3.5rem;
+  left: -9rem;
+  width: 22rem;
+  filter: blur(5rem);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.btn-outcome .blur-bg-btn ellipse {
+  transition: fill 0.3s ease;
+}
+.btn-outcome .icon-outcome {
+  width: 3.5rem;
+}
+.btn-outcome .icon-outcome path {
+  transition: fill 0.3s ease;
+}
+.btn-outcome .title {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 100%;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  color: #cfcdc7;
+}
+.btn-outcome .subtitle {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 0.95rem;
+  text-align: center;
+  color: #f4f5f8;
+  opacity: 0.6;
+}
+
+#outcome-medic {
+  transition: all 0.3s ease;
+}
+#outcome-medic ellipse {
+  fill: #4FDF65;
+}
+#outcome-medic:hover {
+  border: 1px solid #376f3a;
+}
+#outcome-medic:hover .blur-bg-btn {
+  transition: opacity 0.4s ease;
+  opacity: 0.7;
+}
+#outcome-medic:hover .blur-bg-btn ellipse {
+  fill: #4FDF65;
+}
+#outcome-medic:hover .title {
+  color: #5db778;
+  transition: all 0.3s ease;
+}
+#outcome-medic:hover .icon-outcome path {
+  fill: #5db778;
+  transition: fill 0.3s ease;
+}
+
+#outcome-death {
+  transition: all 0.3s ease;
+}
+#outcome-death ellipse {
+  fill: #FF283E;
+}
+#outcome-death:hover {
+  border: 1px solid #FF283E;
+}
+#outcome-death:hover .blur-bg-btn {
+  opacity: 0.7;
+}
+#outcome-death:hover .blur-bg-btn ellipse {
+  fill: #FF283E;
+}
+#outcome-death:hover .title {
+  color: #FF283E;
+  transition: all 0.3s ease;
+}
+#outcome-death:hover .icon-outcome path {
+  fill: #FF283E;
+  transition: fill 0.3s ease;
+}
+
+#outcome-chance {
+  transition: all 0.3s ease;
+}
+#outcome-chance ellipse {
+  fill: #ffca58;
+}
+#outcome-chance:hover {
+  border: 1px solid #ffca58;
+}
+#outcome-chance:hover .blur-bg-btn {
+  opacity: 0.7;
+}
+#outcome-chance:hover .blur-bg-btn ellipse {
+  fill: #ffca58;
+}
+#outcome-chance:hover .title {
+  color: #ffca58;
+  transition: all 0.3s ease;
+}
+#outcome-chance:hover .icon-outcome path {
+  fill: #ffca58;
+  transition: fill 0.3s ease;
+}
+
+/*# sourceMappingURL=BtnOutcome.css.map */

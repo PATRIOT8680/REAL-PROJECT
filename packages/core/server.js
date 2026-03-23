@@ -1697,12 +1697,11 @@ const connectedUsers = {
         return undefined;
     }
 };
-rce.registerClientCef('dataOnlineUser:getField', (player, field) => {
-    if (!player) {
+rce.registerClientCef('dataOnlineUser:getField', (player, targetId, field) => {
+    if (!mp.players.at(targetId)) {
         return `Игрок (ID: ${player.id}) не в сети!`;
     }
-    console.log(`Отправляем запрошенные данные: ${connectedUsers.getField(player.id, field)}`);
-    return connectedUsers.getField(player.id, field);
+    return connectedUsers.getField(targetId, field);
 });
 
 mp.events.add('playerJoin', (player) => {
@@ -45387,36 +45386,12 @@ rce.registerClient('client:playerDeath', (player, [posX, posY, posZ]) => {
     player.playAnimation('amb@lo_res_idles@', 'world_human_bum_slumped_left_lo_res_base', 1, 15);
 });
 const playerKill = async (player) => {
-    player.spawn(new mp.Vector3(-1221.006591796875, -100.9054946899414, 42.5238037109375));
+    player.spawn(new mp.Vector3(275.446, -1361.11, 24.5378));
     player.setVariable('player_knockout', false);
-    rce.triggerClient(player, 'gui:cursorVisible', false);
-    rce.triggerClient(player, 'ui:setPauseMenuActive', true);
-    rce.triggerClient(player, 'ui:displayRadar', true);
-    rce.triggerClient(player, 'player:freeze', false);
-    rce.triggerClient(player, 'player:isCollision', true);
-    rce.triggerClient(player, 'player:godmode', false);
-    await setTimeout(() => {
-        rce.triggerClient(player, 'graphics:stopAllScreenEffects');
-    }, 4000);
-    rce.triggerClient(player, 'execute', ['window.App.deathReducer.showDeath(``, `finish`)']);
 };
 const playerKnockout = (player) => {
     player.health = 0;
     player.setVariable('player_knockout', true);
-    if (player.vehicle) {
-        rce.triggerClient(player, 'player:isCollision', true);
-    }
-    else {
-        rce.triggerClient(player, 'player:isCollision', false);
-    }
-    rce.triggerClient(player, 'gui:cursorVisible', true);
-    rce.triggerClient(player, 'player:freeze', true);
-    rce.triggerClient(player, 'ui:setPauseMenuActive', false);
-    rce.triggerClient(player, 'ui:displayRadar', false);
-    rce.triggerClient(player, 'graphics:startScreenEffect', 'DeathFailMPIn', 0, true);
-    setTimeout(() => {
-        rce.triggerClient(player, 'player:godmode', true);
-    }, 200);
 };
 const playerReborn = (player) => {
     const playerPos = player.position;
@@ -45424,17 +45399,6 @@ const playerReborn = (player) => {
     player.stopAnimation();
     player.spawn(playerPos);
     player.setVariable('player_knockout', false);
-    rce.triggerClient(player, 'ui:displayRadar', true);
-    rce.triggerClient(player, 'player:freeze', false);
-    rce.triggerClient(player, 'player:isCollision', true);
-    rce.triggerClient(player, 'player:godmode', false);
-    rce.triggerClient(player, 'ui:setPauseMenuActive', true);
-    rce.triggerClient(player, 'graphics:stopAllScreenEffects');
-    rce.triggerClient(player, 'gui:cursorVisible', false);
-    rce.triggerClient(player, 'execute', 'window.App.deathReducer.showDeath(``, `reborn`)');
-    /*setTimeout(() => {
-      rce.triggerClient(player, 'execute', `window.App.chatReducer.showChat()`)
-    }, 5000)*/
 };
 rce.registerClientCef('playerKill', (player) => {
     playerKill(player);
@@ -61237,11 +61201,13 @@ const RETRY_DELAY = 2000;
 const playerRentData = new Map();
 rce.register('charSpawned', async (player) => {
     const uid = await getDataAccount(player, 'uid', player.id);
-    playerRentData.set(uid, {
+    const oldData = playerRentData.get(uid);
+    const playerData = {
         isTakenRent: false,
         vehicleRent: null,
-        isWithdrawal: null,
-    });
+        isWithdrawal: null
+    };
+    playerRentData.set(uid, playerData);
     rentsData.forEach(rent => {
         rce.triggerClients('createPed', rent.pedName, 'Местный арендодатель', rent.modelName, [rent.pedPos.x, rent.pedPos.y, rent.pedPos.z, rent.pedPos.heading], { isVisible: true, id: 811, color: 46 });
     });
@@ -61264,22 +61230,35 @@ rce.register('charSpawned', async (player) => {
             rce.triggerClient(player, 'sendNotify', 'warning', 'Срок вашей предыдущей аренды истёк!', 3200, 'bottom');
             return;
         }
-        const spawnPos = new mp.Vector3(rentInfo.position.x, rentInfo.position.y, rentInfo.position.z);
-        const vehicle = mp.vehicles.new(mp.joaat(rentInfo.keyNameVeh), spawnPos, {
-            heading: rentInfo.heading,
-            color: [rentInfo.color, rentInfo.color],
-            dimension: player.dimension,
-            engine: true,
-            locked: false,
-            numberPlate: 'RENT'
-        });
-        const playerData = playerRentData.get(uid);
-        if (playerData) {
-            playerData.isTakenRent = true;
-            playerData.vehicleRent = vehicle;
-            playerData.isWithdrawal = timeLeft;
-            rce.triggerClient(player, 'startRentTimer', timeLeft);
+        let vehicleToUse = null;
+        if (player.vehicle && player.vehicle.model === mp.joaat(rentInfo.keyNameVeh)) {
+            vehicleToUse = player.vehicle;
         }
+        if (!vehicleToUse) {
+            const spawnPos = new mp.Vector3(rentInfo.position.x, rentInfo.position.y, rentInfo.position.z);
+            vehicleToUse = mp.vehicles.new(mp.joaat(rentInfo.keyNameVeh), spawnPos, {
+                heading: rentInfo.heading,
+                color: [rentInfo.color, rentInfo.color],
+                dimension: player.dimension,
+                engine: true,
+                locked: false,
+                numberPlate: 'RENT'
+            });
+        }
+        if (oldData && oldData.vehicleRent && mp.vehicles.exists(oldData.vehicleRent) && oldData.vehicleRent !== vehicleToUse) {
+            oldData.vehicleRent.destroy();
+        }
+        playerData.vehicleRent = vehicleToUse;
+        playerData.isTakenRent = true;
+        playerData.isWithdrawal = timeLeft;
+        if (!player.vehicle || player.vehicle !== vehicleToUse) {
+            setTimeout(() => {
+                if (mp.players.exists(player) && mp.vehicles.exists(vehicleToUse)) {
+                    player.putIntoVehicle(vehicleToUse, 0);
+                }
+            }, 500);
+        }
+        rce.triggerClient(player, 'startRentTimer', vehicleToUse.id, timeLeft);
     }
     catch (e) {
         console.log(chalk.red('[SPAWN RENT VEH]') + ` Ошибка получения информации с БД: ${e}`);
@@ -61408,6 +61387,7 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
     }
     const vehInfo = rentData.vehiclesData.find(veh => veh.vehName === selectedVeh.keyNameCar);
     const vehPos = new mp.Vector3(vehInfo.x, vehInfo.y, vehInfo.z);
+    console.log(`vehInfo: ${JSON.stringify(vehInfo)}`);
     try {
         playerData.isTakenRent = true;
         playerData.vehicleRent = mp.vehicles.new(mp.joaat(selectedVeh.keyNameCar), vehPos, {
@@ -61418,8 +61398,13 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
             locked: false,
             numberPlate: 'RENT'
         });
-        player.putIntoVehicle(playerData.vehicleRent, 0);
+        setTimeout(() => {
+            player.putIntoVehicle(playerData.vehicleRent, 0);
+        }, 200);
         playerData.isWithdrawal = time;
+        setTimeout(() => {
+            console.log(`Heading rveh: ${playerData.vehicleRent.heading} | ${typeof playerData.vehicleRent.heading}`);
+        }, 3000);
         const rentInfo = {
             keyNameVeh: selectedVeh.keyNameCar,
             color: color,
@@ -61428,7 +61413,7 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
                 y: Number(vehPos.y),
                 z: Number(vehPos.z),
             },
-            heading: Number(vehInfo.heading),
+            heading: vehInfo.heading,
             timeLeft: time
         };
         if (method === 'cash') {
@@ -61451,6 +61436,9 @@ rce.registerClient('rentOver', async (player) => {
     playerData.isTakenRent = false;
     playerData.isWithdrawal = null;
     playerData.vehicleRent.destroy();
+});
+rce.registerClient('rentPlayerQuit', async (player, timeLeft) => {
+    rentPlayerQuit(player, timeLeft);
 });
 mp.events.add('playerEnterColshape', (player, colshape) => {
     if (!player.vehicle) {
@@ -61482,40 +61470,33 @@ mp.events.add('playerExitColshape', (player, colshape) => {
         rce.triggerClient(player, 'rentColshape', 'disabled', {});
     }
 });
-rce.registerClient('rentPlayerQuit', async (player, timeLeft) => {
+const rentPlayerQuit = async (player, timeLeft) => {
     const uid = await getDataAccount(player, 'uid', player.id);
     const rentData = playerRentData.get(uid);
-    const vehPos = rentData.vehicleRent.position;
-    rentData.vehicleRent.heading;
-    ({
-        keyNameVeh: rentData.vehicleRent.model,
-        color: rentData.vehicleRent.getColorRGB(0),
-        position: {
-            x: Number(vehPos.x),
-            y: Number(vehPos.y),
-            z: Number(vehPos.z),
-        }});
     if (rentData.isTakenRent && rentData.vehicleRent && mp.vehicles.exists(rentData.vehicleRent)) {
         const vehPos = rentData.vehicleRent.position;
         const vehRot = rentData.vehicleRent.heading;
         const rentInfo = {
-            keyNameVeh: rentData.vehicleRent.model,
+            keyNameVeh: typeof rentData.vehicleRent.model === 'string' ? rentData.vehicleRent.model : mp.joaat(rentData.vehicleRent.model.toString()),
             color: rentData.vehicleRent.getColorRGB(0),
             position: {
                 x: Number(vehPos.x),
                 y: Number(vehPos.y),
                 z: Number(vehPos.z),
             },
-            heading: Number(vehRot),
+            heading: Number(vehRot.toFixed(3)),
             timeLeft: Number(timeLeft)
         };
         await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
         rentData.vehicleRent.destroy();
     }
+    if (rentData && rentData.isWithdrawal) {
+        clearTimeout(rentData.isWithdrawal);
+    }
     if (rentData.isWithdrawal)
         clearTimeout(rentData.isWithdrawal);
     playerRentData.delete(uid);
-});
+};
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const loadRentPoints = async (retryCount = 0) => {
     try {
@@ -61574,6 +61555,33 @@ const loadRentPoints = async (retryCount = 0) => {
             return loadRentPoints(retryCount + 1);
         }
         console.log(chalk.red('[LOADING RENT]') + ` Ошибка загрузки после ${retryCount} попыток: ${e}`);
+    }
+};
+const savingPlayerRents = async () => {
+    mp.events.delayShutdown = true;
+    let savedCount = 0;
+    for (const [uid, data] of playerRentData.entries()) {
+        const player = connectedUsers.getPlayerByUid(uid);
+        if (!data.isTakenRent || !data.vehicleRent || !mp.vehicles.exists(data.vehicleRent)) {
+            continue;
+        }
+        let timeLeft;
+        if (player && mp.players.exists(player)) {
+            timeLeft = await Promise.race([
+                rce.callClient(player, 'rent:getTimeLeft'),
+                new Promise((resolve) => setTimeout(() => resolve(-1), 4000))
+            ]);
+        }
+        try {
+            await rentPlayerQuit(player, timeLeft);
+            savedCount++;
+        }
+        catch (e) {
+            console.log(chalk.red('[SAVING RENT]') + ` Ошибка сохранения аренды при отключении сервера: ${e}`);
+        }
+    }
+    if (savedCount > 0) {
+        console.log(chalk.green('[SAVED RENT]') + ` Сохранено ${savedCount} активных аренд`);
     }
 };
 
@@ -61927,6 +61935,7 @@ const savedCoordQuit = async () => {
 mp.events.add("serverShutdown", async () => {
     mp.events.delayShutdown = true;
     await savedCoordQuit();
+    await savingPlayerRents();
     setTimeout(() => {
         mp.events.delayShutdown = false;
     }, 3000);

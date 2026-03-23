@@ -4,8 +4,8 @@ const Header = () => {
   return (
     <>
       <div className="header-death">
-        <span className="title">Без сознания</span>
-        <span className="descr">Вам требуется немедленная медицинская помощь, иначе вы попадёте в реанимацию</span>
+        <span className="title">Вы без сознания</span>
+        <span className="descr">Вам требуется немедленная медицинская помощь, иначе вы умрете и попадете в рай (ну или ад)</span>
       </div>
     </>
   ) 

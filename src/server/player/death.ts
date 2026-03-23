@@ -11,43 +11,13 @@ rce.registerClient('client:playerDeath', (player: PlayerMp, [posX, posY, posZ] :
 })
 
 export const playerKill = async (player: PlayerMp) => {
-  player.spawn(new mp.Vector3(-1221.006591796875, -100.9054946899414, 42.5238037109375))
+  player.spawn(new mp.Vector3(275.446, -1361.11, 24.5378))
   player.setVariable('player_knockout', false)
-
-  rce.triggerClient(player, 'gui:cursorVisible', false)
-  rce.triggerClient(player, 'ui:setPauseMenuActive', true)
-  rce.triggerClient(player, 'ui:displayRadar', true)
-  rce.triggerClient(player, 'player:freeze', false)
-  rce.triggerClient(player, 'player:isCollision', true)
-  rce.triggerClient(player, 'player:godmode', false)
-
-  await setTimeout(() => {
-    rce.triggerClient(player, 'graphics:stopAllScreenEffects')
-  }, 4000)
-
-
-  rce.triggerClient(player, 'execute', ['window.App.deathReducer.showDeath(``, `finish`)'])
 }
 
 export const playerKnockout = (player: PlayerMp) => {
   player.health = 0
   player.setVariable('player_knockout', true)
-
-  if (player.vehicle) {
-    rce.triggerClient(player, 'player:isCollision', true)
-  } else {
-    rce.triggerClient(player, 'player:isCollision', false)
-  }
-
-  rce.triggerClient(player, 'gui:cursorVisible', true)
-  rce.triggerClient(player, 'player:freeze', true)
-  rce.triggerClient(player, 'ui:setPauseMenuActive', false)
-  rce.triggerClient(player, 'ui:displayRadar', false)
-  rce.triggerClient(player, 'graphics:startScreenEffect', 'DeathFailMPIn', 0, true)
-
-  setTimeout(() => {
-    rce.triggerClient(player, 'player:godmode', true)
-  }, 200)
 }
 
 
@@ -58,19 +28,6 @@ export const playerReborn = (player: PlayerMp) => {
   player.stopAnimation()
   player.spawn(playerPos)
   player.setVariable('player_knockout', false)
-
-  rce.triggerClient(player, 'ui:displayRadar', true)
-  rce.triggerClient(player, 'player:freeze', false)
-  rce.triggerClient(player, 'player:isCollision', true)
-  rce.triggerClient(player, 'player:godmode', false)
-  rce.triggerClient(player, 'ui:setPauseMenuActive', true)
-  rce.triggerClient(player, 'graphics:stopAllScreenEffects')
-  rce.triggerClient(player, 'gui:cursorVisible', false)
-  rce.triggerClient(player, 'execute', 'window.App.deathReducer.showDeath(``, `reborn`)')
-
-  /*setTimeout(() => {
-    rce.triggerClient(player, 'execute', `window.App.chatReducer.showChat()`)
-  }, 5000)*/
 }
 
 rce.registerClientCef('playerKill', (player: PlayerMp) => {

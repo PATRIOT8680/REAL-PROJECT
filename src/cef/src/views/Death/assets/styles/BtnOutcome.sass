@@ -1,0 +1,127 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+.btn-outcome
+  height: 100%
+  background: rgba(37, 26, 26, 0.85)
+  border: 1px solid #3b3939
+  border-radius: 0.25rem
+  display: flex
+  position: relative
+  flex-direction: column
+  align-items: center
+  gap: 1.2rem
+  justify-content: center
+  overflow: hidden
+  user-select: none
+  cursor: pointer
+
+  .blur-bg-btn
+    position: absolute
+    top: -3.5rem
+    left: -9rem
+    width: 22rem
+    filter: blur(5rem)
+    opacity: 0
+    transition: opacity 0.4s ease
+
+    ellipse
+      transition: fill .3s ease
+
+  .icon-outcome
+    width: 3.5rem
+
+    path
+      transition: fill .3s ease
+
+  .title
+    font-family: $Druk
+    font-weight: 600
+    font-size: 1.05rem
+    line-height: 100%
+    letter-spacing: -0.01em
+    text-transform: uppercase
+    transition: all .3s ease
+    color: #cfcdc7
+
+  .subtitle
+    font-family: $Montserrat
+    font-weight: 400
+    font-size: .95rem
+    text-align: center
+    color: #f4f5f8
+    opacity: .6
+
+#outcome-medic
+  transition: all .3s ease
+
+  ellipse
+    fill: #4FDF65
+
+  &:hover
+    border: 1px solid #376f3a
+
+    .blur-bg-btn
+      transition: opacity 0.4s ease
+      opacity: .7
+
+      ellipse
+        fill: #4FDF65
+
+
+    .title
+      color: #5db778
+      transition: all .3s ease
+
+    .icon-outcome
+      path
+        fill: #5db778
+        transition: fill .3s ease
+
+#outcome-death
+  transition: all .3s ease
+
+  ellipse
+    fill: #FF283E
+
+  &:hover
+    border: 1px solid #FF283E
+
+    .blur-bg-btn
+      opacity: .7
+
+      ellipse
+        fill: #FF283E
+
+    .title
+      color: #FF283E
+      transition: all .3s ease
+
+    .icon-outcome
+      path
+        fill: #FF283E
+        transition: fill .3s ease
+
+#outcome-chance
+  transition: all .3s ease
+
+  ellipse
+    fill: #ffca58
+
+  &:hover
+    border: 1px solid #ffca58
+
+    .blur-bg-btn
+      opacity: .7
+
+      ellipse
+        fill: #ffca58
+
+    .title
+      color: #ffca58
+      transition: all .3s ease
+
+    .icon-outcome
+      path
+        fill: #ffca58
+        transition: fill .3s ease

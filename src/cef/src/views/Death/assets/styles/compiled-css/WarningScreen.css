@@ -1,0 +1,103 @@
+.warning-screen {
+  position: relative;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.warning-screen.exit {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.warning-screen * {
+  z-index: 1;
+}
+.warning-screen .bg-blur-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90rem;
+  opacity: 0.4;
+  filter: blur(12rem);
+  animation: fadeInBlurWDeath 2.5s ease forwards;
+  z-index: 0;
+}
+.warning-screen .death-icon {
+  margin-bottom: 2rem;
+  animation: fadeInDeathIcon 0.7s cubic-bezier(0.19, -0.2, 1, -0.06);
+}
+.warning-screen .title {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 3.5rem;
+  text-transform: uppercase;
+  color: #ff4646;
+  opacity: 0;
+  animation: fadeInDeathTitle 0.6s cubic-bezier(0.19, -0.2, 1, -0.06) forwards, fadeInTextShadowTitleDeath 1s ease forwards;
+  animation-delay: 0.6s, 1.2s;
+}
+.warning-screen .subtitle {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  color: rgba(244, 245, 248, 0.5);
+  line-height: 150%;
+  width: 30rem;
+  opacity: 0;
+  text-align: center;
+  animation: fadeInSubtitleDeath 0.7s ease forwards;
+  animation-delay: 1.7s;
+}
+
+@keyframes fadeInBlurWDeath {
+  from {
+    opacity: 0.1;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  to {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes fadeInDeathIcon {
+  from {
+    opacity: 0;
+    margin-bottom: 6rem;
+  }
+  to {
+    opacity: 1;
+    margin-bottom: 2rem;
+  }
+}
+@keyframes fadeInDeathTitle {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes fadeInTextShadowTitleDeath {
+  from {
+    text-shadow: 0 0 0 rgba(255, 70, 70, 0);
+  }
+  to {
+    text-shadow: 0 -24px 0 rgba(255, 70, 70, 0.1);
+  }
+}
+@keyframes fadeInSubtitleDeath {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=WarningScreen.css.map */

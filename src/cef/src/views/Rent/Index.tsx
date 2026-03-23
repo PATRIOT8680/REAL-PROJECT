@@ -42,7 +42,6 @@ const Rent = () => {
 
   const handleCancelRentVeh = () => {
     rce.triggerClient('cef:cancelRentCar')
-    rentReducer.isTakenRent = false
   }
 
   const closeRentMenu = () => {
