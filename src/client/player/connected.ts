@@ -1,7 +1,6 @@
 import { rce } from '../utils/rce'
 import { gui } from '../menus/global'
 
-
 mp.events.add('playerReady', (player: PlayerMp) => {
   rce.triggerCef('client:setActiveAmbient', mp.storage.data.activeAmbient)
   mp.game.gameplay.setFadeOutAfterDeath(false)

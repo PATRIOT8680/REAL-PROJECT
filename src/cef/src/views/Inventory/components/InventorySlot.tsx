@@ -246,7 +246,8 @@ const InventorySlot = ({
     } else {
       const folderMap: Record<string, string> = {
         weapon: 'weapons',
-        food: 'foods'
+        food: 'foods',
+        misc: 'misc'
       }
 
       const folder = folderMap[item.type] || 'items'

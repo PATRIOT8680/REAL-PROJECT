@@ -10,6 +10,7 @@ import { useClothes } from "./usageItems";
 import { usageClothes } from "../../player/clothes";
 import { dropItemOnGround } from "./itemsObject";
 import { getMyOffers, getPartnerOffers, getTradeForPlayer } from "./tradeManager";
+import {ServerItem} from "../../../shared/types/items";
 
 interface IHaveBag {
   have: boolean,
@@ -675,6 +676,15 @@ rce.registerCef("dropItemOnGround", async (player: PlayerMp, itemId: number, slo
       return rce.triggerClient(player, 'sendNotify', 'err', 'Неверное количество для выброса!', 3000, 'top')
     }
 
+    const dropData = {
+      id: sourceItem.id,
+      quantity: value,
+      name: sourceItem.name || itemData.name,
+      description: sourceItem.description || itemData.description,
+      keyData: sourceItem.keyData || null,
+      hashObj: itemData.hashObj,
+    }
+
     if (value === sourceItem.quantity) {
       sourceSlots[slotId] = null
     } else {
@@ -692,7 +702,7 @@ rce.registerCef("dropItemOnGround", async (player: PlayerMp, itemId: number, slo
     await updateTotalWeightInventory(uid)
     await sendInventoryToCef(player, uid)
 
-    dropItemOnGround(player, itemId, slotId, section, value)
+    dropItemOnGround(player, dropData)
   } catch (e) {
     console.log(chalk.red('[DROP ERROR]') + ` Err: ${e}`)
     rce.triggerClient(player, 'sendNotify', 'err', 'Не удалось выкинуть предмет', 3100, 'top')
@@ -958,6 +968,110 @@ export const addItemToInventory = async (
 
   await updateTotalWeightInventory(uid)
   return { success: true }
+}
+
+export const addCustomItemToInventory = async (
+  uid: number,
+  customItem: Partial<ServerItem> & { id: number; amount?: number }
+): Promise<{ success: boolean; reason?: string }> => {
+
+  try {
+    const inventory = await getPlayerInventory(uid)
+    const player = connectedUsers.getPlayerByUid(uid)
+    if (!inventory) {
+      return { success: false, reason: 'Инвентарь не найден' }
+    }
+
+    const baseItem = getItemById(customItem.id)
+    if (!baseItem) {
+      return { success: false, reason: 'Базовый предмет не найден' }
+    }
+
+    const finalItem: any = {
+      ...baseItem,
+      name: customItem.name || baseItem.name,
+      description: customItem.description || baseItem.description,
+      keyData: customItem.keyData || null,
+      weight: baseItem.weight,
+      maxStack: 1,
+      stackable: false,
+      consumable: false,
+    };
+
+    const quantity = customItem.amount || 1
+    const addedWeight = finalItem.weight * quantity
+
+    if ((inventory.weight || 0) + addedWeight > (inventory.maxweight || 20)) {
+      return { success: false, reason: 'Недостаточно места в инвентаре' }
+    }
+
+    const freeSlotInfo = await findFreeSlotsInInventory(uid)
+    if (!freeSlotInfo || !freeSlotInfo.section) {
+      return { success: false, reason: 'Нет свободного слота в инвентаре' }
+    }
+
+    const config = SECTION_CONFIG[freeSlotInfo.section as InventorySection]
+    if (!config) {
+      return { success: false, reason: 'Неизвестная секция инвентаря' }
+    }
+
+    let slots = await config.getSlots(inventory, uid)
+    if (!slots) {
+      return { success: false, reason: 'Не удалось загрузить слоты' }
+    }
+
+    let added = false
+
+    for (let i = 0; i < slots.length; i++) {
+      if (slots[i]?.id === customItem.id && baseItem.stackable) {
+        const max = baseItem.maxStack || 999
+        if (slots[i].quantity + quantity <= max) {
+          slots[i].quantity += quantity
+          slots[i].name = finalItem.name
+          slots[i].description = finalItem.description
+          slots[i].keyData = finalItem.keyData
+          added = true
+          break
+        }
+      }
+    }
+
+    if (!added) {
+      slots[freeSlotInfo.slot] = {
+        id: customItem.id,
+        quantity: quantity,
+        name: finalItem.name,
+        description: finalItem.description,
+        keyData: finalItem.keyData,
+      }
+    }
+
+    const success = await config.saveSlots(
+      uid,
+      slots,
+      freeSlotInfo.section === 'bag' ? null : undefined
+    )
+
+    if (!success) {
+      return { success: false, reason: 'Ошибка сохранения в базу данных' }
+    }
+
+    await updateTotalWeightInventory(uid)
+    if (typeof player !== 'undefined' && mp.players.exists(player)) {
+      await sendInventoryToCef(player, uid)
+    } else {
+      const player = connectedUsers.getPlayerByUid(uid)
+      if (player && mp.players.exists(player)) {
+        await sendInventoryToCef(player, uid)
+      }
+    }
+
+    return { success: true }
+
+  } catch (e) {
+    console.error(chalk.red('[addCustomItemToInventory] Ошибка:'), e)
+    return { success: false, reason: 'Произошла внутренняя ошибка' }
+  }
 }
 
 export const updateSlot = async (
@@ -1348,27 +1462,30 @@ export const convertSlots = (slots: any[]): any[] => {
   return slots.map((slot: any) => {
     if (!slot) return null
 
-    const itemData = getItemById(slot.id)
-    if (!itemData) return null
+    const baseItem = getItemById(slot.id)
+    if (!baseItem) return null
 
-    const imageId = getItemImageIdForCef(itemData)
+    const imageId = getItemImageIdForCef(baseItem)
 
     return {
       id: slot.id,
-      name: itemData.name,
-      description: itemData.description,
+      name: slot.name || baseItem.name,
+      description: slot.description || baseItem.description,
       imageId: imageId,
       quantity: slot.quantity || 1,
-      maxStack: itemData.maxStack,
-      type: itemData.type,
-      weight: itemData.weight,
-      stackable: itemData.stackable,
-      consumable: itemData.consumable,
-      price: itemData.price,
+      maxStack: baseItem.maxStack,
+      type: baseItem.type,
+      weight: baseItem.weight,
+      stackable: baseItem.stackable,
+      consumable: baseItem.consumable,
+      price: baseItem.price,
 
-      clothesData: itemData.clothesData,
-      weaponData: itemData.weaponData,
-      foodData: itemData.foodData,
+      clothesData: baseItem.clothesData,
+      weaponData: baseItem.weaponData,
+      foodData: baseItem.foodData,
+      miscData: baseItem.miscData,
+
+      keyData: slot.keyData || null,
       isFast: true,
     }
   })
@@ -1835,4 +1952,115 @@ export const updateSlotsInDB = async (
       })
     })
   })
+}
+
+export const removeKeyFromVeh = async (uid: number, keyUniqueId?: number, plate?: string): Promise<boolean> => {
+  try {
+    const player = connectedUsers.getPlayerByUid(uid)
+    const inventory = await getPlayerInventory(uid)
+    if (!inventory) return false
+
+    const sections: InventorySection[] = ['main', 'donat', 'bag']
+
+    for (const section of sections) {
+      let slots: any[] = []
+
+      if (section === 'bag') {
+        const bagData = await getEquippedBag(uid)
+        if (bagData && bagData.items) {
+          slots = normalizeSlots(JSON.parse(bagData.items))
+        } else {
+          continue
+        }
+      } else {
+        const config = SECTION_CONFIG[section]
+        slots = await config.getSlots(inventory, uid) || []
+      }
+
+      let changed = false
+
+      for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i]
+        if (!slot?.keyData) continue
+
+        const matchById = keyUniqueId && slot.keyData.uniqueId === keyUniqueId
+        const matchByPlate = plate && slot.keyData.plate === plate
+
+        if (matchById || matchByPlate) {
+          slots[i] = null
+          changed = true
+          console.log(chalk.green(`[REMOVE KEY] Ключ удалён из ${section} (слот ${i}) | uniqueId=${slot.keyData.uniqueId} | plate=${slot.keyData.plate}`))
+          break
+        }
+      }
+
+      if (changed) {
+        if (section === 'bag') {
+          const clothesSlots = JSON.parse(inventory.clothesslots || '[]')
+          const bagUid = clothesSlots[10]?.id
+          if (bagUid) await handleBagOperations(uid, 'update', bagUid, slots)
+        } else {
+          await updateSlotsArray(uid, section, slots)
+        }
+
+        await updateTotalWeightInventory(uid)
+
+        if (player && mp.players.exists(player)) {
+          await sendInventoryToCef(player, uid)
+        }
+
+        return true
+      }
+    }
+
+    console.log(chalk.yellow(`[REMOVE KEY] Ключ НЕ НАЙДЕН (uniqueId=${keyUniqueId}, plate=${plate})`))
+    return false
+
+  } catch (e) {
+    console.error(chalk.red('[REMOVE KEY FROM VEH] Ошибка:'), e)
+    return false
+  }
+}
+
+export const playerHasKeyForVehicle = async (player: PlayerMp, vehicle: VehicleMp) => {
+  if (!player || !vehicle || !mp.vehicles.exists(vehicle)) return false
+
+  const uid = connectedUsers.getField(player.id, 'uid')
+  if (!uid) return false
+
+  const rentalKeyId = vehicle.getVariable('rentalKeyId') as number | undefined
+  const plate = vehicle.numberPlate
+
+  const inventory = await getPlayerInventory(uid)
+  if (!inventory) return false
+
+  const sections: InventorySection[] = ['main', 'donat', 'bag']
+
+  for (const section of sections) {
+    let slots: any[] = []
+
+    if (section === 'bag') {
+      const bagData = await getEquippedBag(uid)
+
+      if (bagData && bagData.items) {
+        slots = normalizeSlots(JSON.parse(bagData.items))
+      } else {
+        continue
+      }
+    } else {
+      const config = SECTION_CONFIG[section]
+      slots = await config.getSlots(inventory, uid) || []
+    }
+
+    for (const slot of slots) {
+      if (!slot || !slot.keyData) continue
+
+      const matchById = rentalKeyId !== undefined && slot.keyData.uniqueId === rentalKeyId
+      const matchByPlate = plate && slot.keyData.plate === plate
+
+      if (matchById || matchByPlate) return true
+    }
+  }
+
+  return false
 }

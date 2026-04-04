@@ -2,7 +2,7 @@ import { rce } from "../../utils/rce";
 import { getItemById } from "./items";
 import { ServerItem } from "../../../shared/types/items";
 import { data } from "../../database/mysql";
-import {addItemToInventory, sendInventoryToCef} from "./inventoryHandlers";
+import { addItemToInventory, sendInventoryToCef, addCustomItemToInventory } from "./inventoryHandlers";
 import { connectedUsers } from "../../data/dataConnectedUser";
 import { playAnim } from "../../utils/playAnim";
 import chalk from "chalk";
@@ -14,26 +14,21 @@ const itemsWorld = new Map<number, {
   position: Vector3,
 }>()
 
-const createObjInWorld = (item: ServerItem, value: number, posObj: Vector3, dimension: number) => {
-  const obj = mp.objects.new(item.hashObj, posObj,
-    {
-      dimension,
-      alpha: 255
-    }
-  )
-
+const createObjInWorld = (item: any, value: number, posObj: Vector3, dimension: number) => {
+  const hash = item.hashObj || getItemById(item.id)?.hashObj || 0
+  const obj = mp.objects.new(hash, posObj, {
+    dimension,
+    alpha: 255
+  })
   itemsWorld.set(obj.id, {
     item,
     quantity: value,
     position: posObj
   })
-
   return obj
 }
 
-export const dropItemOnGround = async (player: PlayerMp, itemId: number, slotId: number, section: string, value: number) => {
-  const item = getItemById(itemId)
-
+export const dropItemOnGround = async (player: PlayerMp, itemData: any) => {
   const randomAngle = Math.random() * 2 * Math.PI
   const distance = 0.5 + Math.random() * 1
   const offsetX = Math.cos(randomAngle) * distance
@@ -47,18 +42,13 @@ export const dropItemOnGround = async (player: PlayerMp, itemId: number, slotId:
     getGroundZ + 0.02
   )
 
-  const newObj: ObjectMp = createObjInWorld(item, value, posObj, player.dimension)
+  const newObj: ObjectMp = createObjInWorld(itemData, itemData.quantity, posObj, player.dimension)
 
   try {
     const sql = 'INSERT INTO items(id, item, quantity, position, dimension) VALUES (?, ?, ?, ?, ?)'
-
-    data.query(sql, [newObj.id, JSON.stringify(item), value, JSON.stringify(posObj), player.dimension], (err, results) => {
-      if (err) {
-        console.log(chalk.red('[DROP ITEM]') + ` Insert in DB: ${err}`)
-        return
-      }
-
-      rce.triggerClients('droppedItemOnGround', item, newObj.id, posObj, value)
+    data.query(sql, [newObj.id, JSON.stringify(itemData), itemData.quantity, JSON.stringify(posObj), player.dimension], (err) => {
+      if (err) console.log(chalk.red('[DROP ITEM]') + ` Insert in DB: ${err}`)
+      else rce.triggerClients('droppedItemOnGround', itemData, newObj.id, posObj, itemData.quantity)
     })
   } catch (e) {
     console.log(chalk.red('[DROP ITEM]') + ` Insert in DB (gl): ${e}`)
@@ -103,7 +93,15 @@ rce.registerClient('pickUpItem', async (player: PlayerMp, objId: number, item: S
   const obj = itemsWorld.get(objId)
   if (!obj) return { status: 'destroyItem', text: 'Предмет уже подобран!' }
 
-  const resultAdd = await addItemToInventory(uid, item.id, value)
+  const customItem = {
+    id: item.id,
+    amount: value,
+    name: item.name,
+    description: item.description,
+    keyData: item.keyData,
+  }
+
+  const resultAdd = await addCustomItemToInventory(uid, customItem)
   if (!resultAdd.success) return { status: 'denied', text: resultAdd.reason || 'Не удалось подобрать!' }
 
   const entityObj = mp.objects.at(objId)
@@ -115,17 +113,11 @@ rce.registerClient('pickUpItem', async (player: PlayerMp, objId: number, item: S
   try {
     await new Promise<void>((resolve, reject) => {
       const sql = 'DELETE FROM items WHERE id = ?'
-
-      data.query(sql, [objId], (err, results) => {
-        if (err) {
-          console.log(chalk.red('[PICK UP ITEM]') + ` Delete in DB: ${err}`)
-          reject(err)
-          return
-        }
-        resolve()
+      data.query(sql, [objId], (err) => {
+        if (err) reject(err)
+        else resolve()
       })
     })
-
     await sendInventoryToCef(player, uid)
     return { status: 'approved' }
   } catch (e) {

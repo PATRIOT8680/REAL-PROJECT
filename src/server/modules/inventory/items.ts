@@ -6,6 +6,7 @@ import { CLOTHES_MALE_CONFIG } from "../../configs/items/clothes.male";
 import { CLOTHES_FEMALE_CONFIG } from "../../configs/items/clothes.female";
 import { WEAPONS_CONFIG } from "../../configs/items/weapons";
 import { FOODS_CONFIG } from "../../configs/items/foods";
+import { MISC_CONFIG } from "../../configs/items/misc";
 import { SLOT_MAPPING, CLOTHES_IMAGE_IDS } from "../../configs/items/slotClothesMapping";
 
 import { getUsageFunction, usageFunctions } from "./usageItems";
@@ -228,6 +229,38 @@ const loadFoods = () => {
   })
 }
 
+const loadMisc = () => {
+  MISC_CONFIG.forEach((misc: any[]) => {
+    const [
+      id, name, description = 'Неизвестно',
+      weight, maxStack, stackable, consumable,
+      price, hashObj, waitingUsage, anim,
+    ] = misc
+
+    const item: ServerItem = {
+      id,
+      name,
+      description,
+      imageId: id,
+      maxStack: maxStack,
+      type: 'misc',
+      weight,
+      stackable,
+      consumable,
+      price,
+      hashObj: hashObj,
+      usage: usageFunctions[id],
+      miscData: {
+        waitingUsage: waitingUsage,
+        anim: anim
+      },
+    }
+    registerItem(item)
+  })
+
+  console.log(chalk.green('[ITEMS]') + ` Загружено misc предметов: ${MISC_CONFIG.length}`)
+}
+
 export const initItems = () => {
   console.log(chalk.bgBlue('• ITEMS •') + chalk.blue(' Инициализация системы предметов...'))
 
@@ -244,6 +277,8 @@ export const initItems = () => {
 
   loadFoods()
   console.log(chalk.bgGreen('• ITEMS •') + chalk.green(` Загружено предметов питания: ${FOODS_CONFIG.length}`))
+
+  loadMisc()
 
   console.log(chalk.bgGreen('• ITEMS •') + chalk.green(` Общее количество предметов загружено: ${itemsRegistry.size}`))
 }

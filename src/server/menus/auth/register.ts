@@ -71,7 +71,7 @@ export const registerUser = (player: PlayerMp, login: string, email: string, pas
           selectChar(player)
           connectedUsers.setUser(player.id, { login: login, sid: sid, donatcoins: 0 })
           rce.triggerClient(player, 'server:auth:saveLogin', login)
-          rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 4000, 'bottom')
+          rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 4000, 'top')
           rce.triggerCef(player, 'server:authSuccess')
           console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`))
         }

@@ -26,6 +26,8 @@ import './player/clothes'
 import './modules/inventory/itemsObject'
 import './player/interaction'
 import './modules/inventory/tradeManager'
+import './vehicles/interaction'
+import './business/manager'
 
 //mp.world.weather = 'XMAS'
 
