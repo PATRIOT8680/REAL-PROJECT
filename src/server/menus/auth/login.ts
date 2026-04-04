@@ -66,14 +66,14 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
                 data.query(sql, [sid, charResults[0].numberslot], (err, charResults) => {
                   if (err) return console.log(chalk.bgRed('• GET UQUEST •') + chalk.red(` Ошибка: ${err}`))
 
-                  rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'bottom')
+                  rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'top')
                   rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`)
                   rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot, charResults)
                 })
 
               } else {
                 selectChar(player)
-                rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'bottom')
+                rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'top')
               }
             } else {
               selectChar(player)

@@ -7,7 +7,10 @@ import { getDataAccount } from "../data/getDataAccount";
 import { connectedUsers } from "../data/dataConnectedUser";
 import { ICarData } from "../../shared/types/rent";
 import { vehicles } from "../configs/vehicles";
-import { normalizeHeading } from "../utils/normalizeHeading";
+import { addCustomItemToInventory } from "./inventory/inventoryHandlers";
+import { generateUSPlate } from "../vehicles/numberPlate";
+import { removeKeyFromVeh } from "./inventory/inventoryHandlers";
+import { vehicleManager } from "../vehicles";
 
 interface IRentsData {
   id: number,
@@ -27,18 +30,19 @@ const RETRY_DELAY = 2000
 const playerRentData = new Map<number, {
   isTakenRent: boolean,
   vehicleRent: VehicleMp | null,
-  isWithdrawal: number | null
+  isWithdrawal: number | null,
+  keyNameVeh?: string
 }>()
 
 rce.register('charSpawned', async (player: PlayerMp) => {
   const uid = await getDataAccount(player, 'uid', player.id)
-
   const oldData = playerRentData.get(uid)
 
   const playerData: {
     isTakenRent: boolean,
     vehicleRent: VehicleMp | null,
-    isWithdrawal: number | null
+    isWithdrawal: number | null,
+    keyNameVeh?: string
   } = {
     isTakenRent: false,
     vehicleRent: null,
@@ -59,6 +63,7 @@ rce.register('charSpawned', async (player: PlayerMp) => {
     if (rows.length === 0 || !rows[0].rent_data) return
 
     let rentInfo
+
     try {
       rentInfo = JSON.parse(rows[0].rent_data)
     } catch (e) {
@@ -67,11 +72,11 @@ rce.register('charSpawned', async (player: PlayerMp) => {
       return
     }
 
-    const timeLeft = rentInfo.timeLeft
+    const timeLeft = Number(rentInfo.timeLeft) || 0
 
-    if (timeLeft <= 0) {
+    if (timeLeft < 1) {
       await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid])
-      rce.triggerClient(player, 'sendNotify', 'warning', 'Срок вашей предыдущей аренды истёк!', 3200, 'bottom')
+      rce.triggerClient(player, 'sendNotify', 'warning', 'Аренда истекла', 3200, 'bottom')
       return
     }
 
@@ -92,7 +97,7 @@ rce.register('charSpawned', async (player: PlayerMp) => {
         dimension: player.dimension,
         engine: true,
         locked: false,
-        numberPlate: 'RENT'
+        numberPlate: rentInfo.plate
       })
     }
 
@@ -100,11 +105,20 @@ rce.register('charSpawned', async (player: PlayerMp) => {
       oldData.vehicleRent.destroy()
     }
 
+    const vehicleFullName = vehicles.find(v => v.short === rentInfo.keyNameVeh)?.full || rentInfo.keyNameVeh
     playerData.vehicleRent = vehicleToUse
     playerData.isTakenRent = true
     playerData.isWithdrawal = timeLeft
+    playerData.keyNameVeh = rentInfo.keyNameVeh
 
-    if (!player.vehicle || player.vehicle !== vehicleToUse) {
+    vehicleManager.addVehicle(vehicleToUse, {
+      fullName: vehicleFullName,
+      ownerUid: uid,
+      isRental: true,
+      rentalKeyId: Date.now() + Math.floor(Math.random() * 1000000)
+    })
+
+    if (!player.vehicle && player.vehicle !== vehicleToUse && rentInfo.inVeh) {
       setTimeout(() => {
         if (mp.players.exists(player) && mp.vehicles.exists(vehicleToUse)) {
           player.putIntoVehicle(vehicleToUse, 0)
@@ -112,7 +126,7 @@ rce.register('charSpawned', async (player: PlayerMp) => {
       }, 500)
     }
 
-    rce.triggerClient(player, 'startRentTimer', vehicleToUse.id, timeLeft)
+    rce.triggerClient(player, 'startRentTimer', uid, vehicleToUse.id, timeLeft)
   } catch (e) {
     console.log(chalk.red('[SPAWN RENT VEH]') + ` Ошибка получения информации с БД: ${e}`)
   }
@@ -133,8 +147,8 @@ rce.registerCef('createNpcForRent', async (player: PlayerMp, npcModel: string, n
 
   try {
     const [rows]: any = await db.query(`
-      SELECT COALESCE(MAX(id), 0) AS maxId
-      FROM rent
+        SELECT COALESCE(MAX(id), 0) AS maxId
+        FROM rent
     `)
 
     const maxId = Number(rows[0].maxId)
@@ -285,11 +299,32 @@ rce.registerCef('cef:handleRentVeh', async (
   const vehInfo = rentData.vehiclesData.find(veh => veh.vehName === selectedVeh.keyNameCar)
   const vehPos = new mp.Vector3(vehInfo.x, vehInfo.y, vehInfo.z)
 
-  console.log(`vehInfo: ${JSON.stringify(vehInfo)}`)
+  const modelName = selectedVeh.keyNameCar
+  const vehicleFullName = vehicles.find(v => v.short === modelName)?.full || modelName
+  const plate = await generateUSPlate()
+  const keyUniqueId = Date.now() + Math.floor(Math.random() * 1000000)
+
+  const result = await addCustomItemToInventory(uid, {
+    id: 800,
+    name: `Ключ от ${vehicleFullName}`,
+    description: `Номерной знак: ${plate}`,
+    amount: 1,
+    keyData: {
+      model: modelName,
+      uniqueId: keyUniqueId,
+      plate: plate,
+      isRental: true,
+      vehicleName: vehicleFullName
+    }
+  })
+
+  if (!result.success) {
+    rce.triggerClient(player, 'sendNotify', 'err', result.reason, 3500, 'bottom')
+    return
+  }
 
   try {
-    playerData.isTakenRent = true
-    playerData.vehicleRent = mp.vehicles.new(
+    const vehicle = mp.vehicles.new(
       mp.joaat(selectedVeh.keyNameCar),
       vehPos,
       {
@@ -298,14 +333,27 @@ rce.registerCef('cef:handleRentVeh', async (
         engine: true,
         heading: vehInfo.heading,
         locked: false,
-        numberPlate: 'RENT'
+        numberPlate: plate
       }
     )
 
+    vehicle.setVariable('rentalKeyId', keyUniqueId)
+
+    playerData.isTakenRent = true
+    playerData.isWithdrawal = time
+    playerData.keyNameVeh = selectedVeh.keyNameCar
+    playerData.vehicleRent = vehicle
+
+    vehicleManager.addVehicle(vehicle, {
+      fullName: vehicleFullName,
+      ownerUid: uid,
+      isRental: true,
+      rentalKeyId: keyUniqueId
+    })
+
     setTimeout(() => {
       player.putIntoVehicle(playerData.vehicleRent, 0)
-    }, 200)
-    playerData.isWithdrawal = time
+    }, 400)
 
     setTimeout(() => {
       console.log(`Heading rveh: ${playerData.vehicleRent.heading} | ${typeof playerData.vehicleRent.heading}`)
@@ -313,6 +361,7 @@ rce.registerCef('cef:handleRentVeh', async (
 
     const rentInfo = {
       keyNameVeh: selectedVeh.keyNameCar,
+      plate: plate,
       color: color,
       position: {
         x: Number(vehPos.x),
@@ -320,7 +369,8 @@ rce.registerCef('cef:handleRentVeh', async (
         z: Number(vehPos.z),
       },
       heading: vehInfo.heading,
-      timeLeft: time
+      timeLeft: time,
+      inVeh: true
     }
 
     if (method === 'cash') {
@@ -329,8 +379,9 @@ rce.registerCef('cef:handleRentVeh', async (
       decrementBankMoney(player, uid, selectedVeh.price * (time / 60))
     }
 
+
     await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid])
-    rce.triggerClient(player, 'startRentTimer', playerData.vehicleRent.id, time)
+    rce.triggerClient(player, 'startRentTimer', uid, playerData.vehicleRent.id, time)
   } catch (e) {
     console.log(chalk.red('[RENT VEH]') + ` Ошибка при аренде т/с: ${e}`)
   }
@@ -340,15 +391,55 @@ rce.registerClient('rentOver', async (player: PlayerMp) => {
   const uid = connectedUsers.getField(player.id, 'uid')
   const playerData = playerRentData.get(uid)
 
+  if (playerData?.vehicleRent) {
+    const keyUniqueId = playerData.vehicleRent.getVariable('rentalKeyId')
+    const plate = playerData.vehicleRent.numberPlate
+
+    await removeKeyFromVeh(uid, keyUniqueId, plate)
+  }
+
   await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid])
 
   playerData.isTakenRent = false
   playerData.isWithdrawal = null
-  playerData.vehicleRent.destroy()
+  vehicleManager.removeVehicle(playerData.vehicleRent.id)
+
+  if (playerData.vehicleRent && mp.vehicles.exists(playerData.vehicleRent)) {
+    player.removeFromVehicle()
+    playerData.vehicleRent.destroy()
+  }
+
+  playerData.vehicleRent = null
 })
 
-rce.registerClient('rentPlayerQuit', async (player: PlayerMp, timeLeft: number) => {
-  rentPlayerQuit(player, timeLeft)
+rce.registerClient('rentPlayerQuit', async (player: PlayerMp, uid: number, timeLeft: number, inVeh: boolean) => {
+  rentPlayerQuit(uid, inVeh, timeLeft)
+})
+
+rce.registerClient('syncRentTime', async (player: PlayerMp, timeLeft: number) => {
+  const uid = connectedUsers.getField(player.id, 'uid')
+  const playerData = playerRentData.get(uid)
+  if (!playerData || !playerData.isTakenRent) return
+
+  playerData.isWithdrawal = timeLeft
+
+  if (playerData.vehicleRent && mp.vehicles.exists(playerData.vehicleRent)) {
+    const vehicle = playerData.vehicleRent
+    const rentInfo = {
+      keyNameVeh: playerData.keyNameVeh,
+      plate: playerData.vehicleRent.numberPlate,
+      color: vehicle.getColorRGB(0),
+      position: {
+        x: Number(vehicle.position.x.toFixed(4)),
+        y: Number(vehicle.position.y.toFixed(4)),
+        z: Number(vehicle.position.z.toFixed(4)),
+      },
+      heading: Number(vehicle.heading.toFixed(4)),
+      timeLeft: timeLeft,
+      inVeh: (player.vehicle && player.vehicle.id === vehicle.id) ? true : false
+    }
+    await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid])
+  }
 })
 
 mp.events.add('playerEnterColshape', (player: PlayerMp, colshape: ColshapeMp) => {
@@ -387,33 +478,51 @@ mp.events.add('playerExitColshape', (player: PlayerMp, colshape: ColshapeMp) => 
   }
 })
 
-const rentPlayerQuit = async (player: PlayerMp, timeLeft: number) => {
-  const uid = await getDataAccount(player, 'uid', player.id)
+const rentPlayerQuit = async (uid: number, inVeh: boolean = false, clientTimeLeft?: number, ) => {
   const rentData = playerRentData.get(uid)
+  if (!rentData?.vehicleRent || !mp.vehicles.exists(rentData.vehicleRent)) return
 
-  if (rentData.isTakenRent && rentData.vehicleRent && mp.vehicles.exists(rentData.vehicleRent)) {
-    const vehPos = rentData.vehicleRent.position
-    const vehRot = rentData.vehicleRent.heading
+  const vehicle = rentData.vehicleRent;
+  const keyUniqueId = vehicle.getVariable('rentalKeyId')
+  const plate = vehicle.numberPlate
+  const pos = vehicle.position
+  const heading = vehicle.heading
+  const modelHash = vehicle.model
 
-    const rentInfo = {
-      keyNameVeh: typeof rentData.vehicleRent.model === 'string' ? rentData.vehicleRent.model : mp.joaat(rentData.vehicleRent.model.toString()),
-      color: rentData.vehicleRent.getColorRGB(0),
-      position: {
-        x: Number(vehPos.x),
-        y: Number(vehPos.y),
-        z: Number(vehPos.z),
-      },
-      heading: Number(vehRot.toFixed(3)),
-      timeLeft: Number(timeLeft)
-    }
+  // if (keyUniqueId || plate) {
+  //   await removeKeyFromVeh(uid, keyUniqueId, plate)
+  // }
 
-    await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid])
-    rentData.vehicleRent.destroy()
+  let modelName = rentData.keyNameVeh
+  if (!modelName || modelName === "unknown") {
+    const found = vehicles.find(v => mp.joaat(v.short) === modelHash)
+    modelName = found ? found.short : "unknown"
   }
 
-  if (rentData && rentData.isWithdrawal) {
-    clearTimeout(rentData.isWithdrawal)
+  const finalTimeLeft = (clientTimeLeft !== undefined && clientTimeLeft > 0)
+    ? clientTimeLeft
+    : (rentData.isWithdrawal || 0)
+
+  const rentInfo = {
+    keyNameVeh: modelName,
+    plate: plate,
+    color: vehicle.getColorRGB(0),
+    position: {
+      x: Number(pos.x.toFixed(4)),
+      y: Number(pos.y.toFixed(4)),
+      z: Number(pos.z.toFixed(4)),
+    },
+    heading: Number(heading.toFixed(4)),
+    inVeh: inVeh,
+    timeLeft: Math.max(1, finalTimeLeft)
   }
+
+  vehicleManager.removeVehicle(vehicle.id)
+
+  await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`,
+    [JSON.stringify(rentInfo), uid])
+
+  vehicle.destroy()
 
   if (rentData.isWithdrawal) clearTimeout(rentData.isWithdrawal)
   playerRentData.delete(uid)
@@ -491,33 +600,24 @@ export const loadRentPoints = async (retryCount: number = 0) => {
 
 export const savingPlayerRents = async () => {
   mp.events.delayShutdown = true
-  let savedCount: number = 0
+  let savedCount = 0
 
   for (const [uid, data] of playerRentData.entries()) {
-    const player = connectedUsers.getPlayerByUid(uid)
-
     if (!data.isTakenRent || !data.vehicleRent || !mp.vehicles.exists(data.vehicleRent)) {
       continue
     }
 
-    let timeLeft: number
-
-    if (player && mp.players.exists(player)) {
-      timeLeft = await Promise.race([
-        rce.callClient(player, 'rent:getTimeLeft'),
-        new Promise<number>((resolve) => setTimeout(() => resolve(-1), 4000))
-      ])
-    }
+    const player = connectedUsers.getPlayerByUid(uid)
 
     try {
-      await rentPlayerQuit(player, timeLeft)
+      await rentPlayerQuit(uid, (player.vehicle && player.vehicle.id === data.vehicleRent.id) ? true : false, data.isWithdrawal)
       savedCount++
     } catch (e) {
-      console.log(chalk.red('[SAVING RENT]') + ` Ошибка сохранения аренды при отключении сервера: ${e}`)
+      console.error(`[SHUTDOWN] Ошибка uid ${uid}:`, e)
     }
   }
 
-  if (savedCount > 0) {
-    console.log(chalk.green('[SAVED RENT]') + ` Сохранено ${savedCount} активных аренд`)
-  }
+  console.log(chalk.green('[SHUTDOWN] Сохранено аренд:') + ` ${savedCount}`)
+  await new Promise(r => setTimeout(r, 2000))
+  mp.events.delayShutdown = false
 }

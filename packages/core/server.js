@@ -40804,6 +40804,11 @@ const FOODS_CONFIG = [
     [2, "Бургер Чиз Классик", '+50% к сытости, -5% жажды', 0.5, 3, true, 5, 50, 5, 150, 'prop_cs_burger_01', 6000, { dict: 'amb@code_human_wander_eating_donut@female@idle_a', name: 'idle_a', flag: 49 }]
 ];
 
+// [id, name, description, weight, maxStack, stackable, consumable, price, hashObj, waitingUsage, anim: { dict, name }]
+const MISC_CONFIG = [
+    [800, "Ключи от транспорта", 'Нет информации', 0.1, 1, false, false, 100, 'p_car_keys_01', 1000, { dict: 'anim@mp_player_intmenu@key_fob@', name: 'fob_click', flag: 49 }],
+];
+
 const SLOT_MAPPING = {
     // Головной убор - props[0]
     0: {
@@ -41100,6 +41105,31 @@ const loadFoods = () => {
         registerItem(item);
     });
 };
+const loadMisc = () => {
+    MISC_CONFIG.forEach((misc) => {
+        const [id, name, description = 'Неизвестно', weight, maxStack, stackable, consumable, price, hashObj, waitingUsage, anim,] = misc;
+        const item = {
+            id,
+            name,
+            description,
+            imageId: id,
+            maxStack: maxStack,
+            type: 'misc',
+            weight,
+            stackable,
+            consumable,
+            price,
+            hashObj: hashObj,
+            usage: usageFunctions[id],
+            miscData: {
+                waitingUsage: waitingUsage,
+                anim: anim
+            },
+        };
+        registerItem(item);
+    });
+    console.log(chalk.green('[ITEMS]') + ` Загружено misc предметов: ${MISC_CONFIG.length}`);
+};
 const initItems = () => {
     console.log(chalk.bgBlue('• ITEMS •') + chalk.blue(' Инициализация системы предметов...'));
     loadClothes();
@@ -41113,6 +41143,7 @@ const initItems = () => {
     console.log(chalk.bgGreen('• ITEMS •') + chalk.green(` Загружено оружия: ${WEAPONS_CONFIG.length}`));
     loadFoods();
     console.log(chalk.bgGreen('• ITEMS •') + chalk.green(` Загружено предметов питания: ${FOODS_CONFIG.length}`));
+    loadMisc();
     console.log(chalk.bgGreen('• ITEMS •') + chalk.green(` Общее количество предметов загружено: ${itemsRegistry.size}`));
 };
 const getAllItems = () => {
@@ -43523,7 +43554,8 @@ const playAnim = (player, dict, name, flag, duration) => {
 
 const itemsWorld = new Map();
 const createObjInWorld = (item, value, posObj, dimension) => {
-    const obj = mp.objects.new(item.hashObj, posObj, {
+    const hash = item.hashObj || getItemById(item.id)?.hashObj || 0;
+    const obj = mp.objects.new(hash, posObj, {
         dimension,
         alpha: 255
     });
@@ -43534,23 +43566,21 @@ const createObjInWorld = (item, value, posObj, dimension) => {
     });
     return obj;
 };
-const dropItemOnGround = async (player, itemId, slotId, section, value) => {
-    const item = getItemById(itemId);
+const dropItemOnGround = async (player, itemData) => {
     const randomAngle = Math.random() * 2 * Math.PI;
     const distance = 0.5 + Math.random() * 1;
     const offsetX = Math.cos(randomAngle) * distance;
     const offsetY = Math.sin(randomAngle) * distance;
     const getGroundZ = await rce.callClient(player, 'getGroundZ');
     const posObj = new mp.Vector3(player.position.x + offsetX, player.position.y + offsetY, getGroundZ + 0.02);
-    const newObj = createObjInWorld(item, value, posObj, player.dimension);
+    const newObj = createObjInWorld(itemData, itemData.quantity, posObj, player.dimension);
     try {
         const sql = 'INSERT INTO items(id, item, quantity, position, dimension) VALUES (?, ?, ?, ?, ?)';
-        data.query(sql, [newObj.id, JSON.stringify(item), value, JSON.stringify(posObj), player.dimension], (err, results) => {
-            if (err) {
+        data.query(sql, [newObj.id, JSON.stringify(itemData), itemData.quantity, JSON.stringify(posObj), player.dimension], (err) => {
+            if (err)
                 console.log(chalk.red('[DROP ITEM]') + ` Insert in DB: ${err}`);
-                return;
-            }
-            rce.triggerClients('droppedItemOnGround', item, newObj.id, posObj, value);
+            else
+                rce.triggerClients('droppedItemOnGround', itemData, newObj.id, posObj, itemData.quantity);
         });
     }
     catch (e) {
@@ -43590,7 +43620,14 @@ rce.registerClient('pickUpItem', async (player, objId, item, value) => {
     const obj = itemsWorld.get(objId);
     if (!obj)
         return { status: 'destroyItem', text: 'Предмет уже подобран!' };
-    const resultAdd = await addItemToInventory(uid, item.id, value);
+    const customItem = {
+        id: item.id,
+        amount: value,
+        name: item.name,
+        description: item.description,
+        keyData: item.keyData,
+    };
+    const resultAdd = await addCustomItemToInventory(uid, customItem);
     if (!resultAdd.success)
         return { status: 'denied', text: resultAdd.reason || 'Не удалось подобрать!' };
     const entityObj = mp.objects.at(objId);
@@ -43600,13 +43637,11 @@ rce.registerClient('pickUpItem', async (player, objId, item, value) => {
     try {
         await new Promise((resolve, reject) => {
             const sql = 'DELETE FROM items WHERE id = ?';
-            data.query(sql, [objId], (err, results) => {
-                if (err) {
-                    console.log(chalk.red('[PICK UP ITEM]') + ` Delete in DB: ${err}`);
+            data.query(sql, [objId], (err) => {
+                if (err)
                     reject(err);
-                    return;
-                }
-                resolve();
+                else
+                    resolve();
             });
         });
         await sendInventoryToCef(player, uid);
@@ -44162,6 +44197,14 @@ rce.registerCef("dropItemOnGround", async (player, itemId, slotId, section, valu
         if (value <= 0 || value > sourceItem.quantity) {
             return rce.triggerClient(player, 'sendNotify', 'err', 'Неверное количество для выброса!', 3000, 'top');
         }
+        const dropData = {
+            id: sourceItem.id,
+            quantity: value,
+            name: sourceItem.name || itemData.name,
+            description: sourceItem.description || itemData.description,
+            keyData: sourceItem.keyData || null,
+            hashObj: itemData.hashObj,
+        };
         if (value === sourceItem.quantity) {
             sourceSlots[slotId] = null;
         }
@@ -44177,7 +44220,7 @@ rce.registerCef("dropItemOnGround", async (player, itemId, slotId, section, valu
         }
         await updateTotalWeightInventory(uid);
         await sendInventoryToCef(player, uid);
-        dropItemOnGround(player, itemId, slotId, section, value);
+        dropItemOnGround(player, dropData);
     }
     catch (e) {
         console.log(chalk.red('[DROP ERROR]') + ` Err: ${e}`);
@@ -44409,6 +44452,88 @@ const addItemToInventory = async (uid, itemId, quantity = 1) => {
     await updateTotalWeightInventory(uid);
     return { success: true };
 };
+const addCustomItemToInventory = async (uid, customItem) => {
+    try {
+        const inventory = await getPlayerInventory(uid);
+        const player = connectedUsers.getPlayerByUid(uid);
+        if (!inventory) {
+            return { success: false, reason: 'Инвентарь не найден' };
+        }
+        const baseItem = getItemById(customItem.id);
+        if (!baseItem) {
+            return { success: false, reason: 'Базовый предмет не найден' };
+        }
+        const finalItem = {
+            ...baseItem,
+            name: customItem.name || baseItem.name,
+            description: customItem.description || baseItem.description,
+            keyData: customItem.keyData || null,
+            weight: baseItem.weight,
+            maxStack: 1,
+            stackable: false,
+            consumable: false,
+        };
+        const quantity = customItem.amount || 1;
+        const addedWeight = finalItem.weight * quantity;
+        if ((inventory.weight || 0) + addedWeight > (inventory.maxweight || 20)) {
+            return { success: false, reason: 'Недостаточно места в инвентаре' };
+        }
+        const freeSlotInfo = await findFreeSlotsInInventory(uid);
+        if (!freeSlotInfo || !freeSlotInfo.section) {
+            return { success: false, reason: 'Нет свободного слота в инвентаре' };
+        }
+        const config = SECTION_CONFIG[freeSlotInfo.section];
+        if (!config) {
+            return { success: false, reason: 'Неизвестная секция инвентаря' };
+        }
+        let slots = await config.getSlots(inventory, uid);
+        if (!slots) {
+            return { success: false, reason: 'Не удалось загрузить слоты' };
+        }
+        let added = false;
+        for (let i = 0; i < slots.length; i++) {
+            if (slots[i]?.id === customItem.id && baseItem.stackable) {
+                const max = baseItem.maxStack || 999;
+                if (slots[i].quantity + quantity <= max) {
+                    slots[i].quantity += quantity;
+                    slots[i].name = finalItem.name;
+                    slots[i].description = finalItem.description;
+                    slots[i].keyData = finalItem.keyData;
+                    added = true;
+                    break;
+                }
+            }
+        }
+        if (!added) {
+            slots[freeSlotInfo.slot] = {
+                id: customItem.id,
+                quantity: quantity,
+                name: finalItem.name,
+                description: finalItem.description,
+                keyData: finalItem.keyData,
+            };
+        }
+        const success = await config.saveSlots(uid, slots, freeSlotInfo.section === 'bag' ? null : undefined);
+        if (!success) {
+            return { success: false, reason: 'Ошибка сохранения в базу данных' };
+        }
+        await updateTotalWeightInventory(uid);
+        if (typeof player !== 'undefined' && mp.players.exists(player)) {
+            await sendInventoryToCef(player, uid);
+        }
+        else {
+            const player = connectedUsers.getPlayerByUid(uid);
+            if (player && mp.players.exists(player)) {
+                await sendInventoryToCef(player, uid);
+            }
+        }
+        return { success: true };
+    }
+    catch (e) {
+        console.error(chalk.red('[addCustomItemToInventory] Ошибка:'), e);
+        return { success: false, reason: 'Произошла внутренняя ошибка' };
+    }
+};
 const updateSlot = async (uid, section, slotIdx, itemData, bagUid) => {
     return new Promise((resolve, reject) => {
         if (section === 'bag') {
@@ -44633,25 +44758,27 @@ const convertSlots = (slots) => {
     return slots.map((slot) => {
         if (!slot)
             return null;
-        const itemData = getItemById(slot.id);
-        if (!itemData)
+        const baseItem = getItemById(slot.id);
+        if (!baseItem)
             return null;
-        const imageId = getItemImageIdForCef(itemData);
+        const imageId = getItemImageIdForCef(baseItem);
         return {
             id: slot.id,
-            name: itemData.name,
-            description: itemData.description,
+            name: slot.name || baseItem.name,
+            description: slot.description || baseItem.description,
             imageId: imageId,
             quantity: slot.quantity || 1,
-            maxStack: itemData.maxStack,
-            type: itemData.type,
-            weight: itemData.weight,
-            stackable: itemData.stackable,
-            consumable: itemData.consumable,
-            price: itemData.price,
-            clothesData: itemData.clothesData,
-            weaponData: itemData.weaponData,
-            foodData: itemData.foodData,
+            maxStack: baseItem.maxStack,
+            type: baseItem.type,
+            weight: baseItem.weight,
+            stackable: baseItem.stackable,
+            consumable: baseItem.consumable,
+            price: baseItem.price,
+            clothesData: baseItem.clothesData,
+            weaponData: baseItem.weaponData,
+            foodData: baseItem.foodData,
+            miscData: baseItem.miscData,
+            keyData: slot.keyData || null,
             isFast: true,
         };
     });
@@ -44997,6 +45124,105 @@ const getEquippedBag = async (uid) => {
         });
     });
 };
+const removeKeyFromVeh = async (uid, keyUniqueId, plate) => {
+    try {
+        const player = connectedUsers.getPlayerByUid(uid);
+        const inventory = await getPlayerInventory(uid);
+        if (!inventory)
+            return false;
+        const sections = ['main', 'donat', 'bag'];
+        for (const section of sections) {
+            let slots = [];
+            if (section === 'bag') {
+                const bagData = await getEquippedBag(uid);
+                if (bagData && bagData.items) {
+                    slots = normalizeSlots(JSON.parse(bagData.items));
+                }
+                else {
+                    continue;
+                }
+            }
+            else {
+                const config = SECTION_CONFIG[section];
+                slots = await config.getSlots(inventory, uid) || [];
+            }
+            let changed = false;
+            for (let i = 0; i < slots.length; i++) {
+                const slot = slots[i];
+                if (!slot?.keyData)
+                    continue;
+                const matchById = keyUniqueId && slot.keyData.uniqueId === keyUniqueId;
+                const matchByPlate = plate && slot.keyData.plate === plate;
+                if (matchById || matchByPlate) {
+                    slots[i] = null;
+                    changed = true;
+                    console.log(chalk.green(`[REMOVE KEY] Ключ удалён из ${section} (слот ${i}) | uniqueId=${slot.keyData.uniqueId} | plate=${slot.keyData.plate}`));
+                    break;
+                }
+            }
+            if (changed) {
+                if (section === 'bag') {
+                    const clothesSlots = JSON.parse(inventory.clothesslots || '[]');
+                    const bagUid = clothesSlots[10]?.id;
+                    if (bagUid)
+                        await handleBagOperations(uid, 'update', bagUid, slots);
+                }
+                else {
+                    await updateSlotsArray(uid, section, slots);
+                }
+                await updateTotalWeightInventory(uid);
+                if (player && mp.players.exists(player)) {
+                    await sendInventoryToCef(player, uid);
+                }
+                return true;
+            }
+        }
+        console.log(chalk.yellow(`[REMOVE KEY] Ключ НЕ НАЙДЕН (uniqueId=${keyUniqueId}, plate=${plate})`));
+        return false;
+    }
+    catch (e) {
+        console.error(chalk.red('[REMOVE KEY FROM VEH] Ошибка:'), e);
+        return false;
+    }
+};
+const playerHasKeyForVehicle = async (player, vehicle) => {
+    if (!player || !vehicle || !mp.vehicles.exists(vehicle))
+        return false;
+    const uid = connectedUsers.getField(player.id, 'uid');
+    if (!uid)
+        return false;
+    const rentalKeyId = vehicle.getVariable('rentalKeyId');
+    const plate = vehicle.numberPlate;
+    const inventory = await getPlayerInventory(uid);
+    if (!inventory)
+        return false;
+    const sections = ['main', 'donat', 'bag'];
+    for (const section of sections) {
+        let slots = [];
+        if (section === 'bag') {
+            const bagData = await getEquippedBag(uid);
+            if (bagData && bagData.items) {
+                slots = normalizeSlots(JSON.parse(bagData.items));
+            }
+            else {
+                continue;
+            }
+        }
+        else {
+            const config = SECTION_CONFIG[section];
+            slots = await config.getSlots(inventory, uid) || [];
+        }
+        for (const slot of slots) {
+            if (!slot || !slot.keyData)
+                continue;
+            const matchById = rentalKeyId !== undefined && slot.keyData.uniqueId === rentalKeyId;
+            const matchByPlate = plate && slot.keyData.plate === plate;
+            if (matchById || matchByPlate)
+                return true;
+        }
+    }
+    return false;
+};
 
 const selectChar = (player) => {
     rce.triggerClient(player, 'player:freeze', true);
@@ -45268,14 +45494,14 @@ const loginUser = (player, login, password) => {
                                 data.query(sql, [sid, charResults[0].numberslot], (err, charResults) => {
                                     if (err)
                                         return console.log(chalk.bgRed('• GET UQUEST •') + chalk.red(` Ошибка: ${err}`));
-                                    rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'bottom');
+                                    rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'top');
                                     rce.triggerClient(player, 'execute', `window.App.donatCoinsReducer.setDonatCoins(${donatcoins})`);
                                     rce.triggerClient(player, 'closedSelectCreateChar', sid, emptyChar.numberslot, charResults);
                                 });
                             }
                             else {
                                 selectChar(player);
-                                rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'bottom');
+                                rce.triggerClient(player, 'sendNotify', 'success', `Вы успешно авторизовались, ${login}!`, 2800, 'top');
                             }
                         }
                         else {
@@ -60196,7 +60422,7 @@ const registerUser = (player, login, email, password) => {
                     selectChar(player);
                     connectedUsers.setUser(player.id, { login: login, sid: sid, donatcoins: 0 });
                     rce.triggerClient(player, 'server:auth:saveLogin', login);
-                    rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 4000, 'bottom');
+                    rce.triggerClient(player, 'sendNotify', 'success', `${login}, вы успешно зарегистрировались и подтвердили электронную почту!`, 4000, 'top');
                     rce.triggerCef(player, 'server:authSuccess');
                     console.log(chalk.bgGreen('• REGISTER •') + chalk.green(` Пользователь ${login} успешно зарегистрирован`));
                 }
@@ -61194,6 +61420,97 @@ const vehicles = [
     { short: 'chernobog', full: 'Chernobog', price: 4978560, fuel: 'gas', trunk: 153 },
 ];
 
+const db$1 = data.promise();
+const generateRandomUSPlate = () => {
+    const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+    if (Math.random() > 0.5) {
+        let plate = '';
+        for (let i = 0; i < 3; i++) {
+            plate += letters[Math.floor(Math.random() * letters.length)];
+        }
+        for (let i = 0; i < 4; i++) {
+            plate += Math.floor(Math.random() * 10);
+        }
+        return plate;
+    }
+    else {
+        let plate = Math.floor(Math.random() * 10).toString();
+        plate += letters[Math.floor(Math.random() * letters.length)];
+        plate += Math.floor(Math.random() * 10);
+        plate += letters[Math.floor(Math.random() * letters.length)] + " ";
+        plate += Math.floor(100 + Math.random() * 900);
+        return plate;
+    }
+};
+const isPlateExist = async (plate) => {
+    try {
+        const [rows] = await db$1.query(`
+      SELECT COUNT(*) AS cnt
+      FROM chars
+      WHERE rent_data IS NOT NULL AND JSON_EXTRACT(rent_data, '$.plate') = ?
+    `, [plate]);
+        return rows[0].cnt > 0;
+    }
+    catch (e) {
+        console.log(chalk.red('[CHECK PLATE]') + ` Ошибка проверки номерного знака в БД: ${e}`);
+        return false;
+    }
+};
+const generateUSPlate = async () => {
+    const MAX_ATTEMPTS = 50;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+        const plate = generateRandomUSPlate();
+        const exist = await isPlateExist(plate);
+        if (!exist)
+            return plate;
+    }
+    return 'ERR';
+};
+
+const activeVehicles = new Map();
+const addVehicle = (vehicle, data) => {
+    if (!mp.vehicles.exists(vehicle))
+        return;
+    const activeVeh = {
+        id: vehicle.id,
+        model: vehicle.model.toString(),
+        fullName: data.fullName,
+        plate: vehicle.numberPlate,
+        color: vehicle.getColor(0),
+        ownerUid: data.ownerUid,
+        isRental: data.isRental || false,
+        rentalKeyId: data.rentalKeyId,
+        createAt: Date.now()
+    };
+    activeVehicles.set(vehicle.id, activeVeh);
+};
+const removeVehicle = (vehicleId) => {
+    const existed = activeVehicles.has(vehicleId);
+    if (existed) {
+        activeVehicles.delete(vehicleId);
+        return true;
+    }
+    return false;
+};
+const getVehicle = (vehicleId) => {
+    return activeVehicles.get(vehicleId);
+};
+const getAllVehicles = () => {
+    return Array.from(activeVehicles.values());
+};
+const getPlayerVehicles = (uid) => {
+    return Array.from(activeVehicles.values().filter(v => v.ownerUid === uid));
+};
+const clearAllVehicles = () => activeVehicles.clear();
+const vehicleManager = {
+    addVehicle,
+    removeVehicle,
+    getVehicle,
+    getAllVehicles,
+    getPlayerVehicles,
+    clearAllVehicles
+};
+
 const db = data.promise();
 let rentsData = [];
 const MAX_RETRIES = 10;
@@ -61224,10 +61541,10 @@ rce.register('charSpawned', async (player) => {
             await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
             return;
         }
-        const timeLeft = rentInfo.timeLeft;
-        if (timeLeft <= 0) {
+        const timeLeft = Number(rentInfo.timeLeft) || 0;
+        if (timeLeft < 1) {
             await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
-            rce.triggerClient(player, 'sendNotify', 'warning', 'Срок вашей предыдущей аренды истёк!', 3200, 'bottom');
+            rce.triggerClient(player, 'sendNotify', 'warning', 'Аренда истекла', 3200, 'bottom');
             return;
         }
         let vehicleToUse = null;
@@ -61242,23 +61559,31 @@ rce.register('charSpawned', async (player) => {
                 dimension: player.dimension,
                 engine: true,
                 locked: false,
-                numberPlate: 'RENT'
+                numberPlate: rentInfo.plate
             });
         }
         if (oldData && oldData.vehicleRent && mp.vehicles.exists(oldData.vehicleRent) && oldData.vehicleRent !== vehicleToUse) {
             oldData.vehicleRent.destroy();
         }
+        const vehicleFullName = vehicles.find(v => v.short === rentInfo.keyNameVeh)?.full || rentInfo.keyNameVeh;
         playerData.vehicleRent = vehicleToUse;
         playerData.isTakenRent = true;
         playerData.isWithdrawal = timeLeft;
-        if (!player.vehicle || player.vehicle !== vehicleToUse) {
+        playerData.keyNameVeh = rentInfo.keyNameVeh;
+        vehicleManager.addVehicle(vehicleToUse, {
+            fullName: vehicleFullName,
+            ownerUid: uid,
+            isRental: true,
+            rentalKeyId: Date.now() + Math.floor(Math.random() * 1000000)
+        });
+        if (!player.vehicle && player.vehicle !== vehicleToUse && rentInfo.inVeh) {
             setTimeout(() => {
                 if (mp.players.exists(player) && mp.vehicles.exists(vehicleToUse)) {
                     player.putIntoVehicle(vehicleToUse, 0);
                 }
             }, 500);
         }
-        rce.triggerClient(player, 'startRentTimer', vehicleToUse.id, timeLeft);
+        rce.triggerClient(player, 'startRentTimer', uid, vehicleToUse.id, timeLeft);
     }
     catch (e) {
         console.log(chalk.red('[SPAWN RENT VEH]') + ` Ошибка получения информации с БД: ${e}`);
@@ -61276,8 +61601,8 @@ rce.registerCef('createNpcForRent', async (player, npcModel, npcName) => {
     }
     try {
         const [rows] = await db.query(`
-      SELECT COALESCE(MAX(id), 0) AS maxId
-      FROM rent
+        SELECT COALESCE(MAX(id), 0) AS maxId
+        FROM rent
     `);
         const maxId = Number(rows[0].maxId);
         const newId = maxId + 1;
@@ -61387,26 +61712,56 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
     }
     const vehInfo = rentData.vehiclesData.find(veh => veh.vehName === selectedVeh.keyNameCar);
     const vehPos = new mp.Vector3(vehInfo.x, vehInfo.y, vehInfo.z);
-    console.log(`vehInfo: ${JSON.stringify(vehInfo)}`);
+    const modelName = selectedVeh.keyNameCar;
+    const vehicleFullName = vehicles.find(v => v.short === modelName)?.full || modelName;
+    const plate = await generateUSPlate();
+    const keyUniqueId = Date.now() + Math.floor(Math.random() * 1000000);
+    const result = await addCustomItemToInventory(uid, {
+        id: 800,
+        name: `Ключ от ${vehicleFullName}`,
+        description: `Номерной знак: ${plate}`,
+        amount: 1,
+        keyData: {
+            model: modelName,
+            uniqueId: keyUniqueId,
+            plate: plate,
+            isRental: true,
+            vehicleName: vehicleFullName
+        }
+    });
+    if (!result.success) {
+        rce.triggerClient(player, 'sendNotify', 'err', result.reason, 3500, 'bottom');
+        return;
+    }
     try {
-        playerData.isTakenRent = true;
-        playerData.vehicleRent = mp.vehicles.new(mp.joaat(selectedVeh.keyNameCar), vehPos, {
+        const vehicle = mp.vehicles.new(mp.joaat(selectedVeh.keyNameCar), vehPos, {
             color: [color, color],
             dimension: player.dimension,
             engine: true,
             heading: vehInfo.heading,
             locked: false,
-            numberPlate: 'RENT'
+            numberPlate: plate
+        });
+        vehicle.setVariable('rentalKeyId', keyUniqueId);
+        playerData.isTakenRent = true;
+        playerData.isWithdrawal = time;
+        playerData.keyNameVeh = selectedVeh.keyNameCar;
+        playerData.vehicleRent = vehicle;
+        vehicleManager.addVehicle(vehicle, {
+            fullName: vehicleFullName,
+            ownerUid: uid,
+            isRental: true,
+            rentalKeyId: keyUniqueId
         });
         setTimeout(() => {
             player.putIntoVehicle(playerData.vehicleRent, 0);
-        }, 200);
-        playerData.isWithdrawal = time;
+        }, 400);
         setTimeout(() => {
             console.log(`Heading rveh: ${playerData.vehicleRent.heading} | ${typeof playerData.vehicleRent.heading}`);
         }, 3000);
         const rentInfo = {
             keyNameVeh: selectedVeh.keyNameCar,
+            plate: plate,
             color: color,
             position: {
                 x: Number(vehPos.x),
@@ -61414,7 +61769,8 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
                 z: Number(vehPos.z),
             },
             heading: vehInfo.heading,
-            timeLeft: time
+            timeLeft: time,
+            inVeh: true
         };
         if (method === 'cash') {
             decrementCash(player, uid, selectedVeh.price * (time / 60));
@@ -61423,7 +61779,7 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
             decrementBankMoney(player, uid, selectedVeh.price * (time / 60));
         }
         await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
-        rce.triggerClient(player, 'startRentTimer', playerData.vehicleRent.id, time);
+        rce.triggerClient(player, 'startRentTimer', uid, playerData.vehicleRent.id, time);
     }
     catch (e) {
         console.log(chalk.red('[RENT VEH]') + ` Ошибка при аренде т/с: ${e}`);
@@ -61432,13 +61788,47 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
 rce.registerClient('rentOver', async (player) => {
     const uid = connectedUsers.getField(player.id, 'uid');
     const playerData = playerRentData.get(uid);
+    if (playerData?.vehicleRent) {
+        const keyUniqueId = playerData.vehicleRent.getVariable('rentalKeyId');
+        const plate = playerData.vehicleRent.numberPlate;
+        await removeKeyFromVeh(uid, keyUniqueId, plate);
+    }
     await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
     playerData.isTakenRent = false;
     playerData.isWithdrawal = null;
-    playerData.vehicleRent.destroy();
+    vehicleManager.removeVehicle(playerData.vehicleRent.id);
+    if (playerData.vehicleRent && mp.vehicles.exists(playerData.vehicleRent)) {
+        player.removeFromVehicle();
+        playerData.vehicleRent.destroy();
+    }
+    playerData.vehicleRent = null;
 });
-rce.registerClient('rentPlayerQuit', async (player, timeLeft) => {
-    rentPlayerQuit(player, timeLeft);
+rce.registerClient('rentPlayerQuit', async (player, uid, timeLeft, inVeh) => {
+    rentPlayerQuit(uid, inVeh, timeLeft);
+});
+rce.registerClient('syncRentTime', async (player, timeLeft) => {
+    const uid = connectedUsers.getField(player.id, 'uid');
+    const playerData = playerRentData.get(uid);
+    if (!playerData || !playerData.isTakenRent)
+        return;
+    playerData.isWithdrawal = timeLeft;
+    if (playerData.vehicleRent && mp.vehicles.exists(playerData.vehicleRent)) {
+        const vehicle = playerData.vehicleRent;
+        const rentInfo = {
+            keyNameVeh: playerData.keyNameVeh,
+            plate: playerData.vehicleRent.numberPlate,
+            color: vehicle.getColorRGB(0),
+            position: {
+                x: Number(vehicle.position.x.toFixed(4)),
+                y: Number(vehicle.position.y.toFixed(4)),
+                z: Number(vehicle.position.z.toFixed(4)),
+            },
+            heading: Number(vehicle.heading.toFixed(4)),
+            timeLeft: timeLeft,
+            inVeh: (player.vehicle && player.vehicle.id === vehicle.id) ? true : false
+        };
+        await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+    }
 });
 mp.events.add('playerEnterColshape', (player, colshape) => {
     if (!player.vehicle) {
@@ -61470,29 +61860,43 @@ mp.events.add('playerExitColshape', (player, colshape) => {
         rce.triggerClient(player, 'rentColshape', 'disabled', {});
     }
 });
-const rentPlayerQuit = async (player, timeLeft) => {
-    const uid = await getDataAccount(player, 'uid', player.id);
+const rentPlayerQuit = async (uid, inVeh = false, clientTimeLeft) => {
     const rentData = playerRentData.get(uid);
-    if (rentData.isTakenRent && rentData.vehicleRent && mp.vehicles.exists(rentData.vehicleRent)) {
-        const vehPos = rentData.vehicleRent.position;
-        const vehRot = rentData.vehicleRent.heading;
-        const rentInfo = {
-            keyNameVeh: typeof rentData.vehicleRent.model === 'string' ? rentData.vehicleRent.model : mp.joaat(rentData.vehicleRent.model.toString()),
-            color: rentData.vehicleRent.getColorRGB(0),
-            position: {
-                x: Number(vehPos.x),
-                y: Number(vehPos.y),
-                z: Number(vehPos.z),
-            },
-            heading: Number(vehRot.toFixed(3)),
-            timeLeft: Number(timeLeft)
-        };
-        await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
-        rentData.vehicleRent.destroy();
+    if (!rentData?.vehicleRent || !mp.vehicles.exists(rentData.vehicleRent))
+        return;
+    const vehicle = rentData.vehicleRent;
+    vehicle.getVariable('rentalKeyId');
+    const plate = vehicle.numberPlate;
+    const pos = vehicle.position;
+    const heading = vehicle.heading;
+    const modelHash = vehicle.model;
+    // if (keyUniqueId || plate) {
+    //   await removeKeyFromVeh(uid, keyUniqueId, plate)
+    // }
+    let modelName = rentData.keyNameVeh;
+    if (!modelName || modelName === "unknown") {
+        const found = vehicles.find(v => mp.joaat(v.short) === modelHash);
+        modelName = found ? found.short : "unknown";
     }
-    if (rentData && rentData.isWithdrawal) {
-        clearTimeout(rentData.isWithdrawal);
-    }
+    const finalTimeLeft = (clientTimeLeft !== undefined && clientTimeLeft > 0)
+        ? clientTimeLeft
+        : (rentData.isWithdrawal || 0);
+    const rentInfo = {
+        keyNameVeh: modelName,
+        plate: plate,
+        color: vehicle.getColorRGB(0),
+        position: {
+            x: Number(pos.x.toFixed(4)),
+            y: Number(pos.y.toFixed(4)),
+            z: Number(pos.z.toFixed(4)),
+        },
+        heading: Number(heading.toFixed(4)),
+        inVeh: inVeh,
+        timeLeft: Math.max(1, finalTimeLeft)
+    };
+    vehicleManager.removeVehicle(vehicle.id);
+    await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+    vehicle.destroy();
     if (rentData.isWithdrawal)
         clearTimeout(rentData.isWithdrawal);
     playerRentData.delete(uid);
@@ -61561,28 +61965,21 @@ const savingPlayerRents = async () => {
     mp.events.delayShutdown = true;
     let savedCount = 0;
     for (const [uid, data] of playerRentData.entries()) {
-        const player = connectedUsers.getPlayerByUid(uid);
         if (!data.isTakenRent || !data.vehicleRent || !mp.vehicles.exists(data.vehicleRent)) {
             continue;
         }
-        let timeLeft;
-        if (player && mp.players.exists(player)) {
-            timeLeft = await Promise.race([
-                rce.callClient(player, 'rent:getTimeLeft'),
-                new Promise((resolve) => setTimeout(() => resolve(-1), 4000))
-            ]);
-        }
+        const player = connectedUsers.getPlayerByUid(uid);
         try {
-            await rentPlayerQuit(player, timeLeft);
+            await rentPlayerQuit(uid, (player.vehicle && player.vehicle.id === data.vehicleRent.id) ? true : false, data.isWithdrawal);
             savedCount++;
         }
         catch (e) {
-            console.log(chalk.red('[SAVING RENT]') + ` Ошибка сохранения аренды при отключении сервера: ${e}`);
+            console.error(`[SHUTDOWN] Ошибка uid ${uid}:`, e);
         }
     }
-    if (savedCount > 0) {
-        console.log(chalk.green('[SAVED RENT]') + ` Сохранено ${savedCount} активных аренд`);
-    }
+    console.log(chalk.green('[SHUTDOWN] Сохранено аренд:') + ` ${savedCount}`);
+    await new Promise(r => setTimeout(r, 2000));
+    mp.events.delayShutdown = false;
 };
 
 mp.events.add('packagesLoaded', () => {
@@ -62195,6 +62592,30 @@ rce.registerClient('handleInteractionPlayer', async (player, action, targetId) =
     }
     else {
         rce.triggerClient(player, 'sendNotify', 'err', 'Игрок не найден!', 3500, 'bottom');
+    }
+});
+
+rce.registerClient('handleInteractionVehicle', async (player, action, targetId) => {
+    if (mp.vehicles.exists(targetId)) {
+        const vehicle = mp.vehicles.at(targetId);
+        connectedUsers.getField(player.id, 'sid');
+        switch (action) {
+            case 'toggleDoors': {
+                const availabilityOfKey = await playerHasKeyForVehicle(player, vehicle);
+                if (!availabilityOfKey) {
+                    rce.triggerClient(player, 'sendNotify', 'err', 'У вас нет ключей от этого транспорта!', 3200, 'bottom');
+                    return;
+                }
+                const lockedState = !vehicle.locked;
+                vehicle.locked = lockedState;
+                vehicle.setVariable('doorsLocked', lockedState);
+                const stateText = lockedState ? 'закрыты' : 'открыты';
+                rce.triggerClient(player, 'sendNotify', lockedState ? 'err' : 'success', `Двери транпорта были ${stateText}`, 2500, 'bottom');
+                break;
+            }
+            default:
+                rce.triggerClient(player, 'sendNotify', 'warning', 'Неизвестное действие с транспортом', 3200, 'bottom');
+        }
     }
 });
 

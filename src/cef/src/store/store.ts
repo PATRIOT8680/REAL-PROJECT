@@ -19,6 +19,7 @@ import { waitingLoaderStore } from "./menus/waitingLoader.ts";
 import { interactionStore } from "./menus/interaction.ts";
 import { offerStore } from "./menus/offer.ts";
 import { devMenusStore } from "./menus/dev-menus.ts";
+import { shop24Store } from "./menus/shop24.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -60,6 +61,7 @@ window.App = {
   interactionReducer: interactionStore,
   offerReducer: offerStore,
   devMenusReducer: devMenusStore,
+  shop24Reducer: shop24Store,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,

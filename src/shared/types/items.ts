@@ -34,4 +34,17 @@ export interface ServerItem {
     waitingUsage?: number,
     anim?: { dict: string, name: string, flag: number }
   },
+
+  miscData?: {
+    waitingUsage?: number,
+    anim?: { dict: string, name: string, flag: number }
+  },
+
+  keyData?: {
+    model: string;
+    uniqueId: number;
+    plate?: string;
+    isRental?: boolean;
+    vehicleName?: string;
+  } | null
 }

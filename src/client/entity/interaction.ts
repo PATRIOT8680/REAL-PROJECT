@@ -13,8 +13,13 @@ rce.registerAll('handleActionInteraction', (typeEntity: 'player' | 'vehicle', ac
   )
 
   if (distToEntity <= 7) {
-    if (typeEntity === 'player') {
-      rce.triggerServer('handleInteractionPlayer', action, targetId)
+    switch (typeEntity) {
+      case 'player':
+        rce.triggerServer('handleInteractionPlayer', action, targetId)
+        break
+      case 'vehicle':
+        rce.triggerServer('handleInteractionVehicle', action, targetId)
+        break
     }
   } else {
     gui.execute(`window.App.sendNotifyReducer.sendNotify('err', 'Игрок далеко от вас!', 3000, 'bottom')`)
