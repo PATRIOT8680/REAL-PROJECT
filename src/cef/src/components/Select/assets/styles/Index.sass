@@ -1,0 +1,97 @@
+$Montserrat: "Montserrat", sans-serif
+$Manrope: "Manrope", sans-serif
+
+.select-component
+  width: 100%
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  gap: .3rem
+
+  .select-label
+    font-family: $Manrope
+    font-size: .9rem
+    font-weight: 400
+    color: rgba(255, 255, 255, 0.53)
+    user-select: none
+
+  .custom-s-wrapper
+    width: 100%
+    position: relative
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+    height: 3.9rem
+    padding: 0 1.5rem
+    background: rgba(255, 255, 255, 0.02)
+    border: 2px solid rgba(255, 255, 255, 0.03)
+    border-radius: 4px
+    cursor: pointer
+
+    .custom-select-value
+      font-family: $Manrope
+      font-size: .9rem
+      font-weight: 400
+      color: rgba(255, 255, 255, 0.75)
+      user-select: none
+
+    .arrow-list
+      opacity: .5
+      width: .9rem
+      transition: transform .3s ease
+
+      &.opened
+        transition: transform .3s ease
+        transform: rotate(-180deg)
+
+  .custom-options-list
+    position: absolute
+    top: calc(100% + .5rem)
+    backdrop-filter: blur(6px)
+    background: rgba(43, 39, 45, 0.8)
+    border: 1px solid rgba(255, 255, 255, 0.15)
+    border-radius: 6px
+    animation: fadeInCustomListOptions .3s ease
+    left: 50%
+    transform: translateX(-50%)
+    width: 101%
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    user-select: none
+    box-sizing: border-box
+    padding: 1rem
+    gap: .3rem
+    z-index: 20
+
+    .custom-option
+      font-family: $Montserrat
+      font-weight: 400
+      font-size: .8rem
+      color: rgba(255, 255, 255, 0.85)
+      padding: .45rem .5rem
+      border: 1px solid rgba(255, 255, 255, 0.05)
+      cursor: pointer
+      border-radius: 4px
+      width: 100%
+      transition: all .3s ease
+
+      &:hover
+        color: #ffffff
+        border-color: rgba(255, 255, 255, 0.5)
+        background: rgba(255, 255, 255, 0.05)
+
+      &.selected
+        transition: all .3s ease
+        background: rgba(43, 39, 45, 0.8)
+        border-color: #ffca58
+        color: #ffca58
+
+@keyframes fadeInCustomListOptions
+  from
+    opacity: 0
+    top: 80%
+  to
+    opacity: 1
+    top: calc(100% + .5rem)

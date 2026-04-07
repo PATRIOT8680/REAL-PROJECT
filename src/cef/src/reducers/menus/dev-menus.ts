@@ -1,6 +1,7 @@
 const initialState = {
   isVisible: false,
   newRentVisible: false,
+  createBusinessVisible: false,
 }
 
 export const devMenusReducer = (state = initialState, action: any) => {
@@ -16,6 +17,18 @@ export const devMenusReducer = (state = initialState, action: any) => {
         ...state,
         isVisible: false,
         newRentVisible: false,
+      }
+    case 'SHOW_CREATE_BUSINESS':
+      return {
+        ...state,
+        isVisible: true,
+        createBusinessVisible: true
+      }
+    case 'HIDE_CREATE_BUSINESS':
+      return {
+        ...state,
+        isVisible: false,
+        createBusinessVisible: false
       }
     default:
       return state

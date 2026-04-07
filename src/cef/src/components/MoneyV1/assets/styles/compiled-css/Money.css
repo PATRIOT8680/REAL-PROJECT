@@ -1,6 +1,9 @@
 .money-block {
   display: flex;
   flex-direction: column;
+  user-select: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
   gap: 0.1rem;
 }
 .money-block .cash {

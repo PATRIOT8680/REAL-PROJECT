@@ -24,6 +24,7 @@ export const connectedUsers = {
     users.set(playerId, { ...existingUser, ...userData })
 
     if (userData.login) {
+      rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`)
       console.log(`Обновлен пользователь: ${userData.login} (ID: ${playerId})`);
     }
   },
@@ -32,7 +33,8 @@ export const connectedUsers = {
     const user = users.get(playerId)
     if (user) {
       users.delete(playerId)
-      console.log(`Удален пользователь: ${user.login || 'Unknown'} (ID: ${playerId})`);
+      rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`)
+      console.log(`Удален пользователь: ${user.login || 'Unknown'} (ID: ${playerId})`)
       return true
     }
 

@@ -54,6 +54,8 @@ const closeCreateChar = async (player: PlayerMp, dataChar) => {
   const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?'
   const uid = await getDataAccount(player, 'uid', player.id)
 
+  rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`)
+
   const coordExit = {
     x: player.position.x.toFixed(3),
     y: player.position.y.toFixed(3),

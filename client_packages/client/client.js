@@ -208,6 +208,9 @@ class CustomEventBase {
         this.registerHandles.set(id, [eventName, handle]);
         return { destroy: () => this.registerHandles.delete(id) };
     }
+    static registerCallable(eventName, handle) {
+        return this.register(eventName, handle); // пока используем тот же механизм
+    }
     static trigger(eventName, ...args) {
         this.registerHandles.forEach(([name, handle]) => {
             if (name === eventName)
@@ -312,11 +315,9 @@ class rce extends CustomEventBase {
         }
     }
 }
-// Обработчик для событий из CEF
 mp.events.add('triggerFromCef', (eventName, ...args) => {
     rce.triggerFromCef(eventName, ...args);
 });
-// Остальной код без изменений
 mp.events.add("client:trigger:event", (eventname, argsstring) => triggerEvent(eventname, argsstring));
 let enableEventsLogging = mp.storage.data.enableEventsLoggin;
 const eventsCountMap = new Map();
@@ -403,15 +404,25 @@ mp.events.add('call:cef:response', (requestID, res) => {
     });
 });
 mp.events.add('call:server', (requestID, eventName, ...args) => mp.events.callRemote('call:cef', requestID, rce.encryptEventName(eventName), ...args));
-mp.events.add('call:clientfromcef', async (requestID, eventName, ...args) => {
-    const fnd = await CustomEventBase.call(eventName, ...args);
-    mp.browsers.forEach((browser) => {
-        if (browser.eventReady)
-            browser.execute(`window.customevent.callClientResponseHandle(${requestID}, '${JSON.stringify(fnd)}');`);
-    });
-});
 mp.events.add('trigger:server', (name, args) => {
     mp.events.callRemote('trigger:cef', rce.encryptEventName(name), args);
+});
+mp.events.add('call:clientfromcef', async (requestID, eventName, ...args) => {
+    try {
+        const result = await CustomEventBase.call(eventName, ...args);
+        mp.browsers.forEach((browser) => {
+            if (browser.active) {
+                browser.execute(`window.customevent.callClientResponseHandle(${requestID}, ${JSON.stringify(result)})`);
+            }
+        });
+    }
+    catch (error) {
+        mp.browsers.forEach((browser) => {
+            if (browser.active) {
+                browser.execute(`window.customevent.callClientResponseHandle(${requestID}, null)`);
+            }
+        });
+    }
 });
 
 const maxDistance = 20 * 20;
@@ -863,6 +874,20 @@ mp.events.add('render', () => {
     mp.game.controls.disableControlAction(0, 100, true);
 });
 
+rce.registerServer('openDevMenu', () => {
+    mp.gui.cursor.visible = true;
+    mp.game.ui.displayRadar(false);
+    mp.game.graphics.triggerScreenblurFadeIn(1000);
+    mp.game.graphics.isScreenblurFadeRunning();
+    gui.execute('window.App.hudReducer.hideHud()');
+});
+rce.registerAll('closeDevMenu', () => {
+    mp.gui.cursor.visible = false;
+    mp.game.ui.displayRadar(true);
+    mp.game.graphics.triggerScreenblurFadeOut(1000);
+    showHud();
+});
+
 mp.events.add('guiReady', () => {
     mp.gui.chat.show(false);
     gui.browser.active = true;
@@ -1131,6 +1156,8 @@ const stopNoclip = () => {
 mp.keys.bind(Keys.VK_F8, false, () => {
     if (!global.loginPlayer)
         return;
+    if (localplayer$1.getVariable('ADMIN_LVL') < 1)
+        return;
     noclip.active = !noclip.active;
     direction = camera.getDirection();
     camera.getCoord();
@@ -1320,160 +1347,6 @@ rce.registerAll('createPed', (pedName, pedRole, modelName, pedPos, blip) => {
             dimension: 0
         });
     }
-});
-
-let keyDownE = 'disabled';
-let rentData = null;
-let isWithdrawal = null;
-let penaltyTimer = null;
-let warningRentOver = null;
-let syncInterval = null;
-let rentFromPlayer = null;
-const clearAllRentTimers = () => {
-    if (isWithdrawal !== null) {
-        try {
-            clearTimeout(isWithdrawal);
-        }
-        catch (e) { }
-        isWithdrawal = null;
-    }
-    if (warningRentOver !== null) {
-        try {
-            clearTimeout(warningRentOver);
-        }
-        catch (e) { }
-        warningRentOver = null;
-    }
-    if (penaltyTimer !== null) {
-        try {
-            clearTimeout(penaltyTimer);
-        }
-        catch (e) { }
-        penaltyTimer = null;
-    }
-    if (syncInterval !== null) {
-        try {
-            clearInterval(syncInterval);
-        }
-        catch (e) { }
-        syncInterval = null;
-    }
-};
-rce.registerServer('rentColshape', (status, data) => {
-    if (status === 'enabled') {
-        keyDownE = 'enabled';
-        rentData = data;
-    }
-    else {
-        handleHideRent();
-        keyDownE = 'disabled';
-        rentData = null;
-    }
-});
-rce.registerServer('closeRent', () => {
-    handleHideRent();
-});
-rce.registerServer('startRentTimer', (uid, vehId, time) => {
-    clearAllRentTimers();
-    rentFromPlayer = {
-        uid: uid,
-        vehId: vehId,
-        rentEndTime: Date.now() + (time * 60 * 1000)
-    };
-    warningRentOver = setTimeout(() => {
-        gui.execute(`window.App.sendNotifyReducer.sendNotify('warning', 'Внимание! Аренда транспорта завершится через ${time} минут', 4000, 'bottom')`);
-    }, (time * 60 * 1000) * 0.25);
-    isWithdrawal = setTimeout(() => {
-        rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
-        rce.triggerServer('rentOver');
-        clearAllRentTimers();
-        gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда завершена. Транспорт был изъят', 4000, 'bottom')`);
-    }, time * 60 * 1000);
-    syncInterval = setInterval(() => {
-        if (!rentFromPlayer?.rentEndTime)
-            return;
-        const remainingMs = rentFromPlayer.rentEndTime - Date.now();
-        const remainingMins = Math.max(0, Math.ceil(remainingMs / 60000));
-        rce.triggerServer('syncRentTime', remainingMins);
-    }, 5 * 60 * 1000); // 5 минуток
-});
-rce.registerAll('cef:cancelRentCar', () => {
-    rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
-    rce.triggerServer('rentOver');
-    clearAllRentTimers();
-    if (rentData)
-        rentData.isTakenRent = false;
-    gui.execute(`window.App.rentReducer.setIsTakenRent(false)`);
-    gui.execute(`window.App.sendNotifyReducer.sendNotify('success', 'Аренда была завершена!', 3200, 'bottom')`);
-});
-mp.events.add('playerQuit', () => {
-    if (!rentFromPlayer || !rentFromPlayer.uid) {
-        clearAllRentTimers();
-        rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
-        return;
-    }
-    let remainingMins = 0;
-    if (rentFromPlayer.rentEndTime) {
-        let remainingMs = rentFromPlayer.rentEndTime - Date.now();
-        if (remainingMs < 0)
-            remainingMs = 0;
-        remainingMins = Math.ceil(remainingMs / 60000);
-    }
-    rce.triggerServer('rentPlayerQuit', rentFromPlayer.uid, remainingMins, !!mp.players.local.vehicle);
-    clearAllRentTimers();
-    rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
-});
-mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
-    if (!rentFromPlayer || !vehicle || vehicle.remoteId !== rentFromPlayer.vehId)
-        return;
-    gui.execute(`window.App.sendNotifyReducer.sendNotify('warning', 'Аренда завершится через 10 минут!', 3500, 'bottom')`);
-    penaltyTimer = setTimeout(() => {
-        rce.triggerServer('rentOver');
-        clearAllRentTimers();
-        rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
-        gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Вы не вернулись в арендованное т/с. Транспорт был изъят', 4000, 'bottom')`);
-    }, 600000);
-});
-mp.events.add('playerEnterVehicle', (vehicle, seat) => {
-    if (!rentFromPlayer || !vehicle || vehicle.remoteId !== rentFromPlayer.vehId)
-        return;
-    const remainingMs = rentFromPlayer.rentEndTime - Date.now();
-    const remainingMins = Math.max(0, Math.ceil(remainingMs / 60000));
-    if (penaltyTimer !== null) {
-        try {
-            clearTimeout(penaltyTimer);
-        }
-        catch (e) { }
-        penaltyTimer = null;
-    }
-    gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена. Осталось ${remainingMins} мин до окончания', 4000, 'bottom')`);
-});
-const handleShowRent = () => {
-    mp.gui.cursor.show(true, true);
-    gui.execute('window.App.hudReducer.hideHud()');
-    gui.execute('window.App.chatReducer.hideChat()');
-    gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`);
-};
-const handleHideRent = () => {
-    mp.game.ui.setPauseMenuActive(false);
-    mp.gui.cursor.show(false, false);
-    gui.execute(`window.App.rentReducer.hideRent()`);
-    showHud();
-    gui.execute('window.App.chatReducer.showChat()');
-    setTimeout(() => {
-        mp.game.ui.setPauseMenuActive(true);
-    }, 300);
-};
-mp.keys.bind(Keys.VK_E, false, () => {
-    if (keyDownE !== 'disabled') {
-        handleShowRent();
-    }
-});
-mp.keys.bind(Keys.VK_ESCAPE, false, () => {
-    handleHideRent();
-});
-rce.registerAll('closeRentMenu', () => {
-    handleHideRent();
 });
 
 const listCameras = [
@@ -2253,34 +2126,6 @@ mp.keys.bind(Keys.VK_E, false, async () => {
     }
 });
 
-let localplayer = mp.players.local;
-let currentVehicle = null;
-mp.events.add('playerEnterVehicle', (vehicle, seat) => {
-    if (vehicle && seat === -1) {
-        currentVehicle = vehicle;
-        gui.execute(`window.App.hudReducer.showHud(true)`);
-    }
-});
-mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
-    if (vehicle && seat === -1) {
-        currentVehicle = null;
-        gui.execute(`window.App.hudReducer.showHud(false)`);
-    }
-});
-mp.events.add('render', () => {
-    if (localplayer.vehicle !== null) {
-        let speed = localplayer.vehicle.getSpeed() * 3.6;
-        gui.execute(`window.App.speedVehReducer.setSpeed(${Number(speed.toFixed(0))})`);
-    }
-    else {
-        if (currentVehicle !== null) {
-            currentVehicle = null;
-            gui.execute(`window.App.hudReducer.showHud(false)`);
-            gui.execute(`window.App.speedVehReducer.setSpeed(0)`);
-        }
-    }
-});
-
 const updateDiscord = () => {
     const player = mp.players.local;
     let subtitle;
@@ -2386,87 +2231,18 @@ const HIT_MAX_DIST$1 = 2.5;
 const RAY_LENGTH$1 = 15;
 let openedInteraction$1 = false;
 mp.events.add('render', () => {
-    const hit = checkCenterScreenHit(RAY_LENGTH$1, HIT_MAX_DIST$1, 2);
+    const hit = checkCenterScreenHit(RAY_LENGTH$1, HIT_MAX_DIST$1, 8);
     const changedHit = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId;
-    if (openedInteraction$1 && (hit.type !== 'vehicle' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST$1)) {
+    if (openedInteraction$1 && (hit.type !== 'player' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST$1)) {
         openedInteraction$1 = false;
         gui.execute(`window.App.interactionReducer.hideInteraction()`);
         mp.gui.cursor.visible = false;
     }
-    if (hit.type === 'vehicle' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST$1 && !mp.players.local.vehicle) {
-        const veh = mp.vehicles.atRemoteId(hit.remoteId);
-        if (veh && !mp.players.local.vehicle) {
-            const posVeh = veh.position;
-            const factor = getDistanceFactor(hit.distToHit, HIT_MAX_DIST$1, 0.48);
-            mp.game.graphics.drawText('[E]', [posVeh.x, posVeh.y - factor.yOffset, posVeh.z], {
-                font: 4,
-                color: [255, 255, 255, factor.alpha - 30],
-                scale: factor.scale,
-                outline: true
-            });
-        }
-        if (changedHit) {
-            if (lastHit.type !== 'none') {
-                gui.execute(`window.App.hoverInteractionReducer.removeHover()`);
-            }
-            updateLastHit(hit);
-            gui.execute(`window.App.hoverInteractionReducer.setHover()`);
-        }
-    }
-    else {
-        if (changedHit && lastHit.type === 'vehicle') {
-            gui.execute(`window.App.hoverInteractionReducer.removeHover()`);
-        }
-    }
-});
-mp.keys.bind(Keys.VK_E, false, async () => {
-    if (lastHit.type === 'none')
-        return;
-    if (openedInteraction$1) {
-        openedInteraction$1 = false;
-        mp.gui.cursor.visible = false;
-        gui.execute(`window.App.interactionReducer.hideInteraction()`);
-        return;
-    }
-    const openedMenus = await rce.callCef('getOpenMenus');
-    const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent'];
-    const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu));
-    if (lastHit.type === 'vehicle' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST$1 && !hasSpecialOpen) {
-        openedInteraction$1 = true;
-        gui.execute(`window.App.interactionReducer.showInteraction('vehicle', ${lastHit.remoteId})`);
-        mp.gui.cursor.visible = true;
-    }
-});
-mp.keys.bind(Keys.VK_ESCAPE, false, () => {
-    if (openedInteraction$1) {
-        openedInteraction$1 = false;
-        gui.execute(`window.App.interactionReducer.hideInteraction()`);
-        mp.gui.cursor.visible = false;
-    }
-});
-mp.events.add('playerEnterVehicle', (vehicle, seat) => {
-    gui.execute(`window.App.hoverInteractionReducer.visibleHover(false)`);
-});
-mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
-    gui.execute(`window.App.hoverInteractionReducer.visibleHover(true)`);
-});
-
-const HIT_MAX_DIST = 2.5;
-const RAY_LENGTH = 15;
-let openedInteraction = false;
-mp.events.add('render', () => {
-    const hit = checkCenterScreenHit(RAY_LENGTH, HIT_MAX_DIST, 8);
-    const changedHit = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId;
-    if (openedInteraction && (hit.type !== 'player' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST)) {
-        openedInteraction = false;
-        gui.execute(`window.App.interactionReducer.hideInteraction()`);
-        mp.gui.cursor.visible = false;
-    }
-    if (hit.type === 'player' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST && !mp.players.local.vehicle) {
+    if (hit.type === 'player' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST$1 && !mp.players.local.vehicle) {
         const target = mp.players.atRemoteId(hit.remoteId);
         if (target && !mp.players.local.vehicle) {
             const posTarget = target.position;
-            const factor = getDistanceFactor(hit.distToHit, HIT_MAX_DIST, 0.48);
+            const factor = getDistanceFactor(hit.distToHit, HIT_MAX_DIST$1, 0.48);
             mp.game.graphics.drawText('[E]', [posTarget.x, posTarget.y - factor.yOffset, posTarget.z], {
                 font: 4,
                 color: [44, 255, 132, factor.alpha],
@@ -2491,6 +2267,70 @@ mp.events.add('render', () => {
 mp.keys.bind(Keys.VK_E, false, async () => {
     if (lastHit.type === 'none')
         return;
+    if (openedInteraction$1) {
+        openedInteraction$1 = false;
+        mp.gui.cursor.visible = false;
+        gui.execute(`window.App.interactionReducer.hideInteraction()`);
+        return;
+    }
+    const openedMenus = await rce.callCef('getOpenMenus');
+    const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent'];
+    const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu));
+    if (lastHit.type === 'player' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST$1 && !hasSpecialOpen) {
+        openedInteraction$1 = true;
+        mp.console.logWarning(`Взаимодействуете с ID: ${lastHit.remoteId}`);
+        gui.execute(`window.App.interactionReducer.showInteraction('player', ${lastHit.remoteId})`);
+        mp.gui.cursor.visible = true;
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    if (openedInteraction$1) {
+        openedInteraction$1 = false;
+        gui.execute(`window.App.interactionReducer.hideInteraction()`);
+        mp.gui.cursor.visible = false;
+    }
+});
+
+const HIT_MAX_DIST = 2.5;
+const RAY_LENGTH = 15;
+let openedInteraction = false;
+mp.events.add('render', () => {
+    const hit = checkCenterScreenHit(RAY_LENGTH, HIT_MAX_DIST, 2);
+    const changedHit = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId;
+    if (openedInteraction && (hit.type !== 'vehicle' || hit.remoteId === null || hit.distToHit > HIT_MAX_DIST)) {
+        openedInteraction = false;
+        gui.execute(`window.App.interactionReducer.hideInteraction()`);
+        mp.gui.cursor.visible = false;
+    }
+    if (hit.type === 'vehicle' && hit.remoteId !== null && hit.distToHit <= HIT_MAX_DIST && !mp.players.local.vehicle) {
+        const veh = mp.vehicles.atRemoteId(hit.remoteId);
+        if (veh && !mp.players.local.vehicle) {
+            const posVeh = veh.position;
+            const factor = getDistanceFactor(hit.distToHit, HIT_MAX_DIST, 0.48);
+            mp.game.graphics.drawText('[E]', [posVeh.x, posVeh.y - factor.yOffset, posVeh.z], {
+                font: 4,
+                color: [255, 255, 255, factor.alpha - 30],
+                scale: factor.scale,
+                outline: true
+            });
+        }
+        if (changedHit) {
+            if (lastHit.type !== 'none') {
+                gui.execute(`window.App.hoverInteractionReducer.removeHover()`);
+            }
+            updateLastHit(hit);
+            gui.execute(`window.App.hoverInteractionReducer.setHover()`);
+        }
+    }
+    else {
+        if (changedHit && lastHit.type === 'vehicle') {
+            gui.execute(`window.App.hoverInteractionReducer.removeHover()`);
+        }
+    }
+});
+mp.keys.bind(Keys.VK_E, false, async () => {
+    if (lastHit.type === 'none')
+        return;
     if (openedInteraction) {
         openedInteraction = false;
         mp.gui.cursor.visible = false;
@@ -2500,10 +2340,9 @@ mp.keys.bind(Keys.VK_E, false, async () => {
     const openedMenus = await rce.callCef('getOpenMenus');
     const specialMenus = ['Welcome', 'Auth', 'SelectChar', 'Spawn', 'CreateChar', 'Loading', 'Rent'];
     const hasSpecialOpen = openedMenus.some(menu => specialMenus.includes(menu));
-    if (lastHit.type === 'player' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST && !hasSpecialOpen) {
+    if (lastHit.type === 'vehicle' && lastHit.remoteId !== null && lastHit.distToHit <= HIT_MAX_DIST && !hasSpecialOpen) {
         openedInteraction = true;
-        mp.console.logWarning(`Взаимодействуете с ID: ${lastHit.remoteId}`);
-        gui.execute(`window.App.interactionReducer.showInteraction('player', ${lastHit.remoteId})`);
+        gui.execute(`window.App.interactionReducer.showInteraction('vehicle', ${lastHit.remoteId})`);
         mp.gui.cursor.visible = true;
     }
 });
@@ -2512,6 +2351,207 @@ mp.keys.bind(Keys.VK_ESCAPE, false, () => {
         openedInteraction = false;
         gui.execute(`window.App.interactionReducer.hideInteraction()`);
         mp.gui.cursor.visible = false;
+    }
+});
+mp.events.add('playerEnterVehicle', (vehicle, seat) => {
+    gui.execute(`window.App.hoverInteractionReducer.visibleHover(false)`);
+});
+mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
+    gui.execute(`window.App.hoverInteractionReducer.visibleHover(true)`);
+});
+
+let keyDownE = 'disabled';
+let rentData = null;
+let isWithdrawal = null;
+let penaltyTimer = null;
+let warningRentOver = null;
+let syncInterval = null;
+let rentFromPlayer = null;
+const clearAllRentTimers = () => {
+    if (isWithdrawal !== null) {
+        try {
+            clearTimeout(isWithdrawal);
+        }
+        catch (e) { }
+        isWithdrawal = null;
+    }
+    if (warningRentOver !== null) {
+        try {
+            clearTimeout(warningRentOver);
+        }
+        catch (e) { }
+        warningRentOver = null;
+    }
+    if (penaltyTimer !== null) {
+        try {
+            clearTimeout(penaltyTimer);
+        }
+        catch (e) { }
+        penaltyTimer = null;
+    }
+    if (syncInterval !== null) {
+        try {
+            clearInterval(syncInterval);
+        }
+        catch (e) { }
+        syncInterval = null;
+    }
+};
+rce.registerServer('rentColshape', (status, data) => {
+    if (status === 'enabled') {
+        keyDownE = 'enabled';
+        rentData = data;
+    }
+    else {
+        handleHideRent();
+        keyDownE = 'disabled';
+        rentData = null;
+    }
+});
+rce.registerServer('closeRent', () => {
+    handleHideRent();
+});
+rce.registerServer('startRentTimer', (uid, vehId, time) => {
+    clearAllRentTimers();
+    rentFromPlayer = {
+        uid: uid,
+        vehId: vehId,
+        rentEndTime: Date.now() + (time * 60 * 1000)
+    };
+    warningRentOver = setTimeout(() => {
+        gui.execute(`window.App.sendNotifyReducer.sendNotify('warning', 'Внимание! Аренда транспорта завершится через ${time} минут', 4000, 'bottom')`);
+    }, (time * 60 * 1000) * 0.25);
+    isWithdrawal = setTimeout(() => {
+        rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
+        rce.triggerServer('rentOver');
+        clearAllRentTimers();
+        gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда завершена. Транспорт был изъят', 4000, 'bottom')`);
+    }, time * 60 * 1000);
+    syncInterval = setInterval(() => {
+        if (!rentFromPlayer?.rentEndTime)
+            return;
+        const remainingMs = rentFromPlayer.rentEndTime - Date.now();
+        const remainingMins = Math.max(0, Math.ceil(remainingMs / 60000));
+        rce.triggerServer('syncRentTime', remainingMins);
+    }, 5 * 60 * 1000); // 5 минуток
+});
+rce.registerAll('cef:cancelRentCar', () => {
+    rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
+    rce.triggerServer('rentOver');
+    clearAllRentTimers();
+    if (rentData)
+        rentData.isTakenRent = false;
+    gui.execute(`window.App.rentReducer.setIsTakenRent(false)`);
+    gui.execute(`window.App.sendNotifyReducer.sendNotify('success', 'Аренда была завершена!', 3200, 'bottom')`);
+});
+mp.events.add('playerQuit', () => {
+    if (!rentFromPlayer || !rentFromPlayer.uid) {
+        clearAllRentTimers();
+        rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
+        return;
+    }
+    let remainingMins = 0;
+    if (rentFromPlayer.rentEndTime) {
+        let remainingMs = rentFromPlayer.rentEndTime - Date.now();
+        if (remainingMs < 0)
+            remainingMs = 0;
+        remainingMins = Math.ceil(remainingMs / 60000);
+    }
+    rce.triggerServer('rentPlayerQuit', rentFromPlayer.uid, remainingMins, !!mp.players.local.vehicle);
+    clearAllRentTimers();
+    rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
+});
+mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
+    if (!rentFromPlayer || !vehicle || vehicle.remoteId !== rentFromPlayer.vehId)
+        return;
+    gui.execute(`window.App.sendNotifyReducer.sendNotify('warning', 'Аренда завершится через 10 минут!', 3500, 'bottom')`);
+    penaltyTimer = setTimeout(() => {
+        rce.triggerServer('rentOver');
+        clearAllRentTimers();
+        rentFromPlayer = { uid: null, vehId: null, rentEndTime: null };
+        gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Вы не вернулись в арендованное т/с. Транспорт был изъят', 4000, 'bottom')`);
+    }, 600000);
+});
+mp.events.add('playerEnterVehicle', (vehicle, seat) => {
+    if (!rentFromPlayer || !vehicle || vehicle.remoteId !== rentFromPlayer.vehId)
+        return;
+    const remainingMs = rentFromPlayer.rentEndTime - Date.now();
+    const remainingMins = Math.max(0, Math.ceil(remainingMs / 60000));
+    if (penaltyTimer !== null) {
+        try {
+            clearTimeout(penaltyTimer);
+        }
+        catch (e) { }
+        penaltyTimer = null;
+    }
+    gui.execute(`window.App.sendNotifyReducer.sendNotify('info', 'Аренда возобновлена. Осталось ${remainingMins} мин до окончания', 4000, 'bottom')`);
+});
+const handleShowRent = () => {
+    mp.gui.cursor.show(true, true);
+    gui.execute('window.App.hudReducer.hideHud()');
+    gui.execute('window.App.chatReducer.hideChat()');
+    gui.execute(`window.App.rentReducer.showRent(${JSON.stringify(rentData)})`);
+};
+const handleHideRent = () => {
+    mp.game.ui.setPauseMenuActive(false);
+    mp.gui.cursor.show(false, false);
+    gui.execute(`window.App.rentReducer.hideRent()`);
+    showHud();
+    gui.execute('window.App.chatReducer.showChat()');
+    setTimeout(() => {
+        mp.game.ui.setPauseMenuActive(true);
+    }, 300);
+};
+mp.keys.bind(Keys.VK_E, false, () => {
+    if (keyDownE !== 'disabled') {
+        handleShowRent();
+    }
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    handleHideRent();
+});
+rce.registerAll('closeRentMenu', () => {
+    handleHideRent();
+});
+
+let localplayer = mp.players.local;
+let currentVehicle = null;
+mp.events.add('playerEnterVehicle', (vehicle, seat) => {
+    if (vehicle && seat === -1) {
+        currentVehicle = vehicle;
+        gui.execute(`window.App.hudReducer.showHud(true)`);
+    }
+});
+mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
+    if (vehicle && seat === -1) {
+        currentVehicle = null;
+        gui.execute(`window.App.hudReducer.showHud(false)`);
+    }
+});
+mp.events.add('render', () => {
+    if (localplayer.vehicle !== null) {
+        let speed = localplayer.vehicle.getSpeed() * 3.6;
+        gui.execute(`window.App.speedVehReducer.setSpeed(${Number(speed.toFixed(0))})`);
+    }
+    else {
+        if (currentVehicle !== null) {
+            currentVehicle = null;
+            gui.execute(`window.App.hudReducer.showHud(false)`);
+            gui.execute(`window.App.speedVehReducer.setSpeed(0)`);
+        }
+    }
+});
+
+const player = mp.players.local;
+rce.registerAll('getModelVeh', () => {
+    mp.console.logWarning('Получаем модельку');
+    if (player.vehicle) {
+        let modelName = mp.game.vehicle.getDisplayNameFromVehicleModel(player.vehicle.model).toLowerCase();
+        mp.console.logWarning(`model: ${modelName}`);
+        return modelName;
+    }
+    else {
+        return null;
     }
 });
 

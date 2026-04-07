@@ -25,6 +25,10 @@ export class CustomEventBase {
     return { destroy: () => this.registerHandles.delete(id) };
   }
 
+  static registerCallable(eventName: string, handle: (...args: any[]) => any): CustomEventHandler {
+    return this.register(eventName, handle); // пока используем тот же механизм
+  }
+
   static trigger(eventName: string, ...args: any[]) {
     this.registerHandles.forEach(([name, handle]) => {
       if (name === eventName) handle(...args);

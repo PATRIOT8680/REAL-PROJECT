@@ -127,8 +127,10 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
         }
 
 
+        const uid = await getDataAccount(player, 'uid', player.id)
         rce.triggerClient(player, 'execute', `window.App.spawnReducer.hideSpawn()`)
-        sendInventoryToCef(player, await getDataAccount(player, 'uid', player.id))
+        rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`)
+        sendInventoryToCef(player, uid)
 
         player.spawn(new mp.Vector3(parseFloat(coords.x), parseFloat(coords.y), parseFloat(coords.z)))
         player.heading = parseFloat(coords.heading)
@@ -139,7 +141,7 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
         const bankmoney = await getDataAccount(player, 'bankmoney', player.id)
 
         const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?'
-        const uid = await getDataAccount(player, 'uid', player.id)
+
         const dataChar = JSON.parse(results[0].chardata)
 
         const coordExit = {

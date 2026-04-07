@@ -1,7 +1,5 @@
 import { combineReducers } from 'redux';
 
-import { IDeathPlayer } from './menus/death';
-
 // Menus
 import { authReducer } from './menus/auth';
 import { chatReducer } from './menus/chat';
@@ -21,6 +19,7 @@ import { interactionReducer } from "./menus/interaction.ts";
 import { offerReducer } from "./menus/offer.ts";
 import { devMenusReducer } from "./menus/dev-menus.ts";
 import { shop24Reducer } from "./menus/shop24.ts";
+import { buyingBusinessReducer } from "./menus/buyingBusiness.ts";
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
@@ -32,6 +31,7 @@ import { consoleBufferReducer } from "./elements/adminMenu/consoleBuffer.ts";
 import { reportReducer } from "./elements/adminMenu/reportsList.ts";
 import { hoverInteractionReducer } from "./elements/hoverInteraction.ts";
 import { speedVehReducer } from "./elements/vehicle/speed.ts";
+import { serverInfoReducer } from "./elements/serverInfo.ts";
 
 export type RootState = {
 	// Menus
@@ -53,6 +53,7 @@ export type RootState = {
   offerReducer: ReturnType<typeof offerReducer>
   devMenusReducer: ReturnType<typeof devMenusReducer>
   shop24Reducer: ReturnType<typeof shop24Reducer>
+  buyingBusinessReducer: ReturnType<typeof buyingBusinessReducer>
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
@@ -64,6 +65,7 @@ export type RootState = {
   reportReducer: ReturnType<typeof reportReducer>
   hoverInteractionReducer: ReturnType<typeof hoverInteractionReducer>
   speedVehReducer: ReturnType<typeof speedVehReducer>
+  serverInfoReducer: ReturnType<typeof serverInfoReducer>
 }
 
 export const rootReducer = combineReducers({
@@ -86,6 +88,7 @@ export const rootReducer = combineReducers({
   offerReducer,
   devMenusReducer,
   shop24Reducer,
+  buyingBusinessReducer,
 
   // Elements
   sendNotifyReducer,
@@ -97,4 +100,5 @@ export const rootReducer = combineReducers({
   reportReducer,
   hoverInteractionReducer,
   speedVehReducer,
+  serverInfoReducer,
 });

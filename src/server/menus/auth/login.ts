@@ -90,6 +90,7 @@ export const loginUser = (player: PlayerMp, login: string, password: string) => 
 
 mp.events.add('playerQuit', async (player: PlayerMp) => {
   listLoginAccs.delete(player.id)
+  connectedUsers.removeUser(player.id)
   console.log(`вышел с игры: ${player.id}`)
 
   if (player.getVariable('player_spawned')) {
