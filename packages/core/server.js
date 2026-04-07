@@ -63,6 +63,9 @@ class CustomEventBase {
         this.registerHandles.set(id, [eventName, handle]);
         return { destroy: () => this.registerHandles.delete(id) };
     }
+    static registerCallable(eventName, handle) {
+        return this.register(eventName, handle); // пока используем тот же механизм
+    }
     static trigger(eventName, ...args) {
         this.registerHandles.forEach(([name, handle]) => {
             if (name === eventName)
@@ -1630,6 +1633,7 @@ const connectedUsers = {
         const existingUser = users.get(playerId) || {};
         users.set(playerId, { ...existingUser, ...userData });
         if (userData.login) {
+            rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`);
             console.log(`Обновлен пользователь: ${userData.login} (ID: ${playerId})`);
         }
     },
@@ -1637,6 +1641,7 @@ const connectedUsers = {
         const user = users.get(playerId);
         if (user) {
             users.delete(playerId);
+            rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`);
             console.log(`Удален пользователь: ${user.login || 'Unknown'} (ID: ${playerId})`);
             return true;
         }
@@ -45301,8 +45306,10 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                     default:
                         rce.triggerClient(player, 'sendNotify', 'err', 'Неизвестная точка спавна!', 3500, 'top');
                 }
+                const uid = await getDataAccount(player, 'uid', player.id);
                 rce.triggerClient(player, 'execute', `window.App.spawnReducer.hideSpawn()`);
-                sendInventoryToCef(player, await getDataAccount(player, 'uid', player.id));
+                rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`);
+                sendInventoryToCef(player, uid);
                 player.spawn(new mp.Vector3(parseFloat(coords.x), parseFloat(coords.y), parseFloat(coords.z)));
                 player.heading = parseFloat(coords.heading);
                 player.health = results[0].health;
@@ -45310,7 +45317,6 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                 const cash = await getDataAccount(player, 'cash', player.id);
                 const bankmoney = await getDataAccount(player, 'bankmoney', player.id);
                 const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?';
-                const uid = await getDataAccount(player, 'uid', player.id);
                 const dataChar = JSON.parse(results[0].chardata);
                 const coordExit = {
                     x: player.position.x.toFixed(3),
@@ -45519,6 +45525,7 @@ const loginUser = (player, login, password) => {
 };
 mp.events.add('playerQuit', async (player) => {
     listLoginAccs.delete(player.id);
+    connectedUsers.removeUser(player.id);
     console.log(`вышел с игры: ${player.id}`);
     if (player.getVariable('player_spawned')) {
         const numberSlot = getNumberChar(player.id);
@@ -45759,7 +45766,13 @@ registerACommand('getmepos', 'Получить свои координаты', [
 });
 registerACommand('newrent', 'Открыть меню для создания аренды', [], 10, (player) => {
     rce.triggerClient(player, 'closeAMenu');
+    rce.triggerClient(player, 'openDevMenu');
     rce.triggerClient(player, 'execute', 'window.App.devMenusReducer.showNewRent()');
+});
+registerACommand('create_business', 'Создать бизнес или привязать точку бизнеса', [], 10, (player) => {
+    rce.triggerClient(player, 'closeAMenu');
+    rce.triggerClient(player, 'openDevMenu');
+    rce.triggerClient(player, 'execute', 'window.App.devMenusReducer.showCreateBusiness()');
 });
 registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
     try {
@@ -61420,7 +61433,7 @@ const vehicles = [
     { short: 'chernobog', full: 'Chernobog', price: 4978560, fuel: 'gas', trunk: 153 },
 ];
 
-const db$1 = data.promise();
+const db$2 = data.promise();
 const generateRandomUSPlate = () => {
     const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ";
     if (Math.random() > 0.5) {
@@ -61444,7 +61457,7 @@ const generateRandomUSPlate = () => {
 };
 const isPlateExist = async (plate) => {
     try {
-        const [rows] = await db$1.query(`
+        const [rows] = await db$2.query(`
       SELECT COUNT(*) AS cnt
       FROM chars
       WHERE rent_data IS NOT NULL AND JSON_EXTRACT(rent_data, '$.plate') = ?
@@ -61511,7 +61524,7 @@ const vehicleManager = {
     clearAllVehicles
 };
 
-const db = data.promise();
+const db$1 = data.promise();
 let rentsData = [];
 const MAX_RETRIES = 10;
 const RETRY_DELAY = 2000;
@@ -61529,7 +61542,7 @@ rce.register('charSpawned', async (player) => {
         rce.triggerClients('createPed', rent.pedName, 'Местный арендодатель', rent.modelName, [rent.pedPos.x, rent.pedPos.y, rent.pedPos.z, rent.pedPos.heading], { isVisible: true, id: 811, color: 46 });
     });
     try {
-        const [rows] = await db.query(`SELECT rent_data FROM chars WHERE uid = ?`, [uid]);
+        const [rows] = await db$1.query(`SELECT rent_data FROM chars WHERE uid = ?`, [uid]);
         if (rows.length === 0 || !rows[0].rent_data)
             return;
         let rentInfo;
@@ -61538,12 +61551,12 @@ rce.register('charSpawned', async (player) => {
         }
         catch (e) {
             console.log(chalk.red('[SPAWN RENT VEH]') + ` Ошибка парсинга: ${e}`);
-            await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+            await db$1.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
             return;
         }
         const timeLeft = Number(rentInfo.timeLeft) || 0;
         if (timeLeft < 1) {
-            await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+            await db$1.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
             rce.triggerClient(player, 'sendNotify', 'warning', 'Аренда истекла', 3200, 'bottom');
             return;
         }
@@ -61600,7 +61613,7 @@ rce.registerCef('createNpcForRent', async (player, npcModel, npcName) => {
         return;
     }
     try {
-        const [rows] = await db.query(`
+        const [rows] = await db$1.query(`
         SELECT COALESCE(MAX(id), 0) AS maxId
         FROM rent
     `);
@@ -61612,7 +61625,7 @@ rce.registerCef('createNpcForRent', async (player, npcModel, npcName) => {
             z: player.position.z,
             heading: player.heading,
         };
-        await db.query(`INSERT INTO rent (id, pedname, modelname, pedpos) VALUES (?, ?, ?, ?)`, [newId, npcName, npcModel, JSON.stringify(pedpos)]);
+        await db$1.query(`INSERT INTO rent (id, pedname, modelname, pedpos) VALUES (?, ?, ?, ?)`, [newId, npcName, npcModel, JSON.stringify(pedpos)]);
         const coordZ = await rce.callClient(player, 'getGroundZ');
         const colshape = mp.colshapes.newSphere(pedpos.x, pedpos.y, coordZ, 4.0, player.dimension);
         rentsData.push({
@@ -61648,14 +61661,14 @@ rce.registerCef('addVehInRent', async (player, rentId, typeVeh, vehModel, priceV
     const vehPos = veh.position;
     const vehRot = veh.heading;
     try {
-        const [checkRows] = await db.query(`SELECT COUNT(*) AS cnt FROM rent WHERE id = ?`, [rentId]);
+        const [checkRows] = await db$1.query(`SELECT COUNT(*) AS cnt FROM rent WHERE id = ?`, [rentId]);
         const exist = checkRows[0].cnt > 0;
         if (!exist) {
             rce.triggerClient(player, 'sendNotify', 'err', `Аренда #${rentId} не найдена!`, 3200, 'top');
             return;
         }
         let vehiclesData = [];
-        const [rows] = await db.query(`SELECT vehiclesdata FROM rent WHERE id = ?`, [rentId]);
+        const [rows] = await db$1.query(`SELECT vehiclesdata FROM rent WHERE id = ?`, [rentId]);
         if (rows[0].vehiclesdata) {
             try {
                 vehiclesData = JSON.parse(rows[0].vehiclesdata);
@@ -61680,7 +61693,7 @@ rce.registerCef('addVehInRent', async (player, rentId, typeVeh, vehModel, priceV
         else {
             vehiclesData.push(vehiclesInfo);
         }
-        await db.query(`UPDATE rent SET vehiclesdata = ? WHERE id = ?`, [JSON.stringify(vehiclesData), rentId]);
+        await db$1.query(`UPDATE rent SET vehiclesdata = ? WHERE id = ?`, [JSON.stringify(vehiclesData), rentId]);
         const rentIndex = rentsData.findIndex(r => r.id === rentId);
         if (rentIndex !== -1) {
             rentsData[rentIndex].vehiclesData = vehiclesData;
@@ -61778,7 +61791,7 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
         else {
             decrementBankMoney(player, uid, selectedVeh.price * (time / 60));
         }
-        await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+        await db$1.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
         rce.triggerClient(player, 'startRentTimer', uid, playerData.vehicleRent.id, time);
     }
     catch (e) {
@@ -61793,7 +61806,7 @@ rce.registerClient('rentOver', async (player) => {
         const plate = playerData.vehicleRent.numberPlate;
         await removeKeyFromVeh(uid, keyUniqueId, plate);
     }
-    await db.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+    await db$1.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
     playerData.isTakenRent = false;
     playerData.isWithdrawal = null;
     vehicleManager.removeVehicle(playerData.vehicleRent.id);
@@ -61827,7 +61840,7 @@ rce.registerClient('syncRentTime', async (player, timeLeft) => {
             timeLeft: timeLeft,
             inVeh: (player.vehicle && player.vehicle.id === vehicle.id) ? true : false
         };
-        await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+        await db$1.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
     }
 });
 mp.events.add('playerEnterColshape', (player, colshape) => {
@@ -61870,9 +61883,6 @@ const rentPlayerQuit = async (uid, inVeh = false, clientTimeLeft) => {
     const pos = vehicle.position;
     const heading = vehicle.heading;
     const modelHash = vehicle.model;
-    // if (keyUniqueId || plate) {
-    //   await removeKeyFromVeh(uid, keyUniqueId, plate)
-    // }
     let modelName = rentData.keyNameVeh;
     if (!modelName || modelName === "unknown") {
         const found = vehicles.find(v => mp.joaat(v.short) === modelHash);
@@ -61895,7 +61905,7 @@ const rentPlayerQuit = async (uid, inVeh = false, clientTimeLeft) => {
         timeLeft: Math.max(1, finalTimeLeft)
     };
     vehicleManager.removeVehicle(vehicle.id);
-    await db.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+    await db$1.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
     vehicle.destroy();
     if (rentData.isWithdrawal)
         clearTimeout(rentData.isWithdrawal);
@@ -61904,7 +61914,7 @@ const rentPlayerQuit = async (uid, inVeh = false, clientTimeLeft) => {
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const loadRentPoints = async (retryCount = 0) => {
     try {
-        const [rows] = await db.query(`SELECT * FROM rent`);
+        const [rows] = await db$1.query(`SELECT * FROM rent`);
         if (rows.length === 0)
             return;
         rentsData = [];
@@ -61982,13 +61992,141 @@ const savingPlayerRents = async () => {
     mp.events.delayShutdown = false;
 };
 
+var BusinessType;
+(function (BusinessType) {
+    BusinessType["SHOP24"] = "shop24";
+    BusinessType["GAS_STATION"] = "gas_station";
+    BusinessType["CLOTHES_SHOP"] = "clothes_shop";
+    BusinessType["CAR_SHOWROOM"] = "car_showroom";
+})(BusinessType || (BusinessType = {}));
+const BusinessNames = {
+    [BusinessType.SHOP24]: 'QuickStop 24/7',
+    [BusinessType.GAS_STATION]: 'Заправка Thunder',
+    [BusinessType.CLOTHES_SHOP]: 'Магазин одежды Style Forge',
+    [BusinessType.CAR_SHOWROOM]: 'Автосалон Velocity'
+};
+({
+    [BusinessType.SHOP24]: {
+        },
+    [BusinessType.GAS_STATION]: {
+        },
+    [BusinessType.CLOTHES_SHOP]: {
+        },
+    [BusinessType.CAR_SHOWROOM]: {
+        },
+});
+
+const db = data.promise();
+const businesses = new Map();
+rce.registerCef('createBusiness', (player, data) => {
+    const pos = player.position;
+    const dto = {
+        type: data.type,
+        position: new mp.Vector3(pos.x, pos.y, pos.z),
+        price: data.price,
+        balance: data.balance,
+        markup: data.markup,
+    };
+    createBusiness(dto, data.owner);
+});
+const initBusinessSystem = async () => {
+    await loadBusinesses();
+    console.log(chalk.green('[UPLOADED BUSINESSES]') + ` Загружено ${businesses.size} бизнесов`);
+};
+const loadBusinesses = async () => {
+    try {
+        const [rows] = await db.query(`SELECT * FROM businesses`);
+        businesses.clear();
+        rows.forEach((row) => {
+            const nameBusiness = BusinessType[row.type];
+            const pos = new mp.Vector3(JSON.parse(row.position));
+            const business = {
+                id: row.id,
+                owner: typeof row.owner === 'number' ? row.owner.toString() : row.owner,
+                type: row.type,
+                name: nameBusiness,
+                price: row.price,
+                markup: row.markup ?? 0.00,
+                balance: row.balance ?? 0,
+                position: pos,
+                taxAccumulated: Number(row.taxAccumulated || 0),
+                lastHourlyExpense: new Date(row.lastHourlyExpense || Date.now()),
+                taxDeadline: new Date(row.taxDeadline || Date.now()),
+                lastBalanceZero: row.lastBalanceZero ? new Date(row.lastBalanceZero) : null,
+                createdAt: row.createdAt,
+                updatedAt: row.updateAt
+            };
+            mp.markers.new(20, pos, 0.75, {
+                color: [229, 255, 173, 255],
+                dimension: 0,
+                rotation: new mp.Vector3(0, 180, 0)
+            });
+            businesses.set(row.id, business);
+        });
+    }
+    catch (e) {
+        console.log(chalk.red('[UPLOADED BUSINESS]') + ` Ошибка загрузки бизнеса: ${e}`);
+    }
+};
+const createBusiness = async (dto, owner = 'gov') => {
+    const nameBusiness = BusinessNames[dto.type];
+    try {
+        const markup = dto.markup ?? 0.00;
+        const now = new Date();
+        const [result] = await db.execute(`
+      INSERT INTO businesses
+      (type, owner, price, position, balance, markup, taxAccumulated, lastHourlyExpense, taxDeadline, lastBalanceZero)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [
+            dto.type,
+            typeof owner === 'number' ? owner.toString() : owner,
+            dto.price,
+            JSON.stringify(dto.position),
+            0,
+            markup,
+            0,
+            now,
+            new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+            null
+        ]);
+        const insertId = result.insertId;
+        const newBusiness = {
+            id: insertId,
+            owner: typeof owner === 'number' ? owner.toString() : owner,
+            type: dto.type,
+            name: nameBusiness,
+            price: dto.price,
+            markup: dto.markup ?? 0.00,
+            balance: 0,
+            position: dto.position,
+            taxAccumulated: 0,
+            lastHourlyExpense: now,
+            taxDeadline: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+            lastBalanceZero: null,
+            createdAt: now,
+            updatedAt: now,
+        };
+        mp.markers.new(20, dto.position, 0.75, {
+            color: [229, 255, 173, 255],
+            dimension: 0,
+            rotation: new mp.Vector3(0, 180, 0)
+        });
+        businesses.set(insertId, newBusiness);
+        console.log(chalk.green('[BUSINESS]') + ` Создан новый бизнес "${nameBusiness}" (ID: ${insertId})`);
+    }
+    catch (e) {
+        console.log(chalk.red('[BUSINESS]') + ` Ошибка при создании бизнеса: ${e}`);
+    }
+};
+
 mp.events.add('packagesLoaded', () => {
     initTimeSystem();
     initItems();
     setTimeout(async () => {
         await waitForDatabase();
         loadItems();
-        loadRentPoints();
+        await loadRentPoints();
+        await initBusinessSystem();
     }, 2000);
 });
 async function waitForDatabase() {
@@ -62146,6 +62284,7 @@ const closeCreateChar = async (player, dataChar) => {
     rce.triggerClient(player, 'closeCreateChar');
     const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?';
     const uid = await getDataAccount(player, 'uid', player.id);
+    rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`);
     const coordExit = {
         x: player.position.x.toFixed(3),
         y: player.position.y.toFixed(3),

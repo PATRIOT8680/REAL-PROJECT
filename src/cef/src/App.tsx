@@ -42,6 +42,7 @@ import WaitingLoader from "./views/WaitingLoader/Index.tsx";
 import Interaction from './views/Interaction/Index.tsx'
 import Offer from './views/Offer/Index.tsx'
 import DevMenus from "./views/DevMenus/Index.tsx";
+import BuyingBusiness from "./views/BuyingBusiness/BuyingBusiness.tsx";
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -71,6 +72,7 @@ const App = () => {
   const inventoryState = useSelector((state: RootState) => state.inventoryReducer)
   const interactionVisible = useSelector((state: RootState) => state.interactionReducer.isVisible)
   const devMenusVisible = useSelector((state: RootState) => state.devMenusReducer.isVisible)
+  const buyingBusinessVisible = useSelector((state: RootState) => state.buyingBusinessReducer.isVisible)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -91,19 +93,15 @@ const App = () => {
       Spawn: spawnVisible,
       Inventory: inventoryState.isVisible,
       Interaction: interactionVisible,
+      Dev: devMenusVisible,
+      BuyingBusiness: buyingBusinessVisible,
     }
 
-    let open = Object.entries(menus)
+    const open = Object.entries(menus)
       .filter(([, visible]) => visible)
       .map(([name]) => name)
 
-    if (!Array.isArray(open)) open = open ? [open] : ['none']
-
-    const jsonResult = JSON.stringify(open)
-
-    console.log(`[CEF] Готовим отправку JSON: ${jsonResult}`)
-
-    return jsonResult
+    return open
   })
 
   useEffect(() => {
@@ -181,6 +179,7 @@ const App = () => {
       { interactionVisible && <Interaction /> }
       <Offer />
       { devMenusVisible && <DevMenus /> }
+      { buyingBusinessVisible && <BuyingBusiness /> }
 
       {/*<div className="language_ambients">*/}
       {/*  /!*{ shouldChangeLanguage && <ChangeLanguage /> }*!/*/}

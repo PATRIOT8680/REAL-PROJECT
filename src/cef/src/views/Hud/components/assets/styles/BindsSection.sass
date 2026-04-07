@@ -1,0 +1,52 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+.binds-section
+  position: absolute
+  top: 62%
+  left: 2.7rem
+  transform: translateY(-50%)
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  animation: fadeInBindsSection .6s ease forwards
+  gap: .5rem
+
+  .raw-bind
+    display: flex
+    flex-direction: row
+    align-items: center
+    height: 1.4rem
+    gap: .5rem
+
+    .key
+      display: flex
+      align-items: center
+      justify-content: center
+      font-family: $Montserrat
+      font-weight: 600
+      font-size: .6rem
+      padding: 0 .5rem
+      height: 100%
+      background: rgba(32, 29, 25, 0.45)
+      color: rgba(255, 255, 255, 0.8)
+
+    .label
+      display: flex
+      align-items: center
+      justify-content: center
+      font-family: $Montserrat
+      font-size: .6rem
+      font-weight: 400
+      height: 100%
+      color: rgba(255, 255, 255, 0.8)
+      background: rgba(32, 29, 25, 0.4)
+      padding: 0 .5rem
+
+@keyframes fadeInBindsSection
+  from
+    left: -15rem
+    opacity: 0
+  to
+    left: 2.7rem
+    opacity: 1

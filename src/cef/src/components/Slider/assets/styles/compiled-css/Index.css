@@ -68,7 +68,7 @@
   background: #ffca58;
   border-radius: 2px;
   pointer-events: none;
-  transition: width 0.15s ease;
+  transition: width 0.1s ease;
 }
 .main-slider .container-slider .range-container .slider-thumb {
   position: absolute;
@@ -81,7 +81,7 @@
   cursor: grab;
   outline: 7px solid rgb(29, 25, 32);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-  transition: left 0.15s ease;
+  transition: left 0.1s ease;
   z-index: 2;
   user-select: none;
 }

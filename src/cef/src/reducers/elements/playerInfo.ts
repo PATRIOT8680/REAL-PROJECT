@@ -1,6 +1,7 @@
 export interface IPlayerInfo {
   sid: number,
   id: number,
+  uid: number,
   nickname: string,
   eat: number,
   water: number
@@ -10,6 +11,7 @@ export interface IPlayerInfo {
 const initialState = {
   sid: 0,
   id: 0,
+  uid: 0,
   nickname: '',
   eat: 50,
   water: 100,
@@ -22,6 +24,8 @@ export const playerInfoReducer = (state: IPlayerInfo = initialState, action: any
       return { ...state, sid: action.sid }
     case 'SET_ID':
       return { ...state, id: action.id }
+    case 'SET_UID':
+      return { ...state, uid: action.uid }
     case 'SET_NICKNAME':
       return { ...state, nickname: action.nickname }
     case 'SET_EAT':

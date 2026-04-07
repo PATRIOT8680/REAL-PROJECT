@@ -69,12 +69,14 @@ $Montserrat: "Montserrat", sans-serif
       padding: .3rem .8rem
       color: rgba(255, 255, 255, 0.95)
       text-shadow: 0 0 20px rgba(255, 255, 255, 0.6)
+      user-select: none
 
     .btns-type-veh
       width: 100%
       display: flex
       flex-direction: row
       align-items: center
+      user-select: none
       gap: 1rem
 
       .btn-type
@@ -96,6 +98,38 @@ $Montserrat: "Montserrat", sans-serif
           border-color: #ffca58
           color: #ffca58
 
+    .raw-model
+      display: flex
+      flex-direction: row
+      align-items: center
+      height: 3.6rem
+      gap: .5rem
+
+      .get-model
+        display: flex
+        align-items: center
+        justify-content: center
+        background: rgba(255, 255, 255, 0.02)
+        border: 2px solid rgba(255, 255, 255, 0.03)
+        border-radius: 4px
+        width: 4.2rem
+        height: 100%
+        transition: all .3s ease
+        user-select: none
+
+        &:hover
+          transition: all .3s ease
+          border-color: #ffca58
+
+          img
+            opacity: 1
+            transition: all .3s ease
+
+        img
+          width: 1.4rem
+          opacity: 0.5
+          transition: all .3s ease
+
     .form-inp
       height: 3.6em
 
@@ -109,6 +143,7 @@ $Montserrat: "Montserrat", sans-serif
       font-family: $Druk
       text-transform: uppercase
       transition: all .3s ease
+      user-select: none
       cursor: pointer
 
       &:hover

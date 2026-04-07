@@ -7,7 +7,12 @@ export interface BusinessData {
   markup: number,
   balance: number,
   position: Vector3,
-  createdAt: Date
+  taxAccumulated: number, // Накопленный налог за неделю
+  lastHourlyExpense: Date, // Дата последнего списания расходов (каждый час)
+  taxDeadline: Date, // До какой даты нужно оплатить налог (7 дней)
+  lastBalanceZero: Date | null // Когда последний раз баланс стал 0 (для отъема)
+  createdAt: Date,
+  updatedAt: Date
 }
 
 export enum BusinessType {
@@ -65,6 +70,7 @@ export interface CreateBusinessDto {
   type: BusinessType,
   position: Vector3,
   price: number,
+  balance: number,
   markup?: number,
 }
 

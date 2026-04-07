@@ -20,6 +20,7 @@ import { interactionStore } from "./menus/interaction.ts";
 import { offerStore } from "./menus/offer.ts";
 import { devMenusStore } from "./menus/dev-menus.ts";
 import { shop24Store } from "./menus/shop24.ts";
+import { buyingBusinessStore } from "./menus/buyingBusiness.ts";
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -31,6 +32,7 @@ import { consoleBufferStore } from "./elements/adminMenu/consoleBuffer.ts";
 import { reportsListStore } from "./elements/adminMenu/reportsList.ts";
 import { hoverInteractionStore } from "./elements/hoverInteraction.ts";
 import { speedVehStore } from "./elements/vehicle/speed.ts";
+import { serverInfoStore } from "./elements/serverInfo.ts";
 
 export const store = createStore(rootReducer);
 
@@ -62,6 +64,7 @@ window.App = {
   offerReducer: offerStore,
   devMenusReducer: devMenusStore,
   shop24Reducer: shop24Store,
+  buyingBusinessReducer: buyingBusinessStore,
 
   // Elements
   sendNotifyReducer: sendNotifyStore,
@@ -73,4 +76,5 @@ window.App = {
   reportsListReducer: reportsListStore,
   hoverInteractionReducer: hoverInteractionStore,
   speedVehReducer: speedVehStore,
+  serverInfoReducer: serverInfoStore,
 };

@@ -1,0 +1,61 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+.hud-server-info
+  position: absolute
+  top: 1.1rem
+  right: 1.1rem
+  display: flex
+  flex-direction: column
+  align-items: flex-end
+  user-select: none
+  pointer-events: none
+  -webkit-user-drag: none
+  animation: fadeInServerInfo .6s ease forwards
+  gap: .6rem
+
+  .bg-blur
+    position: absolute
+    top: -4rem
+    right: -4rem
+    background: rgba(29, 25, 31, 0.35)
+    filter: blur(8rem)
+    width: 20rem
+    height: 13rem
+    z-index: -1
+
+  .server-logo
+    width: 9.8rem
+
+  .raw-info
+    display: flex
+    flex-direction: row
+    align-items: center
+    gap: 1.05rem
+
+    .value-info
+      display: flex
+      align-items: center
+      gap: .37rem
+
+      .prefix
+        font-family: $Druk
+        color: #ffca58
+        font-size: .85rem
+
+      .value
+        font-family: $Montserrat
+        font-weight: 500
+        font-size: .8rem
+        color: #ffffff
+
+      .icon-online
+        width: .8rem
+
+@keyframes fadeInServerInfo
+  from
+    right: -15rem
+    opacity: 0
+  to
+    right: 1.1rem
+    opacity: 1

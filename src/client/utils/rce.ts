@@ -108,12 +108,10 @@ export class rce extends CustomEventBase {
     }
 }
 
-// Обработчик для событий из CEF
 mp.events.add('triggerFromCef', (eventName: string, ...args: any[]) => {
     rce.triggerFromCef(eventName, ...args);
 });
 
-// Остальной код без изменений
 mp.events.add("client:trigger:event", (eventname: string, argsstring: string) => triggerEvent(eventname, argsstring));
 
 let enableEventsLogging = mp.storage.data.enableEventsLoggin;
@@ -214,13 +212,23 @@ mp.events.add('call:cef:response', (requestID: number, res: any) => {
 
 mp.events.add('call:server', (requestID: number, eventName: string, ...args: any[]) => mp.events.callRemote('call:cef', requestID, rce.encryptEventName(eventName), ...args));
 
-mp.events.add('call:clientfromcef', async (requestID: number, eventName: string, ...args: any[]) => {
-    const fnd = await CustomEventBase.call(eventName, ...args);
-    mp.browsers.forEach((browser: any) => {
-        if (browser.eventReady) browser.execute(`window.customevent.callClientResponseHandle(${requestID}, '${JSON.stringify(fnd)}');`);
-    });
-});
-
 mp.events.add('trigger:server', (name: string, args: string) => {
     mp.events.callRemote('trigger:cef', rce.encryptEventName(name), args)
-});
+})
+
+mp.events.add('call:clientfromcef', async (requestID: number, eventName: string, ...args: any[]) => {
+  try {
+    const result = await CustomEventBase.call(eventName, ...args)
+    mp.browsers.forEach((browser: any) => {
+      if (browser.active) {
+        browser.execute(`window.customevent.callClientResponseHandle(${requestID}, ${JSON.stringify(result)})`)
+      }
+    })
+  } catch (error) {
+    mp.browsers.forEach((browser: any) => {
+      if (browser.active) {
+        browser.execute(`window.customevent.callClientResponseHandle(${requestID}, null)`)
+      }
+    })
+  }
+})

@@ -489,10 +489,6 @@ const rentPlayerQuit = async (uid: number, inVeh: boolean = false, clientTimeLef
   const heading = vehicle.heading
   const modelHash = vehicle.model
 
-  // if (keyUniqueId || plate) {
-  //   await removeKeyFromVeh(uid, keyUniqueId, plate)
-  // }
-
   let modelName = rentData.keyNameVeh
   if (!modelName || modelName === "unknown") {
     const found = vehicles.find(v => mp.joaat(v.short) === modelHash)

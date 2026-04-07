@@ -1,4 +1,4 @@
-import { CustomEventBase } from "../../../shared/CustomEventBase.ts";
+import { CustomEventBase, CustomEventHandler } from "../../../shared/CustomEventBase.ts";
 
 export class rce extends CustomEventBase {
   static triggerCef(eventName: string, args: string) {
@@ -22,18 +22,6 @@ export class rce extends CustomEventBase {
 
   static triggerClient(name: string, ...args: any[]) {
     mp.trigger('triggerFromCef', name, ...args)
-  }
-
-  static registerCallable(name: string, handler: (...args: any[]) => any) {
-    this.register(name, (...handlerArgs) => {
-      const result = handler(...handlerArgs)
-
-      if (typeof handlerArgs[0] === 'number' && Number.isInteger(handlerArgs[0])) {
-        mp.trigger('__cefResponse', handlerArgs[0], result)
-      }
-
-      return result
-    })
   }
 
   static lastServerSend = 0;
@@ -61,23 +49,30 @@ export class rce extends CustomEventBase {
   static callServerResponseHandle(requestID: number, val: string) {
     const resolver = this.requestServerHandle.get(requestID);
     if (resolver) {
-      resolver(JSON.parse(val));
-      this.requestServerHandle.delete(requestID);
+      resolver(JSON.parse(val))
+      this.requestServerHandle.delete(requestID)
     } else {
-      console.warn(`No resolver found for requestID: ${requestID}`);
+      console.warn(`No resolver found for requestID: ${requestID}`)
     }
   }
 
-  static callClientResponseHandle(requestID: number, val: string) {
-    const resolver = this.requestClientHandle.get(requestID);
+  static callClientResponseHandle(requestID: number, val: any) {
+    const resolver = this.requestClientHandle.get(requestID)
     if (resolver) {
-      resolver(JSON.parse(val));
-      this.requestClientHandle.delete(requestID);
+      resolver(val)
+      this.requestClientHandle.delete(requestID)
     } else {
-      console.warn(`No resolver found for requestID: ${requestID}`);
+      console.warn(`[CEF] No resolver for requestID: ${requestID}`)
     }
+  }
+
+  static registerCallable(eventName: string, handle: (...args: any[]) => any): CustomEventHandler {
+    return super.register(eventName, async (callId: number, ...args: any[]) => {
+      const result = await handle(...args)
+      mp.trigger('__cefResponse', callId, JSON.stringify(result))
+    })
   }
 }
 
 // @ts-ignore
-window.customevent = rce;
+window.customevent = rce

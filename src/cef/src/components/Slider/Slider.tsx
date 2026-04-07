@@ -20,25 +20,23 @@ interface ISlider {
 }
 
 const Slider = ({
-                  title,
-                  value,
-                  onChange,
-                  minVal,
-                  maxVal,
-                  step,
-                  enterInput,
-                  random,
-                  subtitleOne,
-                  subtitleTwo,
-                  showedPercents,
-                  showedValues
-                }: ISlider) => {
-  // Состояние для поля ввода
+  title,
+  value,
+  onChange,
+  minVal,
+  maxVal,
+  step,
+  enterInput,
+  random,
+  subtitleOne,
+  subtitleTwo,
+  showedPercents,
+  showedValues
+}: ISlider) => {
   const [inputValue, setInputValue] = useState<string>(
     (value >= minVal && value <= maxVal) ? value.toString() : minVal.toString()
   )
 
-  // Для анимации при клике на трек
   const [displayValue, setDisplayValue] = useState<number>(value)
   const [isDragging, setIsDragging] = useState<boolean>(false)
   const animationRef = useRef<number>()

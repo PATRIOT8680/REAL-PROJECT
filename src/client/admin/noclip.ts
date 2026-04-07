@@ -116,6 +116,7 @@ const stopNoclip = () => {
 
 mp.keys.bind(Keys.VK_F8, false, () => {
   if (!global.loginPlayer) return
+  if (localplayer.getVariable('ADMIN_LVL') < 1) return
 
   noclip.active = !noclip.active
   direction = camera.getDirection()

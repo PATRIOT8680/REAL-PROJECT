@@ -195,7 +195,20 @@ registerACommand(
 
   (player: PlayerMp) => {
     rce.triggerClient(player, 'closeAMenu')
+    rce.triggerClient(player, 'openDevMenu')
     rce.triggerClient(player, 'execute', 'window.App.devMenusReducer.showNewRent()')
+  }
+)
+
+registerACommand(
+  'create_business',
+  'Создать бизнес или привязать точку бизнеса',
+  [], 10,
+
+  (player: PlayerMp) => {
+    rce.triggerClient(player, 'closeAMenu')
+    rce.triggerClient(player, 'openDevMenu')
+    rce.triggerClient(player, 'execute', 'window.App.devMenusReducer.showCreateBusiness()')
   }
 )
 
