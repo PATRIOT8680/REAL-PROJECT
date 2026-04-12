@@ -1,0 +1,53 @@
+.fuel-meter {
+  position: relative;
+  width: calc(130px * var(--app-scale, 1));
+  height: calc(130px * var(--app-scale, 1));
+  -webkit-user-drag: none;
+  animation: fadeInFuelMeter 0.8s ease;
+  margin-right: -1.5rem;
+}
+.fuel-meter .icon-fuel {
+  position: absolute;
+  top: 53%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1.3rem;
+}
+.fuel-meter .bg-shadow {
+  position: absolute;
+  bottom: -1.5rem;
+  left: -1.5rem;
+  width: 13rem;
+  height: 13rem;
+  filter: blur(7rem);
+  z-index: 0;
+  pointer-events: none;
+}
+.fuel-meter .main-section {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+.fuel-meter .main-section .tick.showedLowFuel {
+  animation: fadeInLowFuel 0.6s ease;
+}
+
+@keyframes fadeInLowFuel {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeInFuelMeter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=Fuel.css.map */

@@ -86,18 +86,16 @@ const CreateChar = memo(() => {
 
   const updateCharHistory = useCallback((newDataChar: IDataChar) => {
     setCharHistory(prev => {
-      const newHistory = [...prev];
+      const newHistory = [...prev]
 
-      // Если уже есть 3 состояния, удаляем самое старое
       if (newHistory.length >= 3) {
-        newHistory.shift();
+        newHistory.shift()
       }
 
-      // Добавляем новое состояние
-      newHistory.push(newDataChar);
-      return newHistory;
-    });
-  }, []);
+      newHistory.push(newDataChar)
+      return newHistory
+    })
+  }, [])
 
   const syncDataToClient = useCallback((charData: IDataChar) => {
     Object.keys(charData).forEach(key => {
@@ -144,32 +142,27 @@ const CreateChar = memo(() => {
       clothes: dataChar.clothes
     };
 
-    // Для мужчин генерируем бороду, для женщин - нет
     if (currentGender === 'male') {
-      updatedData.beard = Math.floor(Math.random() * 29);
-      updatedData.beardColor = Math.floor(Math.random() * 64);
+      updatedData.beard = Math.floor(Math.random() * 29)
+      updatedData.beardColor = Math.floor(Math.random() * 64)
     } else {
-      updatedData.beard = 0;
-      updatedData.beardColor = 0;
+      updatedData.beard = 0
+      updatedData.beardColor = 0
     }
 
-    // Обновляем историю
-    updateCharHistory(updatedData);
-  }, [dataChar, updateCharHistory]);
+    updateCharHistory(updatedData)
+  }, [dataChar, updateCharHistory])
 
   const handleCancel = useCallback(() => {
     setCharHistory(prev => {
-      // Если есть предыдущие состояния для отката
       if (prev.length > 1) {
-        const newHistory = [...prev];
-        // Удаляем текущее состояние (последний элемент)
-        newHistory.pop();
-        return newHistory;
+        const newHistory = [...prev]
+        newHistory.pop()
+        return newHistory
       }
-      // Если только одно состояние, возвращаем как есть
-      return prev;
-    });
-  }, []);
+      return prev
+    })
+  }, [])
 
   const validateForm = () => {
     let isValid = true;
@@ -202,7 +195,6 @@ const CreateChar = memo(() => {
       isValid = false;
     }
 
-    // Валидация возраста
     if (!dataChar.age) {
       window.App.sendNotifyReducer.sendNotify('err', 'Укажите возраст персонажа!', 3000, 'bottom');
       isValid = false;

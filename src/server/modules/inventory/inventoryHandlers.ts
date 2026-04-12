@@ -2064,3 +2064,11 @@ export const playerHasKeyForVehicle = async (player: PlayerMp, vehicle: VehicleM
 
   return false
 }
+
+rce.registerClient('playerHasKeyForVehicle', async (player: PlayerMp, vehicleId: number) => {
+  if (!mp.vehicles.exists(vehicleId)) return false
+
+  const vehicle = mp.vehicles.at(vehicleId)
+  const result = await playerHasKeyForVehicle(player, vehicle)
+  return result
+})

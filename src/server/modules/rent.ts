@@ -80,7 +80,7 @@ rce.register('charSpawned', async (player: PlayerMp) => {
       return
     }
 
-    let vehicleToUse = null
+    let vehicleToUse: VehicleMp | null = null
     if (player.vehicle && player.vehicle.model === mp.joaat(rentInfo.keyNameVeh)) {
       vehicleToUse = player.vehicle
     }
@@ -461,6 +461,8 @@ mp.events.add('playerEnterColshape', (player: PlayerMp, colshape: ColshapeMp) =>
         }
       })
 
+      rce.triggerClient(player, 'execute', 'window.App.hudReducer.setHintVisible(true)')
+
       rce.triggerClient(player, 'rentColshape', 'enabled', {
         id: rentData.id,
         isTakenRent: playerData.isTakenRent,
@@ -474,6 +476,7 @@ mp.events.add('playerExitColshape', (player: PlayerMp, colshape: ColshapeMp) => 
   const rentData = rentsData.find(rent => colshape.id === rent.colshapeId)
 
   if (rentData) {
+    rce.triggerClient(player, 'execute', 'window.App.hudReducer.setHintVisible(false)')
     rce.triggerClient(player, 'rentColshape', 'disabled', {})
   }
 })

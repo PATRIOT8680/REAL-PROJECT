@@ -20,7 +20,13 @@ const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   suffix = '',
 }) => {
   const animatedValue = useAnimatedNumber(value, duration)
-  const displayValue = format ? formatedMoney(animatedValue) : animatedValue.toString()
+  let displayValue: string
+
+  if (format) {
+    displayValue = formatedMoney(animatedValue)
+  } else {
+    displayValue = Math.floor(animatedValue).toString()
+  }
 
   return (
     <span className={className}>

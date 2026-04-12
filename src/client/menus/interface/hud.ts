@@ -1,6 +1,13 @@
 import { rce } from "../../utils/rce";
 import { gui } from "../global";
 
+let area: string
+let street: any
+const lcplayer: PlayerMp = mp.players.local
+
+mp.game.ui.setRadarZoom(1.0)
+mp.game.ui.setRadarBigmapEnabled(false, false)
+
 export const showHud = () => {
   const pl = mp.players.local
   const minimap = getMinimapAnchor()
@@ -10,8 +17,8 @@ export const showHud = () => {
   gui.execute(`
     window.App.hudReducer.showHud(
       ${isDriver},
-      ${minimap.rightX * 100}, ${minimap.leftX * 10},
-      ${minimap.topY * 100}, ${minimap.bottomY * 10},
+      ${minimap.rightX * 100}, ${minimap.leftX * 100},
+      ${minimap.topY * 100}, ${minimap.bottomY * 100},
       ${minimap.width * 100}, ${minimap.height * 100}
     )
   `)
@@ -44,3 +51,16 @@ export const getMinimapAnchor = () => {
 
   return minimap
 }
+
+mp.events.add('render', () => {
+  const currentArea: string = mp.game.zone.getNameOfZone(lcplayer.position.x, lcplayer.position.y, lcplayer.position.z)
+  const currentStreet: any = mp.game.pathfind.getStreetNameAtCoord(lcplayer.position.x, lcplayer.position.y, lcplayer.position.z)
+
+  if (currentArea !== area || currentStreet !== street) {
+    area = currentArea
+    street = currentStreet
+
+    gui.execute(`window.App.hudReducer.setArea('${mp.game.ui.getLabelText(currentArea)}')`)
+    gui.execute(`window.App.hudReducer.setStreet('${mp.game.ui.getStreetNameFromHashKey(currentStreet.streetName)}')`)
+  }
+})

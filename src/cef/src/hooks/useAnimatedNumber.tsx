@@ -18,21 +18,22 @@ export function useAnimatedNumber(
 
       const elapsed = now - startTimeRef.current
       const progress = Math.min(elapsed / duration, 1)
-      const nextValue =
-        startValueRef.current + (targetValue - startValueRef.current) * progress
-      setCurrentValue(Math.round(nextValue))
+
+      const nextValue = startValueRef.current + (targetValue - startValueRef.current) * progress
+
+      setCurrentValue(nextValue)
 
       if (progress < 1) {
         rafRef.current = requestAnimationFrame(animate)
+      } else {
+        setCurrentValue(targetValue)
       }
     }
 
     rafRef.current = requestAnimationFrame(animate)
 
     return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-      }
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
   }, [targetValue, duration])
 

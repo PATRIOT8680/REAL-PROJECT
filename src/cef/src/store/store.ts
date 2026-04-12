@@ -33,6 +33,7 @@ import { reportsListStore } from "./elements/adminMenu/reportsList.ts";
 import { hoverInteractionStore } from "./elements/hoverInteraction.ts";
 import { speedVehStore } from "./elements/vehicle/speed.ts";
 import { serverInfoStore } from "./elements/serverInfo.ts";
+import { fuelVehStore } from "./elements/vehicle/fuel.ts";
 
 export const store = createStore(rootReducer);
 
@@ -77,4 +78,5 @@ window.App = {
   hoverInteractionReducer: hoverInteractionStore,
   speedVehReducer: speedVehStore,
   serverInfoReducer: serverInfoStore,
-};
+  fuelVehReducer: fuelVehStore,
+}

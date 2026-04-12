@@ -1711,7 +1711,6 @@ rce.registerClientCef('dataOnlineUser:getField', (player, targetId, field) => {
 
 mp.events.add('playerJoin', (player) => {
     player.dimension = player.id + 1;
-    //console.log(`${player.socialClub} подключился!!! dim: ${player.dimension}`)
     player.model = mp.joaat('mp_m_freemode_01');
     player.spawn(new mp.Vector3(3335.050537109375, 5162.82177734375, 18.2938232421875));
     player.heading = 144;
@@ -41151,6 +41150,10 @@ const initItems = () => {
     loadMisc();
     console.log(chalk.bgGreen('• ITEMS •') + chalk.green(` Общее количество предметов загружено: ${itemsRegistry.size}`));
 };
+const findClothesItem = (type, gender, sectionId, drawable, texture = 0) => {
+    const uniqueId = generateClothesItemId(type, gender, sectionId, drawable, texture);
+    return getItemById(uniqueId);
+};
 const getAllItems = () => {
     return Array.from(itemsRegistry.values());
 };
@@ -45228,6 +45231,13 @@ const playerHasKeyForVehicle = async (player, vehicle) => {
     }
     return false;
 };
+rce.registerClient('playerHasKeyForVehicle', async (player, vehicleId) => {
+    if (!mp.vehicles.exists(vehicleId))
+        return false;
+    const vehicle = mp.vehicles.at(vehicleId);
+    const result = await playerHasKeyForVehicle(player, vehicle);
+    return result;
+});
 
 const selectChar = (player) => {
     rce.triggerClient(player, 'player:freeze', true);
@@ -45273,7 +45283,6 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
     const lastName = nameParts.slice(1).join(' ');
     rce.triggerClient(player, 'closeSelectChar');
     rce.triggerClient(player, 'execute', 'window.App.selectCharReducer.hideSelectChar()');
-    player.setVariable('player_spawned', true);
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`);
     console.log(nickname);
     setNumberChar(player.id, numberSlot);
@@ -45344,6 +45353,7 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                 });
                 rce.trigger('charSpawned', player);
                 player.setVariable('gender', dataChar.gender);
+                player.setVariable('player_spawned', true);
                 rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
                 rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
                 setCustomizationChar(player, JSON.parse(results[0].chardata));
@@ -61490,11 +61500,17 @@ const addVehicle = (vehicle, data) => {
         fullName: data.fullName,
         plate: vehicle.numberPlate,
         color: vehicle.getColor(0),
+        fuel: data.fuel ?? 100,
+        engine: vehicle.engine,
+        health: vehicle.bodyHealth,
         ownerUid: data.ownerUid,
         isRental: data.isRental || false,
         rentalKeyId: data.rentalKeyId,
         createAt: Date.now()
     };
+    vehicle.setVariable('VEH_FUEL', data.fuel ?? 100);
+    vehicle.setVariable('VEH_ENGINE', vehicle.engine);
+    vehicle.setVariable('VEH_HEALTH', vehicle.bodyHealth);
     activeVehicles.set(vehicle.id, activeVeh);
 };
 const removeVehicle = (vehicleId) => {
@@ -61505,8 +61521,65 @@ const removeVehicle = (vehicleId) => {
     }
     return false;
 };
+const updateVehicleProp = (vehicleId, field, value) => {
+    const vehicleData = activeVehicles.get(vehicleId);
+    if (!vehicleData)
+        return false;
+    vehicleData[field] = value;
+    const veh = mp.vehicles.at(vehicleId);
+    if (!veh || !mp.vehicles.exists(veh))
+        return true;
+    switch (field) {
+        case 'fuel': {
+            veh.setVariable('VEH_FUEL', Number(value));
+            break;
+        }
+        case 'engine': {
+            const newState = Boolean(value);
+            veh.setVariable('VEH_ENGINE', newState);
+            veh.engine = newState;
+            break;
+        }
+        case 'health': {
+            const newHealth = Number(value);
+            veh.setVariable('VEH_HEALTH', newHealth);
+            if (newHealth <= 300) {
+                veh.engine = false;
+                veh.setVariable('VEH_ENGINE', false);
+                vehicleData.engine = false;
+                rce.triggerClient(veh.getOccupant(0), 'sendNotify', 'err', 'Транспорт полностью сломан! Невозможно завести двигатель', 5000, 'bottom');
+            }
+            else if (newHealth <= 400) {
+                if (!vehicleData.criticalWarningShown) {
+                    vehicleData.criticalWarningShown = true;
+                    rce.triggerClient(veh.getOccupant(0), 'sendNotify', 'warning', 'Транспорт в критическом состоянии! Требуется срочный ремонт!', 5000, 'bottom');
+                }
+            }
+            else {
+                if (vehicleData.criticalWarningShown) {
+                    vehicleData.criticalWarningShown = false;
+                }
+            }
+            break;
+        }
+    }
+};
 const getVehicle = (vehicleId) => {
     return activeVehicles.get(vehicleId);
+};
+const getVehicleProp = (vehicleId, prop) => {
+    const vehicle = activeVehicles.get(vehicleId);
+    return vehicle ? vehicle[prop] : undefined;
+};
+const getVehicleProps = (vehicleId, props) => {
+    const vehicle = activeVehicles.get(vehicleId);
+    if (!vehicle)
+        return undefined;
+    const result = {};
+    for (const prop of props) {
+        result[prop] = vehicle[prop];
+    }
+    return result;
 };
 const getAllVehicles = () => {
     return Array.from(activeVehicles.values());
@@ -61515,10 +61588,28 @@ const getPlayerVehicles = (uid) => {
     return Array.from(activeVehicles.values().filter(v => v.ownerUid === uid));
 };
 const clearAllVehicles = () => activeVehicles.clear();
+rce.registerClient('getVehicleProp', (player, vehicleId, prop) => {
+    if (!mp.vehicles.exists(vehicleId))
+        return undefined;
+    return getVehicleProp(vehicleId, prop);
+});
+rce.registerClient('getVehicleProps', (player, vehicleId, props) => {
+    if (!mp.vehicles.exists(vehicleId))
+        return undefined;
+    return getVehicleProps(vehicleId, props);
+});
+rce.registerClient('updateVehicleProp', (player, vehicleId, field, value) => {
+    if (!mp.vehicles.exists(vehicleId))
+        return;
+    updateVehicleProp(vehicleId, field, value);
+});
 const vehicleManager = {
     addVehicle,
     removeVehicle,
+    updateVehicleProp,
     getVehicle,
+    getVehicleProp,
+    getVehicleProps,
     getAllVehicles,
     getPlayerVehicles,
     clearAllVehicles
@@ -61859,6 +61950,7 @@ mp.events.add('playerEnterColshape', (player, colshape) => {
                     typeFuel: vehicleConfig ? vehicleConfig.fuel : 'gas'
                 };
             });
+            rce.triggerClient(player, 'execute', 'window.App.hudReducer.setHintVisible(true)');
             rce.triggerClient(player, 'rentColshape', 'enabled', {
                 id: rentData.id,
                 isTakenRent: playerData.isTakenRent,
@@ -61870,6 +61962,7 @@ mp.events.add('playerEnterColshape', (player, colshape) => {
 mp.events.add('playerExitColshape', (player, colshape) => {
     const rentData = rentsData.find(rent => colshape.id === rent.colshapeId);
     if (rentData) {
+        rce.triggerClient(player, 'execute', 'window.App.hudReducer.setHintVisible(false)');
         rce.triggerClient(player, 'rentColshape', 'disabled', {});
     }
 });
@@ -62270,7 +62363,7 @@ const createSlotChar = async (player, numberSlot) => {
     }
 };
 const closeCreateChar = async (player, dataChar) => {
-    const { clothes } = dataChar;
+    const { clothes, gender } = dataChar;
     rce.triggerClient(player, 'execute', 'window.App.createCharReducer.hideCreateChar()');
     const cash = connectedUsers.getField(player.id, 'cash');
     const bankmoney = connectedUsers.getField(player.id, 'bankmoney');
@@ -62282,7 +62375,6 @@ const closeCreateChar = async (player, dataChar) => {
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`);
     rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
     rce.triggerClient(player, 'closeCreateChar');
-    const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?';
     const uid = await getDataAccount(player, 'uid', player.id);
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`);
     const coordExit = {
@@ -62291,24 +62383,35 @@ const closeCreateChar = async (player, dataChar) => {
         z: player.position.z.toFixed(3),
         heading: player.heading.toFixed(3)
     };
-    const coordString = JSON.stringify(coordExit);
-    data.query(sql, [coordString, uid], async (err, results) => {
-        if (err)
-            return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`));
-        await createInventoryForChar(player, uid, connectedUsers.getField(player.id, 'sid'));
-        const itemsToAdd = [
-            { id: clothes.tops, quantity: 1 },
-            { id: clothes.legs, quantity: 1 },
-            { id: clothes.shoes, quantity: 1 }
-        ];
-        for (const item of itemsToAdd) {
-            if (item.id === 0 || item.id === undefined) {
-                continue;
+    await new Promise((resolve, reject) => {
+        data.query('UPDATE chars SET coordquit = ?, chardata = ? WHERE uid = ?', [JSON.stringify(coordExit), JSON.stringify(dataChar), uid], (err) => {
+            if (err) {
+                console.log(chalk.bgRed('• CREATE CHAR •') + chalk.red(` Ошибка записи coords: ${err}`));
+                reject(err);
             }
-            await addItemToInventory(uid, item.id, item.quantity);
-        }
-        await sendInventoryToCef(player, uid);
+            else {
+                resolve();
+            }
+        });
     });
+    await createInventoryForChar(player, uid, connectedUsers.getField(player.id, 'sid'));
+    await new Promise(resolve => setTimeout(resolve, 150));
+    const realTopsId = clothes.tops ? findClothesItem('clothes', gender, 11, clothes.tops, 0)?.id ?? clothes.tops : 0;
+    const realLegsId = clothes.legs ? findClothesItem('clothes', gender, 4, clothes.legs, 0)?.id ?? clothes.legs : 0;
+    const realShoesId = clothes.shoes ? findClothesItem('clothes', gender, 6, clothes.shoes, 0)?.id ?? clothes.shoes : 0;
+    const clothesSlots = Array(13).fill(null);
+    if (realTopsId)
+        clothesSlots[5] = { id: realTopsId, quantity: 1 };
+    if (realLegsId)
+        clothesSlots[11] = { id: realLegsId, quantity: 1 };
+    if (realShoesId)
+        clothesSlots[12] = { id: realShoesId, quantity: 1 };
+    await updateSlotsArray(uid, 'clothes', clothesSlots);
+    usageClothes(player, 5, clothes.tops || 0, 0);
+    usageClothes(player, 11, clothes.legs || 0, 0);
+    usageClothes(player, 12, clothes.shoes || 0, 0);
+    await sendInventoryToCef(player, uid);
+    rce.trigger('charSpawned', player);
 };
 rce.registerCef('cef:buyUniqueScenario', async (player, scenario) => {
     const uid = await getDataAccount(player, 'uid', player.id);
@@ -62489,6 +62592,8 @@ rce.registerCef('cef:amenu:spawnVeh', (player, targetId, modelName, colorVeh) =>
         dimension: targetPlayer.dimension,
         heading: targetPlayer.heading
     });
+    const vehicleFullName = vehicles.find(v => v.short === modelName || modelName);
+    vehicleManager.addVehicle(vehicle, { fullName: vehicleFullName.full });
     vehicle.setColorRGB(colorVeh[0], colorVeh[1], colorVeh[2], colorVeh[0], colorVeh[1], colorVeh[2]);
     targetPlayer.putIntoVehicle(vehicle, 0);
 });
@@ -62749,6 +62854,7 @@ rce.registerClient('handleInteractionVehicle', async (player, action, targetId) 
                 vehicle.locked = lockedState;
                 vehicle.setVariable('doorsLocked', lockedState);
                 const stateText = lockedState ? 'закрыты' : 'открыты';
+                rce.triggerClient(player, 'execute', `window.App.speedVehReducer.setDoors(${!lockedState})`);
                 rce.triggerClient(player, 'sendNotify', lockedState ? 'err' : 'success', `Двери транпорта были ${stateText}`, 2500, 'bottom');
                 break;
             }

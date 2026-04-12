@@ -1,6 +1,7 @@
 import '../assets/styles/compiled-css/InfoChar.css'
 import { FC } from "react";
 import { ISelectChar } from "../../../actions/menus/select-char.ts";
+import { formatedMoney } from "../../../modules/formatedMoney.ts";
 
 interface IInfoChar {
   charData: ISelectChar
@@ -19,7 +20,7 @@ const InfoChar: FC<IInfoChar> = ({ charData } ) => {
     switch (key) {
       case 'cash':
       case 'bankmoney':
-        return value ? `$${value.toLocaleString('ru-RU')}` : '$0'
+        return value ? `$${formatedMoney(value)}` : '$0'
       case 'fraction':
         return value || 'Не состоит'
       case 'family':

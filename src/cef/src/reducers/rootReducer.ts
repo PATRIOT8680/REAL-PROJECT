@@ -32,6 +32,7 @@ import { reportReducer } from "./elements/adminMenu/reportsList.ts";
 import { hoverInteractionReducer } from "./elements/hoverInteraction.ts";
 import { speedVehReducer } from "./elements/vehicle/speed.ts";
 import { serverInfoReducer } from "./elements/serverInfo.ts";
+import { fuelVehReducer } from "./elements/vehicle/fuel.ts";
 
 export type RootState = {
 	// Menus
@@ -66,6 +67,7 @@ export type RootState = {
   hoverInteractionReducer: ReturnType<typeof hoverInteractionReducer>
   speedVehReducer: ReturnType<typeof speedVehReducer>
   serverInfoReducer: ReturnType<typeof serverInfoReducer>
+  fuelVehReducer: ReturnType<typeof fuelVehReducer>
 }
 
 export const rootReducer = combineReducers({
@@ -101,4 +103,5 @@ export const rootReducer = combineReducers({
   hoverInteractionReducer,
   speedVehReducer,
   serverInfoReducer,
+  fuelVehReducer
 });

@@ -691,6 +691,11 @@ rce.registerAll('chat:pushLine', (text, showTime, tile) => {
 });
 pushLine(`<b>Ваше приключение начинается на ⚡️ {FCD53F}REAL ROLEPLAY!</b>`, false, 'hello');
 
+let area;
+let street;
+const lcplayer$3 = mp.players.local;
+mp.game.ui.setRadarZoom(1.0);
+mp.game.ui.setRadarBigmapEnabled(false, false);
 const showHud = () => {
     const pl = mp.players.local;
     const minimap = getMinimapAnchor();
@@ -698,8 +703,8 @@ const showHud = () => {
     gui.execute(`
     window.App.hudReducer.showHud(
       ${isDriver},
-      ${minimap.rightX * 100}, ${minimap.leftX * 10},
-      ${minimap.topY * 100}, ${minimap.bottomY * 10},
+      ${minimap.rightX * 100}, ${minimap.leftX * 100},
+      ${minimap.topY * 100}, ${minimap.bottomY * 100},
       ${minimap.width * 100}, ${minimap.height * 100}
     )
   `);
@@ -727,6 +732,16 @@ const getMinimapAnchor = () => {
     minimap.topY = minimap.bottomY - minimap.height;
     return minimap;
 };
+mp.events.add('render', () => {
+    const currentArea = mp.game.zone.getNameOfZone(lcplayer$3.position.x, lcplayer$3.position.y, lcplayer$3.position.z);
+    const currentStreet = mp.game.pathfind.getStreetNameAtCoord(lcplayer$3.position.x, lcplayer$3.position.y, lcplayer$3.position.z);
+    if (currentArea !== area || currentStreet !== street) {
+        area = currentArea;
+        street = currentStreet;
+        gui.execute(`window.App.hudReducer.setArea('${mp.game.ui.getLabelText(currentArea)}')`);
+        gui.execute(`window.App.hudReducer.setStreet('${mp.game.ui.getStreetNameFromHashKey(currentStreet.streetName)}')`);
+    }
+});
 
 let visibleAMenu$1 = false;
 const plLocal = mp.players.local;
@@ -934,7 +949,7 @@ const gui = {
     }
 };
 
-const lcplayer = mp.players.local;
+const lcplayer$2 = mp.players.local;
 mp.keys.bind(Keys.VK_F7, true, () => {
     mp.players.local.setArmour(100);
 });
@@ -947,7 +962,7 @@ mp.events.add('playerDeath', async (player, reason, killer) => {
     const [chance, luck] = getRandomChance();
     let killerName = null;
     let killerSid = null;
-    const playerPos = lcplayer.position;
+    const playerPos = lcplayer$2.position;
     const getGroundZ = mp.game.gameplay.getGroundZFor3dCoord(playerPos.x, playerPos.y, playerPos.z, true, false);
     if (killer) {
         killerName = await rce.callServer('dataOnlineUser:getField', killer.id, 'nickName');
@@ -960,10 +975,10 @@ mp.events.add('playerDeath', async (player, reason, killer) => {
     gui.execute(`window.App.chatReducer.hideChat()`);
     gui.execute(`window.App.hudReducer.hideHud()`);
     rce.triggerCef('client:chanceReborn', chance, luck);
-    if (!lcplayer.vehicle)
-        lcplayer.setCollision(false, false);
-    lcplayer.freezePosition(true);
-    lcplayer.setInvincible(true);
+    if (!lcplayer$2.vehicle)
+        lcplayer$2.setCollision(false, false);
+    lcplayer$2.freezePosition(true);
+    lcplayer$2.setInvincible(true);
     mp.gui.cursor.visible = true;
     mp.game.ui.setPauseMenuActive(false);
     mp.game.ui.displayRadar(false);
@@ -976,15 +991,15 @@ const playerRevive = (type) => {
         rce.triggerServer('playerKill');
     gui.execute(`window.App.chatReducer.showChat()`);
     gui.execute(`window.App.deathReducer.hideDeath()`);
-    lcplayer.freezePosition(false);
-    lcplayer.setInvincible(false);
+    lcplayer$2.freezePosition(false);
+    lcplayer$2.setInvincible(false);
     mp.gui.cursor.visible = false;
     mp.game.ui.setPauseMenuActive(true);
     mp.game.ui.displayRadar(true);
     mp.game.graphics.stopAllScreenEffects();
     showHud();
-    if (lcplayer.isCollisonDisabled())
-        lcplayer.setCollision(true, true);
+    if (lcplayer$2.isCollisonDisabled())
+        lcplayer$2.setCollision(true, true);
 };
 rce.registerAll('playerRevive', (type) => {
     playerRevive(type);
@@ -2291,9 +2306,55 @@ mp.keys.bind(Keys.VK_ESCAPE, false, () => {
     }
 });
 
+let fuelInterval = null;
+let currentLocalFuel = 100;
+let lastSentFuel = 100;
+const startFuelSystem = (initialFuel = 100) => {
+    if (fuelInterval)
+        clearInterval(fuelInterval);
+    currentLocalFuel = Math.max(0, Math.min(initialFuel, 100));
+    lastSentFuel = currentLocalFuel;
+    fuelInterval = setInterval(() => {
+        const player = mp.players.local;
+        const vehicle = player.vehicle;
+        if (!vehicle)
+            return;
+        const isEngineOn = vehicle.getVariable('VEH_ENGINE');
+        if (!isEngineOn)
+            return;
+        const speedVeh = vehicle.getSpeed() * 3.6;
+        if (speedVeh < 2)
+            return;
+        let consumption = speedVeh > 5 ? speedVeh * 0.009 : 0.035;
+        if (currentLocalFuel <= consumption) {
+            currentLocalFuel = 0;
+            gui.execute(`window.App.fuelVehReducer.setFuel(0)`);
+            rce.triggerServer('updateVehicleProp', vehicle.remoteId, 'fuel', 0);
+            rce.triggerServer('updateVehicleProp', vehicle.remoteId, 'engine', false);
+            rce.trigger('sendNotify', 'err', 'Топливо закончилось! Двигатель заглох', 4000, 'bottom');
+            return;
+        }
+        currentLocalFuel = Math.max(0, currentLocalFuel - consumption);
+        currentLocalFuel = Number(currentLocalFuel.toFixed(2));
+        const fuelSpentSinceLastSend = lastSentFuel - currentLocalFuel;
+        if (fuelSpentSinceLastSend >= 1) {
+            rce.triggerServer('updateVehicleProp', vehicle.remoteId, 'fuel', currentLocalFuel);
+            lastSentFuel = currentLocalFuel;
+        }
+        gui.execute(`window.App.fuelVehReducer.setFuel(${currentLocalFuel})`);
+    }, 900);
+};
+const stopFuelSystem = () => {
+    if (fuelInterval) {
+        clearInterval(fuelInterval);
+        fuelInterval = null;
+    }
+};
+
 const HIT_MAX_DIST = 2.5;
 const RAY_LENGTH = 15;
 let openedInteraction = false;
+const lcplayer$1 = mp.players.local;
 mp.events.add('render', () => {
     const hit = checkCenterScreenHit(RAY_LENGTH, HIT_MAX_DIST, 2);
     const changedHit = hit.type !== lastHit.type || hit.remoteId !== lastHit.remoteId;
@@ -2345,6 +2406,11 @@ mp.keys.bind(Keys.VK_E, false, async () => {
         gui.execute(`window.App.interactionReducer.showInteraction('vehicle', ${lastHit.remoteId})`);
         mp.gui.cursor.visible = true;
     }
+});
+mp.keys.bind(Keys.VK_L, false, () => {
+    if (!lcplayer$1.vehicle)
+        return;
+    rce.triggerServer('handleInteractionVehicle', 'toggleDoors', lcplayer$1.vehicle.remoteId);
 });
 mp.keys.bind(Keys.VK_ESCAPE, false, () => {
     if (openedInteraction) {
@@ -2515,16 +2581,17 @@ rce.registerAll('closeRentMenu', () => {
 });
 
 let localplayer = mp.players.local;
-let currentVehicle = null;
+let currentVehicle$1 = null;
 mp.events.add('playerEnterVehicle', (vehicle, seat) => {
     if (vehicle && seat === -1) {
-        currentVehicle = vehicle;
+        currentVehicle$1 = vehicle;
         gui.execute(`window.App.hudReducer.showHud(true)`);
+        gui.execute(`window.App.speedVehReducer.setEngine(${vehicle.getVariable('VEH_ENGINE') ?? true})`);
     }
 });
 mp.events.add('playerLeaveVehicle', (vehicle, seat) => {
     if (vehicle && seat === -1) {
-        currentVehicle = null;
+        currentVehicle$1 = null;
         gui.execute(`window.App.hudReducer.showHud(false)`);
     }
 });
@@ -2534,17 +2601,69 @@ mp.events.add('render', () => {
         gui.execute(`window.App.speedVehReducer.setSpeed(${Number(speed.toFixed(0))})`);
     }
     else {
-        if (currentVehicle !== null) {
-            currentVehicle = null;
+        if (currentVehicle$1 !== null) {
+            currentVehicle$1 = null;
             gui.execute(`window.App.hudReducer.showHud(false)`);
             gui.execute(`window.App.speedVehReducer.setSpeed(0)`);
         }
     }
 });
 
+const lcplayer = mp.players.local;
+let isKeyPressed = false;
+let keyPressedTimeout = null;
+mp.keys.bind(Keys.VK_2, false, async () => {
+    if (!lcplayer.vehicle)
+        return;
+    if (isKeyPressed)
+        return;
+    if (keyPressedTimeout)
+        clearTimeout(keyPressedTimeout);
+    isKeyPressed = true;
+    keyPressedTimeout = setTimeout(() => {
+        isKeyPressed = false;
+        keyPressedTimeout = null;
+        clearTimeout(keyPressedTimeout);
+    }, 1500);
+    const vehicle = lcplayer.vehicle;
+    const currentEngineStatus = vehicle.getVariable('VEH_ENGINE') ?? true;
+    const currentFuel = vehicle.getVariable('VEH_FUEL') ?? true;
+    const hasKey = await rce.callServer('playerHasKeyForVehicle', vehicle.remoteId);
+    if (!hasKey) {
+        rce.trigger('sendNotify', 'err', 'У вас нет ключа от этого транспорта!', 3200, 'bottom');
+        return;
+    }
+    if (currentEngineStatus === false) {
+        const vehHealth = vehicle.getVariable('VEH_HEALTH');
+        if (vehHealth <= 300) {
+            rce.trigger('sendNotify', 'err', 'Транспорт сломан! Невозможно завести', 3200, 'bottom');
+            return;
+        }
+    }
+    const newEngineState = !currentEngineStatus;
+    if (newEngineState === true) {
+        if (currentFuel <= 0) {
+            rce.trigger('sendNotify', 'err', 'В баке нет топлива! Невозможно завести двигатель!', 3200, 'bottom');
+            return;
+        }
+        rce.trigger('sendNotify', 'success', 'Транспорт заведен', 2000, 'bottom');
+        startFuelSystem(currentFuel);
+        gui.execute(`window.App.fuelVehReducer.setFuel(${currentFuel})`);
+        gui.execute(`window.App.speedVehReducer.setEngine(true)`);
+    }
+    else {
+        rce.trigger('sendNotify', 'err', 'Транспорт заглушен', 2000, 'bottom');
+        stopFuelSystem();
+        gui.execute(`window.App.fuelVehReducer.setFuel(0)`);
+        gui.execute(`window.App.speedVehReducer.setEngine(false)`);
+    }
+    rce.triggerServer('updateVehicleProp', vehicle.remoteId, 'engine', newEngineState);
+});
+
+let lastBodyHealth = 1000;
+let currentVehicle = null;
 const player = mp.players.local;
 rce.registerAll('getModelVeh', () => {
-    mp.console.logWarning('Получаем модельку');
     if (player.vehicle) {
         let modelName = mp.game.vehicle.getDisplayNameFromVehicleModel(player.vehicle.model).toLowerCase();
         mp.console.logWarning(`model: ${modelName}`);
@@ -2553,6 +2672,47 @@ rce.registerAll('getModelVeh', () => {
     else {
         return null;
     }
+});
+mp.events.add("playerReady", () => {
+    mp.game.weapon.setEnableLocalOutgoingDamage(true);
+    mp.game.vehicle.defaultEngineBehaviour = false;
+});
+mp.events.add("playerEnterVehicle", (vehicle, seat) => {
+    if (seat === -1) {
+        const savedFuel = vehicle.getVariable('VEH_FUEL');
+        stopFuelSystem();
+        startFuelSystem(savedFuel);
+        vehicle.setInvincible(false);
+        currentVehicle = vehicle;
+        lastBodyHealth = Math.floor(vehicle.getBodyHealth());
+        gui.execute(`window.App.fuelVehReducer.setFuel(0)`);
+    }
+});
+mp.events.add("playerLeaveVehicle", (vehicle, seat) => {
+    if (seat === -1) {
+        currentVehicle = null;
+    }
+});
+setInterval(() => {
+    if (!currentVehicle || !mp.vehicles.exists(currentVehicle))
+        return;
+    const currentBody = Math.floor(currentVehicle.getBodyHealth());
+    if (currentBody < lastBodyHealth - 4) {
+        rce.triggerServer('updateVehicleProp', currentVehicle.id, 'health', currentBody);
+    }
+    lastBodyHealth = currentBody;
+}, 2000);
+mp.events.add('outgoingDamage', (sourceEntity, targetEntity, sourcePlayer, weapon, boneIndex, damage) => {
+    if (!targetEntity || targetEntity.type !== "vehicle")
+        return;
+    const vehicle = targetEntity;
+    const localPlayer = mp.players.local;
+    if (!localPlayer.vehicle || localPlayer.vehicle.handle !== vehicle.handle)
+        return;
+    if (vehicle.getPedInSeat(-1) !== localPlayer.handle)
+        return;
+    const currentBodyHealth = Math.floor(vehicle.getBodyHealth());
+    rce.triggerServer('updateVehicleProp', vehicle.id, 'health', currentBodyHealth);
 });
 
 // mp.game.invoke("0x6E9EF3A33C8899F8", true)

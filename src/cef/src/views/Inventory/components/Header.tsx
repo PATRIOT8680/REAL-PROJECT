@@ -14,7 +14,7 @@ const Header = ({ closeInventory }: IHeader) => {
         <span className="title">Инвентарь</span>
         <MoneyV1 />
       </div>
-      <IndicatorsPlayer />
+      <IndicatorsPlayer forInventory={true} />
       <div className="esc-exit" onClick={closeInventory}>
         <span className="keybind">ESC</span>
         <span className="description">Выйти</span>

@@ -1,4 +1,6 @@
 import { rce } from "../utils/rce";
+import { vehicleManager } from "../vehicles";
+import { vehicles } from "../configs/vehicles";
 
 rce.registerCef('cef:amenu:spawnVeh', (player: PlayerMp, targetId: number, modelName: string, colorVeh: Array3d) => {
   const targetPlayer = mp.players.at(targetId)
@@ -18,6 +20,9 @@ rce.registerCef('cef:amenu:spawnVeh', (player: PlayerMp, targetId: number, model
     heading: targetPlayer.heading
   })
 
+  const vehicleFullName = vehicles.find(v => v.short === modelName || modelName)
+
+  vehicleManager.addVehicle(vehicle, { fullName: vehicleFullName.full })
   vehicle.setColorRGB(colorVeh[0], colorVeh[1], colorVeh[2], colorVeh[0], colorVeh[1], colorVeh[2])
   targetPlayer.putIntoVehicle(vehicle, 0)
 })
