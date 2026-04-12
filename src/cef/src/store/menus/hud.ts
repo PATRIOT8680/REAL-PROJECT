@@ -1,5 +1,5 @@
 import { store } from "../store.ts";
-import { showHud, hideHud } from "../../actions/menus/hud.ts";
+import { showHud, hideHud, setBindsVisible, setHintVisible, setStreet, setArea } from "../../actions/menus/hud.ts";
 
 export const hudStore = {
   showHud: (
@@ -12,4 +12,8 @@ export const hudStore = {
     height?: number,
   ) => store.dispatch(showHud(speedometerVisible, rightX, leftX, topY, bottomY, width, height)),
   hideHud: () => store.dispatch(hideHud()),
+  setBindsVisible: (visible: boolean) => store.dispatch(setBindsVisible(visible)),
+  setHintVisible: (visible: boolean) => store.dispatch(setHintVisible(visible)),
+  setStreet: (street: string) => store.dispatch(setStreet(street)),
+  setArea: (area: string) => store.dispatch(setArea(area))
 }

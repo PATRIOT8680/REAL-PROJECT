@@ -2,11 +2,14 @@ import { rce } from '../utils/rce'
 import { data } from '../database/mysql'
 import { getDataAccount } from '../data/getDataAccount'
 import chalk from 'chalk'
-import {connectedUsers} from "../data/dataConnectedUser";
+import { connectedUsers } from "../data/dataConnectedUser";
 import { setCustomizationChar } from '../index'
 import { decrementDonatCoins } from "../data/account/donatcoins";
 import { createInventoryForChar } from "../modules/inventory/inventory";
 import { addItemToInventory, sendInventoryToCef } from "../modules/inventory/inventoryHandlers";
+import { updateSlotsArray } from "../modules/inventory/inventoryMove";
+import { usageClothes } from "../player/clothes";
+import { findClothesItem } from "../modules/inventory/items";
 
 const createSlotChar = async (player: PlayerMp, numberSlot: number) => {
   try {
@@ -33,7 +36,7 @@ const createSlotChar = async (player: PlayerMp, numberSlot: number) => {
 }
 
 const closeCreateChar = async (player: PlayerMp, dataChar) => {
-  const { clothes } = dataChar
+  const { clothes, gender } = dataChar
 
   rce.triggerClient(player, 'execute', 'window.App.createCharReducer.hideCreateChar()')
 
@@ -51,7 +54,6 @@ const closeCreateChar = async (player: PlayerMp, dataChar) => {
 
   rce.triggerClient(player, 'closeCreateChar')
 
-  const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?'
   const uid = await getDataAccount(player, 'uid', player.id)
 
   rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`)
@@ -62,27 +64,44 @@ const closeCreateChar = async (player: PlayerMp, dataChar) => {
     z: player.position.z.toFixed(3),
     heading: player.heading.toFixed(3)
   }
-  const coordString = JSON.stringify(coordExit)
 
-  data.query(sql, [coordString, uid], async (err, results) => {
-    if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
-    await createInventoryForChar(player, uid, connectedUsers.getField(player.id, 'sid'))
-
-    const itemsToAdd = [
-      { id: clothes.tops, quantity: 1 },
-      { id: clothes.legs, quantity: 1 },
-      { id: clothes.shoes, quantity: 1 }
-    ]
-
-    for (const item of itemsToAdd) {
-      if (item.id === 0 || item.id === undefined) {
-        continue
+  await new Promise<void>((resolve, reject) => {
+    data.query(
+      'UPDATE chars SET coordquit = ?, chardata = ? WHERE uid = ?',
+      [JSON.stringify(coordExit), JSON.stringify(dataChar), uid],
+      (err) => {
+        if (err) {
+          console.log(chalk.bgRed('• CREATE CHAR •') + chalk.red(` Ошибка записи coords: ${err}`))
+          reject(err)
+        } else {
+          resolve()
+        }
       }
-      await addItemToInventory(uid, item.id, item.quantity)
-    }
-
-    await sendInventoryToCef(player, uid)
+    )
   })
+
+  await createInventoryForChar(player, uid, connectedUsers.getField(player.id, 'sid'))
+  await new Promise(resolve => setTimeout(resolve, 150))
+
+  const realTopsId  = clothes.tops  ? findClothesItem('clothes', gender, 11, clothes.tops, 0)?.id ?? clothes.tops  : 0
+  const realLegsId  = clothes.legs  ? findClothesItem('clothes', gender, 4,  clothes.legs, 0)?.id ?? clothes.legs  : 0
+  const realShoesId = clothes.shoes ? findClothesItem('clothes', gender, 6,  clothes.shoes, 0)?.id ?? clothes.shoes : 0
+
+  const clothesSlots = Array(13).fill(null)
+
+  if (realTopsId)  clothesSlots[5]  = { id: realTopsId,  quantity: 1 }
+  if (realLegsId)  clothesSlots[11] = { id: realLegsId,  quantity: 1 }
+  if (realShoesId) clothesSlots[12] = { id: realShoesId, quantity: 1 }
+
+  await updateSlotsArray(uid, 'clothes', clothesSlots)
+
+  usageClothes(player, 5,  clothes.tops || 0, 0)
+  usageClothes(player, 11, clothes.legs || 0, 0)
+  usageClothes(player, 12, clothes.shoes || 0, 0)
+
+  await sendInventoryToCef(player, uid)
+
+  rce.trigger('charSpawned', player)
 }
 
 rce.registerCef('cef:buyUniqueScenario', async (player: PlayerMp, scenario: string) => {
@@ -106,7 +125,6 @@ rce.registerCef('cef:buyUniqueScenario', async (player: PlayerMp, scenario: stri
           resolve('ok')
         })
       })
-
 
     } catch (e) {
       console.log(chalk.bgRed('• SET UQUEST (GL) •') + chalk.red(` ${e}`))

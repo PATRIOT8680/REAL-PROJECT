@@ -85,7 +85,6 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
   const lastName = nameParts.slice(1).join(' ')
   rce.triggerClient(player, 'closeSelectChar')
   rce.triggerClient(player, 'execute', 'window.App.selectCharReducer.hideSelectChar()')
-  player.setVariable('player_spawned', true)
 
   rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`)
   console.log(nickname)
@@ -173,6 +172,7 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
 
         rce.trigger('charSpawned', player)
         player.setVariable('gender', dataChar.gender)
+        player.setVariable('player_spawned', true)
         rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
         rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 

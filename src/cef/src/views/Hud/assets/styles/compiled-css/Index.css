@@ -1,3 +1,10 @@
-
+.hud .vehicle-section {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.65rem;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
 
 /*# sourceMappingURL=Index.css.map */

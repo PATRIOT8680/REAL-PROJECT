@@ -4,6 +4,16 @@
   align-items: center;
   gap: 2rem;
 }
+.indicators-player.non-inventory {
+  gap: 0.5rem;
+}
+.indicators-player.non-inventory .indicator .filling-scale img {
+  width: 0.7rem;
+}
+.indicators-player.non-inventory .indicator .filling-scale svg {
+  width: 2.5rem;
+  height: 2.5rem;
+}
 .indicators-player .indicator {
   display: flex;
   flex-direction: column;

@@ -20,6 +20,7 @@ rce.registerClient('handleInteractionVehicle', async (player: PlayerMp, action: 
         vehicle.setVariable('doorsLocked', lockedState)
 
         const stateText = lockedState ? 'закрыты' : 'открыты'
+        rce.triggerClient(player, 'execute', `window.App.speedVehReducer.setDoors(${!lockedState})`)
         rce.triggerClient(player, 'sendNotify', lockedState ? 'err' : 'success', `Двери транпорта были ${stateText}`, 2500, 'bottom')
         break
       }

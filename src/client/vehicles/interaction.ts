@@ -8,6 +8,7 @@ const HIT_MAX_DIST = 2.5
 const RAY_LENGTH = 15
 
 let openedInteraction: boolean = false
+const lcplayer = mp.players.local
 
 mp.events.add('render', () => {
   const hit = checkCenterScreenHit(RAY_LENGTH, HIT_MAX_DIST, 2);
@@ -65,6 +66,11 @@ mp.keys.bind(Keys.VK_E, false, async () => {
     gui.execute(`window.App.interactionReducer.showInteraction('vehicle', ${lastHit.remoteId})`)
     mp.gui.cursor.visible = true
   }
+})
+
+mp.keys.bind(Keys.VK_L, false, () => {
+  if (!lcplayer.vehicle) return
+  rce.triggerServer('handleInteractionVehicle', 'toggleDoors', lcplayer.vehicle.remoteId)
 })
 
 mp.keys.bind(Keys.VK_ESCAPE, false, () => {

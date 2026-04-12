@@ -8,6 +8,7 @@ mp.events.add('playerEnterVehicle', (vehicle: VehicleMp, seat: number)=> {
   if (vehicle && seat === -1) {
     currentVehicle = vehicle
     gui.execute(`window.App.hudReducer.showHud(true)`)
+    gui.execute(`window.App.speedVehReducer.setEngine(${vehicle.getVariable('VEH_ENGINE') ?? true})`)
   }
 })
 
