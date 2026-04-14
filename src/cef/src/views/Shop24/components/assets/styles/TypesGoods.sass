@@ -1,0 +1,23 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+.types-goods
+  display: flex
+  align-items: center
+  margin-top: -.4rem
+  gap: 1.2rem
+
+  .name-type
+    font-size: 1rem
+    font-family: $Druk
+    text-transform: uppercase
+    color: rgba(255, 255, 255, 0.2)
+    transition: color .3s ease
+    cursor: pointer
+
+    &:hover
+      color: rgba(255, 255, 255, 0.4)
+
+    &.selected
+      color: #ffca58
+      tansition: color .3s ease

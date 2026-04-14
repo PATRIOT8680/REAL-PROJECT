@@ -41,9 +41,22 @@ export const CreateBusiness = () => {
   }
 
   const handleCreateBusiness = () => {
-    if (!owner || (owner === 'gov' || (owner !== 'gov' && typeof Number(owner) !== 'number'))) {
+    if (!owner) {
       window.App.sendNotifyReducer.sendNotify('err', 'Укажите владельца (gov или sid игрока)', 4000, 'top')
       return
+    }
+
+    let ownerValue: string | number = owner
+
+    if (owner !== 'gov') {
+      const ownerNum = Number(owner)
+
+      if (isNaN(ownerNum) || ownerNum <= 0) {
+        window.App.sendNotifyReducer.sendNotify('err', 'UID владельца должен быть положительным числом!', 4000, 'top')
+        return
+      }
+
+      ownerValue = ownerNum
     }
 
     const priceBusiness = Number(price)

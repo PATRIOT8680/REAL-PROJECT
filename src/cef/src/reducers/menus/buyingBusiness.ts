@@ -2,7 +2,7 @@ import { IBuyingBusiness } from "../../actions/menus/buyingBusiness.ts";
 
 const initialState = {
   isVisible: false,
-  infoBusines: {
+  infoBusiness: {
     id: 0,
     name: 'Quickstop 24/7',
     owner: 'gov',
@@ -16,7 +16,7 @@ export const buyingBusinessReducer = (state = initialState, action: any) => {
     case 'SHOW_BUYING_BUSINESS':
       return {
         isVisible: true,
-        infoBusines: action.infoBusines
+        infoBusiness: action.infoBusiness
       }
     case 'HIDE_BUYING_BUSINESS':
       return { isVisible: false }

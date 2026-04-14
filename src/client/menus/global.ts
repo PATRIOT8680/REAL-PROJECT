@@ -11,6 +11,7 @@ import './interface/reportMenu'
 import './interface/inventory'
 import './interface/hud'
 import './interface/dev-menus'
+import './interface/business'
 
 mp.events.add('guiReady', () => {
   mp.gui.chat.show(false)
