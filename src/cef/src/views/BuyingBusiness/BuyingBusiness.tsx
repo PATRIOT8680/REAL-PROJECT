@@ -2,6 +2,7 @@ import './assets/styles/compiled-css/BuyingBusiness.css'
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers/rootReducer.ts";
 import { displayFormatedPrice } from "../../hooks/displayFormatedPrice.ts";
+import { rce } from "../../modules/rce.ts";
 
 import svg_business from './assets/img/img-business.svg'
 import svg_id from './assets/img/id.svg'
@@ -10,14 +11,18 @@ import svg_price from './assets/img/price.svg'
 import svg_markup from './assets/img/markup.svg'
 
 const BuyingBusiness = () => {
-  const infoBusiness = useSelector((state: RootState) => state.buyingBusinessReducer.infoBusines)
-  const owner = infoBusiness.owner === 'gov' ? 'Государство' : infoBusiness.owner
+  const infoBusiness = useSelector((state: RootState) => state.buyingBusinessReducer.infoBusiness)
+  const owner = infoBusiness.owner === 'gov' ? 'Государство' : `#${infoBusiness.owner}`
+
+  const handleCloseMenu = () => {
+    rce.triggerClient('closeInfoBusinessMenu')
+  }
 
   return (
     <div className="buying-business">
       <header className="header-buying">
         <span className="name">{infoBusiness.name}</span>
-        <span className="close-menu">X</span>
+        <span className="close-menu" onClick={handleCloseMenu}>X</span>
       </header>
       <div className="img-box">
         <img src={svg_business} />

@@ -21,6 +21,7 @@ import './entity/interaction'
 import './player/offer'
 import './player/interaction'
 import './vehicles/index'
+import './utils/createLabel'
 
 // mp.game.invoke("0x6E9EF3A33C8899F8", true)
 // mp.game.invoke("0x4CC7F0FEA5283FE0", true)

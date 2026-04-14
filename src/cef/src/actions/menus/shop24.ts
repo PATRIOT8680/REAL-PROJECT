@@ -1,25 +1,25 @@
 export interface IProductCard {
-  key: string,
+  id: number,
+  type: string,
   name: string,
   description: string,
-  type: string,
-  price: number,
   weight: number,
+  price: number
 }
 
 export const showShop24 = (
   id: number,
-  products: IProductCard[]
+  goods: IProductCard[]
 ) => {
-  return { type: 'SHOW_SHOP_24', id, products }
+  return { type: 'SHOW_SHOP_24', id, goods }
 }
 
-export const setProducts = (products: IProductCard[]) => {
-  return { type: 'SET_SHOP24_PRODUCTS', products }
+export const setGoods = (goods: IProductCard[]) => {
+  return { type: 'SET_SHOP24_GOODS', goods }
 }
 
-export const addProduct = (product: IProductCard) => {
-  return { type: 'ADD_SHOP24_PRODUCT', product }
+export const addProduct = (goods: IProductCard) => {
+  return { type: 'ADD_SHOP24_PRODUCT', goods }
 }
 
 export const hideShop24 = () => {

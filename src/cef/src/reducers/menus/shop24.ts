@@ -1,32 +1,34 @@
+import { IProductCard } from "../../actions/menus/shop24.ts";
+
 const initialState = {
-  isVisible: false,
+  isVisible: true,
   id: 0,
   products: [
     {
-      key: 'sprunk',
+      id: 1,
+      type: 'foods',
       name: 'Спранк',
       description: 'Превращает твой нефритовый стержень в отбойный молоток!',
-      type: 'food',
       price: 1500,
       weight: 0.2,
     },
     {
-      key: 'sprunk',
+      id: 1,
+      type: 'foods',
       name: 'Спранк',
       description: 'Превращает твой нефритовый стержень в отбойный молоток!',
-      type: 'food',
-      price: 1800,
-      weight: 0.25,
+      price: 1500,
+      weight: 0.2,
     },
     {
-      key: 'sprunk',
+      id: 1,
+      type: 'foods',
       name: 'Спранк',
       description: 'Превращает твой нефритовый стержень в отбойный молоток!',
-      type: 'food',
-      price: 1700,
-      weight: 0.3,
+      price: 1500,
+      weight: 0.2,
     },
-  ]
+  ] as IProductCard[]
 }
 
 export const shop24Reducer = (state = initialState, action: any) => {
@@ -36,12 +38,12 @@ export const shop24Reducer = (state = initialState, action: any) => {
         ...state,
         isVisible: true,
         id: action.id,
-        products: action.products
+        products: action.goods
       }
-    case 'SET_SHOP24_PRODUCTS':
+    case 'SET_SHOP24_GOODS':
       return {
         ...state,
-        products: action.products,
+        products: action.goods,
       }
     case 'ADD_SHOP24_PRODUCT':
       return {
@@ -50,6 +52,7 @@ export const shop24Reducer = (state = initialState, action: any) => {
       }
     case 'HIDE_SHOP_24':
       return {
+        ...state,
         isVisible: false
       }
     default:

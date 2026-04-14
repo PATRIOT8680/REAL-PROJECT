@@ -43,6 +43,7 @@ import Interaction from './views/Interaction/Index.tsx'
 import Offer from './views/Offer/Index.tsx'
 import DevMenus from "./views/DevMenus/Index.tsx";
 import BuyingBusiness from "./views/BuyingBusiness/BuyingBusiness.tsx";
+import Shop24 from "./views/Shop24/Shop24.tsx";
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
@@ -73,6 +74,7 @@ const App = () => {
   const interactionVisible = useSelector((state: RootState) => state.interactionReducer.isVisible)
   const devMenusVisible = useSelector((state: RootState) => state.devMenusReducer.isVisible)
   const buyingBusinessVisible = useSelector((state: RootState) => state.buyingBusinessReducer.isVisible)
+  const shop24Visible = useSelector((state: RootState) => state.shop24Reducer.isVisible)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -95,6 +97,7 @@ const App = () => {
       Interaction: interactionVisible,
       Dev: devMenusVisible,
       BuyingBusiness: buyingBusinessVisible,
+      Shop24: shop24Visible
     }
 
     const open = Object.entries(menus)
@@ -180,6 +183,7 @@ const App = () => {
       <Offer />
       { devMenusVisible && <DevMenus /> }
       { buyingBusinessVisible && <BuyingBusiness /> }
+      { shop24Visible && <Shop24 /> }
 
       {/*<div className="language_ambients">*/}
       {/*  /!*{ shouldChangeLanguage && <ChangeLanguage /> }*!/*/}

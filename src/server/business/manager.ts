@@ -1,5 +1,6 @@
 import { rce } from "../utils/rce";
 import { BusinessData, BusinessOwner, CreateBusinessDto, BusinessNames, BusinessType } from "./types";
+import { connectedUsers } from "../data/dataConnectedUser";
 import { data } from "../database/mysql";
 import * as mysql from "mysql2";
 import chalk from "chalk";
@@ -21,6 +22,45 @@ rce.registerCef('createBusiness', (player: PlayerMp, data) => {
   createBusiness(dto, data.owner)
 })
 
+mp.events.add('playerEnterColshape', (player: PlayerMp, colshape: ColshapeMp) => {
+  if (!player.vehicle) {
+    const businessData = Array.from(businesses.values()).find((b: BusinessData) => colshape.id === b.colshapeId)
+
+    if (businessData) {
+      rce.triggerClient(player, 'execute', 'window.App.hudReducer.setHintVisible(true)')
+
+      rce.triggerClient(player, 'businessColshape', 'enabled', {
+        id: businessData.id,
+        name: businessData.name,
+        owner: businessData.owner,
+        price: businessData.price,
+        markup: businessData.markup
+      })
+    }
+  }
+})
+
+mp.events.add('playerExitColshape', (player: PlayerMp, colshape: ColshapeMp) => {
+  const businessData = Array.from(businesses.values()).find((b: BusinessData) => colshape.id === b.colshapeId)
+
+  if (businessData) {
+    rce.triggerClient(player, 'execute', 'window.App.hudReducer.setHintVisible(false)')
+    rce.triggerClient(player, 'businessColshape', 'disabled', {})
+  }
+})
+
+mp.events.add('playerJoin', (player: PlayerMp) => {
+  businesses.forEach((business: BusinessData) => {
+    const pos = business.position
+
+    rce.triggerClient(player, 'createLabel',
+      `Бизнес #${business.id}`,
+      { x: pos.x, y: pos.y, z: pos.z + 0.6 },
+      7, 5.0, [229, 255, 173, 200], 0
+    )
+  })
+})
+
 export const initBusinessSystem = async (): Promise<void> => {
   await loadBusinesses()
   console.log(chalk.green('[UPLOADED BUSINESSES]') + ` Загружено ${businesses.size} бизнесов`)
@@ -32,8 +72,10 @@ const loadBusinesses = async (): Promise<void> => {
     businesses.clear()
 
     rows.forEach((row: any) => {
-      const nameBusiness = BusinessType[row.type]
+      const nameBusiness = BusinessNames[row.type as BusinessType]
       const pos = new mp.Vector3(JSON.parse(row.position))
+
+      const colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.2, 0)
 
       const business: BusinessData = {
         id: row.id,
@@ -44,6 +86,7 @@ const loadBusinesses = async (): Promise<void> => {
         markup: row.markup ?? 0.00,
         balance: row.balance ?? 0,
         position: pos,
+        colshapeId: colshape.id,
         taxAccumulated: Number(row.taxAccumulated || 0),
         lastHourlyExpense: new Date(row.lastHourlyExpense || Date.now()),
         taxDeadline: new Date(row.taxDeadline || Date.now()),
@@ -57,6 +100,12 @@ const loadBusinesses = async (): Promise<void> => {
         dimension: 0,
         rotation: new mp.Vector3(0, 180, 0)
       })
+
+      rce.triggerClients('createLabel',
+        `Бизнес #${row.id}`,
+        { x: pos.x, y: pos.y, z: pos.z + 0.6 },
+        7, 5.0, [229, 255, 173, 200], 0
+      )
 
       businesses.set(row.id, business)
     })
@@ -78,22 +127,25 @@ export const createBusiness = async (
 
     const [result] = await db.execute(`
       INSERT INTO businesses
-      (type, owner, price, position, balance, markup, taxAccumulated, lastHourlyExpense, taxDeadline, lastBalanceZero)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (type, owner, price, position, balance, markup, taxAccumulated, lastHourlyExpense, taxDeadline, lastBalanceZero, createdAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [
       dto.type,
       typeof owner === 'number' ? owner.toString() : owner,
       dto.price,
       JSON.stringify(dto.position),
-      0,
+      dto.balance,
       markup,
       0,
       now,
       new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
-      null
+      null,
+      new Date()
     ])
 
+    const pos = dto.position
     const insertId = (result as mysql.ResultSetHeader).insertId
+    const colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.2, 0)
 
     const newBusiness: BusinessData = {
       id: insertId,
@@ -103,7 +155,8 @@ export const createBusiness = async (
       price: dto.price,
       markup: dto.markup ?? 0.00,
       balance: 0,
-      position: dto.position,
+      position: pos,
+      colshapeId: colshape.id,
       taxAccumulated: 0,
       lastHourlyExpense: now,
       taxDeadline: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
@@ -112,11 +165,17 @@ export const createBusiness = async (
       updatedAt: now,
     }
 
-    mp.markers.new(20, dto.position, 0.75, {
+    mp.markers.new(20, pos, 0.75, {
       color: [229, 255, 173, 255],
       dimension: 0,
       rotation: new mp.Vector3(0, 180, 0)
     })
+
+    rce.triggerClients('createLabel',
+      `Бизнес #${insertId}`,
+      { x: pos.x, y: pos.y, z: pos.z + 0.6 },
+      7, 5.0, [229, 255, 173, 200], 0
+    )
 
     businesses.set(insertId, newBusiness)
     console.log(chalk.green('[BUSINESS]') + ` Создан новый бизнес "${nameBusiness}" (ID: ${insertId})`)

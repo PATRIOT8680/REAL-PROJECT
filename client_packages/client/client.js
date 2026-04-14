@@ -903,6 +903,48 @@ rce.registerAll('closeDevMenu', () => {
     showHud();
 });
 
+let isKeyDownE = 'disabled';
+let businessData = undefined;
+rce.registerServer('businessColshape', (status, data) => {
+    if (status === 'enabled') {
+        isKeyDownE = 'enabled';
+        businessData = data;
+    }
+    else {
+        handleHideInfoBusiness();
+        isKeyDownE = 'disabled';
+        businessData = null;
+    }
+});
+rce.registerAll('closeInfoBusinessMenu', () => {
+    handleHideInfoBusiness();
+});
+mp.keys.bind(Keys.VK_E, false, () => {
+    if (isKeyDownE === 'enabled')
+        handleShowInfoBusiness();
+});
+mp.keys.bind(Keys.VK_ESCAPE, false, () => {
+    if (businessData)
+        handleHideInfoBusiness();
+});
+const handleShowInfoBusiness = () => {
+    mp.gui.cursor.visible = true;
+    mp.game.ui.displayRadar(false);
+    mp.game.graphics.triggerScreenblurFadeIn(600);
+    mp.game.graphics.isScreenblurFadeRunning();
+    gui.execute('window.App.chatReducer.hideChat()');
+    gui.execute('window.App.hudReducer.hideHud()');
+    gui.execute(`window.App.buyingBusinessReducer.showBuyingBusiness(${JSON.stringify(businessData)})`);
+};
+const handleHideInfoBusiness = () => {
+    mp.gui.cursor.visible = false;
+    mp.game.ui.displayRadar(true);
+    mp.game.graphics.triggerScreenblurFadeOut(600);
+    showHud();
+    gui.execute('window.App.chatReducer.showChat()');
+    gui.execute(`window.App.buyingBusinessReducer.hideBuyingBusiness()`);
+};
+
 mp.events.add('guiReady', () => {
     mp.gui.chat.show(false);
     gui.browser.active = true;
@@ -2331,6 +2373,7 @@ const startFuelSystem = (initialFuel = 100) => {
             gui.execute(`window.App.fuelVehReducer.setFuel(0)`);
             rce.triggerServer('updateVehicleProp', vehicle.remoteId, 'fuel', 0);
             rce.triggerServer('updateVehicleProp', vehicle.remoteId, 'engine', false);
+            gui.execute(`window.App.speedVehReducer.setEngine(false)`);
             rce.trigger('sendNotify', 'err', 'Топливо закончилось! Двигатель заглох', 4000, 'bottom');
             return;
         }
@@ -2713,6 +2756,16 @@ mp.events.add('outgoingDamage', (sourceEntity, targetEntity, sourcePlayer, weapo
         return;
     const currentBodyHealth = Math.floor(vehicle.getBodyHealth());
     rce.triggerServer('updateVehicleProp', vehicle.id, 'health', currentBodyHealth);
+});
+
+rce.registerServer('createLabel', (text, pos, font, drawDist, color, dimension) => {
+    mp.labels.new(text, new mp.Vector3(pos.x, pos.y, pos.z), {
+        los: false,
+        font: font,
+        drawDistance: drawDist,
+        color: color,
+        dimension: dimension
+    });
 });
 
 // mp.game.invoke("0x6E9EF3A33C8899F8", true)

@@ -61547,6 +61547,7 @@ const updateVehicleProp = (vehicleId, field, value) => {
                 veh.engine = false;
                 veh.setVariable('VEH_ENGINE', false);
                 vehicleData.engine = false;
+                rce.triggerClient(veh.getOccupant(0), 'execute', 'window.App.speedVehReducer.setEngine(false)');
                 rce.triggerClient(veh.getOccupant(0), 'sendNotify', 'err', 'Транспорт полностью сломан! Невозможно завести двигатель', 5000, 'bottom');
             }
             else if (newHealth <= 400) {
@@ -62122,6 +62123,34 @@ rce.registerCef('createBusiness', (player, data) => {
     };
     createBusiness(dto, data.owner);
 });
+mp.events.add('playerEnterColshape', (player, colshape) => {
+    if (!player.vehicle) {
+        const businessData = Array.from(businesses.values()).find((b) => colshape.id === b.colshapeId);
+        if (businessData) {
+            rce.triggerClient(player, 'execute', 'window.App.hudReducer.setHintVisible(true)');
+            rce.triggerClient(player, 'businessColshape', 'enabled', {
+                id: businessData.id,
+                name: businessData.name,
+                owner: businessData.owner,
+                price: businessData.price,
+                markup: businessData.markup
+            });
+        }
+    }
+});
+mp.events.add('playerExitColshape', (player, colshape) => {
+    const businessData = Array.from(businesses.values()).find((b) => colshape.id === b.colshapeId);
+    if (businessData) {
+        rce.triggerClient(player, 'execute', 'window.App.hudReducer.setHintVisible(false)');
+        rce.triggerClient(player, 'businessColshape', 'disabled', {});
+    }
+});
+mp.events.add('playerJoin', (player) => {
+    businesses.forEach((business) => {
+        const pos = business.position;
+        rce.triggerClient(player, 'createLabel', `Бизнес #${business.id}`, { x: pos.x, y: pos.y, z: pos.z + 0.6 }, 7, 5.0, [229, 255, 173, 200], 0);
+    });
+});
 const initBusinessSystem = async () => {
     await loadBusinesses();
     console.log(chalk.green('[UPLOADED BUSINESSES]') + ` Загружено ${businesses.size} бизнесов`);
@@ -62131,8 +62160,9 @@ const loadBusinesses = async () => {
         const [rows] = await db.query(`SELECT * FROM businesses`);
         businesses.clear();
         rows.forEach((row) => {
-            const nameBusiness = BusinessType[row.type];
+            const nameBusiness = BusinessNames[row.type];
             const pos = new mp.Vector3(JSON.parse(row.position));
+            const colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.2, 0);
             const business = {
                 id: row.id,
                 owner: typeof row.owner === 'number' ? row.owner.toString() : row.owner,
@@ -62142,6 +62172,7 @@ const loadBusinesses = async () => {
                 markup: row.markup ?? 0.00,
                 balance: row.balance ?? 0,
                 position: pos,
+                colshapeId: colshape.id,
                 taxAccumulated: Number(row.taxAccumulated || 0),
                 lastHourlyExpense: new Date(row.lastHourlyExpense || Date.now()),
                 taxDeadline: new Date(row.taxDeadline || Date.now()),
@@ -62154,6 +62185,7 @@ const loadBusinesses = async () => {
                 dimension: 0,
                 rotation: new mp.Vector3(0, 180, 0)
             });
+            rce.triggerClients('createLabel', `Бизнес #${row.id}`, { x: pos.x, y: pos.y, z: pos.z + 0.6 }, 7, 5.0, [229, 255, 173, 200], 0);
             businesses.set(row.id, business);
         });
     }
@@ -62168,21 +62200,24 @@ const createBusiness = async (dto, owner = 'gov') => {
         const now = new Date();
         const [result] = await db.execute(`
       INSERT INTO businesses
-      (type, owner, price, position, balance, markup, taxAccumulated, lastHourlyExpense, taxDeadline, lastBalanceZero)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (type, owner, price, position, balance, markup, taxAccumulated, lastHourlyExpense, taxDeadline, lastBalanceZero, createdAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [
             dto.type,
             typeof owner === 'number' ? owner.toString() : owner,
             dto.price,
             JSON.stringify(dto.position),
-            0,
+            dto.balance,
             markup,
             0,
             now,
             new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
-            null
+            null,
+            new Date()
         ]);
+        const pos = dto.position;
         const insertId = result.insertId;
+        const colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.2, 0);
         const newBusiness = {
             id: insertId,
             owner: typeof owner === 'number' ? owner.toString() : owner,
@@ -62191,7 +62226,8 @@ const createBusiness = async (dto, owner = 'gov') => {
             price: dto.price,
             markup: dto.markup ?? 0.00,
             balance: 0,
-            position: dto.position,
+            position: pos,
+            colshapeId: colshape.id,
             taxAccumulated: 0,
             lastHourlyExpense: now,
             taxDeadline: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
@@ -62199,11 +62235,12 @@ const createBusiness = async (dto, owner = 'gov') => {
             createdAt: now,
             updatedAt: now,
         };
-        mp.markers.new(20, dto.position, 0.75, {
+        mp.markers.new(20, pos, 0.75, {
             color: [229, 255, 173, 255],
             dimension: 0,
             rotation: new mp.Vector3(0, 180, 0)
         });
+        rce.triggerClients('createLabel', `Бизнес #${insertId}`, { x: pos.x, y: pos.y, z: pos.z + 0.6 }, 7, 5.0, [229, 255, 173, 200], 0);
         businesses.set(insertId, newBusiness);
         console.log(chalk.green('[BUSINESS]') + ` Создан новый бизнес "${nameBusiness}" (ID: ${insertId})`);
     }

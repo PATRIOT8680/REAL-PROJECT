@@ -10,7 +10,7 @@ import { formatedMoney } from "../../modules/formatedMoney.ts";
 import useSmoothWheelScroll from "../../hooks/useSmoothScroll.ts";
 import Slider from "../../components/Slider/Slider.tsx";
 
-import Header from './components/Header.tsx'
+import HeaderMenus from "../../components/HeaderMenus/HeaderMenus.tsx";
 import PaymentMethods from "../../components/PaymentMethod/PaymentMethods.tsx";
 import AnimatedNumber from "../../components/AnimatedNumber.tsx";
 
@@ -66,7 +66,7 @@ const Rent = () => {
   return(
     <>
       <div className="rent">
-        <Header closeRent={closeRentMenu} />
+        <HeaderMenus title='Аренда транспорта' handleClose={closeRentMenu} />
         <div className="sections-rent">
           <div className="left-section">
             <header className="type-vehs">

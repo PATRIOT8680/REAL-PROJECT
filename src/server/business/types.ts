@@ -7,6 +7,7 @@ export interface BusinessData {
   markup: number,
   balance: number,
   position: Vector3,
+  colshapeId: number,
   taxAccumulated: number, // Накопленный налог за неделю
   lastHourlyExpense: Date, // Дата последнего списания расходов (каждый час)
   taxDeadline: Date, // До какой даты нужно оплатить налог (7 дней)

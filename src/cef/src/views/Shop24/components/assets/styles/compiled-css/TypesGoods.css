@@ -1,0 +1,23 @@
+.types-goods {
+  display: flex;
+  align-items: center;
+  margin-top: -0.4rem;
+  gap: 1.2rem;
+}
+.types-goods .name-type {
+  font-size: 1rem;
+  font-family: "Druk Wide Cyr", sans-serif;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.2);
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+.types-goods .name-type:hover {
+  color: rgba(255, 255, 255, 0.4);
+}
+.types-goods .name-type.selected {
+  color: #ffca58;
+  tansition: color 0.3s ease;
+}
+
+/*# sourceMappingURL=TypesGoods.css.map */
