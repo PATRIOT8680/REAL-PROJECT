@@ -23,4 +23,6 @@ resources
 client_packages/cef/assets/*.js
 client_packages/cef/assets/*.css
 client_packages/cef/assets/*.map
+client_packages/game_resources/dlcpacks
+CARS
 .codegpt
