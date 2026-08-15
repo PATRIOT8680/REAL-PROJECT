@@ -42,8 +42,14 @@
 .vehicles-page .input-search .search-veh {
   width: 98%;
   height: 2.7rem;
+<<<<<<< HEAD
   border-radius: 4px;
   outline: none;
+=======
+  border-radius: 3rem;
+  outline: none;
+  border: none;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   box-sizing: border-box;
   padding-left: 3.5rem;
   border: 2px solid rgba(255, 255, 255, 0.07);
@@ -132,6 +138,7 @@
   background: #ffffff;
   transition: all 0.3s;
 }
+<<<<<<< HEAD
 
 .list-all-vehs {
   display: flex;
@@ -154,13 +161,21 @@
   margin-top: 1rem;
 }
 .list-all-vehs .category-section .category-veh {
+=======
+.vehicles-page .category-veh {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
+<<<<<<< HEAD
   height: auto;
 }
 .list-all-vehs .category-section .category-veh .header-category {
+=======
+}
+.vehicles-page .category-veh .header-category {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -168,7 +183,11 @@
   width: 97%;
   gap: 1rem;
 }
+<<<<<<< HEAD
 .list-all-vehs .category-section .category-veh .header-category .category-name {
+=======
+.vehicles-page .category-veh .header-category .category-name {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   font-weight: 500;
   color: #2D3432;
   background: #ffffff;
@@ -178,19 +197,28 @@
   user-select: none;
   white-space: nowrap;
 }
+<<<<<<< HEAD
 .list-all-vehs .category-section .category-veh .header-category .line {
+=======
+.vehicles-page .category-veh .header-category .line {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   height: 3px;
   width: 100%;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3rem;
 }
+<<<<<<< HEAD
 
 .list-vehs {
+=======
+.vehicles-page .category-veh .list-vehs {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   display: flex;
   flex-direction: row;
   width: 98%;
   flex-wrap: wrap;
   gap: 1rem;
+<<<<<<< HEAD
   height: auto;
   margin: 0;
   padding: 0;
@@ -198,3 +226,105 @@
 }
 
 /*# sourceMappingURL=Vehicles.css.map */
+=======
+}
+.vehicles-page .category-veh .list-vehs .veh-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 14rem;
+  height: 16rem;
+  background: rgba(255, 255, 255, 0.06);
+  box-sizing: border-box;
+  padding: 0.75rem;
+  border-radius: 0.4rem;
+  gap: 0.8rem;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .img-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 6.5rem;
+  overflow: hidden;
+  border-radius: 0.4rem;
+  user-select: none;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .img-box img {
+  object-fit: cover;
+  pointer-events: none;
+  width: 100%;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .line1 {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 0.6rem;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .line1 .veh-name {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  user-select: none;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .line1 .player-id {
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.2rem;
+  color: #ffffff;
+  box-sizing: border-box;
+  padding-left: 0.7rem;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .colors {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .colors .color-btn {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .colors .color-btn.select {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25);
+  transition: all 0.2s;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .btns-action {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 1.9rem;
+  gap: 0.5rem;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .btns-action button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  width: 100%;
+  border-radius: 0.3rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  user-select: none;
+  transition: all 0.3s;
+}
+.vehicles-page .category-veh .list-vehs .veh-card .btns-action button:hover {
+  color: #000000;
+  background: #ffffff;
+  transition: all 0.3s;
+}
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c

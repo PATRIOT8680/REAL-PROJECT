@@ -31,8 +31,13 @@ const updateTime = (isFirstRun: boolean = false) => {
     seconds: moscowTime.getSeconds()
   }
 
+<<<<<<< HEAD
   //mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds)
   mp.world.time.set(7, 0, 0)
+=======
+  mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds)
+  //mp.world.time.set(8, 0, 0)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
   if (!isFirstRun) {
     console.log(`Time: ${pad(currentDateTime.hours)}:${pad(currentDateTime.minutes)}`)

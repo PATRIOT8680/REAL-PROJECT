@@ -23,7 +23,10 @@ import './assets/fonts/Ubuntu/stylesheet.css'
 import './assets/fonts/BebasNeue/stylesheet.css'
 import './assets/fonts/Manrope/stylesheet.css'
 import './assets/fonts/DrukWideCyr/stylesheet.css'
+<<<<<<< HEAD
 import './assets/fonts/Karantina/stylesheet.css'
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 // Menus
 import Auth from "./views/Auth/Index"
@@ -45,14 +48,20 @@ import Offer from './views/Offer/Index.tsx'
 import DevMenus from "./views/DevMenus/Index.tsx";
 import BuyingBusiness from "./views/BuyingBusiness/BuyingBusiness.tsx";
 import Shop24 from "./views/Shop24/Shop24.tsx";
+<<<<<<< HEAD
 import Bank from "./views/Bank/Bank.tsx";
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
 import BtnAmbient from "./components/BtnAmbient/Index"
 import ChangeLanguage from "./components/ChangeLanguage/Index"
 import ModalComponent from './components/Modal/Index'
+<<<<<<< HEAD
 import Whitelist from "./views/Whitelist/Whitelist.tsx";
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 const App = () => {
   const dispatch = useDispatch()
@@ -78,8 +87,11 @@ const App = () => {
   const devMenusVisible = useSelector((state: RootState) => state.devMenusReducer.isVisible)
   const buyingBusinessVisible = useSelector((state: RootState) => state.buyingBusinessReducer.isVisible)
   const shop24Visible = useSelector((state: RootState) => state.shop24Reducer.isVisible)
+<<<<<<< HEAD
   const whitelistVisible = useSelector((state: RootState) => state.whitelistReducer.isVisible)
   const bankVisible = useSelector((state: RootState) => state.bankReducer.isVisible)
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -102,9 +114,13 @@ const App = () => {
       Interaction: interactionVisible,
       Dev: devMenusVisible,
       BuyingBusiness: buyingBusinessVisible,
+<<<<<<< HEAD
       Shop24: shop24Visible,
       Whitelist: whitelistVisible,
       Bank: bankVisible,
+=======
+      Shop24: shop24Visible
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     }
 
     const open = Object.entries(menus)
@@ -191,8 +207,11 @@ const App = () => {
       { devMenusVisible && <DevMenus /> }
       { buyingBusinessVisible && <BuyingBusiness /> }
       { shop24Visible && <Shop24 /> }
+<<<<<<< HEAD
       { whitelistVisible && <Whitelist /> }
       { bankVisible && <Bank /> }
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
       {/*<div className="language_ambients">*/}
       {/*  /!*{ shouldChangeLanguage && <ChangeLanguage /> }*!/*/}

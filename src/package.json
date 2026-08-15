@@ -5,7 +5,11 @@
 	"main": "index.ts",
 	"type": "commonjs",
 	"scripts": {
+<<<<<<< HEAD
     "start": "npm run build && cd .. && start \"RAGE MP Server\" ragemp-server.exe",
+=======
+		"start": "npm run build && cd .. && ragemp-server.exe",
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 		"dev": "cd cef && npm run dev",
 		"build:cef": "cd cef && npm run build",
 		"build": "rollup -c --bundleConfigAsCjs && npm run build:cef"
@@ -54,7 +58,10 @@
 		"content-disposition": "^0.5.4",
 		"core-util-is": "^1.0.3",
 		"cross-spawn": "^7.0.6",
+<<<<<<< HEAD
 		"crypto-js": "^4.2.0",
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 		"dayjs": "^1.11.13",
 		"debug": "^4.4.1",
 		"decompress": "^4.2.1",
@@ -191,7 +198,10 @@
 		"react-animated-numbers": "^1.1.1",
 		"react-freezeframe": "^5.0.2",
 		"react-i18next": "^15.6.0",
+<<<<<<< HEAD
 		"react-window": "^2.2.7",
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 		"readable-stream": "^4.7.0",
 		"readdirp": "^4.1.2",
 		"redux-thunk": "^3.1.0",
@@ -277,7 +287,10 @@
 		"@types/node": "^24.0.14",
 		"@types/ragemp-c": "github:CocaColaBear/types-ragemp-c#v2.0",
 		"@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#v1.0",
+<<<<<<< HEAD
 		"@types/react-window": "^1.8.8",
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 		"concurrently": "^9.2.0",
 		"dotenv": "^17.2.0",
 		"fdir": "^5.2.0",

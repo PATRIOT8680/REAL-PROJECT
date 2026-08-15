@@ -53,7 +53,11 @@
   gap: 0.4rem;
   background: rgba(255, 255, 255, 0.05);
   padding: 0.4rem 0.7rem;
+<<<<<<< HEAD
   border-radius: 4px;
+=======
+  border-radius: 1rem;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   font-size: 0.8rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.6);
@@ -137,21 +141,34 @@
   border-radius: 0.4rem;
   user-select: text;
 }
+<<<<<<< HEAD
 .console-page .input-cmds-section {
   position: relative;
   display: flex;
   flex-direction: column;
 }
 .console-page .input-cmds-section .enter-block {
+=======
+.console-page .enter-block {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
+<<<<<<< HEAD
 .console-page .input-cmds-section .enter-block .enter-cmd {
   position: relative;
   outline: none;
   padding: 0.8rem 2rem;
   border-radius: 4px;
+=======
+.console-page .enter-block .enter-cmd {
+  position: relative;
+  outline: none;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 3rem;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   font-weight: 600;
@@ -161,16 +178,28 @@
   color: #ffffff;
   width: 100%;
 }
+<<<<<<< HEAD
 .console-page .input-cmds-section .enter-block .enter-cmd:focus-visible {
+=======
+.console-page .enter-block .enter-cmd:focus-visible {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   transition: all 0.3s;
   background: rgba(255, 255, 255, 0.1);
   border: rgba(255, 255, 255, 0.17) solid 1px;
 }
+<<<<<<< HEAD
 .console-page .input-cmds-section .enter-block .enter-cmd::placeholder {
   font-size: 0.9rem;
   font-weight: 500;
 }
 .console-page .input-cmds-section .enter-block .enter-keyup {
+=======
+.console-page .enter-block .enter-cmd::placeholder {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.console-page .enter-block .enter-keyup {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   position: absolute;
   margin-right: 1rem;
   font-family: "Montserrat", sans-serif;
@@ -178,42 +207,77 @@
   font-size: 0.8rem;
   background: #ffffff;
   padding: 0.3rem 0.8rem;
+<<<<<<< HEAD
   border-radius: 4px;
   animation: fadeInEnter 0.25s ease;
   color: #000000;
 }
 .console-page .input-cmds-section .suggestions-container {
+=======
+  border-radius: 1rem;
+  animation: fadeInEnter 0.25s ease;
+  color: #000000;
+}
+.console-page .suggestions-container {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   position: absolute;
+<<<<<<< HEAD
   bottom: 4rem;
   width: 100%;
   background: rgba(51, 48, 52, 0.98);
   box-sizing: border-box;
   padding: 0.6rem;
   border-radius: 4px;
+=======
+  bottom: 5.5rem;
+  width: 92%;
+  background: #2D3432;
+  box-sizing: border-box;
+  padding: 0.6rem;
+  border-radius: 0.6rem;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   animation: fadeInHelps 0.3s ease;
   overflow-y: auto;
   max-height: 13rem;
 }
+<<<<<<< HEAD
 .console-page .input-cmds-section .suggestions-container::-webkit-scrollbar {
   width: 0.35rem;
 }
 .console-page .input-cmds-section .suggestions-container::-webkit-scrollbar-track {
+=======
+.console-page .suggestions-container::-webkit-scrollbar {
+  width: 0.35rem;
+}
+.console-page .suggestions-container::-webkit-scrollbar-track {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   opacity: 1;
   background-color: rgba(205, 205, 205, 0.06);
   border-radius: 100px;
 }
+<<<<<<< HEAD
 .console-page .input-cmds-section .suggestions-container::-webkit-scrollbar-thumb {
+=======
+.console-page .suggestions-container::-webkit-scrollbar-thumb {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   cursor: grabbing;
   background-color: rgba(205, 205, 205, 0.08);
   border-radius: 100px;
 }
+<<<<<<< HEAD
 .console-page .input-cmds-section .suggestions-container::-webkit-scrollbar-thumb:hover {
   background-color: rgba(205, 205, 205, 0.2392156863);
 }
 .console-page .input-cmds-section .suggestions-container .suggestion-item {
+=======
+.console-page .suggestions-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(205, 205, 205, 0.2392156863);
+}
+.console-page .suggestions-container .suggestion-item {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -221,6 +285,7 @@
   font-weight: 500;
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.8);
+<<<<<<< HEAD
   background: rgba(255, 255, 255, 0.07);
   box-sizing: border-box;
   border-radius: 3px;
@@ -228,11 +293,24 @@
   transition: all 0.2s;
 }
 .console-page .input-cmds-section .suggestions-container .suggestion-item .suggestion-command {
+=======
+  background: #3b4442;
+  box-sizing: border-box;
+  border-radius: 0.3rem;
+  padding: 0.4rem;
+  transition: all 0.2s;
+}
+.console-page .suggestions-container .suggestion-item .suggestion-command {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   display: flex;
   flex-direction: row;
   gap: 0.4rem;
 }
+<<<<<<< HEAD
 .console-page .input-cmds-section .suggestions-container .suggestion-item.selected {
+=======
+.console-page .suggestions-container .suggestion-item.selected {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   transition: all 0.2s;
   background: #ffffff;
   color: #000000;
@@ -270,5 +348,8 @@
     opacity: 1;
   }
 }
+<<<<<<< HEAD
 
 /*# sourceMappingURL=Console.css.map */
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c

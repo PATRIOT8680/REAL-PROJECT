@@ -7,13 +7,17 @@
   flex-direction: column;
   gap: 2.75rem;
   -webkit-user-drag: none;
+<<<<<<< HEAD
   box-sizing: border-box;
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   animation: fadeInRent 0.5s ease;
 }
 .shop24-menu .section-shop24 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+<<<<<<< HEAD
   height: 100%;
   width: 100%;
   gap: 1.5rem;
@@ -29,6 +33,13 @@
   height: 100%;
   min-height: 0;
   gap: 2rem;
+=======
+  gap: 1rem;
+}
+.shop24-menu .section-shop24 .list-goods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 }
 
 /*# sourceMappingURL=Shop24.css.map */

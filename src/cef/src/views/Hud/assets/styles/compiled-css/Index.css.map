@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"version":3,"sourceRoot":"","sources":["../Index.sass"],"names":[],"mappings":"AAAA;EACE;EACA;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA","file":"Index.css"}
+=======
+{"version":3,"sourceRoot":"","sources":["../Index.sass"],"names":[],"mappings":"AACE;EACE;EACA;EACA;EACA;EACA;EACA","file":"Index.css"}
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c

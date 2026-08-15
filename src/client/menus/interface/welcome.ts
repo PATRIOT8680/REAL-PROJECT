@@ -2,6 +2,7 @@ import { rce } from '../../utils/rce'
 import { gui } from '../global'
 
 mp.events.add('browserDomReady', async (player: PlayerMp) => {
+<<<<<<< HEAD
   const { existing, haveRequest } = await rce.callServer('checkWhitelist')
 
   if (existing) {
@@ -26,4 +27,16 @@ mp.events.add('browserDomReady', async (player: PlayerMp) => {
     mp.game.cam.renderScriptCams(true, false, 0, true, false)
     gui.execute(`window.App.whitelistReducer.showWhitelist(${haveRequest})`)
   }
+=======
+  gui.execute('window.App.welcomeReducer.showWelcome()')
+  mp.gui.cursor.visible = true
+
+  await setTimeout(() => {
+    rce.trigger('cef:authEnabled')
+
+    setTimeout(() => {
+      gui.execute('window.App.welcomeReducer.hideWelcome()')
+    }, 200)
+  }, 5100)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 })

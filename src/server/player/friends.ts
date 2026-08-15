@@ -1,5 +1,9 @@
 import { data } from "../database/mysql";
+<<<<<<< HEAD
 import { connectedUsers } from "../data/dataConnectedUser";
+=======
+import { connectedUsers, IConnectedUser } from "../data/dataConnectedUser";
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 import { rce } from "../utils/rce";
 import chalk from "chalk";
 

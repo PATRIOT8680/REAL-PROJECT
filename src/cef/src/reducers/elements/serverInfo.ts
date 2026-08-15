@@ -1,12 +1,18 @@
+<<<<<<< HEAD
 import { IConnectedUser } from "../../../../shared/types/connectedUsers.ts";
 
 export interface IServerInfo {
   online: number,
   playersData: IConnectedUser[]
+=======
+export interface IServerInfo {
+  online: number
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 }
 
 const initialState: IServerInfo = {
   online: 0,
+<<<<<<< HEAD
   playersData: [
     /*{
       sid: 0,
@@ -159,12 +165,15 @@ const initialState: IServerInfo = {
       unique_quest: null
     },*/
   ]
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 }
 
 export const serverInfoReducer = (state: IServerInfo = initialState, action: any) => {
   switch (action.type) {
     case 'SET_ONLINE':
       return { ...state, online: action.online }
+<<<<<<< HEAD
     case 'SET_PLAYERS_DATA':
       return { ...state, playersData: action.playersData }
     case 'ADD_PLAYER_DATA':
@@ -179,6 +188,8 @@ export const serverInfoReducer = (state: IServerInfo = initialState, action: any
         playersData: state.playersData.filter(p => p.uid !== action.uid),
         online: Math.max(0, state.online - 1)
       }
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     default:
       return state
   }

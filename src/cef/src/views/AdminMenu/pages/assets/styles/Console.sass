@@ -55,7 +55,11 @@ $Montserrat: "Montserrat", sans-serif
         gap: 0.4rem
         background: rgba(255, 255, 255, 0.05)
         padding: 0.4rem 0.7rem
+<<<<<<< HEAD
         border-radius: 4px
+=======
+        border-radius: 1rem
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         font-size: 0.8rem
         font-weight: 500
         color: rgba(255, 255, 255, 0.6)
@@ -141,6 +145,7 @@ $Montserrat: "Montserrat", sans-serif
           user-select: text
 
 
+<<<<<<< HEAD
   .input-cmds-section
     position: relative
     display: flex
@@ -240,6 +245,103 @@ $Montserrat: "Montserrat", sans-serif
         transition: all 0.2s
         background: #ffffff
         color: #000000
+=======
+  .enter-block
+    display: flex
+    align-items: center
+    justify-content: flex-end
+
+    .enter-cmd
+      position: relative
+      outline: none
+      border: none
+      padding: 0.8rem 2rem
+      border-radius: 3rem
+      font-family: $Montserrat
+      font-size: 1rem
+      font-weight: 600
+      background: rgba(255, 255, 255, 0.06)
+      border: rgba(255, 255, 255, 0.14) solid 1px
+      transition: all 0.3s
+      color: #ffffff
+      width: 100%
+
+      &:focus-visible
+        transition: all 0.3s
+        background: rgba(255, 255, 255, 0.1)
+        border: rgba(255, 255, 255, 0.17) solid 1px
+
+      &::placeholder
+        font-size: 0.9rem
+        font-weight: 500
+
+    .enter-keyup
+      position: absolute
+      margin-right: 1rem
+      font-family: $Montserrat
+      font-weight: 600
+      font-size: 0.8rem
+      background: #ffffff
+      padding: 0.3rem 0.8rem
+      border-radius: 1rem
+      animation: fadeInEnter 0.25s ease
+      color: #000000
+
+  .suggestions-container
+    display: flex
+    flex-direction: column
+    gap: 0.4rem
+    position: absolute
+    bottom: 5.5rem
+    width: 92%
+    background: #2D3432
+    box-sizing: border-box
+    padding: 0.6rem
+    border-radius: 0.6rem
+    animation: fadeInHelps 0.3s ease
+    overflow-y: auto
+    max-height: 13rem
+
+    &::-webkit-scrollbar
+      width: 0.35rem
+
+    &::-webkit-scrollbar-track
+      opacity: 1
+      background-color: rgba(205, 205, 205, 0.06)
+      border-radius: 100px
+
+    &::-webkit-scrollbar-thumb
+      cursor: grabbing
+      background-color: rgba(205, 205, 205, 0.08)
+      border-radius: 100px
+
+      &:hover
+        background-color: #cdcdcd3d
+
+    .suggestion-item
+      display: flex
+      flex-direction: row
+      justify-content: space-between
+      font-family: $Montserrat
+      font-weight: 500
+      font-size: 0.8rem
+      color: rgba(255, 255, 255, 0.8)
+      background: #3b4442
+      box-sizing: border-box
+      border-radius: 0.3rem
+      padding: 0.4rem
+      transition: all 0.2s
+
+      .suggestion-command
+        display: flex
+        flex-direction: row
+        gap: 0.4rem
+
+    .suggestion-item.selected
+      transition: all 0.2s
+      background: #ffffff
+      color: #000000
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 @keyframes fadeInEnter
   from

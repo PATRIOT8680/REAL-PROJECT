@@ -23,7 +23,11 @@ export const send = (player: PlayerMp | null, msg: string, showTime: boolean, ti
   }
 }
 
+<<<<<<< HEAD
 export const broadcast = (msg: string, showTime: boolean = true, tile: string = 'Server') => {
+=======
+export const broadcast = (msg: string, showTime: boolean, tile?: string) => {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   rce.triggerClients(CHAT_MESSAGE_EVENT, null, msg, showTime, tile)
 }
 

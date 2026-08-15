@@ -226,6 +226,7 @@ class CustomEventBase {
     }
 }
 
+<<<<<<< HEAD
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 function getDefaultExportFromCjs (x) {
@@ -7753,6 +7754,11 @@ mp.events.add('setSessionSecret', (secretBase64) => {
 function generateNonce() {
     return Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 }
+=======
+mp.events.add('setKey', (key) => {
+    rce.key = key;
+});
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 class rce extends CustomEventBase {
     static callServerResponse = 1;
     static cefCallId = 1;
@@ -7762,6 +7768,10 @@ class rce extends CustomEventBase {
     static registerServerEvents = new Map();
     static registerSocketEvents = new Map();
     static cefPromises = new Map();
+<<<<<<< HEAD
+=======
+    // Добавляем обработчики для событий из CEF
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     static cefHandlers = new Map();
     static key;
     static encryptEventName(eventName) {
@@ -7770,6 +7780,7 @@ class rce extends CustomEventBase {
             .map(s => (s.charCodeAt(0) ^ rce.key).toString(16))
             .join('g');
     }
+<<<<<<< HEAD
     // ── triggerServer c авто-подписью ────────────────────
     static triggerServer(eventName, ...args) {
         const encryptedName = rce.encryptEventName(eventName);
@@ -7819,6 +7830,11 @@ class rce extends CustomEventBase {
         });
     }
     // ── Остальные методы (без изменений) ─────────────────
+=======
+    static triggerServer(eventName, ...args) {
+        mp.events.callRemote('trigger:client', rce.encryptEventName(eventName), JSON.stringify(args));
+    }
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     static async callCef(eventName, ...args) {
         const id = this.cefCallId++;
         mp.console.logWarning(`[CLIENT] Вызываем CEF ${eventName} с id=${id}`);
@@ -7834,6 +7850,16 @@ class rce extends CustomEventBase {
             this.cefPromises.delete(id);
         }
     }
+<<<<<<< HEAD
+=======
+    static callServer(eventName, ...args) {
+        const requestID = rce.callServerResponse++;
+        return new Promise((resolve, reject) => {
+            rce.requestServerHandle.set(requestID, resolve);
+            mp.events.callRemote('call:client', requestID, rce.encryptEventName(eventName), JSON.stringify(args));
+        });
+    }
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     static triggerCef(eventName, ...args) {
         mp.browsers.forEach((browser) => {
             if (browser.active) {
@@ -7856,11 +7882,19 @@ class rce extends CustomEventBase {
     static registerAll(name, handle) {
         this.registerServer(name, handle);
         CustomEventBase.register(name, handle);
+<<<<<<< HEAD
+=======
+        // Также регистрируем для обработки событий из CEF
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         if (!this.cefHandlers.has(name)) {
             this.cefHandlers.set(name, new Set());
         }
         this.cefHandlers.get(name).add(handle);
     }
+<<<<<<< HEAD
+=======
+    // Метод для вызова событий из CEF
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     static triggerFromCef(eventName, ...args) {
         const handlers = this.cefHandlers.get(eventName);
         if (handlers) {
@@ -7875,7 +7909,10 @@ class rce extends CustomEventBase {
         }
     }
 }
+<<<<<<< HEAD
 // ── Статические обработчики клиента ────────────────────
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 mp.events.add('triggerFromCef', (eventName, ...args) => {
     rce.triggerFromCef(eventName, ...args);
 });
@@ -7941,6 +7978,10 @@ mp.events.add("client:call:event", async (eventname, requestID, argsstring) => {
             mp.events.callRemote('client:call:event:result', requestID, null);
             return;
         }
+<<<<<<< HEAD
+=======
+        // Вызываем первый обработчик (для обратной совместимости)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         const handler = Array.from(handlers)[0];
         let res = await handler(...(JSON.parse(argsstring)));
         mp.events.callRemote('client:call:event:result', requestID, res);
@@ -7963,9 +8004,13 @@ mp.events.add('call:cef:response', (requestID, res) => {
         browser.execute(`window.customevent.callServerResponseHandle(${requestID}, '${JSON.stringify(res)}');`);
     });
 });
+<<<<<<< HEAD
 mp.events.add('call:server', (requestID, eventName, ...args) => {
     mp.events.callRemote('call:cef', requestID, rce.encryptEventName(eventName), ...args);
 });
+=======
+mp.events.add('call:server', (requestID, eventName, ...args) => mp.events.callRemote('call:cef', requestID, rce.encryptEventName(eventName), ...args));
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 mp.events.add('trigger:server', (name, args) => {
     mp.events.callRemote('trigger:cef', rce.encryptEventName(name), args);
 });
@@ -8155,6 +8200,7 @@ rce.registerAll('sendNotify', (typeNotify, msg, duration, pos) => {
 });
 
 mp.events.add('browserDomReady', async (player) => {
+<<<<<<< HEAD
     const { existing, haveRequest } = await rce.callServer('checkWhitelist');
     if (existing) {
         gui.execute('window.App.welcomeReducer.showWelcome()');
@@ -8174,6 +8220,16 @@ mp.events.add('browserDomReady', async (player) => {
         mp.game.cam.renderScriptCams(true, false, 0, true, false);
         gui.execute(`window.App.whitelistReducer.showWhitelist(${haveRequest})`);
     }
+=======
+    gui.execute('window.App.welcomeReducer.showWelcome()');
+    mp.gui.cursor.visible = true;
+    await setTimeout(() => {
+        rce.trigger('cef:authEnabled');
+        setTimeout(() => {
+            gui.execute('window.App.welcomeReducer.hideWelcome()');
+        }, 200);
+    }, 5100);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 });
 
 const CHAT_MESSAGE_EVENT = 'chat:message';
@@ -8206,6 +8262,7 @@ rce.registerAll('chatmessage', (text) => {
 const pushMsg = (name, text, showTime, tile) => {
     if (!loaded) {
         buffer.push({ name, text, showTime, tile });
+<<<<<<< HEAD
         return;
     }
     if (name === null) {
@@ -8215,6 +8272,13 @@ const pushMsg = (name, text, showTime, tile) => {
         rce.triggerCef('addMsg', name, text, showTime, tile);
     }
     buffer.push({ name, text, showTime, tile });
+=======
+    }
+    else {
+        addMsg(name, text, showTime, tile);
+        buffer.push({ name, text, showTime, tile });
+    }
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 };
 const pushLine = (text, showTime, tile) => {
     pushMsg(null, text, showTime, tile);
@@ -9403,6 +9467,7 @@ const scenarios = [
 let currentCamera = null;
 let targetCamera = null;
 rce.registerServer('server:showSelectChar', async () => {
+<<<<<<< HEAD
     const dataChars = await rce.callServer('selectChar:getDataAllChars');
     const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
     const plDimension = mp.players.local.dimension;
@@ -9414,6 +9479,29 @@ rce.registerServer('server:showSelectChar', async () => {
             mp.labels.new(`Причина: ${char.ban.reason}`, new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9), { los: false, font: 4, drawDistance: 7.5, color: [255, 43, 43, 255], dimension: plDimension });
         }
     });
+=======
+    await rce.callServer('selectChar:getDataAllChars');
+    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    mp.players.local.dimension;
+    mp.game.ui.setPauseMenuActive(false);
+    // setTimeout(() => {
+    //   dataChars.forEach((char: any) => {
+    //     const plPos = listCameras[char.numberslot - 1].playerPos
+    //
+    //     mp.labels.new(
+    //         `${char.nickname} [0 LVL]`,
+    //         new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.965),
+    //         { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 255], dimension: plDimension }
+    //     )
+    //
+    //     mp.labels.new(
+    //         `Наличные: $${char.cash} • На карте: $${char.bankmoney}`,
+    //         new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9),
+    //         { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 180], dimension: plDimension }
+    //     )
+    //   })
+    // }, 4000)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     destroyCamera(currentCamera);
     destroyCamera(targetCamera);
     currentCamera = createCamera(new mp.Vector3(-143.5, -596.5199, 211.9750), new mp.Vector3(-2, 0, 204), 45);

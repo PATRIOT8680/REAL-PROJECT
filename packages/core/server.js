@@ -6,18 +6,32 @@ var require$$0$3 = require('stream');
 var require$$1$1 = require('util');
 var require$$5$1 = require('assert');
 var perf_hooks = require('perf_hooks');
+<<<<<<< HEAD
 var require$$0$4 = require('crypto');
 var path = require('path');
 var require$$0$5 = require('os');
 var require$$1$2 = require('tty');
 var require$$0$6 = require('url');
+=======
+var path = require('path');
+var require$$0$4 = require('os');
+var require$$1$2 = require('tty');
+var require$$0$5 = require('url');
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 var require$$0$b = require('net');
 var require$$1$5 = require('tls');
 var require$$1$4 = require('timers');
 var require$$0$9 = require('events');
+<<<<<<< HEAD
 var require$$0$7 = require('buffer');
 var require$$1$3 = require('string_decoder');
 var require$$0$8 = require('process');
+=======
+var require$$0$6 = require('buffer');
+var require$$1$3 = require('string_decoder');
+var require$$0$8 = require('process');
+var require$$0$7 = require('crypto');
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 var require$$0$a = require('zlib');
 var require$$0$c = require('http');
 var require$$1$6 = require('https');
@@ -42,7 +56,10 @@ function _interopNamespaceDefault(e) {
 }
 
 var fs__namespace = /*#__PURE__*/_interopNamespaceDefault(fs);
+<<<<<<< HEAD
 var require$$0__namespace = /*#__PURE__*/_interopNamespaceDefault(require$$0$4);
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 var path__namespace = /*#__PURE__*/_interopNamespaceDefault(path);
 
 class CustomEventBase {
@@ -1383,6 +1400,7 @@ class rce extends CustomEventBase {
             .map(s => (s.charCodeAt(0) ^ rce.key).toString(16))
             .join('g');
     }
+<<<<<<< HEAD
     // ============= Новые поля для HMAC-защиты ============
     static sessionSecrets = new Map(); // player.id → secret
     static usedNonces = new Map(); // player.id → Set(nonce)
@@ -1423,6 +1441,8 @@ class rce extends CustomEventBase {
         return require$$0__namespace.timingSafeEqual(Buffer.from(hmac, 'hex'), Buffer.from(expected, 'hex'));
     }
     // ============= Регистрация событий (без изменений) ==========
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     static registerClientCef(name, handle) {
         this.registerClient(name, handle);
         this.registerCef(name, handle);
@@ -1460,7 +1480,10 @@ class rce extends CustomEventBase {
         this.registerClient(name, handle);
         this.registerCef(name, handle);
     }
+<<<<<<< HEAD
     // ========= Отправка клиенту / CEF (без изменений) ===========
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     static triggerCef(player, eventName, ...args) {
         if (!mp.players.exists(player))
             return;
@@ -1511,13 +1534,17 @@ class rce extends CustomEventBase {
         });
     }
 }
+<<<<<<< HEAD
 // =================== Обработчики входящих вызовов ===================
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 mp.events.add('client:call:event:result', (player, reqId, result) => {
     let res = rce.clientCallHandle.get(reqId);
     if (res)
         res[0](result);
     rce.clientCallHandle.delete(reqId);
 });
+<<<<<<< HEAD
 // Универсальный исполнитель handlers
 function executeHandlers(player, name, argsArray) {
     const handlers = rce.clientEvents.get(name);
@@ -1648,6 +1675,82 @@ mp.events.add('call:client', (player, requestID, encryptedName, argss) => {
     }
 });
 // Остальные обработчики (CEF, call:cef, playerJoin/Quit) без изменений...
+=======
+mp.events.add('trigger:client', (player, name, argss) => {
+    const nowTm = Date.now() / 1000 | 0;
+    if (rce.clientPoolLog.has(`${player.id}_____${name}`)) {
+        const old = rce.clientPoolLog.get(`${player.id}_____${name}`);
+        if (old.last + 2 > nowTm) {
+            old.count++;
+            if (old.count === 10) ;
+            rce.clientPoolLog.set(`${player.id}_____${name}`, old);
+        }
+        else {
+            rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+        }
+    }
+    else {
+        rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+    }
+    const handlers = rce.clientEvents.get(name);
+    if (handlers) {
+        handlers.forEach(handler => {
+            const t1 = perf_hooks.performance.now();
+            handler(player, ...(JSON.parse(argss)));
+            const t2 = perf_hooks.performance.now();
+            const time = t2 - t1;
+            if (time > PERFOMANCE_MIN_TIME) {
+                console.debug(`Client event '${rce.decryptEventName(name)}' executed in ${time} ms}.`);
+                const existedResult = eventsPerfomanceTestResults.data.find(d => d.eventName == name);
+                if (!existedResult)
+                    eventsPerfomanceTestResults.insert({
+                        count: 1,
+                        averageExecutionTime: time,
+                        eventName: name
+                    });
+                else {
+                    existedResult.count++;
+                    existedResult.averageExecutionTime = (existedResult.averageExecutionTime + time) / existedResult.count;
+                }
+            }
+        });
+    }
+});
+mp.events.add('call:client', (player, requestID, name, argss) => {
+    const nowTm = Date.now() / 1000 | 0;
+    if (rce.clientPoolLog.has(`${player.id}_____${name}`)) {
+        const old = rce.clientPoolLog.get(`${player.id}_____${name}`);
+        if (old.last + 2 > nowTm) {
+            old.count++;
+            if (old.count === 10) ;
+            rce.clientPoolLog.set(`${player.id}_____${name}`, old);
+        }
+        else {
+            rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+        }
+    }
+    else {
+        rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+    }
+    const handlers = rce.clientEvents.get(name);
+    if (handlers) {
+        handlers.forEach(async (handler) => {
+            if (!mp.players.exists(player))
+                return;
+            let res;
+            try {
+                res = await handler(player, ...(JSON.parse(argss)));
+            }
+            catch (error) {
+                console.error(error);
+            }
+            if (!mp.players.exists(player))
+                return;
+            player.call('call:client:response', [requestID, res]);
+        });
+    }
+});
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 mp.events.add('trigger:cef', (player, name, args) => {
     const nowTm = Date.now() / 1000 | 0;
     if (rce.clientPoolLog.has(`${player.id}_CEF____${name}`)) {
@@ -1672,7 +1775,11 @@ mp.events.add('trigger:cef', (player, name, args) => {
             const t2 = perf_hooks.performance.now();
             const time = t2 - t1;
             if (time > PERFOMANCE_MIN_TIME) {
+<<<<<<< HEAD
                 console.debug(`CEF event '${rce.decryptEventName(name)}' executed in ${time} ms}.`);
+=======
+                console.debug(`Client event '${rce.decryptEventName(name)}' executed in ${time} ms}.`);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 const existedResult = eventsPerfomanceTestResults.data.find(d => d.eventName == name);
                 if (!existedResult)
                     eventsPerfomanceTestResults.insert({
@@ -1725,29 +1832,43 @@ mp.events.add('call:cef', (player, requestID, name, ...args) => {
 mp.events.add('playerJoin', (player) => {
     player.call('setKey', [rce.key]);
 });
+<<<<<<< HEAD
 mp.events.add('playerQuit', (player) => {
     rce.destroySession(player);
 });
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 const users = new Map();
 const connectedUsers = {
     setUser: (playerId, userData) => {
         const existingUser = users.get(playerId) || {};
         users.set(playerId, { ...existingUser, ...userData });
+<<<<<<< HEAD
         if (userData.uid) {
             rce.triggerClients('execute', `window.App.serverInfoReducer.addPlayer(${JSON.stringify(connectedUsers.getFullData(playerId))})`);
+=======
+        if (userData.login) {
+            rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`);
+            console.log(`Обновлен пользователь: ${userData.login} (ID: ${playerId})`);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         }
     },
     removeUser: (playerId) => {
         const user = users.get(playerId);
         if (user) {
             users.delete(playerId);
+<<<<<<< HEAD
             rce.triggerClients('execute', `window.App.serverInfoReducer.removePlayer(${user.uid})`);
+=======
+            rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
             console.log(`Удален пользователь: ${user.login || 'Unknown'} (ID: ${playerId})`);
             return true;
         }
         return false;
     },
+<<<<<<< HEAD
     getFullData: (playerId) => {
         return users.get(playerId);
     },
@@ -1758,6 +1879,8 @@ const connectedUsers = {
         }
         return undefined;
     },
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     getUser: (playerId) => {
         return users.get(playerId);
     },
@@ -1859,7 +1982,11 @@ const send = (player, msg, showTime, tile, radius) => {
         }
     }
 };
+<<<<<<< HEAD
 const broadcast = (msg, showTime = true, tile = 'Server') => {
+=======
+const broadcast = (msg, showTime, tile) => {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     rce.triggerClients(CHAT_MESSAGE_EVENT, null, msg, showTime, tile);
 };
 // РП-заготовки
@@ -3388,7 +3515,11 @@ var hasRequiredSupportsColor;
 function requireSupportsColor () {
 	if (hasRequiredSupportsColor) return supportsColor_1;
 	hasRequiredSupportsColor = 1;
+<<<<<<< HEAD
 	const os = require$$0$5;
+=======
+	const os = require$$0$4;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const tty = require$$1$2;
 	const hasFlag = requireHasFlag();
 
@@ -7705,7 +7836,11 @@ function requireConnection_config () {
 	if (hasRequiredConnection_config) return connection_config;
 	hasRequiredConnection_config = 1;
 
+<<<<<<< HEAD
 	const { URL } = require$$0$6;
+=======
+	const { URL } = require$$0$5;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const ClientConstants = requireClient();
 	const Charsets = requireCharsets();
 	const { version } = require$$3$1;
@@ -14411,7 +14546,11 @@ function requireSafer () {
 	if (hasRequiredSafer) return safer_1;
 	hasRequiredSafer = 1;
 
+<<<<<<< HEAD
 	var buffer = require$$0$7;
+=======
+	var buffer = require$$0$6;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	var Buffer = buffer.Buffer;
 
 	var safer = {};
@@ -25803,7 +25942,11 @@ function requirePacket () {
 	hasRequiredPacket = 1;
 
 	const ErrorCodeToName = requireErrors();
+<<<<<<< HEAD
 	const NativeBuffer = require$$0$7.Buffer;
+=======
+	const NativeBuffer = require$$0$6.Buffer;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const Long = requireUmd();
 	const StringParser = requireString();
 	const Types = requireTypes();
@@ -27321,7 +27464,11 @@ function requireAuth_41 () {
 		server stores sha1(sha1(password)) ( hash_stag2)
 		*/
 
+<<<<<<< HEAD
 		const crypto = require$$0$4;
+=======
+		const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 		function sha1(msg, msg1, msg2) {
 		  const hash = crypto.createHash('sha1');
@@ -28427,7 +28574,11 @@ function requireHandshake () {
 	  }
 
 	  setScrambleData(cb) {
+<<<<<<< HEAD
 	    require$$0$4.randomBytes(20, (err, data) => {
+=======
+	    require$$0$7.randomBytes(20, (err, data) => {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	      if (err) {
 	        cb(err);
 	        return;
@@ -29394,7 +29545,11 @@ function requireSha256_password () {
 	hasRequiredSha256_password = 1;
 
 	const PLUGIN_NAME = 'sha256_password';
+<<<<<<< HEAD
 	const crypto = require$$0$4;
+=======
+	const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const { xorRotating } = requireAuth_41();
 	const Tls = require$$1$5;
 
@@ -29472,7 +29627,11 @@ function requireCaching_sha2_password () {
 	// https://mysqlserverteam.com/mysql-8-0-4-new-default-authentication-plugin-caching_sha2_password/
 
 	const PLUGIN_NAME = 'caching_sha2_password';
+<<<<<<< HEAD
 	const crypto = require$$0$4;
+=======
+	const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const { xor, xorRotating } = requireAuth_41();
 
 	const REQUEST_SERVER_KEY_PACKET = Buffer.from([2]);
@@ -37076,7 +37235,11 @@ function randomBytes(len) {
   } catch {}
   // Node.js crypto module for non-browser environments.
   try {
+<<<<<<< HEAD
     return require$$0$4.randomBytes(len);
+=======
+    return require$$0$7.randomBytes(len);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   } catch {}
   // Custom fallback specified with `setRandomFallback`.
   if (!randomFallback) {
@@ -42845,6 +43008,10 @@ const canStack = (item1, item2) => {
     return item1.id === item2.id && item1Data.stackable && item2Data.stackable;
 };
 const moveItemSlots = (sourceSlots, sourceIndex, targetSlots, targetIndex) => {
+<<<<<<< HEAD
+=======
+    // ✅ Если это один и тот же массив (перемещение внутри одной секции)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     if (sourceSlots === targetSlots) {
         const newSlots = sourceSlots.length >= 20 ? [...sourceSlots] : [...sourceSlots, ...Array(20 - sourceSlots.length).fill(null)];
         const sourceItem = newSlots[sourceIndex];
@@ -42881,6 +43048,10 @@ const moveItemSlots = (sourceSlots, sourceIndex, targetSlots, targetIndex) => {
         }
         return { newSourceSlots: newSlots, newTargetSlots: newSlots };
     }
+<<<<<<< HEAD
+=======
+    // ✅ Для разных массивов (перемещение между секциями)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     const newSourceSlots = sourceSlots.length >= 20 ? [...sourceSlots] : [...sourceSlots, ...Array(20 - sourceSlots.length).fill(null)];
     const newTargetSlots = targetSlots.length >= 20 ? [...targetSlots] : [...targetSlots, ...Array(20 - targetSlots.length).fill(null)];
     const sourceItem = newSourceSlots[sourceIndex];
@@ -45393,9 +45564,15 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
     rce.triggerClient(player, 'closeSelectChar');
     rce.triggerClient(player, 'execute', 'window.App.selectCharReducer.hideSelectChar()');
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`);
+<<<<<<< HEAD
     setNumberChar(player.id, numberSlot);
     player.dimension = 0;
     console.log('pam 1');
+=======
+    console.log(nickname);
+    setNumberChar(player.id, numberSlot);
+    player.dimension = 0;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     try {
         const sql = `SELECT uid, coordquit, adminlvl, age, cash, bankmoney, lvl, exp, health, armour, chardata FROM chars WHERE firstname = ? AND lastname = ?`;
         data.query(sql, [firstName, lastName], async (err, results) => {
@@ -45403,14 +45580,20 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                 console.log(chalk.bgRed('• SPAWN •') + chalk.red(` Ошибка запроса к БД: ${err}`));
                 return;
             }
+<<<<<<< HEAD
             console.log('pam 2');
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
             if (Array.isArray(results) && results.length === 0) {
                 console.log(chalk.bgYellow('• SPAWN •') + chalk.yellow(` Игрок с никнеймом ${nickname} не найден в БД.`));
                 return;
             }
             try {
                 let coords;
+<<<<<<< HEAD
                 console.log('pam 3');
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 switch (pointSpawn) {
                     case 'exit':
                         coords = JSON.parse(results[0].coordquit);
@@ -45426,17 +45609,26 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                     default:
                         rce.triggerClient(player, 'sendNotify', 'err', 'Неизвестная точка спавна!', 3500, 'top');
                 }
+<<<<<<< HEAD
                 console.log('pam 4');
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 const uid = await getDataAccount(player, 'uid', player.id);
                 rce.triggerClient(player, 'execute', `window.App.spawnReducer.hideSpawn()`);
                 rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`);
                 sendInventoryToCef(player, uid);
+<<<<<<< HEAD
                 console.log('pam 5');
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 player.spawn(new mp.Vector3(parseFloat(coords.x), parseFloat(coords.y), parseFloat(coords.z)));
                 player.heading = parseFloat(coords.heading);
                 player.health = results[0].health;
                 player.armour = results[0].armour;
+<<<<<<< HEAD
                 console.log('pam 6');
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 const cash = await getDataAccount(player, 'cash', player.id);
                 const bankmoney = await getDataAccount(player, 'bankmoney', player.id);
                 const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?';
@@ -45448,12 +45640,18 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                     heading: player.heading.toFixed(3)
                 };
                 const coordString = JSON.stringify(coordExit);
+<<<<<<< HEAD
                 console.log('pam 7');
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 data.query(sql, [coordString, uid], (err, results) => {
                     if (err)
                         return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`));
                 });
+<<<<<<< HEAD
                 console.log('pam 8');
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 player.setVariable('ADMIN_LVL', results[0].adminlvl);
                 connectedUsers.setUser(player.id, {
                     uid: results[0].uid,
@@ -45467,11 +45665,17 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                     exp: results[0].exp,
                     unique_quest: results[0].unique_quest
                 });
+<<<<<<< HEAD
                 console.log('pam 9');
                 rce.trigger('charSpawned', player);
                 player.setVariable('gender', dataChar.gender);
                 player.setVariable('player_spawned', true);
                 rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setAdminLvl(${results[0].adminlvl})`);
+=======
+                rce.trigger('charSpawned', player);
+                player.setVariable('gender', dataChar.gender);
+                player.setVariable('player_spawned', true);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
                 rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
                 setCustomizationChar(player, JSON.parse(results[0].chardata));
@@ -45518,7 +45722,11 @@ rce.registerClient('client:playerSpawnedBeforeAuth', async (player) => {
                         results.find((char) => char.numberslot === i) :
                         null;
                     if (charData) {
+<<<<<<< HEAD
                         let status = charData.ban !== null ? 'ban' : 'active';
+=======
+                        let status = 'active';
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                         slots.push({
                             status: status,
                             nickname: `${charData.firstname} ${charData.lastname}`,
@@ -45563,7 +45771,11 @@ rce.registerClient('selectChar:getDataAllChars', async (player) => {
                 resolve([]);
                 return;
             }
+<<<<<<< HEAD
             const sql = 'SELECT firstname, lastname, numberslot, cash, bankmoney, ban FROM chars WHERE sid = ?';
+=======
+            const sql = 'SELECT firstname, lastname, numberslot, cash, bankmoney FROM chars WHERE sid = ?';
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
             data.query(sql, [sid], (err, results) => {
                 if (err) {
                     console.log(chalk.bgRed('• SELECT CHAR •') + chalk.red(` DB error: ${err}`));
@@ -45575,7 +45787,10 @@ rce.registerClient('selectChar:getDataAllChars', async (player) => {
                     numberslot: char.numberslot,
                     cash: char.cash,
                     bankmoney: char.bankmoney,
+<<<<<<< HEAD
                     ban: JSON.parse(char.ban)
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 }));
                 resolve(charsData);
             });
@@ -45772,6 +45987,7 @@ rce.registerClientCef('playerReborn', (player) => {
     playerReborn(player);
 });
 
+<<<<<<< HEAD
 const db$4 = data.promise();
 const checkAdminLvl = (player) => {
     const alvl = connectedUsers.getField(player.id, 'adminLvl');
@@ -45860,6 +46076,8 @@ rce.registerCef('admin:revive', (player, targetUid) => {
         revivePlayer(player, targetUid);
 });
 
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 registerCMD('getpos', (player, [target, ...namePos]) => {
     const targetId = parseInt(target, 10);
     const fullNamePos = namePos.join(' ');
@@ -45910,6 +46128,7 @@ registerACommand('sethp', 'Установить здоровье игроку', 
     rce.triggerClient(target, 'sendNotify', 'info', `Вам установлено HP: ${hp}%`, 3500, 'bottom');
     rce.triggerCef(player, 'console:commandResponse', false, `Игроку ID:${targetId} выдано HP: ${hp}%`);
 });
+<<<<<<< HEAD
 registerACommand('ban', 'Заблокировать игрока', [
     { name: 'UID игрока', type: 'number' },
     { name: 'время (дни)', type: 'number' },
@@ -45934,6 +46153,8 @@ registerACommand('ban', 'Заблокировать игрока', [
     }
     banPlayer(player, uid, days, reason);
 });
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 registerACommand('banvoice', 'Выдать мут игроку', [
     { name: 'id игрока', type: 'number' },
 ], 2, (player, [targetId]) => {
@@ -46015,12 +46236,15 @@ registerACommand('create_business', 'Создать бизнес или прив
     rce.triggerClient(player, 'openDevMenu');
     rce.triggerClient(player, 'execute', 'window.App.devMenusReducer.showCreateBusiness()');
 });
+<<<<<<< HEAD
 registerACommand('tpto', 'Телепортироваться к игроку', [
     { name: 'UID игрока', type: 'number' }
 ], 2, (player, [targetUid]) => {
     const tUid = parseInt(targetUid);
     tpToPlayer(player, tUid);
 });
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
     try {
         // Проверка обязательных аргументов
@@ -46141,7 +46365,11 @@ function requireCookies () {
 
 	// module to handle cookies
 
+<<<<<<< HEAD
 	const urllib = require$$0$6;
+=======
+	const urllib = require$$0$5;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 	const SESSION_TIMEOUT = 1800; // 30 min
 
@@ -46437,7 +46665,11 @@ function requireFetch () {
 
 	const http = require$$0$c;
 	const https = require$$1$6;
+<<<<<<< HEAD
 	const urllib = require$$0$6;
+=======
+	const urllib = require$$0$5;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const zlib = require$$0$a;
 	const PassThrough = require$$0$3.PassThrough;
 	const Cookies = requireCookies();
@@ -46725,13 +46957,21 @@ function requireShared () {
 	hasRequiredShared = 1;
 	(function (module) {
 
+<<<<<<< HEAD
 		const urllib = require$$0$6;
+=======
+		const urllib = require$$0$5;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 		const util = require$$1$1;
 		const fs$1 = fs;
 		const nmfetch = requireFetch();
 		const dns = require$$4$1;
 		const net = require$$0$b;
+<<<<<<< HEAD
 		const os = require$$0$5;
+=======
+		const os = require$$0$4;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 		const DNS_TTL = 5 * 60 * 1000;
 		const CACHE_CLEANUP_INTERVAL = 30 * 1000; // Minimum 30 seconds between cleanups
@@ -51616,7 +51856,11 @@ function requireMimeNode () {
 	if (hasRequiredMimeNode) return mimeNode;
 	hasRequiredMimeNode = 1;
 
+<<<<<<< HEAD
 	const crypto = require$$0$4;
+=======
+	const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const fs$1 = fs;
 	const punycode = requirePunycode();
 	const PassThrough = require$$0$3.PassThrough;
@@ -53740,7 +53984,11 @@ function requireRelaxedBody () {
 	// streams through a message body and calculates relaxed body hash
 
 	const Transform = require$$0$3.Transform;
+<<<<<<< HEAD
 	const crypto = require$$0$4;
+=======
+	const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 	class RelaxedBody extends Transform {
 	    constructor(options) {
@@ -53898,7 +54146,11 @@ function requireSign () {
 
 	const punycode = requirePunycode();
 	const mimeFuncs = requireMimeFuncs();
+<<<<<<< HEAD
 	const crypto = require$$0$4;
+=======
+	const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 	/**
 	 * Returns DKIM signature header line
@@ -54030,7 +54282,11 @@ function requireDkim () {
 	const PassThrough = require$$0$3.PassThrough;
 	const fs$1 = fs;
 	const path$1 = path;
+<<<<<<< HEAD
 	const crypto = require$$0$4;
+=======
+	const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 	const DKIM_ALGO = 'sha256';
 	const MAX_MESSAGE_SIZE = 2 * 1024 * 1024; // buffer messages larger than this to disk
@@ -54288,7 +54544,11 @@ function requireHttpProxyClient () {
 
 	const net = require$$0$b;
 	const tls = require$$1$5;
+<<<<<<< HEAD
 	const urllib = require$$0$6;
+=======
+	const urllib = require$$0$5;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 	/**
 	 * Establishes proxied connection to destinationPort
@@ -54763,12 +55023,20 @@ function requireMailer () {
 	const DKIM = requireDkim();
 	const httpProxyClient = requireHttpProxyClient();
 	const util = require$$1$1;
+<<<<<<< HEAD
 	const urllib = require$$0$6;
+=======
+	const urllib = require$$0$5;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const packageData = require$$9;
 	const MailMessage = requireMailMessage();
 	const net = require$$0$b;
 	const dns = require$$4$1;
+<<<<<<< HEAD
 	const crypto = require$$0$4;
+=======
+	const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 	/**
 	 * Creates an object for exposing the Mail API
@@ -55325,8 +55593,13 @@ function requireSmtpConnection () {
 	const EventEmitter = require$$0$9.EventEmitter;
 	const net = require$$0$b;
 	const tls = require$$1$5;
+<<<<<<< HEAD
 	const os = require$$0$5;
 	const crypto = require$$0$4;
+=======
+	const os = require$$0$4;
+	const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const DataStream = requireDataStream();
 	const PassThrough = require$$0$3.PassThrough;
 	const shared = requireShared();
@@ -57174,7 +57447,11 @@ function requireXoauth2 () {
 
 	const Stream = require$$0$3.Stream;
 	const nmfetch = requireFetch();
+<<<<<<< HEAD
 	const crypto = require$$0$4;
+=======
+	const crypto = require$$0$7;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 	const shared = requireShared();
 
 	/**
@@ -60865,8 +61142,13 @@ const updateTime = (isFirstRun = false) => {
         minutes: moscowTime.getMinutes(),
         seconds: moscowTime.getSeconds()
     };
+<<<<<<< HEAD
     //mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds)
     mp.world.time.set(7, 0, 0);
+=======
+    mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds);
+    //mp.world.time.set(8, 0, 0)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     if (!isFirstRun) {
         console.log(`Time: ${pad(currentDateTime.hours)}:${pad(currentDateTime.minutes)}`);
     }
@@ -61680,7 +61962,11 @@ const vehicles = [
     { short: 'chernobog', full: 'Chernobog', price: 4978560, fuel: 'gas', trunk: 153 },
 ];
 
+<<<<<<< HEAD
 const db$3 = data.promise();
+=======
+const db$2 = data.promise();
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 const generateRandomUSPlate = () => {
     const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ";
     if (Math.random() > 0.5) {
@@ -61704,7 +61990,11 @@ const generateRandomUSPlate = () => {
 };
 const isPlateExist = async (plate) => {
     try {
+<<<<<<< HEAD
         const [rows] = await db$3.query(`
+=======
+        const [rows] = await db$2.query(`
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       SELECT COUNT(*) AS cnt
       FROM chars
       WHERE rent_data IS NOT NULL AND JSON_EXTRACT(rent_data, '$.plate') = ?
@@ -61853,7 +62143,11 @@ const vehicleManager = {
     clearAllVehicles
 };
 
+<<<<<<< HEAD
 const db$2 = data.promise();
+=======
+const db$1 = data.promise();
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 let rentsData = [];
 const MAX_RETRIES = 10;
 const RETRY_DELAY = 2000;
@@ -61871,7 +62165,11 @@ rce.register('charSpawned', async (player) => {
         rce.triggerClients('createPed', rent.pedName, 'Местный арендодатель', rent.modelName, [rent.pedPos.x, rent.pedPos.y, rent.pedPos.z, rent.pedPos.heading], { isVisible: true, id: 811, color: 46 });
     });
     try {
+<<<<<<< HEAD
         const [rows] = await db$2.query(`SELECT rent_data FROM chars WHERE uid = ?`, [uid]);
+=======
+        const [rows] = await db$1.query(`SELECT rent_data FROM chars WHERE uid = ?`, [uid]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         if (rows.length === 0 || !rows[0].rent_data)
             return;
         let rentInfo;
@@ -61880,12 +62178,20 @@ rce.register('charSpawned', async (player) => {
         }
         catch (e) {
             console.log(chalk.red('[SPAWN RENT VEH]') + ` Ошибка парсинга: ${e}`);
+<<<<<<< HEAD
             await db$2.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+=======
+            await db$1.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
             return;
         }
         const timeLeft = Number(rentInfo.timeLeft) || 0;
         if (timeLeft < 1) {
+<<<<<<< HEAD
             await db$2.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+=======
+            await db$1.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
             rce.triggerClient(player, 'sendNotify', 'warning', 'Аренда истекла', 3200, 'bottom');
             return;
         }
@@ -61942,7 +62248,11 @@ rce.registerCef('createNpcForRent', async (player, npcModel, npcName) => {
         return;
     }
     try {
+<<<<<<< HEAD
         const [rows] = await db$2.query(`
+=======
+        const [rows] = await db$1.query(`
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         SELECT COALESCE(MAX(id), 0) AS maxId
         FROM rent
     `);
@@ -61954,7 +62264,11 @@ rce.registerCef('createNpcForRent', async (player, npcModel, npcName) => {
             z: player.position.z,
             heading: player.heading,
         };
+<<<<<<< HEAD
         await db$2.query(`INSERT INTO rent (id, pedname, modelname, pedpos) VALUES (?, ?, ?, ?)`, [newId, npcName, npcModel, JSON.stringify(pedpos)]);
+=======
+        await db$1.query(`INSERT INTO rent (id, pedname, modelname, pedpos) VALUES (?, ?, ?, ?)`, [newId, npcName, npcModel, JSON.stringify(pedpos)]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         const coordZ = await rce.callClient(player, 'getGroundZ');
         const colshape = mp.colshapes.newSphere(pedpos.x, pedpos.y, coordZ, 4.0, player.dimension);
         rentsData.push({
@@ -61990,14 +62304,22 @@ rce.registerCef('addVehInRent', async (player, rentId, typeVeh, vehModel, priceV
     const vehPos = veh.position;
     const vehRot = veh.heading;
     try {
+<<<<<<< HEAD
         const [checkRows] = await db$2.query(`SELECT COUNT(*) AS cnt FROM rent WHERE id = ?`, [rentId]);
+=======
+        const [checkRows] = await db$1.query(`SELECT COUNT(*) AS cnt FROM rent WHERE id = ?`, [rentId]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         const exist = checkRows[0].cnt > 0;
         if (!exist) {
             rce.triggerClient(player, 'sendNotify', 'err', `Аренда #${rentId} не найдена!`, 3200, 'top');
             return;
         }
         let vehiclesData = [];
+<<<<<<< HEAD
         const [rows] = await db$2.query(`SELECT vehiclesdata FROM rent WHERE id = ?`, [rentId]);
+=======
+        const [rows] = await db$1.query(`SELECT vehiclesdata FROM rent WHERE id = ?`, [rentId]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         if (rows[0].vehiclesdata) {
             try {
                 vehiclesData = JSON.parse(rows[0].vehiclesdata);
@@ -62022,7 +62344,11 @@ rce.registerCef('addVehInRent', async (player, rentId, typeVeh, vehModel, priceV
         else {
             vehiclesData.push(vehiclesInfo);
         }
+<<<<<<< HEAD
         await db$2.query(`UPDATE rent SET vehiclesdata = ? WHERE id = ?`, [JSON.stringify(vehiclesData), rentId]);
+=======
+        await db$1.query(`UPDATE rent SET vehiclesdata = ? WHERE id = ?`, [JSON.stringify(vehiclesData), rentId]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         const rentIndex = rentsData.findIndex(r => r.id === rentId);
         if (rentIndex !== -1) {
             rentsData[rentIndex].vehiclesData = vehiclesData;
@@ -62120,7 +62446,11 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
         else {
             decrementBankMoney(player, uid, selectedVeh.price * (time / 60));
         }
+<<<<<<< HEAD
         await db$2.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+=======
+        await db$1.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         rce.triggerClient(player, 'startRentTimer', uid, playerData.vehicleRent.id, time);
     }
     catch (e) {
@@ -62135,7 +62465,11 @@ rce.registerClient('rentOver', async (player) => {
         const plate = playerData.vehicleRent.numberPlate;
         await removeKeyFromVeh(uid, keyUniqueId, plate);
     }
+<<<<<<< HEAD
     await db$2.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+=======
+    await db$1.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     playerData.isTakenRent = false;
     playerData.isWithdrawal = null;
     vehicleManager.removeVehicle(playerData.vehicleRent.id);
@@ -62169,7 +62503,11 @@ rce.registerClient('syncRentTime', async (player, timeLeft) => {
             timeLeft: timeLeft,
             inVeh: (player.vehicle && player.vehicle.id === vehicle.id) ? true : false
         };
+<<<<<<< HEAD
         await db$2.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+=======
+        await db$1.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     }
 });
 mp.events.add('playerEnterColshape', (player, colshape) => {
@@ -62236,7 +62574,11 @@ const rentPlayerQuit = async (uid, inVeh = false, clientTimeLeft) => {
         timeLeft: Math.max(1, finalTimeLeft)
     };
     vehicleManager.removeVehicle(vehicle.id);
+<<<<<<< HEAD
     await db$2.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+=======
+    await db$1.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     vehicle.destroy();
     if (rentData.isWithdrawal)
         clearTimeout(rentData.isWithdrawal);
@@ -62245,7 +62587,11 @@ const rentPlayerQuit = async (uid, inVeh = false, clientTimeLeft) => {
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const loadRentPoints = async (retryCount = 0) => {
     try {
+<<<<<<< HEAD
         const [rows] = await db$2.query(`SELECT * FROM rent`);
+=======
+        const [rows] = await db$1.query(`SELECT * FROM rent`);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         if (rows.length === 0)
             return;
         rentsData = [];
@@ -62347,7 +62693,11 @@ const BusinessNames = {
         },
 });
 
+<<<<<<< HEAD
 const db$1 = data.promise();
+=======
+const db = data.promise();
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 const businesses = new Map();
 rce.registerCef('createBusiness', (player, data) => {
     const pos = player.position;
@@ -62394,7 +62744,11 @@ const initBusinessSystem = async () => {
 };
 const loadBusinesses = async () => {
     try {
+<<<<<<< HEAD
         const [rows] = await db$1.query(`SELECT * FROM businesses`);
+=======
+        const [rows] = await db.query(`SELECT * FROM businesses`);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         businesses.clear();
         rows.forEach((row) => {
             const nameBusiness = BusinessNames[row.type];
@@ -62435,7 +62789,11 @@ const createBusiness = async (dto, owner = 'gov') => {
     try {
         const markup = dto.markup ?? 0.00;
         const now = new Date();
+<<<<<<< HEAD
         const [result] = await db$1.execute(`
+=======
+        const [result] = await db.execute(`
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       INSERT INTO businesses
       (type, owner, price, position, balance, markup, taxAccumulated, lastHourlyExpense, taxDeadline, lastBalanceZero, createdAt)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -62648,7 +63006,10 @@ const closeCreateChar = async (player, dataChar) => {
     rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`);
     rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
+<<<<<<< HEAD
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setAdminLvl(${0})`);
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     rce.triggerClient(player, 'closeCreateChar');
     const uid = await getDataAccount(player, 'uid', player.id);
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`);
@@ -62703,6 +63064,10 @@ rce.registerCef('cef:buyUniqueScenario', async (player, scenario) => {
                         return;
                     }
                     decrementDonatCoins(player, sid, priceScenario);
+<<<<<<< HEAD
+=======
+                    resolve('ok');
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
                 });
             });
         }
@@ -62864,7 +63229,11 @@ rce.registerCef('cef:amenu:spawnVeh', (player, targetId, modelName, colorVeh) =>
         engine: true,
         numberPlate: 'REAL_RP',
         dimension: targetPlayer.dimension,
+<<<<<<< HEAD
         heading: Number(targetPlayer.heading)
+=======
+        heading: targetPlayer.heading
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     });
     const vehicleFullName = vehicles.find(v => v.short === modelName || modelName);
     vehicleManager.addVehicle(vehicle, { fullName: vehicleFullName.full });
@@ -62877,7 +63246,11 @@ rce.registerCef('cef:amenu:spawnVehForMe', (player, modelName, colorVeh) => {
         engine: true,
         numberPlate: 'REAL_RP',
         dimension: player.dimension,
+<<<<<<< HEAD
         heading: Number(player.heading)
+=======
+        heading: player.heading
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     });
     vehicle.setColorRGB(colorVeh[0], colorVeh[1], colorVeh[2], colorVeh[0], colorVeh[1], colorVeh[2]);
     player.putIntoVehicle(vehicle, 0);
@@ -63138,6 +63511,7 @@ rce.registerClient('handleInteractionVehicle', async (player, action, targetId) 
     }
 });
 
+<<<<<<< HEAD
 const db = data.promise();
 rce.registerClient('checkWhitelist', async (player) => {
     const [result] = await db.query(`SELECT whitelist_enabled FROM server_settings`);
@@ -63160,6 +63534,9 @@ rce.registerCef('sendRequestWhitelist', async (player, discord) => {
     await db.execute(`INSERT INTO requests_whitelist (social_club, discord, createdAt) VALUES (?, ?, ?)`, [player.socialClub, discord, new Date()]);
 });
 
+=======
+//import './whitelist/index'
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 //mp.world.weather = 'XMAS'
 const setCustomizationChar = (player, dataChar) => {
     try {

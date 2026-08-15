@@ -4,11 +4,15 @@ export interface IProductCard {
   name: string,
   description: string,
   weight: number,
+<<<<<<< HEAD
   price: number,
 }
 
 export interface ICartItem extends IProductCard {
   quantity: number
+=======
+  price: number
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 }
 
 export const showShop24 = (

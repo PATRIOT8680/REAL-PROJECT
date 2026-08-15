@@ -20,8 +20,11 @@ import { offerReducer } from "./menus/offer.ts";
 import { devMenusReducer } from "./menus/dev-menus.ts";
 import { shop24Reducer } from "./menus/shop24.ts";
 import { buyingBusinessReducer } from "./menus/buyingBusiness.ts";
+<<<<<<< HEAD
 import { whitelistReducer } from "./menus/whitelist.ts";
 import { bankReducer } from "./menus/bank.ts";
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 // Elements
 import { sendNotifyReducer } from './elements/notify'
@@ -57,8 +60,11 @@ export type RootState = {
   devMenusReducer: ReturnType<typeof devMenusReducer>
   shop24Reducer: ReturnType<typeof shop24Reducer>
   buyingBusinessReducer: ReturnType<typeof buyingBusinessReducer>
+<<<<<<< HEAD
   whitelistReducer: ReturnType<typeof whitelistReducer>
   bankReducer: ReturnType<typeof bankReducer>
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
   // Elements
   sendNotifyReducer: ReturnType<typeof sendNotifyReducer>
@@ -95,8 +101,11 @@ export const rootReducer = combineReducers({
   devMenusReducer,
   shop24Reducer,
   buyingBusinessReducer,
+<<<<<<< HEAD
   whitelistReducer,
   bankReducer,
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
   // Elements
   sendNotifyReducer,

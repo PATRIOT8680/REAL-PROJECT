@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import './assets/styles/compiled-css/Players.css'
 import { useCallback, useState, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -206,6 +207,14 @@ const PlayersPage = () => {
             onClose={closeBanModal}
           />
         )}
+=======
+const PlayersPage = () => {
+  return (
+      <>
+        <div className="players-page">
+          Players Page
+        </div>
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       </>
   )
 }

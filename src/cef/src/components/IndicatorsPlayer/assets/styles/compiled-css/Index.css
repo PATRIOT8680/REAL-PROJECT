@@ -19,7 +19,10 @@
   flex-direction: column;
   align-items: center;
   gap: 0.1rem;
+<<<<<<< HEAD
   user-select: none;
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 }
 .indicators-player .indicator .info-indicator {
   font-family: "Montserrat", sans-serif;

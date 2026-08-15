@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+//import './whitelist/index'
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 import './player/spawn'
 import './player/playerCmd'
 import './admin/adminCmd'
@@ -27,8 +31,11 @@ import './player/interaction'
 import './modules/inventory/tradeManager'
 import './vehicles/interaction'
 import './business/manager'
+<<<<<<< HEAD
 import './player/whitelist'
 import './admin/actions'
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 //mp.world.weather = 'XMAS'
 

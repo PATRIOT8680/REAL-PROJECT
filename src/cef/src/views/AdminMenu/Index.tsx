@@ -19,10 +19,31 @@ const AdminMenu = () => {
     setActivePage(menu)
   }, [])
 
+<<<<<<< HEAD
   const handleCloseAMenu = () => {
     rce.triggerClient('closeAMenu')
   }
 
+=======
+  const handleKeyDown = (key: 'left' | 'right') => {
+    if (key === 'left') {
+      const currentIndex = pages.indexOf(activePage)
+      const newIndex = (currentIndex - 1 + pages.length) % pages.length
+      setActivePage(pages[newIndex])
+    }
+    else if (key === 'right') {
+      const currentIndex = pages.indexOf(activePage)
+      const newIndex = (currentIndex + 1) % pages.length
+      setActivePage(pages[newIndex])
+    }
+  }
+
+  rce.register('amenu:ctrlPress', (key: 'left' | 'right') => {
+    rce.triggerClient('clientCmd', `Нажат ${key}`)
+    handleKeyDown(key)
+  })
+
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   const renderActivePage = () => {
     switch (activePage) {
       case 'console':
@@ -43,6 +64,7 @@ const AdminMenu = () => {
   }
 
   return (
+<<<<<<< HEAD
     <div className='admin-menu'>
       <Header activeMenu={activePage} onMenuChange={handleSelectPage} />
       <div className="main-container">
@@ -54,6 +76,14 @@ const AdminMenu = () => {
         { renderActivePage() }
       </div>
     </div>
+=======
+    <>
+      <div className="admin-menu">
+        <Header activeMenu={activePage} onMenuChange={handleSelectPage} />
+        { renderActivePage() }
+      </div>
+    </>
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   )
 }
 

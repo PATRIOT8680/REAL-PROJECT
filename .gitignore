@@ -1,16 +1,26 @@
+<<<<<<< HEAD
 # Logs
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+<<<<<<< HEAD
 # Build
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 dist
 dist-ssr
 *.local
 
+<<<<<<< HEAD
 # Editor
+=======
+# Editor directories and files
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 .vscode/*
 !.vscode/extensions.json
 .idea

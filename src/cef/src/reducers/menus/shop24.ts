@@ -1,7 +1,11 @@
 import { IProductCard } from "../../actions/menus/shop24.ts";
 
 const initialState = {
+<<<<<<< HEAD
   isVisible: false,
+=======
+  isVisible: true,
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   id: 0,
   products: [
     {
@@ -28,6 +32,7 @@ const initialState = {
       price: 1500,
       weight: 0.2,
     },
+<<<<<<< HEAD
     {
       id: 1,
       type: 'foods',
@@ -100,6 +105,8 @@ const initialState = {
       price: 1500,
       weight: 1.2,
     },
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   ] as IProductCard[]
 }
 

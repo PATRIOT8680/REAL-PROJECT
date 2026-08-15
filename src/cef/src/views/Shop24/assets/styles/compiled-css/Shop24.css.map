@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"version":3,"sourceRoot":"","sources":["../Shop24.sass"],"names":[],"mappings":"AAGA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA","file":"Shop24.css"}
+=======
+{"version":3,"sourceRoot":"","sources":["../Shop24.sass"],"names":[],"mappings":"AAGA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;;AAEA;EACE;EACA","file":"Shop24.css"}
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c

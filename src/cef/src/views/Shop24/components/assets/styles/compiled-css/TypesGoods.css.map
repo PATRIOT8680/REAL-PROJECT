@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"version":3,"sourceRoot":"","sources":["../TypesGoods.sass"],"names":[],"mappings":"AAGA;EACE;EACA;EACA;EACA;EACA;EACA;;AAEA;EACE;EACA,aAbG;EAcH;EACA;EACA;EACA;;AAEA;EACE;;AAEF;EACE;EACA","file":"TypesGoods.css"}
+=======
+{"version":3,"sourceRoot":"","sources":["../TypesGoods.sass"],"names":[],"mappings":"AAGA;EACE;EACA;EACA;EACA;;AAEA;EACE;EACA,aAXG;EAYH;EACA;EACA;EACA;;AAEA;EACE;;AAEF;EACE;EACA","file":"TypesGoods.css"}
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c

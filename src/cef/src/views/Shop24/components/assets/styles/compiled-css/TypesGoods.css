@@ -2,8 +2,11 @@
   display: flex;
   align-items: center;
   margin-top: -0.4rem;
+<<<<<<< HEAD
   user-select: none;
   -webkit-user-drag: none;
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   gap: 1.2rem;
 }
 .types-goods .name-type {
@@ -19,7 +22,11 @@
 }
 .types-goods .name-type.selected {
   color: #ffca58;
+<<<<<<< HEAD
   transition: color 0.3s ease;
+=======
+  tansition: color 0.3s ease;
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 }
 
 /*# sourceMappingURL=TypesGoods.css.map */

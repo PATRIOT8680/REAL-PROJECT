@@ -51,7 +51,10 @@ const closeCreateChar = async (player: PlayerMp, dataChar) => {
   rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
   rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`)
   rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
+<<<<<<< HEAD
   rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setAdminLvl(${0})`)
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
   rce.triggerClient(player, 'closeCreateChar')
 
@@ -123,6 +126,10 @@ rce.registerCef('cef:buyUniqueScenario', async (player: PlayerMp, scenario: stri
           }
 
           decrementDonatCoins(player, sid, priceScenario)
+<<<<<<< HEAD
+=======
+          resolve('ok')
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         })
       })
 

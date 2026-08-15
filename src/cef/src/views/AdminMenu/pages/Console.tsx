@@ -34,7 +34,10 @@ interface Suggestion {
 
 const ConsolePage = () => {
   const consoleBufferState = useSelector((state: RootState) => state.consoleBufferReducer)
+<<<<<<< HEAD
   const { nickname } = useSelector((state: RootState) => state.playerInfoReducer)
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const suggestionsRef = useRef<HTMLDivElement>(null)
@@ -51,7 +54,11 @@ const ConsolePage = () => {
 
   rce.register('console:setCommands', (serverCommands: CommandDefinition[]) => {
     rce.triggerClient('clientCmd', 'Зарегали команду')
+<<<<<<< HEAD
     setCommands(serverCommands)
+=======
+    setCommands(serverCommands);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   })
 
   rce.register('console:commandResponse', (success: boolean, message: string) => {
@@ -88,6 +95,10 @@ const ConsolePage = () => {
     const timer = setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus()
+<<<<<<< HEAD
+=======
+        console.log('penis')
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       }
     }, 550)
 
@@ -198,7 +209,11 @@ const ConsolePage = () => {
 
     const userMsg: ConsoleMessage = {
       id: messageId,
+<<<<<<< HEAD
       sender: nickname,
+=======
+      sender: 'Какашке',
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       time: currentTime,
       args: [commandName, ...args]
     }
@@ -230,6 +245,7 @@ const ConsolePage = () => {
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+<<<<<<< HEAD
       e.preventDefault();
 
       // Если есть выбранная подсказка И текст в инпуте ещё не полностью введён вручную
@@ -272,6 +288,34 @@ const ConsolePage = () => {
       }
     }
   };
+=======
+      e.preventDefault()
+      if (selectedSuggestion >= 0 && suggestions.length > 0) {
+        handleSuggestionSelect(suggestions[selectedSuggestion]);
+      } else {
+        handleCmdSubmit();
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setSelectedSuggestion(prev =>
+        prev < suggestions.length - 1 ? prev + 1 : 0
+      )
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setSelectedSuggestion(prev =>
+        prev > 0 ? prev - 1 : suggestions.length - 1
+      )
+    } else if (e.key === 'Escape') {
+      setSuggestions([])
+      setSelectedSuggestion(-1)
+    } else if (e.key === 'Tab' && suggestions.length > 0) {
+      e.preventDefault()
+      if (selectedSuggestion >= 0) {
+        handleSuggestionSelect(suggestions[selectedSuggestion])
+      }
+    }
+  }
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
   const getTime = async () => {
     return await getDateTime()
@@ -332,6 +376,7 @@ const ConsolePage = () => {
           <div ref={messagesEndRef} />
         </div>
 
+<<<<<<< HEAD
         <div className="input-cmds-section">
           {suggestions.length > 0 && (
             <div ref={suggestionsRef} className="suggestions-container">
@@ -369,6 +414,46 @@ const ConsolePage = () => {
             ) }
           </div>
         </div>
+=======
+        <div className="enter-block">
+          <input
+            ref={inputRef}
+            type='text'
+            value={cmdValue}
+            onKeyDown={handleKeyPress}
+            onChange={(e) => setCmdValue(e.target.value)}
+            className='enter-cmd'
+            placeholder='Начните вводить команду...'
+          />
+
+          { cmdValue !== '' && (
+              <span className="enter-keyup">ENTER</span>
+          ) }
+        </div>
+
+
+        {suggestions.length > 0 && (
+            <div ref={suggestionsRef} className="suggestions-container">
+              {suggestions.map((suggestion, index) => (
+                  <div
+                      key={suggestion.command}
+                      ref={index === selectedSuggestion ? selectedSuggestionRef : null}
+                      className={`suggestion-item ${index === selectedSuggestion ? 'selected' : ''}`}
+                      onClick={() => handleSuggestionSelect(suggestion)}
+                  >
+                    <div className="suggestion-command">
+                      <span className="command-name">{suggestion.command}</span>
+                      {suggestion.args.map((arg, argIndex) => (
+                          <span key={argIndex} className="command-arg">{arg}</span>
+                      ))}
+                    </div>
+                    <div className="suggestion-description">{suggestion.description}</div>
+                  </div>
+              ))}
+            </div>
+        )}
+
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       </div>
     </>
   )

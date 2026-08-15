@@ -1,5 +1,6 @@
 import { CustomEventBase, CustomEventHandler } from "../../../shared/CustomEventBase.ts";
 
+<<<<<<< HEAD
 declare var CryptoJS: any;  // библиотека crypto-js д.б. подключена в index.html
 
 // Глобальная переменная для сессионного секрета
@@ -12,6 +13,8 @@ function generateNonce(): string {
   return Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 }
 
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 export class rce extends CustomEventBase {
   static triggerCef(eventName: string, args: string) {
     try {
@@ -38,6 +41,7 @@ export class rce extends CustomEventBase {
 
   static lastServerSend = 0;
 
+<<<<<<< HEAD
   // triggerServer — теперь с подписью
   static triggerServer(eventName: string, ...args: any[]) {
     if (sessionSecret) {
@@ -67,10 +71,17 @@ export class rce extends CustomEventBase {
   }
 
   // callServer — с подписью
+=======
+  static triggerServer(eventName: string, ...args: any[]) {
+    mp.trigger("trigger:server", eventName, JSON.stringify(args));
+  }
+
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   static callServer(eventName: string, ...args: any[]): Promise<any> {
     const requestID = this.callServerResponse++;
     return new Promise((resolve, reject) => {
       this.requestServerHandle.set(requestID, resolve);
+<<<<<<< HEAD
       if (sessionSecret) {
         const ts = Date.now();
         const nonce = generateNonce();
@@ -88,6 +99,9 @@ export class rce extends CustomEventBase {
       } else {
         mp.trigger('call:server', requestID, eventName, JSON.stringify(args));
       }
+=======
+      mp.trigger('call:server', requestID, eventName, ...args);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     });
   }
 

@@ -17,7 +17,11 @@ rce.registerCef('cef:amenu:spawnVeh', (player: PlayerMp, targetId: number, model
     engine: true,
     numberPlate: 'REAL_RP',
     dimension: targetPlayer.dimension,
+<<<<<<< HEAD
     heading: Number(targetPlayer.heading)
+=======
+    heading: targetPlayer.heading
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   })
 
   const vehicleFullName = vehicles.find(v => v.short === modelName || modelName)
@@ -36,7 +40,11 @@ rce.registerCef('cef:amenu:spawnVehForMe', (player: PlayerMp, modelName: string,
     engine: true,
     numberPlate: 'REAL_RP',
     dimension: player.dimension,
+<<<<<<< HEAD
     heading: Number(player.heading)
+=======
+    heading: player.heading
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   })
 
   vehicle.setColorRGB(colorVeh[0], colorVeh[1], colorVeh[2], colorVeh[0], colorVeh[1], colorVeh[2])

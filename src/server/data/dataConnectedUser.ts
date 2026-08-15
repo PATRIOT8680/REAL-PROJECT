@@ -1,5 +1,24 @@
 import { rce } from "../utils/rce";
+<<<<<<< HEAD
 import { IConnectedUser } from "../../shared/types/connectedUsers";
+=======
+
+export interface IConnectedUser {
+  sid?: number | null,
+  login?: string | undefined,
+  uid?: number | null,
+  nickName?: string | undefined,
+  gender?: 'male' | 'female',
+  adminLvl?: number | null,
+  age?: number | null,
+  cash?: number | null,
+  bankmoney?: number | null,
+  donatcoins?: number | null,
+  lvl?: number | null,
+  exp?: number | null,
+  unique_quest?: string | null
+}
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 const users = new Map<number, IConnectedUser>()
 
@@ -8,8 +27,14 @@ export const connectedUsers = {
     const existingUser = users.get(playerId) || {}
     users.set(playerId, { ...existingUser, ...userData })
 
+<<<<<<< HEAD
     if (userData.uid) {
       rce.triggerClients('execute', `window.App.serverInfoReducer.addPlayer(${JSON.stringify(connectedUsers.getFullData(playerId))})`)
+=======
+    if (userData.login) {
+      rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`)
+      console.log(`Обновлен пользователь: ${userData.login} (ID: ${playerId})`);
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     }
   },
 
@@ -17,7 +42,11 @@ export const connectedUsers = {
     const user = users.get(playerId)
     if (user) {
       users.delete(playerId)
+<<<<<<< HEAD
       rce.triggerClients('execute', `window.App.serverInfoReducer.removePlayer(${user.uid})`)
+=======
+      rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       console.log(`Удален пользователь: ${user.login || 'Unknown'} (ID: ${playerId})`)
       return true
     }
@@ -25,6 +54,7 @@ export const connectedUsers = {
     return false
   },
 
+<<<<<<< HEAD
   getFullData: (playerId: number): IConnectedUser | undefined => {
     return users.get(playerId)
   },
@@ -36,6 +66,8 @@ export const connectedUsers = {
     return undefined
   },
 
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   getUser: (playerId: number): IConnectedUser | undefined => {
     return users.get(playerId)
   },

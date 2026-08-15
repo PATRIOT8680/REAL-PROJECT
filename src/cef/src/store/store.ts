@@ -21,8 +21,11 @@ import { offerStore } from "./menus/offer.ts";
 import { devMenusStore } from "./menus/dev-menus.ts";
 import { shop24Store } from "./menus/shop24.ts";
 import { buyingBusinessStore } from "./menus/buyingBusiness.ts";
+<<<<<<< HEAD
 import { whitelistStore } from "./menus/whitelist.ts";
 import { bankStore } from "./menus/bank.ts";
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 // Elements
 import { sendNotifyStore } from "./elements/notify";
@@ -68,8 +71,11 @@ window.App = {
   devMenusReducer: devMenusStore,
   shop24Reducer: shop24Store,
   buyingBusinessReducer: buyingBusinessStore,
+<<<<<<< HEAD
   whitelistReducer: whitelistStore,
   bankReducer: bankStore,
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
   // Elements
   sendNotifyReducer: sendNotifyStore,

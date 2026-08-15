@@ -43,6 +43,7 @@ const SECTION_CONFIG: Record<InventorySection, SectionConfig> = {
       const json = JSON.stringify(normalizeSlots(slots, 20))
       return new Promise<boolean>((resolve, reject) => {
         data.query(
+<<<<<<< HEAD
             'UPDATE inventory SET mainslots = ? WHERE uid = ?',
             [json, uid],
             (err) => {
@@ -53,6 +54,18 @@ const SECTION_CONFIG: Record<InventorySection, SectionConfig> = {
               }
               resolve(true)
             }
+=======
+          'UPDATE inventory SET mainslots = ? WHERE uid = ?',
+          [json, uid],
+          (err) => {
+            if (err) {
+              console.error(chalk.red('[SAVE MAIN]'), err)
+              reject(err)
+              return
+            }
+            resolve(true)
+          }
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         )
       })
     }
@@ -70,6 +83,7 @@ const SECTION_CONFIG: Record<InventorySection, SectionConfig> = {
       const json = JSON.stringify({ have: true, slots: normalizeSlots(slots, 15) })
       return new Promise<boolean>((resolve, reject) => {
         data.query(
+<<<<<<< HEAD
             'UPDATE inventory SET donatslots = ? WHERE uid = ?',
             [json, uid],
             (err) => {
@@ -80,6 +94,18 @@ const SECTION_CONFIG: Record<InventorySection, SectionConfig> = {
               }
               resolve(true)
             }
+=======
+          'UPDATE inventory SET donatslots = ? WHERE uid = ?',
+          [json, uid],
+          (err) => {
+            if (err) {
+              console.error(chalk.red('[SAVE DONAT]'), err)
+              reject(err)
+              return
+            }
+            resolve(true)
+          }
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         )
       })
     }
@@ -100,6 +126,7 @@ const SECTION_CONFIG: Record<InventorySection, SectionConfig> = {
       const weight = calcWeightSlots(slots)
       return new Promise<boolean>((resolve, reject) => {
         data.query(
+<<<<<<< HEAD
             'UPDATE bags SET items = ?, weight = ? WHERE bag_uid = ? AND owner_uid = ?',
             [json, weight, bagUid, uid],
             (err) => {
@@ -110,6 +137,18 @@ const SECTION_CONFIG: Record<InventorySection, SectionConfig> = {
               }
               resolve(true)
             }
+=======
+          'UPDATE bags SET items = ?, weight = ? WHERE bag_uid = ? AND owner_uid = ?',
+          [json, weight, bagUid, uid],
+          (err) => {
+            if (err) {
+              console.error(chalk.red('[SAVE BAG]'), err)
+              reject(err)
+              return
+            }
+            resolve(true)
+          }
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         )
       })
     }
@@ -117,11 +156,19 @@ const SECTION_CONFIG: Record<InventorySection, SectionConfig> = {
 }
 
 rce.registerCef('moveItemInInventory', async (
+<<<<<<< HEAD
     player: PlayerMp,
     sourceSection: string,
     sourceSlot: number,
     targetSection: string,
     targetSlot: number
+=======
+  player: PlayerMp,
+  sourceSection: string,
+  sourceSlot: number,
+  targetSection: string,
+  targetSlot: number
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 ) => {
   try {
     console.log('Перемещаем')
@@ -169,6 +216,10 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
         return rce.triggerClient(player, 'sendNotify', 'err', 'Предмет в быстром слоте не найден!', 3000, 'top');
       }
 
+<<<<<<< HEAD
+=======
+      // Ищем, где реально лежит этот предмет (main/donate/bag/clothes)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       let realSection: string | null = null;
       let realSlot: number | null = null;
 
@@ -184,20 +235,38 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
       tryFind(JSON.parse(inventory.mainslots), 'main');
       if (!realSection) tryFind(JSON.parse(inventory.clothesslots), 'clothes');
 
+<<<<<<< HEAD
+=======
+      // Если есть donate — тоже можно проверить
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       if (!realSection) {
         const donat = JSON.parse(inventory.donatslots);
         tryFind(donat.slots || [], 'donat');
       }
 
+<<<<<<< HEAD
+=======
+      // Если всё ещё не нашли — ошибка
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       if (!realSection || realSlot === null) {
         console.log(`[USE FAST] Не найден реальный предмет ${itemId} в инвентаре`);
         return rce.triggerClient(player, 'sendNotify', 'err', 'Оригинальный предмет не найден в инвентаре!', 3500, 'top');
       }
 
+<<<<<<< HEAD
       section = realSection;
       slotIdx = realSlot;
     }
 
+=======
+      // Теперь вызываем ту же логику, но уже с реальной секцией
+      section = realSection;
+      slotIdx = realSlot;
+      // дальше код продолжит работать как обычно ↓↓↓
+    }
+
+    // 🚨 ОБРАБОТКА ПРЕДМЕТОВ В СУМКЕ
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     if (section === 'bag') {
       console.log(chalk.cyan(`[USE ITEM BAG] Пытаемся использовать предмет из сумки: itemId=${itemId}, slotIdx=${slotIdx}`));
 
@@ -211,9 +280,15 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
 
       const bagItemData = getItemById(bagItem.id);
       if (!bagItemData ||
+<<<<<<< HEAD
           !bagItemData.clothesData ||
           bagItemData.clothesData.slot !== 10 ||
           bagItemData.clothesData.maxWeight === undefined) {
+=======
+        !bagItemData.clothesData ||
+        bagItemData.clothesData.slot !== 10 ||
+        bagItemData.clothesData.maxWeight === undefined) {
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         console.log(chalk.red(`[USE ITEM BAG] Предмет в слоте 10 не является сумкой: id=${bagItem.id}`));
         rce.triggerClient(player, 'sendNotify', 'err', 'Сумка не надета!', 3000, 'top');
         return;
@@ -236,6 +311,10 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
 
       console.log(chalk.cyan(`[USE ITEM BAG] Найден предмет: ${JSON.stringify(slot)}`));
 
+<<<<<<< HEAD
+=======
+      // ─── Одежда из сумки ────────────────────────────────────────
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       if (itemData.type === 'clothes') {
         console.log(chalk.cyan(`[USE ITEM BAG] Использование одежды из сумки: ${itemId}`));
 
@@ -248,13 +327,21 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
         }
 
         if (isEquipped) {
+<<<<<<< HEAD
+=======
+          // Снимаем
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           const freeSlotInfo = await findFreeSlotsInInventory(uid);
           if (!freeSlotInfo.section) {
             rce.triggerClient(player, 'sendNotify', 'err', 'Нет свободного слота!', 3000, 'top');
             return;
           }
           const updatedClothes = clothesSlots.map((slot: any, idx: number) =>
+<<<<<<< HEAD
               idx === clothesSlotIndex ? null : slot
+=======
+            idx === clothesSlotIndex ? null : slot
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           );
           await updateSlotsArray(uid, 'clothes', updatedClothes);
           const targetSection = freeSlotInfo.section;
@@ -278,6 +365,10 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
           }
           targetSlots[targetSlot] = { id: itemId, quantity: 1 };
 
+<<<<<<< HEAD
+=======
+          // Сохраняем с проверкой на 'bag'
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           console.log(chalk.blue(`[USE CLOTHES OFF] Сохраняем в targetSection: ${targetSection}`));
           if (targetSection === 'bag') {
             const clothesSlots = JSON.parse(inventory.clothesslots);
@@ -291,21 +382,38 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
             await updateSlotsArray(uid, targetSection, targetSlots);
           }
 
+<<<<<<< HEAD
+=======
+          // ←←← Если снимаем сумку — unequip
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           if (clothesSlotIndex === 10 && itemData.clothesData?.maxWeight !== undefined) {
             await handleBagOperations(uid, 'unequip', itemId);
           }
           usageClothes(player, clothesSlotIndex, -1, 0, itemId);
+<<<<<<< HEAD
           useClothes(player, itemId, false);
+=======
+          useClothes(player, itemId, false); // снял
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           await updateTotalWeightInventory(uid);
           await sendInventoryToCef(player, uid);
           console.log(chalk.green(`[USE CLOTHES] Снята и возвращена в ${targetSection}-${targetSlot}`));
           return;
         }
 
+<<<<<<< HEAD
         const updatedClothes = clothesSlots.map((s: any, idx: number) =>
             idx === clothesSlotIndex ? { id: itemId, quantity: 1 } : s
         );
 
+=======
+        // Надеваем одежду
+        const updatedClothes = clothesSlots.map((s: any, idx: number) =>
+          idx === clothesSlotIndex ? { id: itemId, quantity: 1 } : s
+        );
+
+        // Удаляем из сумки
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         const updateSuccess = await updateSlot(uid, 'bag', slotIdx, null, bagItem.id);
         if (!updateSuccess) {
           console.error(chalk.red('[USE CLOTHES BAG] Ошибка при удалении из сумки'));
@@ -320,7 +428,11 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
         }
 
         usageClothes(player, clothesSlotIndex, itemData.clothesData.drawable, itemData.clothesData.texture, itemId);
+<<<<<<< HEAD
         useClothes(player, itemId, true);
+=======
+        useClothes(player, itemId, true); // одел
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
         await updateTotalWeightInventory(uid);
         await sendInventoryToCef(player, uid);
@@ -331,6 +443,10 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
         return;
       }
 
+<<<<<<< HEAD
+=======
+      // Используем предмет
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       try {
         itemData.usage(player)
       } catch (usageError) {
@@ -339,10 +455,18 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
         return
       }
 
+<<<<<<< HEAD
+=======
+      // Обработка расходуемого предмета
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       if (itemData.consumable !== false) {
         if (slot.quantity > 1) {
           slot.quantity -= 1
 
+<<<<<<< HEAD
+=======
+          // Обновляем слот в сумке
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           const updateSuccess = await updateSlot(uid, 'bag', slotIdx, slot, bagItem.id)
           if (!updateSuccess) {
             console.error(chalk.red('[USE ITEM BAG] Ошибка при обновлении слота сумки'))
@@ -352,6 +476,10 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
 
           rce.triggerClient(player, 'execute', `window.App.inventoryReducer.updateItemQuantity('bag', ${slotIdx}, ${slot.quantity})`)
         } else {
+<<<<<<< HEAD
+=======
+          // Удаляем предмет из сумки
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           const clearSuccess = await updateSlot(uid, 'bag', slotIdx, null, bagItem.id)
           if (!clearSuccess) {
             console.error(chalk.red('[USE ITEM BAG] Ошибка при удалении предмета из сумки'))
@@ -365,7 +493,11 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
         await updateTotalWeightInventory(uid)
         await sendInventoryToCef(player, uid)
 
+<<<<<<< HEAD
         const inventoryAfterUse = await getPlayerInventory(uid);
+=======
+        const inventoryAfterUse = await getPlayerInventory(uid); // свежие данные после изменения
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         const fastSlots = JSON.parse(inventoryAfterUse.fastslots || '[]');
 
         let fastChanged = false;
@@ -375,9 +507,17 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
           if (!fastItem) continue;
 
           if (fastItem.id === itemId) {
+<<<<<<< HEAD
             let stillExists = false;
             let newQuantity = 0;
 
+=======
+            // Ищем, остался ли предмет в оригинальной секции
+            let stillExists = false;
+            let newQuantity = 0;
+
+            // Проверяем main
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
             const main = JSON.parse(inventoryAfterUse.mainslots);
             const mainItem = main.find(it => it?.id === itemId);
             if (mainItem) {
@@ -385,10 +525,21 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
               newQuantity = mainItem.quantity;
             }
 
+<<<<<<< HEAD
             if (!stillExists) {
               fastSlots[i] = null;
               fastChanged = true;
             } else if (newQuantity !== fastItem.quantity) {
+=======
+            // Можно добавить donate, clothes, bag если нужно
+
+            if (!stillExists) {
+              // Предмет полностью закончился → убираем из fast
+              fastSlots[i] = null;
+              fastChanged = true;
+            } else if (newQuantity !== fastItem.quantity) {
+              // Количество уменьшилось → обновляем
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
               fastSlots[i] = { ...fastItem, quantity: newQuantity };
               fastChanged = true;
             }
@@ -401,14 +552,26 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
             if (err) console.error('[FAST SYNC AFTER USE] Ошибка:', err);
           });
 
+<<<<<<< HEAD
+=======
+          // И сразу отправляем обновление клиенту (чтобы fast-слоты синхронизировались без переоткрытия)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           await sendInventoryToCef(player, uid);
         }
       }
 
+<<<<<<< HEAD
+=======
+      // ВАЖНО: Выходим из функции после обработки сумки
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       console.log(chalk.green('[USE ITEM BAG] Предмет успешно использован из сумки'))
       return
     }
 
+<<<<<<< HEAD
+=======
+    // 🚨 ОБРАБОТКА ПРЕДМЕТОВ В ДРУГИХ СЕКЦИЯХ (main, donate, clothes)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     let slots
     if (section === 'main') {
       slots = JSON.parse(inventory.mainslots)
@@ -448,6 +611,10 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
         }
 
         if (isEquipped) {
+<<<<<<< HEAD
+=======
+          // Снимаем
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           const freeSlotInfo = await findFreeSlotsInInventory(uid);
           if (!freeSlotInfo.section) {
             rce.triggerClient(player, 'sendNotify', 'err', 'Нет свободного слота!', 3000, 'top');
@@ -455,7 +622,11 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
           }
 
           const updatedClothes = clothesSlots.map((slot: any, idx: number) =>
+<<<<<<< HEAD
               idx === clothesSlotIndex ? null : slot
+=======
+            idx === clothesSlotIndex ? null : slot
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           );
           await updateSlotsArray(uid, 'clothes', updatedClothes);
 
@@ -483,31 +654,53 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
           targetSlots[targetSlot] = { id: itemId, quantity: 1 };
           await updateSlotsArray(uid, targetSection, targetSlots);
 
+<<<<<<< HEAD
+=======
+          // ←←← ВАЖНО: если снимаем сумку — вызываем unequip
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           if (clothesSlotIndex === 10 && itemData.clothesData?.maxWeight !== undefined) {
             await handleBagOperations(uid, 'unequip', itemId);
           }
 
           usageClothes(player, clothesSlotIndex, -1, 0, itemId);
+<<<<<<< HEAD
           useClothes(player, itemId, false);
+=======
+          useClothes(player, itemId, false); // снял
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           await sendInventoryToCef(player, uid);
 
           console.log(chalk.green(`[USE CLOTHES] Снята и возвращена в ${targetSection}-${targetSlot}`));
           return;
         }
 
+<<<<<<< HEAD
         const updatedClothes = clothesSlots.map((slot: any, idx: number) =>
             idx === clothesSlotIndex ? { id: itemId, quantity: 1 } : slot
+=======
+        // Надеваем
+        const updatedClothes = clothesSlots.map((slot: any, idx: number) =>
+          idx === clothesSlotIndex ? { id: itemId, quantity: 1 } : slot
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         );
 
         await updateSlot(uid, section, slotIdx, null);
         await updateSlotsArray(uid, 'clothes', updatedClothes);
 
+<<<<<<< HEAD
+=======
+        // ←←← ВАЖНО: если надеваем сумку — вызываем equip
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         if (clothesSlotIndex === 10 && itemData.clothesData?.maxWeight !== undefined) {
           await handleBagOperations(uid, 'equip', itemId);
         }
 
         usageClothes(player, clothesSlotIndex, itemData.clothesData.drawable, itemData.clothesData.texture, itemId);
+<<<<<<< HEAD
         useClothes(player, itemId, true);
+=======
+        useClothes(player, itemId, true); // одел
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         await sendInventoryToCef(player, uid);
 
         console.log(chalk.green(`[USE CLOTHES] Перенесена одежда ${itemId} из ${section}-${slotIdx} в слот ${clothesSlotIndex}`));
@@ -516,6 +709,10 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
 
       itemData.usage(player)
 
+<<<<<<< HEAD
+=======
+      // Обработка расходуемого предмета
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       if (itemData.consumable !== false) {
         if (slot.quantity > 1) {
           slot.quantity -= 1
@@ -538,6 +735,7 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
         const updatedFast = fastSlots.map((fItem: any) => {
           if (!fItem) return null;
 
+<<<<<<< HEAD
           let remainingQuantity = 0;
 
           const main = JSON.parse(inventoryAfter.mainslots || '[]');
@@ -558,6 +756,34 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
           if (remainingQuantity === 0) {
             fastNeedsUpdate = true;
             return null;
+=======
+          // Ищем, остался ли хоть один экземпляр этого предмета в инвентаре
+          let remainingQuantity = 0;
+
+          // main
+          const main = JSON.parse(inventoryAfter.mainslots || '[]');
+          remainingQuantity += main
+            .filter((it: any) => it?.id === fItem.id)
+            .reduce((sum: number, it: any) => sum + (it.quantity || 0), 0);
+
+          // donate
+          const donat = JSON.parse(inventoryAfter.donatslots || '{}').slots || [];
+          remainingQuantity += donat
+            .filter((it: any) => it?.id === fItem.id)
+            .reduce((sum: number, it: any) => sum + (it.quantity || 0), 0);
+
+          // clothes (редко, но на всякий случай)
+          const clothes = JSON.parse(inventoryAfter.clothesslots || '[]');
+          remainingQuantity += clothes
+            .filter((it: any) => it?.id === fItem.id)
+            .reduce((sum: number, it: any) => sum + (it.quantity || 0), 0);
+
+          // можно добавить bag, если используешь предметы из сумки через fast
+
+          if (remainingQuantity === 0) {
+            fastNeedsUpdate = true;
+            return null; // полностью убираем
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           }
 
           if (remainingQuantity !== fItem.quantity) {
@@ -574,6 +800,10 @@ rce.registerClientCef('useItem', async (player: PlayerMp, itemId: number, slotId
             if (err) console.error('[FAST CLEANUP] Ошибка обновления БД:', err);
           });
 
+<<<<<<< HEAD
+=======
+          // Самое важное — сразу синхронизируем клиенту
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           await sendInventoryToCef(player, uid);
           console.log('[FAST CLEANUP] Быстрые слоты обновлены после использования');
         }
@@ -789,10 +1019,17 @@ rce.registerClientCef('splitItem', async (player: PlayerMp, itemId: number, slot
 })
 
 rce.registerClientCef('bagOperation', async (
+<<<<<<< HEAD
     player: PlayerMp,
     operation: 'equip' | 'unequip' | 'update',
     bagItemId?: number,
     bagItems?: any
+=======
+  player: PlayerMp,
+  operation: 'equip' | 'unequip' | 'update',
+  bagItemId?: number,
+  bagItems?: any
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 ) => {
   const uid = await getDataAccount(player, 'uid', player.id)
   handleBagOperations(uid, operation, bagItemId, bagItems)
@@ -825,6 +1062,10 @@ rce.registerCef('cef:buy-donat-slots', async (player: PlayerMp) => {
       donatSlotsObj.slots = Array(15).fill(null)
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ Увеличиваем максимальный вес на 30 единиц
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     const newMaxWeight = (inventory.maxweight || 20) + 30
 
     const updateSql = 'UPDATE inventory SET donatslots = ?, maxweight = ? WHERE uid = ?'
@@ -839,6 +1080,10 @@ rce.registerCef('cef:buy-donat-slots', async (player: PlayerMp) => {
       })
     })
 
+<<<<<<< HEAD
+=======
+    // Обновляем вес на клиенте
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     await updateTotalWeightInventory(uid)
     await sendInventoryToCef(player, uid)
 
@@ -884,9 +1129,15 @@ export const getPlayerInventory = async (uid: number): Promise<any> => {
 }
 
 export const addItemToInventory = async (
+<<<<<<< HEAD
     uid: number,
     itemId: number,
     quantity: number = 1
+=======
+  uid: number,
+  itemId: number,
+  quantity: number = 1
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 ): Promise<{ success: boolean; reason?: string }> => {
   const inventory = await getPlayerInventory(uid)
   if (!inventory) return { success: false, reason: 'Инвентарь не найден' }
@@ -932,8 +1183,13 @@ export const addItemToInventory = async (
 }
 
 export const addCustomItemToInventory = async (
+<<<<<<< HEAD
     uid: number,
     customItem: Partial<ServerItem> & { id: number; amount?: number }
+=======
+  uid: number,
+  customItem: Partial<ServerItem> & { id: number; amount?: number }
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 ): Promise<{ success: boolean; reason?: string }> => {
 
   try {
@@ -1008,9 +1264,15 @@ export const addCustomItemToInventory = async (
     }
 
     const success = await config.saveSlots(
+<<<<<<< HEAD
         uid,
         slots,
         freeSlotInfo.section === 'bag' ? null : undefined
+=======
+      uid,
+      slots,
+      freeSlotInfo.section === 'bag' ? null : undefined
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     )
 
     if (!success) {
@@ -1036,11 +1298,19 @@ export const addCustomItemToInventory = async (
 }
 
 export const updateSlot = async (
+<<<<<<< HEAD
     uid: number,
     section: string,
     slotIdx: number,
     itemData: any,
     bagUid?: number
+=======
+  uid: number,
+  section: string,
+  slotIdx: number,
+  itemData: any,
+  bagUid?: number
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 ): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     if (section === 'bag') {
@@ -1067,8 +1337,13 @@ export const updateSlot = async (
           }
 
           updateSlot(uid, section, slotIdx, itemData, equippedBag.id)
+<<<<<<< HEAD
               .then(resolve)
               .catch(reject)
+=======
+            .then(resolve)
+            .catch(reject)
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         })
 
         return
@@ -1114,6 +1389,10 @@ export const updateSlot = async (
           items[slotIdx] = null
         }
 
+<<<<<<< HEAD
+=======
+        // ✅ Обновляем вес сумки
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         const weight = calcWeightSlots(items)
         const updateSql = 'UPDATE bags SET items = ?, weight = ? WHERE bag_uid = ? AND owner_uid = ?'
 
@@ -1200,7 +1479,11 @@ export const updateSlot = async (
   })
 }
 
+<<<<<<< HEAD
 const calcSlotsWeight = (slots: any[]) => {
+=======
+const calcSlotsWeight = (slots: any[]) => {  // Сделал синхронной, т.к. bagWeight вызывается только для bag item
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   let weight = 0
   slots.forEach((slot: any) => {
     if (slot && slot.id && slot.quantity) {
@@ -1279,6 +1562,10 @@ export const updateTotalWeightInventory = async (uid: number): Promise<void> => 
   })
 }
 
+<<<<<<< HEAD
+=======
+// Вспомогательная функция для получения веса сумки
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 export const getBagWeight = async (uid: number, bagUid: number): Promise<number> => {
   return new Promise((resolve, reject) => {
     const sql = 'SELECT weight FROM bags WHERE bag_uid = ? AND owner_uid = ? LIMIT 1'
@@ -1329,8 +1616,13 @@ export const calcTotalWeight = (inventory: any): number => {
   try {
     if (inventory.mainslots) {
       const mainSlots = typeof inventory.mainslots === 'string'
+<<<<<<< HEAD
           ? JSON.parse(inventory.mainslots)
           : inventory.mainslots
+=======
+        ? JSON.parse(inventory.mainslots)
+        : inventory.mainslots
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
       mainSlots.forEach((slot: any) => {
         if (slot && slot.id && slot.quantity) {
@@ -1345,8 +1637,13 @@ export const calcTotalWeight = (inventory: any): number => {
 
     if (inventory.bagslots) {
       const bagSlots = typeof inventory.bagslots === 'string'
+<<<<<<< HEAD
           ? JSON.parse(inventory.bagslots)
           : inventory.bagslots
+=======
+        ? JSON.parse(inventory.bagslots)
+        : inventory.bagslots
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
       bagSlots.slots.forEach((slot: any) => {
         if (slot && slot.id && slot.quantity) {
@@ -1361,8 +1658,13 @@ export const calcTotalWeight = (inventory: any): number => {
 
     if (inventory.donatslots) {
       const donatSlots = typeof inventory.donatslots === 'string'
+<<<<<<< HEAD
           ? JSON.parse(inventory.donatslots)
           : inventory.donatslots
+=======
+        ? JSON.parse(inventory.donatslots)
+        : inventory.donatslots
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
       donatSlots.slots.forEach((slot: any) => {
         if (slot && slot.id && slot.quantity) {
@@ -1377,8 +1679,13 @@ export const calcTotalWeight = (inventory: any): number => {
 
     if (inventory.clothesslots) {
       const clothesSlots = typeof inventory.clothesslots === 'string'
+<<<<<<< HEAD
           ? JSON.parse(inventory.clothesslots)
           : inventory.clothesslots
+=======
+        ? JSON.parse(inventory.clothesslots)
+        : inventory.clothesslots
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
       clothesSlots.forEach((slot: any) => {
         if (slot && slot.id && slot.quantity) {
@@ -1470,6 +1777,7 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
       return
     }
 
+<<<<<<< HEAD
     const mainSlotsData = inventory.mainslots
         ? JSON.parse(inventory.mainslots)
         : Array(20).fill(null)
@@ -1492,6 +1800,35 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
     } else if (donatSlotsData.slots && Array.isArray(donatSlotsData.slots)) {
       donatSlotsArray = donatSlotsData.slots
     } else {
+=======
+    // Безопасное получение и парсинг данных
+    const mainSlotsData = inventory.mainslots
+      ? JSON.parse(inventory.mainslots)
+      : Array(20).fill(null)
+
+    const donatSlotsData = inventory.donatslots
+      ? JSON.parse(inventory.donatslots)
+      : { have: false, slots: Array(15).fill(null) }
+
+    const clothesSlotsData = inventory.clothesslots
+      ? JSON.parse(inventory.clothesslots)
+      : Array(13).fill(null)
+
+    const fastSlotsData = inventory.fastslots
+      ? JSON.parse(inventory.fastslots)
+      : Array(4).fill(null)
+
+    // Получаем слоты для доната (обрабатываем и старый формат массива)
+    let donatSlotsArray: any[] = []
+    if (Array.isArray(donatSlotsData)) {
+      // Старый формат: просто массив
+      donatSlotsArray = donatSlotsData
+    } else if (donatSlotsData.slots && Array.isArray(donatSlotsData.slots)) {
+      // Новый формат: объект с полем slots
+      donatSlotsArray = donatSlotsData.slots
+    } else {
+      // На всякий случай
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
       donatSlotsArray = Array(15).fill(null)
     }
 
@@ -1525,9 +1862,17 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
       returnTradeSlotsForCef = convertSlots(normalizeSlots(partnerOffers, 5))
     }
 
+<<<<<<< HEAD
     const bagItem = clothesSlotsData[10]
     if (bagItem && bagItem.id) {
       try {
+=======
+    // Проверяем, надета ли сумка
+    const bagItem = clothesSlotsData[10]
+    if (bagItem && bagItem.id) {
+      try {
+        // Получаем данные сумки
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         let bagData = await new Promise<any>((resolve, reject) => {
           const getBagSql = 'SELECT items, weight FROM bags WHERE bag_uid = ? AND owner_uid = ?';
           data.query(getBagSql, [bagItem.id, uid], (err, results: any) => {
@@ -1536,11 +1881,19 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
           });
         });
 
+<<<<<<< HEAD
+=======
+        // Если записи нет - создаем
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         if (!bagData) {
           console.log(chalk.yellow(`[SEND INV] Запись для сумки ${bagItem.id} не найдена, создаем...`));
           const createBagResult = await handleBagOperations(uid, 'equip', bagItem.id);
 
           if (createBagResult.success) {
+<<<<<<< HEAD
+=======
+            // Повторно запрашиваем
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
             bagData = await new Promise<any>((resolve, reject) => {
               const getBagSql = 'SELECT items, weight FROM bags WHERE bag_uid = ? AND owner_uid = ?';
               data.query(getBagSql, [bagItem.id, uid], (err, results: any) => {
@@ -1564,6 +1917,10 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
           console.log(chalk.cyan(`[SEND INV] Bag data for bag_uid=${bagItem.id}:`))
           console.log(chalk.cyan(`[SEND INV] bagItems: ${JSON.stringify(bagItems)}`))
 
+<<<<<<< HEAD
+=======
+          // Обновляем данные сумки в clothesSlotsForCef
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           const bagItemIndex = clothesSlotsForCef.findIndex((item: any) => item && item.id === bagItem.id)
           if (bagItemIndex !== -1 && clothesSlotsForCef[bagItemIndex]) {
             clothesSlotsForCef[bagItemIndex].bagId = bagItem.id
@@ -1575,6 +1932,10 @@ export const sendInventoryToCef = async (player: PlayerMp, uid: number) => {
       }
     }
 
+<<<<<<< HEAD
+=======
+    // Отправляем данные на клиент
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     rce.triggerClient(player, 'execute', `
       window.App.inventoryReducer.setInventory(
         ${JSON.stringify(mainSlotsForCef)},
@@ -1607,10 +1968,17 @@ const calculateBaseMaxWeight = (inventory: any): number => {
 }
 
 export const handleBagOperations = async (
+<<<<<<< HEAD
     uid: number,
     action: 'equip' | 'unequip' | 'update',
     bagItemId?: number,
     bagItems?: any[]
+=======
+  uid: number,
+  action: 'equip' | 'unequip' | 'update',
+  bagItemId?: number,
+  bagItems?: any[]
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 ): Promise<{success: boolean, bagId?: number}> => {
   return new Promise(async (resolve, reject) => {
     switch (action) {
@@ -1627,6 +1995,10 @@ export const handleBagOperations = async (
           return
         }
 
+<<<<<<< HEAD
+=======
+        // Проверяем, что это сумка
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         if (!itemData.clothesData || itemData.clothesData.slot !== 10) {
           console.log(chalk.red(`[BAG] Предмет не является сумкой: ${bagItemId}`));
           resolve({ success: false });
@@ -1636,6 +2008,10 @@ export const handleBagOperations = async (
         const bagMaxWeight = itemData.clothesData?.maxWeight || 0;
         console.log(chalk.cyan(`[BAG] Надеваем сумку ${bagItemId} с maxWeight=${bagMaxWeight}`));
 
+<<<<<<< HEAD
+=======
+        // Получаем текущий инвентарь для расчета правильного веса
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         const getCurrentInventory = () => {
           return new Promise<any>((resolve, reject) => {
             const sql = 'SELECT maxweight, donatslots FROM inventory WHERE uid = ?';
@@ -1653,6 +2029,10 @@ export const handleBagOperations = async (
 
           console.log(chalk.cyan(`[BAG] Расчет веса: base=${baseWeight}, bag=${bagMaxWeight}, total=${newMaxWeight}`));
 
+<<<<<<< HEAD
+=======
+          // Обновляем максимальный вес в инвентаре
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           const updateMaxWeightSql = 'UPDATE inventory SET maxweight = ? WHERE uid = ?';
           data.query(updateMaxWeightSql, [newMaxWeight, uid], (updateErr) => {
             if (updateErr) {
@@ -1661,6 +2041,10 @@ export const handleBagOperations = async (
               return;
             }
 
+<<<<<<< HEAD
+=======
+            // Продолжаем с созданием записи в bags
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
             const checkSql = 'SELECT id FROM bags WHERE bag_uid = ? AND owner_uid = ?';
             data.query(checkSql, [bagItemId, uid], (err, results: any) => {
               if (err) {
@@ -1710,6 +2094,10 @@ export const handleBagOperations = async (
 
         console.log(chalk.cyan(`[BAG] Снимаем сумку ${bagItemId}`));
 
+<<<<<<< HEAD
+=======
+        // Получаем текущий инвентарь для расчета базового веса
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
         const getCurrentInventory = () => {
           return new Promise<any>((resolve, reject) => {
             const sql = 'SELECT maxweight, donatslots FROM inventory WHERE uid = ?';
@@ -1726,6 +2114,10 @@ export const handleBagOperations = async (
 
           console.log(chalk.cyan(`[BAG] Устанавливаем базовый вес: ${baseWeight}`));
 
+<<<<<<< HEAD
+=======
+          // Устанавливаем базовый вес в инвентаре
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           const updateMaxWeightSql = 'UPDATE inventory SET maxweight = ? WHERE uid = ?';
           data.query(updateMaxWeightSql, [baseWeight, uid], (updateErr) => {
             if (updateErr) {
@@ -1765,6 +2157,10 @@ export const handleBagOperations = async (
             return
           }
 
+<<<<<<< HEAD
+=======
+          // Если запись не найдена, создаем новую
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
           if (results.affectedRows === 0) {
             console.log(chalk.yellow('• [INV] Bag operation update • Запись не найдена, создаем новую'))
 
@@ -1832,10 +2228,17 @@ export const getEquippedBag = async (uid: number): Promise<any> => {
 }
 
 export const updateSlotsInDB = async (
+<<<<<<< HEAD
     uid: number,
     section: string,
     slotIndex: number,
     itemData: any
+=======
+  uid: number,
+  section: string,
+  slotIndex: number,
+  itemData: any
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM inventory WHERE uid = ?'

@@ -5,6 +5,7 @@ import { registerCMD } from '../menus/chat'
 import { registerACommand } from "./console"
 import { send } from '../menus/chat'
 import { rce } from '../utils/rce'
+<<<<<<< HEAD
 import { setDataAccount } from "../data/setDataAccount";
 import { playerReborn, playerKnockout } from "../player/death";
 import { connectedUsers } from "../data/dataConnectedUser";
@@ -13,6 +14,12 @@ import {
   banPlayer,
   tpToPlayer,
 } from "./actions";
+=======
+import {data} from "../database/mysql";
+import chalk from "chalk";
+import { setDataAccount } from "../data/setDataAccount";
+import { playerReborn, playerKnockout } from "../player/death";
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 
 registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...string[]]) => {
     const targetId = parseInt(target, 10)
@@ -79,6 +86,7 @@ registerACommand(
 )
 
 registerACommand(
+<<<<<<< HEAD
   'ban',
   'Заблокировать игрока',
   [
@@ -116,6 +124,8 @@ registerACommand(
 )
 
 registerACommand(
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
     'banvoice',
     'Выдать мут игроку',
     [
@@ -253,6 +263,7 @@ registerACommand(
   }
 )
 
+<<<<<<< HEAD
 registerACommand(
   'tpto',
   'Телепортироваться к игроку',
@@ -265,6 +276,8 @@ registerACommand(
   }
 )
 
+=======
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 registerCMD('veh', (player: PlayerMp, [target, model, r, g, b, numberPlate]) => {
   try {
     // Проверка обязательных аргументов

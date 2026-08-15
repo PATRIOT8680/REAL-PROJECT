@@ -1,6 +1,7 @@
 .header-amenu {
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   align-items: center;
   user-select: none;
   gap: 0.7rem;
@@ -64,3 +65,93 @@
 }
 
 /*# sourceMappingURL=Header.css.map */
+=======
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  gap: 0.8rem;
+}
+.header-amenu .block-h {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.header-amenu .block-h .name {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  background: linear-gradient(106deg, #fff 0%, #acacac 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header-amenu .block-h .block {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+.header-amenu .block-h .block .help-key {
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: rgba(255, 255, 255, 0.18) solid 1px;
+  color: rgba(255, 255, 255, 0.18);
+  padding: 0.4rem 0.7rem;
+  border-radius: 10rem;
+  transition: all 0.3s;
+}
+.header-amenu .block-h .block .help-key:hover {
+  transition: all 0.3s;
+  border-color: #ffffff;
+  color: #ffffff;
+}
+.header-amenu .block-h .block #helpFocus {
+  transition: all 0.3s;
+  border-color: #ffffff;
+  color: #ffffff;
+}
+.header-amenu .block-h .block .links-text {
+  display: flex;
+  gap: 0.8rem;
+}
+.header-amenu .block-h .block .links-text .text.active {
+  background: #ffffff;
+  color: #000000;
+}
+.header-amenu .block-h .block .links-text .text {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.4rem 1rem;
+  border-radius: 10rem;
+  transition: all 0.3s;
+}
+.header-amenu .block-h .block .links-text .text:hover {
+  background: #ffffff;
+  color: #000000;
+  transition: all 0.3s;
+}
+.header-amenu .block-h .close {
+  cursor: pointer;
+  font-family: "Ghotam Pro", sans-serif;
+  font-weight: 600;
+  background: rgba(255, 45, 45, 0.18);
+  border: 1.3px solid rgba(255, 0, 72, 0.5);
+  border-radius: 0.4rem;
+  padding: 0.5rem 1rem;
+  color: #FF0048;
+  transition: all 0.3s;
+}
+.header-amenu .block-h .close:hover {
+  transition: all 0.3s;
+  background: #FF0048;
+  color: white;
+}
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c

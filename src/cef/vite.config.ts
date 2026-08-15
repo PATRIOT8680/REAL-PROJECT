@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
 	plugins: [react()],
+<<<<<<< HEAD
   server: {
     host: '127.0.0.1',
     port: 3200,
@@ -13,6 +14,10 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react-window'],
   },
+=======
+  assetsInclude: ['**/*.json'],
+  root: './',
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
   css: {
     preprocessorOptions: {
       sass: {

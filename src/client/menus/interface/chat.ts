@@ -42,6 +42,7 @@ rce.registerAll('chatmessage', (text: string) => {
 })
 
 export const pushMsg = (name: string | null, text: string, showTime: boolean, tile?: string) => {
+<<<<<<< HEAD
   if (!loaded) {
     buffer.push({ name, text, showTime, tile })
     return
@@ -54,6 +55,14 @@ export const pushMsg = (name: string | null, text: string, showTime: boolean, ti
   }
 
   buffer.push({ name, text, showTime, tile })
+=======
+  if(!loaded) {
+    buffer.push({name, text, showTime, tile})
+  } else {
+    addMsg(name, text, showTime, tile)
+    buffer.push({name, text, showTime, tile})
+  }
+>>>>>>> 89e8cc87b8029b6838e014390449022afd77597c
 }
 
 export const pushLine = (text: string, showTime: boolean, tile?: string) => {
