@@ -19,25 +19,18 @@ const ReportsContainer = () => {
   const listRef = useRef<HTMLUListElement>(null)
   const endMarkerRef = useRef<HTMLDivElement>(null)
 
-
-
   useEffect(() => {
     const fetchGetReports = async () => {
-      console.log("1 fetch")
       try {
-        console.log("2 fetch")
         let data = await rce.callServer('logs:getAllReports', lastReportId)
-        console.log("3 fetch")
         setReportsData(data)
       } catch (error) {
-        console.log("4 fetch")
         console.log(error)
-        setReportsData([]) // Устанавливаем пустой массив при ошибке
+        setReportsData([])
       }
     }
 
     fetchGetReports()
-    console.log("5 fetch")
   }, [])
 
   useEffect(() => {

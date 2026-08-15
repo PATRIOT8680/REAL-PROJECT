@@ -312,7 +312,7 @@ const Chat = () => {
   })
 
   ev = rce.register('addString', (text: string, showTime: boolean, tile: string) =>
-      addString(colorify(text), showTime, tile)
+    addString(colorify(text), showTime, tile)
   )
 
   ev = rce.register('addMsg', addMsg)

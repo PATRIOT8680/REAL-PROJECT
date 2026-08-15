@@ -1,0 +1,97 @@
+.select-rate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 2rem;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.select-rate .list-rates {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.2rem;
+}
+.select-rate .list-rates .rate-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 0;
+  gap: 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+  box-sizing: border-box;
+  padding: 1.2rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.select-rate .list-rates .rate-card:hover {
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.07);
+}
+.select-rate .list-rates .rate-card.selected {
+  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.08);
+  outline: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+.select-rate .list-rates .rate-card.selected .advantages-list .advantage {
+  color: #ffffff;
+}
+.select-rate .list-rates .rate-card.selected .price-card .subtitle {
+  color: rgba(255, 255, 255, 0.5);
+}
+.select-rate .list-rates .rate-card .img-card {
+  width: 100%;
+  pointer-events: none;
+}
+.select-rate .list-rates .rate-card .title {
+  font-family: "Karantina", sans-serif;
+  text-transform: uppercase;
+  font-size: 2rem;
+  letter-spacing: 0.03em;
+  font-weight: bold;
+  background: linear-gradient(90deg, #c9ccd5 0%, #fff 19.7%, #c9ccd5 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.select-rate .list-rates .rate-card .advantages-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 0.7rem;
+}
+.select-rate .list-rates .rate-card .advantages-list .advantage {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.83rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.6rem;
+  border-radius: 4px;
+  width: 100%;
+  text-align: center;
+}
+.select-rate .list-rates .rate-card .price-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+.select-rate .list-rates .rate-card .price-card .price {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 1.2rem;
+  color: #FFCA58;
+}
+.select-rate .list-rates .rate-card .price-card .subtitle {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/*# sourceMappingURL=SelectRate.css.map */

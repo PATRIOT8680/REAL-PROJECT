@@ -53,7 +53,7 @@
   gap: 0.4rem;
   background: rgba(255, 255, 255, 0.05);
   padding: 0.4rem 0.7rem;
-  border-radius: 1rem;
+  border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.6);
@@ -137,17 +137,21 @@
   border-radius: 0.4rem;
   user-select: text;
 }
-.console-page .enter-block {
+.console-page .input-cmds-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.console-page .input-cmds-section .enter-block {
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
-.console-page .enter-block .enter-cmd {
+.console-page .input-cmds-section .enter-block .enter-cmd {
   position: relative;
   outline: none;
-  border: none;
   padding: 0.8rem 2rem;
-  border-radius: 3rem;
+  border-radius: 4px;
   font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   font-weight: 600;
@@ -157,16 +161,16 @@
   color: #ffffff;
   width: 100%;
 }
-.console-page .enter-block .enter-cmd:focus-visible {
+.console-page .input-cmds-section .enter-block .enter-cmd:focus-visible {
   transition: all 0.3s;
   background: rgba(255, 255, 255, 0.1);
   border: rgba(255, 255, 255, 0.17) solid 1px;
 }
-.console-page .enter-block .enter-cmd::placeholder {
+.console-page .input-cmds-section .enter-block .enter-cmd::placeholder {
   font-size: 0.9rem;
   font-weight: 500;
 }
-.console-page .enter-block .enter-keyup {
+.console-page .input-cmds-section .enter-block .enter-keyup {
   position: absolute;
   margin-right: 1rem;
   font-family: "Montserrat", sans-serif;
@@ -174,42 +178,42 @@
   font-size: 0.8rem;
   background: #ffffff;
   padding: 0.3rem 0.8rem;
-  border-radius: 1rem;
+  border-radius: 4px;
   animation: fadeInEnter 0.25s ease;
   color: #000000;
 }
-.console-page .suggestions-container {
+.console-page .input-cmds-section .suggestions-container {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   position: absolute;
-  bottom: 5.5rem;
-  width: 92%;
-  background: #2D3432;
+  bottom: 4rem;
+  width: 100%;
+  background: rgba(51, 48, 52, 0.98);
   box-sizing: border-box;
   padding: 0.6rem;
-  border-radius: 0.6rem;
+  border-radius: 4px;
   animation: fadeInHelps 0.3s ease;
   overflow-y: auto;
   max-height: 13rem;
 }
-.console-page .suggestions-container::-webkit-scrollbar {
+.console-page .input-cmds-section .suggestions-container::-webkit-scrollbar {
   width: 0.35rem;
 }
-.console-page .suggestions-container::-webkit-scrollbar-track {
+.console-page .input-cmds-section .suggestions-container::-webkit-scrollbar-track {
   opacity: 1;
   background-color: rgba(205, 205, 205, 0.06);
   border-radius: 100px;
 }
-.console-page .suggestions-container::-webkit-scrollbar-thumb {
+.console-page .input-cmds-section .suggestions-container::-webkit-scrollbar-thumb {
   cursor: grabbing;
   background-color: rgba(205, 205, 205, 0.08);
   border-radius: 100px;
 }
-.console-page .suggestions-container::-webkit-scrollbar-thumb:hover {
+.console-page .input-cmds-section .suggestions-container::-webkit-scrollbar-thumb:hover {
   background-color: rgba(205, 205, 205, 0.2392156863);
 }
-.console-page .suggestions-container .suggestion-item {
+.console-page .input-cmds-section .suggestions-container .suggestion-item {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -217,18 +221,18 @@
   font-weight: 500;
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.8);
-  background: #3b4442;
+  background: rgba(255, 255, 255, 0.07);
   box-sizing: border-box;
-  border-radius: 0.3rem;
+  border-radius: 3px;
   padding: 0.4rem;
   transition: all 0.2s;
 }
-.console-page .suggestions-container .suggestion-item .suggestion-command {
+.console-page .input-cmds-section .suggestions-container .suggestion-item .suggestion-command {
   display: flex;
   flex-direction: row;
   gap: 0.4rem;
 }
-.console-page .suggestions-container .suggestion-item.selected {
+.console-page .input-cmds-section .suggestions-container .suggestion-item.selected {
   transition: all 0.2s;
   background: #ffffff;
   color: #000000;
@@ -266,3 +270,5 @@
     opacity: 1;
   }
 }
+
+/*# sourceMappingURL=Console.css.map */

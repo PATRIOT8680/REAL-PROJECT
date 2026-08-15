@@ -1,4 +1,5 @@
 import './assets/styles/compiled-css/HeaderMenus.css'
+import { memo } from "react";
 
 import MoneyV1 from "../MoneyV1/MoneyV1.tsx"
 
@@ -18,9 +19,8 @@ const Header = ({ title, handleClose }: IHeader) => {
         <span className="keybind">ESC</span>
         <span className="description">Выйти</span>
       </div>
-
     </header>
   )
 }
 
-export default Header
+export default memo(Header)

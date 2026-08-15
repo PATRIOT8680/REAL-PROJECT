@@ -1,0 +1,240 @@
+$Montserrat: "Montserrat", sans-serif
+
+.players-page
+  display: flex
+  flex-direction: column
+  position: relative
+  height: 100%
+  overflow: hidden
+  animation: fadeInElementPlPageAdmins .4s ease
+  gap: 1rem
+
+  .header-pl-page
+    display: flex
+    align-items: center
+    flex-shrink: 0
+    width: 100%
+    gap: 1.5rem
+    height: 2.5rem
+    user-select: none
+
+    .block-info
+      height: 100%
+      display: flex
+      align-items: center
+      gap: .45rem
+
+      .text
+        display: flex
+        align-items: center
+        font-family: $Montserrat
+        font-weight: 500
+        font-size: .75rem
+        padding: 0 1rem
+        background: rgba(255, 255, 255, 0.05)
+        color: rgba(255, 255, 255, 0.8)
+        border-radius: 4px
+        height: 100%
+        gap: .7rem
+
+        img
+          opacity: .8
+          width: 1.1rem
+
+    .update-players
+      height: 100%
+      width: 2.5rem
+      border-radius: 4px
+      outline: none
+      border: 1px solid rgba(255, 255, 255, 0.05)
+      background: rgba(255, 255, 255, 0.04)
+      cursor: pointer
+      transition: all .3s ease
+      user-select: none
+
+      &:hover
+        border: 1px solid rgba(255, 255, 255, 0.15)
+        background: rgba(255, 255, 255, 0.1)
+        transition: all .3s ease
+
+        img
+          opacity: 1
+          transition: all .3s ease
+          transform: rotate(270deg)
+
+
+      img
+        opacity: .8
+        width: 1rem
+        transition: all .3s ease
+        transform: rotate(0)
+
+  .input-search
+    display: flex
+    align-items: center
+    position: relative
+
+    &:focus-within
+      img
+        opacity: .5
+        transition: all .3s ease
+
+      .search-input
+        border: 1px solid rgba(255, 255, 255, 0.1)
+        background: rgba(255, 255, 255, 0.08)
+        transition: all .3s ease
+
+    img
+      position: absolute
+      width: 1.1rem
+      margin-left: 1.2rem
+      opacity: 0.3
+      user-select: none
+      pointer-events: none
+      transition: all .3s ease
+
+    .search-input
+      width: 100%
+      height: 2.7rem
+      border-radius: 4px
+      outline: none
+      box-sizing: border-box
+      padding-left: 3.5rem
+      padding-right: 3rem
+      border: 1px solid rgba(255, 255, 255, 0.07)
+      background: rgba(255, 255, 255, 0.05)
+      font-family: $Montserrat
+      font-weight: 500
+      color: #ffffff
+      transition: all .3s ease
+
+      &::placeholder
+        font-weight: 400
+        color: rgba(255, 255, 255, 0.25)
+
+    .clear-search
+      cursor: pointer
+      font-family: $Montserrat
+      font-size: 1rem
+      font-weight: 600
+      position: absolute
+      right: 1rem
+      border-radius: 3rem
+      width: 1.5rem
+      height: 1.5rem
+      border: 1px solid rgba(255, 255, 255, 0.4)
+      outline: none
+      background: rgba(255, 255, 255, 0.2)
+      transition: all 0.3s
+      color: #ffffff
+      user-select: none
+
+      &:hover
+        color: #000000
+        background: #ffffff
+        transition: all 0.3s
+
+  .nofound-result
+    position: absolute
+    top: 55%
+    left: 50%
+    transform: translate(-50%, -50%)
+    font-family: $Montserrat
+    font-size: .8rem
+    background: rgba(255, 255, 255, 0.05)
+    border-radius: 2px
+    padding: .65rem 1rem
+    color: rgba(255, 255, 255, 0.8)
+    user-select: none
+    animation: fadeInElementPlPageAdmins .4s ease
+
+  .list-players
+    display: flex
+    flex-direction: column
+    overflow-y: auto
+    overflow-x: hidden
+    height: 100%
+    flex: 1
+    min-height: 0
+    padding-right: .65rem
+    gap: .5rem
+
+    &::-webkit-scrollbar
+      width: .35rem
+      direction: ltr
+
+    &::-webkit-scrollbar-track
+      opacity: 1
+      background: rgba(255, 255, 255, 0.05)
+
+    &::-webkit-scrollbar-thumb
+      background: rgba(255, 255, 255, 0.1)
+
+      &:hover
+        background: rgba(255, 202, 88)
+
+    .player-row
+      background: rgba(255, 255, 255, 0.05)
+      border-radius: 4px
+      display: flex
+      flex-direction: row
+      align-items: center
+      justify-content: space-between
+      box-sizing: border-box
+      padding: .5rem 1rem
+      animation: fadeInElementPlPageAdmins .4s ease
+
+      &.admin
+        background: rgba(255, 145, 145, 0.05)
+        border: 1px solid rgba(255, 61, 61, 0.2)
+
+      .section-in-row
+        display: flex
+        align-items: center
+        gap: .7rem
+        height: 2.35rem
+
+        .text
+          height: 100%
+          padding: 0 1rem
+          display: flex
+          align-items: center
+          justify-content: center
+          background: rgba(255, 255, 255, 0.05)
+          border-radius: 4px
+          font-family: $Montserrat
+          font-weight: 500
+          user-select: none
+          font-size: .8rem
+
+        .action-player
+          width: 2.35rem
+          height: 100%
+          outline: none
+          border: 1px solid rgba(255, 255, 255, 0.05)
+          background: rgba(255, 255, 255, 0.04)
+          border-radius: 4px
+          cursor: pointer
+          transition: all .3s ease
+          user-select: none
+
+          &:hover
+            border: 1px solid rgba(255, 255, 255, 0.15)
+            background: rgba(255, 255, 255, 0.1)
+            transition: all .3s ease
+
+            img
+              transition: all .3s ease
+              opacity: 1
+
+          img
+            width: 1rem
+            opacity: .6
+            transition: all .3s ease
+            pointer-events: none
+
+@keyframes fadeInElementPlPageAdmins
+  from
+    opacity: 0
+  to
+    opacity: 1

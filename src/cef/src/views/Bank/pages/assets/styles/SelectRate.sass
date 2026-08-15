@@ -1,0 +1,100 @@
+$Montserrat: "Montserrat", sans-serif
+$Karantina: "Karantina", sans-serif
+$Druk: "Druk Wide Cyr", sans-serif
+
+.select-rate
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  height: 100%
+  gap: 2rem
+  user-select: none
+  -webkit-user-drag: none
+
+  .list-rates
+    display: flex
+    flex-direction: row
+    align-items: center
+    gap: 1.2rem
+
+    .rate-card
+      display: flex
+      flex-direction: column
+      align-items: center
+      flex: 1 1 0
+      gap: 1.2rem
+      background: rgba(255, 255, 255, 0.05)
+      box-sizing: border-box
+      padding: 1.2rem
+      border-radius: 4px
+      transition: all .3s ease
+      cursor: pointer
+
+      &:hover
+        transition: all .3s ease
+        background: rgba(255, 255, 255, 0.07)
+
+      &.selected
+        transform: scale(1.02)
+        background: rgba(255, 255, 255, 0.08)
+        outline: 1px solid rgba(255, 255, 255, 0.3)
+        transition: all .3s ease
+
+        .advantages-list
+          .advantage
+            color: #ffffff
+
+        .price-card
+          .subtitle
+            color: rgba(255, 255, 255, 0.5)
+
+      .img-card
+        width: 100%
+        pointer-events: none
+
+      .title
+        font-family: $Karantina
+        text-transform: uppercase
+        font-size: 2rem
+        letter-spacing: .03em
+        font-weight: bold
+        background: linear-gradient(90deg, #c9ccd5 0%, #fff 19.7%, #c9ccd5 100%)
+        background-clip: text
+        -webkit-background-clip: text
+        -webkit-text-fill-color: transparent
+
+      .advantages-list
+        display: flex
+        flex-direction: column
+        align-items: center
+        width: 100%
+        gap: .7rem
+
+        .advantage
+          font-family: $Montserrat
+          font-size: .83rem
+          font-weight: 300
+          color: rgba(255, 255, 255, 0.85)
+          background: rgba(255, 255, 255, 0.05)
+          padding: .5rem .6rem
+          border-radius: 4px
+          width: 100%
+          text-align: center
+
+      .price-card
+        display: flex
+        flex-direction: row
+        align-items: flex-end
+        gap: .3rem
+
+        .price
+          font-family: $Druk
+          font-size: 1.2rem
+          color: #FFCA58
+
+        .subtitle
+          font-family: $Montserrat
+          font-weight: 400
+          font-size: .75rem
+          color: rgba(255, 255, 255, 0.3)

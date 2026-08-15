@@ -41,6 +41,7 @@ body
   width: 30rem
   margin: .7rem
   opacity: 0.85
+  z-index: 11
 
   &.active
     .msgList
@@ -76,11 +77,8 @@ body
     &::-webkit-scrollbar
       width: .3rem
 
-    &::-webkit-scrollbar-track
-      opacity: 0
-
     &::-webkit-scrollbar-thumb
-      background: rgba(255, 202, 88, 0.7)
+      background: rgba(255, 255, 255, 0.15)
 
       &:hover
         background: rgba(255, 202, 88)
@@ -119,6 +117,7 @@ body
         color: #ffffff
         margin: 0 0
         font-size: 0.8rem
+        font-weight: 500
         letter-spacing: .05em
         animation: fadeInMsgChat .4s ease
 

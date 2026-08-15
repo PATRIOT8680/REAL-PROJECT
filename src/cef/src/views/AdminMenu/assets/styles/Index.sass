@@ -1,4 +1,9 @@
 $Ghotam: "Ghotam Pro", sans-serif
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+//body
+//  background: grey
 
 ul
   margin-block-start: 0
@@ -6,28 +11,72 @@ ul
   list-style: none
   padding: 0 0
 
+li
+  list-style: none
+
 .admin-menu
+  display: flex
+  flex-direction: row
+  align-items: center
+  justify-content: center
   position: absolute
+  width: 100%
+  height: 100%
   top: 50%
   left: 50%
   transform: translate(-50%, -50%)
-  background: rgba(25, 32, 30, 0.97)
-  width: 65rem
-  height: 45rem
-  border-radius: 0.9rem
-  border: 2px solid rgba(255, 255, 255, 0.05)
-  box-sizing: border-box
-  padding: 2rem 2.5rem
-  display: flex
-  flex-direction: column
-  gap: 1rem
-  color: #ffffff
+  gap: .65rem
 
-  .line
-    position: relative
-    width: 100%
-    height: 3px
-    background: rgba(255, 255, 255, 0.05)
+  .main-container
+    background: rgba(29, 25, 31, 0.98)
+    border-radius: 6px
+    width: 65rem
+    height: 45rem
+    border: 1px solid rgba(255, 255, 255, 0.05)
+    box-sizing: border-box
+    padding: 2rem 2.5rem
+    display: flex
+    flex-direction: column
+    flex-shrink: 0
+    gap: 1rem
+    color: #ffffff
+
+    .header-amenu
+      display: flex
+      flex-direction: row
+      width: 100%
+      align-items: center
+      justify-content: space-between
+
+      .title
+        font-family: $Druk
+        font-size: 1rem
+        text-transform: uppercase
+        color: #ffca58
+        text-shadow: 0 0 25px rgba(255, 202, 88, 0.4)
+
+      .close
+        cursor: pointer
+        font-family: $Montserrat
+        font-size: .9rem
+        font-weight: 600
+        background: rgba(255, 45, 45, 0.18)
+        border: 1.3px solid rgba(255, 0, 72, 0.5)
+        border-radius: 4px
+        padding: 0.4rem .85rem
+        color: #FF0048
+        transition: all 0.3s
+
+        &:hover
+          transition: all 0.3s
+          background: #FF0048
+          color: white
+
+    .line
+      position: relative
+      width: 100%
+      height: 3px
+      background: rgba(255, 255, 255, 0.05)
 
 @keyframes fadeInPageAMenu
   from

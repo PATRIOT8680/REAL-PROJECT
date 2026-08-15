@@ -1,4 +1,3 @@
-//import './whitelist/index'
 import './player/spawn'
 import './player/playerCmd'
 import './admin/adminCmd'
@@ -28,6 +27,8 @@ import './player/interaction'
 import './modules/inventory/tradeManager'
 import './vehicles/interaction'
 import './business/manager'
+import './player/whitelist'
+import './admin/actions'
 
 //mp.world.weather = 'XMAS'
 

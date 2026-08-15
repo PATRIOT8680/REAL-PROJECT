@@ -1,22 +1,24 @@
 import './assets/styles/compiled-css/TypesGoods.css'
+import { memo } from "react";
 
 interface ITypesGoods {
   selectedType: string,
   handleSelectType: (type: string) => void,
 }
 
-const TypesGoods = ({ selectedType, handleSelectType }: ITypesGoods) => {
+const TypesGoods = memo(({ selectedType, handleSelectType }: ITypesGoods) => {
   const typesGoods = [
     { key: 'foods', name: 'Еда' },
     { key: 'household', name: 'Бытовые' },
     { key: 'tools', name: 'Инструменты' },
-    { key: 'various', name: 'Разное' }
+    { key: 'misc', name: 'Разное' }
   ]
 
   return (
     <div className="types-goods">
-      { typesGoods.map(type => (
+      { typesGoods.map((type, key) => (
         <span
+          key={key}
           className={`name-type ${type.key === selectedType ? 'selected' : ''}`}
           onClick={() => handleSelectType(type.key)}
         >
@@ -25,6 +27,6 @@ const TypesGoods = ({ selectedType, handleSelectType }: ITypesGoods) => {
       )) }
     </div>
   )
-}
+})
 
 export default TypesGoods

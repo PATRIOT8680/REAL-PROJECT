@@ -1,5 +1,3 @@
-import { rce } from "../../../modules/rce.ts";
-
 export const setCash = (amount: number) => {
   return { type: 'SET_CASH', payload: amount }
 }

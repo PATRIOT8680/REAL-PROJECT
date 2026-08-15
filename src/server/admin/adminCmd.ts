@@ -5,10 +5,14 @@ import { registerCMD } from '../menus/chat'
 import { registerACommand } from "./console"
 import { send } from '../menus/chat'
 import { rce } from '../utils/rce'
-import {data} from "../database/mysql";
-import chalk from "chalk";
 import { setDataAccount } from "../data/setDataAccount";
 import { playerReborn, playerKnockout } from "../player/death";
+import { connectedUsers } from "../data/dataConnectedUser";
+
+import {
+  banPlayer,
+  tpToPlayer,
+} from "./actions";
 
 registerCMD('getpos', (player: PlayerMp, [target, ...namePos]: [string, ...string[]]) => {
     const targetId = parseInt(target, 10)
@@ -72,6 +76,43 @@ registerACommand(
       rce.triggerClient(target, 'sendNotify', 'info', `Вам установлено HP: ${hp}%`, 3500, 'bottom')
       rce.triggerCef(player, 'console:commandResponse', false, `Игроку ID:${targetId} выдано HP: ${hp}%`)
     }
+)
+
+registerACommand(
+  'ban',
+  'Заблокировать игрока',
+  [
+    { name: 'UID игрока', type: 'number' },
+    { name: 'время (дни)', type: 'number' },
+    { name: 'причина', type: 'string' }
+  ], 3,
+  (player: PlayerMp, args: string[]) => {
+    const uidStr = args[0]
+    const daysStr = args[1]
+    const reason = args.slice(2).join(' ').trim();
+
+    if (!uidStr || !daysStr || !reason) {
+      rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: ban [UID игрока] [время (дни)] [причина]')
+      return
+    }
+
+    const uid = parseInt(uidStr)
+    const days = parseInt(daysStr)
+
+    if (isNaN(uid) || uid <= 0) {
+      rce.triggerCef(player, 'console:commandResponse', false, 'Неверный UID игрока!')
+      return
+    }
+
+    if (isNaN(days) || days <= 0 || days > 90) {
+      rce.triggerCef(player, 'console:commandResponse', false, 'Дни бана должны быть от 1 до 90!')
+      return
+    }
+
+
+
+    banPlayer(player, uid, days, reason)
+  }
 )
 
 registerACommand(
@@ -209,6 +250,18 @@ registerACommand(
     rce.triggerClient(player, 'closeAMenu')
     rce.triggerClient(player, 'openDevMenu')
     rce.triggerClient(player, 'execute', 'window.App.devMenusReducer.showCreateBusiness()')
+  }
+)
+
+registerACommand(
+  'tpto',
+  'Телепортироваться к игроку',
+  [
+    { name: 'UID игрока', type: 'number' }
+  ], 2,
+  (player: PlayerMp, [targetUid]) => {
+    const tUid = parseInt(targetUid)
+    tpToPlayer(player, tUid)
   }
 )
 

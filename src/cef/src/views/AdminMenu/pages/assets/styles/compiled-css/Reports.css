@@ -6,6 +6,7 @@
   height: 92%;
   font-family: "Montserrat", sans-serif;
   animation: fadeInPageAMenu 0.7s ease;
+  -webkit-user-drag: none;
 }
 .reports-page .list-reports {
   display: flex;
@@ -124,7 +125,7 @@
   font-size: 0.85rem;
   font-weight: 500;
   text-align: left;
-  word-break: break-all;
+  word-break: break-word;
 }
 .reports-page .list-reports .list .item-report .bottom-info {
   display: flex;
@@ -168,7 +169,7 @@
   font-size: 0.9rem;
   opacity: 0.5;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 3rem;
+  border-radius: 4px;
   padding: 1rem;
 }
 .reports-page .chat-player.noSelect {
@@ -232,7 +233,7 @@
 }
 .reports-page .chat-player .selected-report header .info-report .time-sended {
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 3rem;
+  border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 400;
   padding: 0.3rem 0.6rem;
@@ -245,9 +246,9 @@
 .reports-page .chat-player .selected-report header .btns-action button {
   cursor: pointer;
   outline: none;
-  padding: 0.4rem 1rem;
-  font-size: 0.85rem;
-  border-radius: 3rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
 }
@@ -330,7 +331,7 @@
   font-weight: 500;
   font-size: 0.94rem;
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 3rem;
+  border-radius: 4px;
   padding: 0.3rem 0.7rem;
 }
 .reports-page .chat-player .selected-report .list-chat li .main-info .header-msg .date-time {
@@ -340,7 +341,7 @@
   font-size: 0.83rem;
   line-height: 147%;
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 0.5rem;
+  border-radius: 4px;
   padding: 0.5rem 0.7rem;
   max-width: 20vw;
   word-break: break-all;
@@ -377,13 +378,12 @@
 .reports-page .chat-player .selected-report .enter-block .enter-cmd {
   position: relative;
   outline: none;
-  border: none;
   width: 100%;
   height: 2.35rem;
   box-sizing: border-box;
   padding-left: 1.5rem;
   padding-right: 5.8rem;
-  border-radius: 3rem;
+  border-radius: 4px;
   font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
@@ -409,7 +409,7 @@
   font-size: 0.8rem;
   background: #ffffff;
   padding: 0.3rem 0.8rem;
-  border-radius: 1rem;
+  border-radius: 4px;
   animation: fadeInEnter 0.25s ease;
   color: #000000;
 }
@@ -430,3 +430,5 @@
     transform: translateX(0);
   }
 }
+
+/*# sourceMappingURL=Reports.css.map */

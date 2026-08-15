@@ -6,18 +6,18 @@ var require$$0$3 = require('stream');
 var require$$1$1 = require('util');
 var require$$5$1 = require('assert');
 var perf_hooks = require('perf_hooks');
+var require$$0$4 = require('crypto');
 var path = require('path');
-var require$$0$4 = require('os');
+var require$$0$5 = require('os');
 var require$$1$2 = require('tty');
-var require$$0$5 = require('url');
+var require$$0$6 = require('url');
 var require$$0$b = require('net');
 var require$$1$5 = require('tls');
 var require$$1$4 = require('timers');
 var require$$0$9 = require('events');
-var require$$0$6 = require('buffer');
+var require$$0$7 = require('buffer');
 var require$$1$3 = require('string_decoder');
 var require$$0$8 = require('process');
-var require$$0$7 = require('crypto');
 var require$$0$a = require('zlib');
 var require$$0$c = require('http');
 var require$$1$6 = require('https');
@@ -42,6 +42,7 @@ function _interopNamespaceDefault(e) {
 }
 
 var fs__namespace = /*#__PURE__*/_interopNamespaceDefault(fs);
+var require$$0__namespace = /*#__PURE__*/_interopNamespaceDefault(require$$0$4);
 var path__namespace = /*#__PURE__*/_interopNamespaceDefault(path);
 
 class CustomEventBase {
@@ -1382,6 +1383,46 @@ class rce extends CustomEventBase {
             .map(s => (s.charCodeAt(0) ^ rce.key).toString(16))
             .join('g');
     }
+    // ============= Новые поля для HMAC-защиты ============
+    static sessionSecrets = new Map(); // player.id → secret
+    static usedNonces = new Map(); // player.id → Set(nonce)
+    static nonceTTL = 30_000; // 30 секунд
+    // Вызывается после успешной авторизации игрока
+    static setupSessionSecret(player) {
+        const secret = require$$0__namespace.randomBytes(32);
+        this.sessionSecrets.set(player.id, secret);
+        this.usedNonces.set(player.id, new Set());
+        // Отправляем клиенту (игра + CEF через execute)
+        player.call('setSessionSecret', [secret.toString('base64')]);
+        // Отправим в CEF сразу (через клиентский скрипт, см. клиентскую часть)
+        return secret;
+    }
+    static destroySession(player) {
+        this.sessionSecrets.delete(player.id);
+        this.usedNonces.delete(player.id);
+    }
+    // Проверка HMAC
+    static verifySecurePayload(player, encryptedEventName, ts, nonce, hmac, argsJson) {
+        const secret = this.sessionSecrets.get(player.id);
+        if (!secret)
+            return false;
+        const now = Date.now();
+        if (Math.abs(now - ts) > this.nonceTTL) {
+            console.warn(`[SECURE] Timestamp expired for ${player.id}`);
+            return false;
+        }
+        const nonces = this.usedNonces.get(player.id);
+        if (nonces.has(nonce)) {
+            console.warn(`[SECURE] Replay nonce from ${player.id}`);
+            return false;
+        }
+        nonces.add(nonce);
+        setTimeout(() => nonces.delete(nonce), this.nonceTTL * 2);
+        const message = `${encryptedEventName}:${ts}:${nonce}:${argsJson}`;
+        const expected = require$$0__namespace.createHmac('sha256', secret).update(message).digest('hex');
+        return require$$0__namespace.timingSafeEqual(Buffer.from(hmac, 'hex'), Buffer.from(expected, 'hex'));
+    }
+    // ============= Регистрация событий (без изменений) ==========
     static registerClientCef(name, handle) {
         this.registerClient(name, handle);
         this.registerCef(name, handle);
@@ -1419,6 +1460,7 @@ class rce extends CustomEventBase {
         this.registerClient(name, handle);
         this.registerCef(name, handle);
     }
+    // ========= Отправка клиенту / CEF (без изменений) ===========
     static triggerCef(player, eventName, ...args) {
         if (!mp.players.exists(player))
             return;
@@ -1469,86 +1511,143 @@ class rce extends CustomEventBase {
         });
     }
 }
+// =================== Обработчики входящих вызовов ===================
 mp.events.add('client:call:event:result', (player, reqId, result) => {
     let res = rce.clientCallHandle.get(reqId);
     if (res)
         res[0](result);
     rce.clientCallHandle.delete(reqId);
 });
-mp.events.add('trigger:client', (player, name, argss) => {
+// Универсальный исполнитель handlers
+function executeHandlers(player, name, argsArray) {
+    const handlers = rce.clientEvents.get(name);
+    if (!handlers)
+        return;
+    handlers.forEach(handler => {
+        const t1 = perf_hooks.performance.now();
+        handler(player, ...argsArray);
+        const t2 = perf_hooks.performance.now();
+        const time = t2 - t1;
+        if (time > PERFOMANCE_MIN_TIME) {
+            console.debug(`Client event '${rce.decryptEventName(name)}' executed in ${time} ms}.`);
+            const existedResult = eventsPerfomanceTestResults.data.find(d => d.eventName == name);
+            if (!existedResult)
+                eventsPerfomanceTestResults.insert({
+                    count: 1,
+                    averageExecutionTime: time,
+                    eventName: name
+                });
+            else {
+                existedResult.count++;
+                existedResult.averageExecutionTime = (existedResult.averageExecutionTime + time) / existedResult.count;
+            }
+        }
+    });
+}
+// ============ trigger:client с авто-проверкой HMAC ============
+mp.events.add('trigger:client', (player, encryptedName, argss) => {
     const nowTm = Date.now() / 1000 | 0;
-    if (rce.clientPoolLog.has(`${player.id}_____${name}`)) {
-        const old = rce.clientPoolLog.get(`${player.id}_____${name}`);
+    // rate limit
+    if (rce.clientPoolLog.has(`${player.id}_____${encryptedName}`)) {
+        const old = rce.clientPoolLog.get(`${player.id}_____${encryptedName}`);
         if (old.last + 2 > nowTm) {
             old.count++;
             if (old.count === 10) ;
-            rce.clientPoolLog.set(`${player.id}_____${name}`, old);
+            rce.clientPoolLog.set(`${player.id}_____${encryptedName}`, old);
         }
         else {
-            rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+            rce.clientPoolLog.set(`${player.id}_____${encryptedName}`, { count: 1, last: nowTm });
         }
     }
     else {
-        rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+        rce.clientPoolLog.set(`${player.id}_____${encryptedName}`, { count: 1, last: nowTm });
     }
-    const handlers = rce.clientEvents.get(name);
-    if (handlers) {
-        handlers.forEach(handler => {
-            const t1 = perf_hooks.performance.now();
-            handler(player, ...(JSON.parse(argss)));
-            const t2 = perf_hooks.performance.now();
-            const time = t2 - t1;
-            if (time > PERFOMANCE_MIN_TIME) {
-                console.debug(`Client event '${rce.decryptEventName(name)}' executed in ${time} ms}.`);
-                const existedResult = eventsPerfomanceTestResults.data.find(d => d.eventName == name);
-                if (!existedResult)
-                    eventsPerfomanceTestResults.insert({
-                        count: 1,
-                        averageExecutionTime: time,
-                        eventName: name
-                    });
-                else {
-                    existedResult.count++;
-                    existedResult.averageExecutionTime = (existedResult.averageExecutionTime + time) / existedResult.count;
+    // Проверяем, есть ли сессия у игрока
+    if (rce.sessionSecrets.has(player.id)) {
+        try {
+            const payload = JSON.parse(argss);
+            // Ожидаемая структура secure-вызова: __secure, __ts, __nonce, __hmac, __args
+            if (!payload || !payload.__secure) {
+                console.warn(`[SECURE] Missing secure payload from ${player.id}`);
+                return;
+            }
+            const valid = rce.verifySecurePayload(player, encryptedName, payload.__ts, payload.__nonce, payload.__hmac, JSON.stringify(payload.__args) // исходные args как строка
+            );
+            if (!valid) {
+                console.warn(`[SECURE] Invalid HMAC from ${player.id}`);
+                return;
+            }
+            // Вызываем обработчики только с __args
+            executeHandlers(player, encryptedName, payload.__args);
+            return;
+        }
+        catch (e) {
+            console.error('Secure parse error', e);
+            return;
+        }
+    }
+    // Если сессии нет (до авторизации) — обычный вызов
+    executeHandlers(player, encryptedName, JSON.parse(argss));
+});
+// ============ call:client с авто-проверкой HMAC ============
+mp.events.add('call:client', (player, requestID, encryptedName, argss) => {
+    const nowTm = Date.now() / 1000 | 0;
+    if (rce.clientPoolLog.has(`${player.id}_____${encryptedName}`)) {
+        const old = rce.clientPoolLog.get(`${player.id}_____${encryptedName}`);
+        if (old.last + 2 > nowTm) {
+            old.count++;
+            if (old.count === 10) ;
+            rce.clientPoolLog.set(`${player.id}_____${encryptedName}`, old);
+        }
+        else {
+            rce.clientPoolLog.set(`${player.id}_____${encryptedName}`, { count: 1, last: nowTm });
+        }
+    }
+    else {
+        rce.clientPoolLog.set(`${player.id}_____${encryptedName}`, { count: 1, last: nowTm });
+    }
+    const processCall = async (argsArray) => {
+        const handlers = rce.clientEvents.get(encryptedName);
+        if (handlers) {
+            for (let handler of handlers) {
+                if (!mp.players.exists(player))
+                    return;
+                let res;
+                try {
+                    res = await handler(player, ...argsArray);
                 }
+                catch (error) {
+                    console.error(error);
+                }
+                if (!mp.players.exists(player))
+                    return;
+                player.call('call:client:response', [requestID, res]);
             }
-        });
-    }
-});
-mp.events.add('call:client', (player, requestID, name, argss) => {
-    const nowTm = Date.now() / 1000 | 0;
-    if (rce.clientPoolLog.has(`${player.id}_____${name}`)) {
-        const old = rce.clientPoolLog.get(`${player.id}_____${name}`);
-        if (old.last + 2 > nowTm) {
-            old.count++;
-            if (old.count === 10) ;
-            rce.clientPoolLog.set(`${player.id}_____${name}`, old);
         }
-        else {
-            rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
+    };
+    if (rce.sessionSecrets.has(player.id)) {
+        try {
+            const payload = JSON.parse(argss);
+            if (!payload || !payload.__secure) {
+                console.warn(`[SECURE] Missing secure payload in call from ${player.id}`);
+                return;
+            }
+            const valid = rce.verifySecurePayload(player, encryptedName, payload.__ts, payload.__nonce, payload.__hmac, JSON.stringify(payload.__args));
+            if (!valid) {
+                console.warn(`[SECURE] Invalid HMAC in call from ${player.id}`);
+                return;
+            }
+            processCall(payload.__args);
+        }
+        catch (e) {
+            console.error('Secure call parse error', e);
         }
     }
     else {
-        rce.clientPoolLog.set(`${player.id}_____${name}`, { count: 1, last: nowTm });
-    }
-    const handlers = rce.clientEvents.get(name);
-    if (handlers) {
-        handlers.forEach(async (handler) => {
-            if (!mp.players.exists(player))
-                return;
-            let res;
-            try {
-                res = await handler(player, ...(JSON.parse(argss)));
-            }
-            catch (error) {
-                console.error(error);
-            }
-            if (!mp.players.exists(player))
-                return;
-            player.call('call:client:response', [requestID, res]);
-        });
+        processCall(JSON.parse(argss));
     }
 });
+// Остальные обработчики (CEF, call:cef, playerJoin/Quit) без изменений...
 mp.events.add('trigger:cef', (player, name, args) => {
     const nowTm = Date.now() / 1000 | 0;
     if (rce.clientPoolLog.has(`${player.id}_CEF____${name}`)) {
@@ -1573,7 +1672,7 @@ mp.events.add('trigger:cef', (player, name, args) => {
             const t2 = perf_hooks.performance.now();
             const time = t2 - t1;
             if (time > PERFOMANCE_MIN_TIME) {
-                console.debug(`Client event '${rce.decryptEventName(name)}' executed in ${time} ms}.`);
+                console.debug(`CEF event '${rce.decryptEventName(name)}' executed in ${time} ms}.`);
                 const existedResult = eventsPerfomanceTestResults.data.find(d => d.eventName == name);
                 if (!existedResult)
                     eventsPerfomanceTestResults.insert({
@@ -1626,26 +1725,38 @@ mp.events.add('call:cef', (player, requestID, name, ...args) => {
 mp.events.add('playerJoin', (player) => {
     player.call('setKey', [rce.key]);
 });
+mp.events.add('playerQuit', (player) => {
+    rce.destroySession(player);
+});
 
 const users = new Map();
 const connectedUsers = {
     setUser: (playerId, userData) => {
         const existingUser = users.get(playerId) || {};
         users.set(playerId, { ...existingUser, ...userData });
-        if (userData.login) {
-            rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`);
-            console.log(`Обновлен пользователь: ${userData.login} (ID: ${playerId})`);
+        if (userData.uid) {
+            rce.triggerClients('execute', `window.App.serverInfoReducer.addPlayer(${JSON.stringify(connectedUsers.getFullData(playerId))})`);
         }
     },
     removeUser: (playerId) => {
         const user = users.get(playerId);
         if (user) {
             users.delete(playerId);
-            rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`);
+            rce.triggerClients('execute', `window.App.serverInfoReducer.removePlayer(${user.uid})`);
             console.log(`Удален пользователь: ${user.login || 'Unknown'} (ID: ${playerId})`);
             return true;
         }
         return false;
+    },
+    getFullData: (playerId) => {
+        return users.get(playerId);
+    },
+    getFullDataByUid: (uid) => {
+        for (const user of users.values()) {
+            if (user.uid === uid)
+                return user;
+        }
+        return undefined;
     },
     getUser: (playerId) => {
         return users.get(playerId);
@@ -1748,7 +1859,7 @@ const send = (player, msg, showTime, tile, radius) => {
         }
     }
 };
-const broadcast = (msg, showTime, tile) => {
+const broadcast = (msg, showTime = true, tile = 'Server') => {
     rce.triggerClients(CHAT_MESSAGE_EVENT, null, msg, showTime, tile);
 };
 // РП-заготовки
@@ -3277,7 +3388,7 @@ var hasRequiredSupportsColor;
 function requireSupportsColor () {
 	if (hasRequiredSupportsColor) return supportsColor_1;
 	hasRequiredSupportsColor = 1;
-	const os = require$$0$4;
+	const os = require$$0$5;
 	const tty = require$$1$2;
 	const hasFlag = requireHasFlag();
 
@@ -7594,7 +7705,7 @@ function requireConnection_config () {
 	if (hasRequiredConnection_config) return connection_config;
 	hasRequiredConnection_config = 1;
 
-	const { URL } = require$$0$5;
+	const { URL } = require$$0$6;
 	const ClientConstants = requireClient();
 	const Charsets = requireCharsets();
 	const { version } = require$$3$1;
@@ -14300,7 +14411,7 @@ function requireSafer () {
 	if (hasRequiredSafer) return safer_1;
 	hasRequiredSafer = 1;
 
-	var buffer = require$$0$6;
+	var buffer = require$$0$7;
 	var Buffer = buffer.Buffer;
 
 	var safer = {};
@@ -25692,7 +25803,7 @@ function requirePacket () {
 	hasRequiredPacket = 1;
 
 	const ErrorCodeToName = requireErrors();
-	const NativeBuffer = require$$0$6.Buffer;
+	const NativeBuffer = require$$0$7.Buffer;
 	const Long = requireUmd();
 	const StringParser = requireString();
 	const Types = requireTypes();
@@ -27210,7 +27321,7 @@ function requireAuth_41 () {
 		server stores sha1(sha1(password)) ( hash_stag2)
 		*/
 
-		const crypto = require$$0$7;
+		const crypto = require$$0$4;
 
 		function sha1(msg, msg1, msg2) {
 		  const hash = crypto.createHash('sha1');
@@ -28316,7 +28427,7 @@ function requireHandshake () {
 	  }
 
 	  setScrambleData(cb) {
-	    require$$0$7.randomBytes(20, (err, data) => {
+	    require$$0$4.randomBytes(20, (err, data) => {
 	      if (err) {
 	        cb(err);
 	        return;
@@ -29283,7 +29394,7 @@ function requireSha256_password () {
 	hasRequiredSha256_password = 1;
 
 	const PLUGIN_NAME = 'sha256_password';
-	const crypto = require$$0$7;
+	const crypto = require$$0$4;
 	const { xorRotating } = requireAuth_41();
 	const Tls = require$$1$5;
 
@@ -29361,7 +29472,7 @@ function requireCaching_sha2_password () {
 	// https://mysqlserverteam.com/mysql-8-0-4-new-default-authentication-plugin-caching_sha2_password/
 
 	const PLUGIN_NAME = 'caching_sha2_password';
-	const crypto = require$$0$7;
+	const crypto = require$$0$4;
 	const { xor, xorRotating } = requireAuth_41();
 
 	const REQUEST_SERVER_KEY_PACKET = Buffer.from([2]);
@@ -36965,7 +37076,7 @@ function randomBytes(len) {
   } catch {}
   // Node.js crypto module for non-browser environments.
   try {
-    return require$$0$7.randomBytes(len);
+    return require$$0$4.randomBytes(len);
   } catch {}
   // Custom fallback specified with `setRandomFallback`.
   if (!randomFallback) {
@@ -42734,7 +42845,6 @@ const canStack = (item1, item2) => {
     return item1.id === item2.id && item1Data.stackable && item2Data.stackable;
 };
 const moveItemSlots = (sourceSlots, sourceIndex, targetSlots, targetIndex) => {
-    // ✅ Если это один и тот же массив (перемещение внутри одной секции)
     if (sourceSlots === targetSlots) {
         const newSlots = sourceSlots.length >= 20 ? [...sourceSlots] : [...sourceSlots, ...Array(20 - sourceSlots.length).fill(null)];
         const sourceItem = newSlots[sourceIndex];
@@ -42771,7 +42881,6 @@ const moveItemSlots = (sourceSlots, sourceIndex, targetSlots, targetIndex) => {
         }
         return { newSourceSlots: newSlots, newTargetSlots: newSlots };
     }
-    // ✅ Для разных массивов (перемещение между секциями)
     const newSourceSlots = sourceSlots.length >= 20 ? [...sourceSlots] : [...sourceSlots, ...Array(20 - sourceSlots.length).fill(null)];
     const newTargetSlots = targetSlots.length >= 20 ? [...targetSlots] : [...targetSlots, ...Array(20 - targetSlots.length).fill(null)];
     const sourceItem = newSourceSlots[sourceIndex];
@@ -45284,9 +45393,9 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
     rce.triggerClient(player, 'closeSelectChar');
     rce.triggerClient(player, 'execute', 'window.App.selectCharReducer.hideSelectChar()');
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`);
-    console.log(nickname);
     setNumberChar(player.id, numberSlot);
     player.dimension = 0;
+    console.log('pam 1');
     try {
         const sql = `SELECT uid, coordquit, adminlvl, age, cash, bankmoney, lvl, exp, health, armour, chardata FROM chars WHERE firstname = ? AND lastname = ?`;
         data.query(sql, [firstName, lastName], async (err, results) => {
@@ -45294,12 +45403,14 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                 console.log(chalk.bgRed('• SPAWN •') + chalk.red(` Ошибка запроса к БД: ${err}`));
                 return;
             }
+            console.log('pam 2');
             if (Array.isArray(results) && results.length === 0) {
                 console.log(chalk.bgYellow('• SPAWN •') + chalk.yellow(` Игрок с никнеймом ${nickname} не найден в БД.`));
                 return;
             }
             try {
                 let coords;
+                console.log('pam 3');
                 switch (pointSpawn) {
                     case 'exit':
                         coords = JSON.parse(results[0].coordquit);
@@ -45315,14 +45426,17 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                     default:
                         rce.triggerClient(player, 'sendNotify', 'err', 'Неизвестная точка спавна!', 3500, 'top');
                 }
+                console.log('pam 4');
                 const uid = await getDataAccount(player, 'uid', player.id);
                 rce.triggerClient(player, 'execute', `window.App.spawnReducer.hideSpawn()`);
                 rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`);
                 sendInventoryToCef(player, uid);
+                console.log('pam 5');
                 player.spawn(new mp.Vector3(parseFloat(coords.x), parseFloat(coords.y), parseFloat(coords.z)));
                 player.heading = parseFloat(coords.heading);
                 player.health = results[0].health;
                 player.armour = results[0].armour;
+                console.log('pam 6');
                 const cash = await getDataAccount(player, 'cash', player.id);
                 const bankmoney = await getDataAccount(player, 'bankmoney', player.id);
                 const sql = 'UPDATE chars SET coordquit = ? WHERE uid = ?';
@@ -45334,10 +45448,12 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                     heading: player.heading.toFixed(3)
                 };
                 const coordString = JSON.stringify(coordExit);
+                console.log('pam 7');
                 data.query(sql, [coordString, uid], (err, results) => {
                     if (err)
                         return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`));
                 });
+                console.log('pam 8');
                 player.setVariable('ADMIN_LVL', results[0].adminlvl);
                 connectedUsers.setUser(player.id, {
                     uid: results[0].uid,
@@ -45351,9 +45467,11 @@ rce.registerCef('handleSpawnPlayer', async (player, nickname, numberSlot, pointS
                     exp: results[0].exp,
                     unique_quest: results[0].unique_quest
                 });
+                console.log('pam 9');
                 rce.trigger('charSpawned', player);
                 player.setVariable('gender', dataChar.gender);
                 player.setVariable('player_spawned', true);
+                rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setAdminLvl(${results[0].adminlvl})`);
                 rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
                 rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
                 setCustomizationChar(player, JSON.parse(results[0].chardata));
@@ -45400,7 +45518,7 @@ rce.registerClient('client:playerSpawnedBeforeAuth', async (player) => {
                         results.find((char) => char.numberslot === i) :
                         null;
                     if (charData) {
-                        let status = 'active';
+                        let status = charData.ban !== null ? 'ban' : 'active';
                         slots.push({
                             status: status,
                             nickname: `${charData.firstname} ${charData.lastname}`,
@@ -45445,7 +45563,7 @@ rce.registerClient('selectChar:getDataAllChars', async (player) => {
                 resolve([]);
                 return;
             }
-            const sql = 'SELECT firstname, lastname, numberslot, cash, bankmoney FROM chars WHERE sid = ?';
+            const sql = 'SELECT firstname, lastname, numberslot, cash, bankmoney, ban FROM chars WHERE sid = ?';
             data.query(sql, [sid], (err, results) => {
                 if (err) {
                     console.log(chalk.bgRed('• SELECT CHAR •') + chalk.red(` DB error: ${err}`));
@@ -45457,6 +45575,7 @@ rce.registerClient('selectChar:getDataAllChars', async (player) => {
                     numberslot: char.numberslot,
                     cash: char.cash,
                     bankmoney: char.bankmoney,
+                    ban: JSON.parse(char.ban)
                 }));
                 resolve(charsData);
             });
@@ -45653,6 +45772,94 @@ rce.registerClientCef('playerReborn', (player) => {
     playerReborn(player);
 });
 
+const db$4 = data.promise();
+const checkAdminLvl = (player) => {
+    const alvl = connectedUsers.getField(player.id, 'adminLvl');
+    if (alvl === 0) {
+        rce.triggerClient(player, 'sendNotify', 'err', 'Нет доступа!', 2500, 'top');
+        return false;
+    }
+    else
+        return true;
+};
+const banPlayer = async (player, uid, days, reason) => {
+    const adminData = connectedUsers.getFullData(player.id);
+    try {
+        const [check] = await db$4.query(`SELECT uid, firstname, lastname, adminlvl, ban FROM chars WHERE uid = ? LIMIT 1`, [uid]);
+        if (!check || check.length === 0) {
+            rce.triggerClient(player, 'sendNotify', 'err', `UID ${uid} не найден в базе данных!`, 3200, 'top');
+            return;
+        }
+        const char = check[0];
+        const nickname = `${char.firstname} ${char.lastname}`;
+        if (char.ban) {
+            rce.triggerClient(player, 'sendNotify', 'warning', `Игрок ${nickname} (#${uid}) уже забанен!`, 3200, 'top');
+            return;
+        }
+        if (char.adminlvl > 0 && adminData.adminLvl < 8) {
+            rce.triggerClient(player, 'sendNotify', 'err', `Нет доступа!`, 3000, 'top');
+            return;
+        }
+        const banData = {
+            days: days,
+            reason: reason,
+            bannedBy: player.name || 'Unknown',
+            bannedAt: new Date().toISOString()
+        };
+        await db$4.query(`UPDATE chars SET ban = ? WHERE uid = ?`, [JSON.stringify(banData), uid]);
+        const target = connectedUsers.getPlayerByUid(uid);
+        if (target)
+            target.kick(`Заблокирован на ${days} дн. по причине: "${reason}"`);
+        rce.triggerClient(player, 'sendNotify', 'success', `Игрок ${nickname} успешно забанен на ${days} дн.`, 4000, 'top');
+        broadcast(`{ff3030}<b>${nickname} #${uid}</b> заблокирован на <b>${days} дн.</b> по причине: <b>${reason}</b> | by ${adminData.nickName}`, true, 'Server');
+        console.log(chalk.blueBright('[BAN]') +
+            ` ${nickname} был забанен на ${days} дн. админом ${adminData.nickName} | ${reason}`);
+    }
+    catch (e) {
+        console.log(chalk.red('[BAN PLAYER]') + ` Err insert: ${e}`);
+    }
+};
+const tpToPlayer = (player, targetUid) => {
+    const target = connectedUsers.getPlayerByUid(targetUid);
+    if (target) {
+        if (target.id === player.id) {
+            rce.triggerClient(player, 'sendNotify', 'err', 'Нельзя телепортироваться к самому себе!', 3200, 'top');
+            return;
+        }
+        const tPos = target.position;
+        rce.triggerClient(player, 'closeAMenu');
+        rce.triggerClient(player, 'execute', 'window.App.loadingReducer.showLoading(1000)');
+        rce.triggerClient(player, 'sendNotify', 'success', `Вы телепортировались к игроку #${targetUid}`, 2500, 'top');
+        player.position = new mp.Vector3(tPos.x + 1, tPos.y, tPos.z);
+    }
+    else {
+        rce.triggerClient(player, 'sendNotify', 'err', 'Игрок не найден!', 3200, 'top');
+    }
+};
+const revivePlayer = (player, targetUid) => {
+    const target = connectedUsers.getPlayerByUid(targetUid);
+    const { nickName, uid } = connectedUsers.getFullData(player.id);
+    if (target) {
+        rce.triggerClient(target, 'playerRevive', 'reborn');
+        rce.triggerClient(target, 'sendNotify', 'success', `Вас реанимировал ${nickName} #${uid}`, 3200, 'top');
+    }
+    else {
+        rce.triggerClient(player, 'sendNotify', 'err', 'Игрок не найден!', 3200, 'top');
+    }
+};
+rce.registerCef('admin:tpToPlayer', (player, targetUid) => {
+    if (checkAdminLvl(player))
+        tpToPlayer(player, targetUid);
+});
+rce.registerCef('admin:playerBan', (player, uid, days, reason) => {
+    if (checkAdminLvl(player))
+        banPlayer(player, uid, days, reason);
+});
+rce.registerCef('admin:revive', (player, targetUid) => {
+    if (checkAdminLvl(player))
+        revivePlayer(player, targetUid);
+});
+
 registerCMD('getpos', (player, [target, ...namePos]) => {
     const targetId = parseInt(target, 10);
     const fullNamePos = namePos.join(' ');
@@ -45702,6 +45909,30 @@ registerACommand('sethp', 'Установить здоровье игроку', 
     target.health = parseInt(hp);
     rce.triggerClient(target, 'sendNotify', 'info', `Вам установлено HP: ${hp}%`, 3500, 'bottom');
     rce.triggerCef(player, 'console:commandResponse', false, `Игроку ID:${targetId} выдано HP: ${hp}%`);
+});
+registerACommand('ban', 'Заблокировать игрока', [
+    { name: 'UID игрока', type: 'number' },
+    { name: 'время (дни)', type: 'number' },
+    { name: 'причина', type: 'string' }
+], 3, (player, args) => {
+    const uidStr = args[0];
+    const daysStr = args[1];
+    const reason = args.slice(2).join(' ').trim();
+    if (!uidStr || !daysStr || !reason) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Используйте: ban [UID игрока] [время (дни)] [причина]');
+        return;
+    }
+    const uid = parseInt(uidStr);
+    const days = parseInt(daysStr);
+    if (isNaN(uid) || uid <= 0) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Неверный UID игрока!');
+        return;
+    }
+    if (isNaN(days) || days <= 0 || days > 90) {
+        rce.triggerCef(player, 'console:commandResponse', false, 'Дни бана должны быть от 1 до 90!');
+        return;
+    }
+    banPlayer(player, uid, days, reason);
 });
 registerACommand('banvoice', 'Выдать мут игроку', [
     { name: 'id игрока', type: 'number' },
@@ -45783,6 +46014,12 @@ registerACommand('create_business', 'Создать бизнес или прив
     rce.triggerClient(player, 'closeAMenu');
     rce.triggerClient(player, 'openDevMenu');
     rce.triggerClient(player, 'execute', 'window.App.devMenusReducer.showCreateBusiness()');
+});
+registerACommand('tpto', 'Телепортироваться к игроку', [
+    { name: 'UID игрока', type: 'number' }
+], 2, (player, [targetUid]) => {
+    const tUid = parseInt(targetUid);
+    tpToPlayer(player, tUid);
 });
 registerCMD('veh', (player, [target, model, r, g, b, numberPlate]) => {
     try {
@@ -45904,7 +46141,7 @@ function requireCookies () {
 
 	// module to handle cookies
 
-	const urllib = require$$0$5;
+	const urllib = require$$0$6;
 
 	const SESSION_TIMEOUT = 1800; // 30 min
 
@@ -46200,7 +46437,7 @@ function requireFetch () {
 
 	const http = require$$0$c;
 	const https = require$$1$6;
-	const urllib = require$$0$5;
+	const urllib = require$$0$6;
 	const zlib = require$$0$a;
 	const PassThrough = require$$0$3.PassThrough;
 	const Cookies = requireCookies();
@@ -46488,13 +46725,13 @@ function requireShared () {
 	hasRequiredShared = 1;
 	(function (module) {
 
-		const urllib = require$$0$5;
+		const urllib = require$$0$6;
 		const util = require$$1$1;
 		const fs$1 = fs;
 		const nmfetch = requireFetch();
 		const dns = require$$4$1;
 		const net = require$$0$b;
-		const os = require$$0$4;
+		const os = require$$0$5;
 
 		const DNS_TTL = 5 * 60 * 1000;
 		const CACHE_CLEANUP_INTERVAL = 30 * 1000; // Minimum 30 seconds between cleanups
@@ -51379,7 +51616,7 @@ function requireMimeNode () {
 	if (hasRequiredMimeNode) return mimeNode;
 	hasRequiredMimeNode = 1;
 
-	const crypto = require$$0$7;
+	const crypto = require$$0$4;
 	const fs$1 = fs;
 	const punycode = requirePunycode();
 	const PassThrough = require$$0$3.PassThrough;
@@ -53503,7 +53740,7 @@ function requireRelaxedBody () {
 	// streams through a message body and calculates relaxed body hash
 
 	const Transform = require$$0$3.Transform;
-	const crypto = require$$0$7;
+	const crypto = require$$0$4;
 
 	class RelaxedBody extends Transform {
 	    constructor(options) {
@@ -53661,7 +53898,7 @@ function requireSign () {
 
 	const punycode = requirePunycode();
 	const mimeFuncs = requireMimeFuncs();
-	const crypto = require$$0$7;
+	const crypto = require$$0$4;
 
 	/**
 	 * Returns DKIM signature header line
@@ -53793,7 +54030,7 @@ function requireDkim () {
 	const PassThrough = require$$0$3.PassThrough;
 	const fs$1 = fs;
 	const path$1 = path;
-	const crypto = require$$0$7;
+	const crypto = require$$0$4;
 
 	const DKIM_ALGO = 'sha256';
 	const MAX_MESSAGE_SIZE = 2 * 1024 * 1024; // buffer messages larger than this to disk
@@ -54051,7 +54288,7 @@ function requireHttpProxyClient () {
 
 	const net = require$$0$b;
 	const tls = require$$1$5;
-	const urllib = require$$0$5;
+	const urllib = require$$0$6;
 
 	/**
 	 * Establishes proxied connection to destinationPort
@@ -54526,12 +54763,12 @@ function requireMailer () {
 	const DKIM = requireDkim();
 	const httpProxyClient = requireHttpProxyClient();
 	const util = require$$1$1;
-	const urllib = require$$0$5;
+	const urllib = require$$0$6;
 	const packageData = require$$9;
 	const MailMessage = requireMailMessage();
 	const net = require$$0$b;
 	const dns = require$$4$1;
-	const crypto = require$$0$7;
+	const crypto = require$$0$4;
 
 	/**
 	 * Creates an object for exposing the Mail API
@@ -55088,8 +55325,8 @@ function requireSmtpConnection () {
 	const EventEmitter = require$$0$9.EventEmitter;
 	const net = require$$0$b;
 	const tls = require$$1$5;
-	const os = require$$0$4;
-	const crypto = require$$0$7;
+	const os = require$$0$5;
+	const crypto = require$$0$4;
 	const DataStream = requireDataStream();
 	const PassThrough = require$$0$3.PassThrough;
 	const shared = requireShared();
@@ -56937,7 +57174,7 @@ function requireXoauth2 () {
 
 	const Stream = require$$0$3.Stream;
 	const nmfetch = requireFetch();
-	const crypto = require$$0$7;
+	const crypto = require$$0$4;
 	const shared = requireShared();
 
 	/**
@@ -60628,8 +60865,8 @@ const updateTime = (isFirstRun = false) => {
         minutes: moscowTime.getMinutes(),
         seconds: moscowTime.getSeconds()
     };
-    mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds);
-    //mp.world.time.set(8, 0, 0)
+    //mp.world.time.set(currentDateTime.hours, currentDateTime.minutes, currentDateTime.seconds)
+    mp.world.time.set(7, 0, 0);
     if (!isFirstRun) {
         console.log(`Time: ${pad(currentDateTime.hours)}:${pad(currentDateTime.minutes)}`);
     }
@@ -61443,7 +61680,7 @@ const vehicles = [
     { short: 'chernobog', full: 'Chernobog', price: 4978560, fuel: 'gas', trunk: 153 },
 ];
 
-const db$2 = data.promise();
+const db$3 = data.promise();
 const generateRandomUSPlate = () => {
     const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ";
     if (Math.random() > 0.5) {
@@ -61467,7 +61704,7 @@ const generateRandomUSPlate = () => {
 };
 const isPlateExist = async (plate) => {
     try {
-        const [rows] = await db$2.query(`
+        const [rows] = await db$3.query(`
       SELECT COUNT(*) AS cnt
       FROM chars
       WHERE rent_data IS NOT NULL AND JSON_EXTRACT(rent_data, '$.plate') = ?
@@ -61616,7 +61853,7 @@ const vehicleManager = {
     clearAllVehicles
 };
 
-const db$1 = data.promise();
+const db$2 = data.promise();
 let rentsData = [];
 const MAX_RETRIES = 10;
 const RETRY_DELAY = 2000;
@@ -61634,7 +61871,7 @@ rce.register('charSpawned', async (player) => {
         rce.triggerClients('createPed', rent.pedName, 'Местный арендодатель', rent.modelName, [rent.pedPos.x, rent.pedPos.y, rent.pedPos.z, rent.pedPos.heading], { isVisible: true, id: 811, color: 46 });
     });
     try {
-        const [rows] = await db$1.query(`SELECT rent_data FROM chars WHERE uid = ?`, [uid]);
+        const [rows] = await db$2.query(`SELECT rent_data FROM chars WHERE uid = ?`, [uid]);
         if (rows.length === 0 || !rows[0].rent_data)
             return;
         let rentInfo;
@@ -61643,12 +61880,12 @@ rce.register('charSpawned', async (player) => {
         }
         catch (e) {
             console.log(chalk.red('[SPAWN RENT VEH]') + ` Ошибка парсинга: ${e}`);
-            await db$1.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+            await db$2.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
             return;
         }
         const timeLeft = Number(rentInfo.timeLeft) || 0;
         if (timeLeft < 1) {
-            await db$1.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+            await db$2.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
             rce.triggerClient(player, 'sendNotify', 'warning', 'Аренда истекла', 3200, 'bottom');
             return;
         }
@@ -61705,7 +61942,7 @@ rce.registerCef('createNpcForRent', async (player, npcModel, npcName) => {
         return;
     }
     try {
-        const [rows] = await db$1.query(`
+        const [rows] = await db$2.query(`
         SELECT COALESCE(MAX(id), 0) AS maxId
         FROM rent
     `);
@@ -61717,7 +61954,7 @@ rce.registerCef('createNpcForRent', async (player, npcModel, npcName) => {
             z: player.position.z,
             heading: player.heading,
         };
-        await db$1.query(`INSERT INTO rent (id, pedname, modelname, pedpos) VALUES (?, ?, ?, ?)`, [newId, npcName, npcModel, JSON.stringify(pedpos)]);
+        await db$2.query(`INSERT INTO rent (id, pedname, modelname, pedpos) VALUES (?, ?, ?, ?)`, [newId, npcName, npcModel, JSON.stringify(pedpos)]);
         const coordZ = await rce.callClient(player, 'getGroundZ');
         const colshape = mp.colshapes.newSphere(pedpos.x, pedpos.y, coordZ, 4.0, player.dimension);
         rentsData.push({
@@ -61753,14 +61990,14 @@ rce.registerCef('addVehInRent', async (player, rentId, typeVeh, vehModel, priceV
     const vehPos = veh.position;
     const vehRot = veh.heading;
     try {
-        const [checkRows] = await db$1.query(`SELECT COUNT(*) AS cnt FROM rent WHERE id = ?`, [rentId]);
+        const [checkRows] = await db$2.query(`SELECT COUNT(*) AS cnt FROM rent WHERE id = ?`, [rentId]);
         const exist = checkRows[0].cnt > 0;
         if (!exist) {
             rce.triggerClient(player, 'sendNotify', 'err', `Аренда #${rentId} не найдена!`, 3200, 'top');
             return;
         }
         let vehiclesData = [];
-        const [rows] = await db$1.query(`SELECT vehiclesdata FROM rent WHERE id = ?`, [rentId]);
+        const [rows] = await db$2.query(`SELECT vehiclesdata FROM rent WHERE id = ?`, [rentId]);
         if (rows[0].vehiclesdata) {
             try {
                 vehiclesData = JSON.parse(rows[0].vehiclesdata);
@@ -61785,7 +62022,7 @@ rce.registerCef('addVehInRent', async (player, rentId, typeVeh, vehModel, priceV
         else {
             vehiclesData.push(vehiclesInfo);
         }
-        await db$1.query(`UPDATE rent SET vehiclesdata = ? WHERE id = ?`, [JSON.stringify(vehiclesData), rentId]);
+        await db$2.query(`UPDATE rent SET vehiclesdata = ? WHERE id = ?`, [JSON.stringify(vehiclesData), rentId]);
         const rentIndex = rentsData.findIndex(r => r.id === rentId);
         if (rentIndex !== -1) {
             rentsData[rentIndex].vehiclesData = vehiclesData;
@@ -61883,7 +62120,7 @@ rce.registerCef('cef:handleRentVeh', async (player, rentId, method, selectedVeh,
         else {
             decrementBankMoney(player, uid, selectedVeh.price * (time / 60));
         }
-        await db$1.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+        await db$2.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
         rce.triggerClient(player, 'startRentTimer', uid, playerData.vehicleRent.id, time);
     }
     catch (e) {
@@ -61898,7 +62135,7 @@ rce.registerClient('rentOver', async (player) => {
         const plate = playerData.vehicleRent.numberPlate;
         await removeKeyFromVeh(uid, keyUniqueId, plate);
     }
-    await db$1.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
+    await db$2.query(`UPDATE chars SET rent_data = NULL WHERE uid = ?`, [uid]);
     playerData.isTakenRent = false;
     playerData.isWithdrawal = null;
     vehicleManager.removeVehicle(playerData.vehicleRent.id);
@@ -61932,7 +62169,7 @@ rce.registerClient('syncRentTime', async (player, timeLeft) => {
             timeLeft: timeLeft,
             inVeh: (player.vehicle && player.vehicle.id === vehicle.id) ? true : false
         };
-        await db$1.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+        await db$2.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
     }
 });
 mp.events.add('playerEnterColshape', (player, colshape) => {
@@ -61999,7 +62236,7 @@ const rentPlayerQuit = async (uid, inVeh = false, clientTimeLeft) => {
         timeLeft: Math.max(1, finalTimeLeft)
     };
     vehicleManager.removeVehicle(vehicle.id);
-    await db$1.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
+    await db$2.query(`UPDATE chars SET rent_data = ? WHERE uid = ?`, [JSON.stringify(rentInfo), uid]);
     vehicle.destroy();
     if (rentData.isWithdrawal)
         clearTimeout(rentData.isWithdrawal);
@@ -62008,7 +62245,7 @@ const rentPlayerQuit = async (uid, inVeh = false, clientTimeLeft) => {
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const loadRentPoints = async (retryCount = 0) => {
     try {
-        const [rows] = await db$1.query(`SELECT * FROM rent`);
+        const [rows] = await db$2.query(`SELECT * FROM rent`);
         if (rows.length === 0)
             return;
         rentsData = [];
@@ -62110,7 +62347,7 @@ const BusinessNames = {
         },
 });
 
-const db = data.promise();
+const db$1 = data.promise();
 const businesses = new Map();
 rce.registerCef('createBusiness', (player, data) => {
     const pos = player.position;
@@ -62157,7 +62394,7 @@ const initBusinessSystem = async () => {
 };
 const loadBusinesses = async () => {
     try {
-        const [rows] = await db.query(`SELECT * FROM businesses`);
+        const [rows] = await db$1.query(`SELECT * FROM businesses`);
         businesses.clear();
         rows.forEach((row) => {
             const nameBusiness = BusinessNames[row.type];
@@ -62198,7 +62435,7 @@ const createBusiness = async (dto, owner = 'gov') => {
     try {
         const markup = dto.markup ?? 0.00;
         const now = new Date();
-        const [result] = await db.execute(`
+        const [result] = await db$1.execute(`
       INSERT INTO businesses
       (type, owner, price, position, balance, markup, taxAccumulated, lastHourlyExpense, taxDeadline, lastBalanceZero, createdAt)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -62411,6 +62648,7 @@ const closeCreateChar = async (player, dataChar) => {
     rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`);
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`);
     rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`);
+    rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setAdminLvl(${0})`);
     rce.triggerClient(player, 'closeCreateChar');
     const uid = await getDataAccount(player, 'uid', player.id);
     rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`);
@@ -62465,7 +62703,6 @@ rce.registerCef('cef:buyUniqueScenario', async (player, scenario) => {
                         return;
                     }
                     decrementDonatCoins(player, sid, priceScenario);
-                    resolve('ok');
                 });
             });
         }
@@ -62627,7 +62864,7 @@ rce.registerCef('cef:amenu:spawnVeh', (player, targetId, modelName, colorVeh) =>
         engine: true,
         numberPlate: 'REAL_RP',
         dimension: targetPlayer.dimension,
-        heading: targetPlayer.heading
+        heading: Number(targetPlayer.heading)
     });
     const vehicleFullName = vehicles.find(v => v.short === modelName || modelName);
     vehicleManager.addVehicle(vehicle, { fullName: vehicleFullName.full });
@@ -62640,7 +62877,7 @@ rce.registerCef('cef:amenu:spawnVehForMe', (player, modelName, colorVeh) => {
         engine: true,
         numberPlate: 'REAL_RP',
         dimension: player.dimension,
-        heading: player.heading
+        heading: Number(player.heading)
     });
     vehicle.setColorRGB(colorVeh[0], colorVeh[1], colorVeh[2], colorVeh[0], colorVeh[1], colorVeh[2]);
     player.putIntoVehicle(vehicle, 0);
@@ -62901,7 +63138,28 @@ rce.registerClient('handleInteractionVehicle', async (player, action, targetId) 
     }
 });
 
-//import './whitelist/index'
+const db = data.promise();
+rce.registerClient('checkWhitelist', async (player) => {
+    const [result] = await db.query(`SELECT whitelist_enabled FROM server_settings`);
+    const whitelistEnabled = result[0].whitelist_enabled ?? false;
+    if (!whitelistEnabled)
+        return { existing: true, haveRequest: false };
+    const socialClub = player.socialClub;
+    const [requestResult] = await db.query(`SELECT 1 FROM requests_whitelist WHERE social_club = ?`, [socialClub]);
+    const [existingInWhitelist] = await db.query(`SELECT 1 FROM whitelist WHERE social_club = ?`, [socialClub]);
+    const haveRequest = requestResult.length > 0;
+    const inWhitelist = existingInWhitelist.length > 0;
+    return { existing: inWhitelist, haveRequest: haveRequest };
+});
+rce.registerCef('sendRequestWhitelist', async (player, discord) => {
+    const [checkRequests] = await db.query(`SELECT * FROM requests_whitelist WHERE social_club`, [player.socialClub]);
+    if (checkRequests.length > 0) {
+        rce.triggerClient(player, 'sendNotify', 'err', 'У вас уже подана заявка! Ожидайте одобрения', 3200, 'top');
+        return;
+    }
+    await db.execute(`INSERT INTO requests_whitelist (social_club, discord, createdAt) VALUES (?, ?, ?)`, [player.socialClub, discord, new Date()]);
+});
+
 //mp.world.weather = 'XMAS'
 const setCustomizationChar = (player, dataChar) => {
     try {

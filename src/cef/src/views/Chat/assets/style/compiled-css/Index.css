@@ -42,6 +42,7 @@ body {
   width: 30rem;
   margin: 0.7rem;
   opacity: 0.85;
+  z-index: 11;
 }
 .chatbox.active .msgList {
   background: rgba(34, 30, 37, 0.5);
@@ -75,11 +76,8 @@ body {
 .chatbox .msgList::-webkit-scrollbar {
   width: 0.3rem;
 }
-.chatbox .msgList::-webkit-scrollbar-track {
-  opacity: 0;
-}
 .chatbox .msgList::-webkit-scrollbar-thumb {
-  background: rgba(255, 202, 88, 0.7);
+  background: rgba(255, 255, 255, 0.15);
 }
 .chatbox .msgList::-webkit-scrollbar-thumb:hover {
   background: rgb(255, 202, 88);
@@ -118,6 +116,7 @@ body {
   color: #ffffff;
   margin: 0 0;
   font-size: 0.8rem;
+  font-weight: 500;
   letter-spacing: 0.05em;
   animation: fadeInMsgChat 0.4s ease;
 }

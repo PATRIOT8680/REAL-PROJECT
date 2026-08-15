@@ -7,6 +7,8 @@ import { setNickname } from "../../actions/elements/playerInfo/nickname.ts";
 import { setEat } from "../../actions/elements/playerInfo/eat.ts";
 import { setWater } from "../../actions/elements/playerInfo/water.ts";
 import { setHealth } from "../../actions/elements/playerInfo/health.ts";
+import { setAdminLvl } from "../../actions/elements/playerInfo/adminLvl.ts";
+import { setCardNumber } from "../../actions/elements/playerInfo/cardNumber.ts";
 
 export const playerInfoStore = {
   setSid: (sid: number) => store.dispatch(setSid(sid)),
@@ -16,4 +18,6 @@ export const playerInfoStore = {
   setEat: (eat: number) => store.dispatch(setEat(eat)),
   setWater: (water: number) => store.dispatch(setWater(water)),
   setHealth: (health: number) => store.dispatch(setHealth(health)),
+  setAdminLvl: (lvl: number) => store.dispatch(setAdminLvl(lvl)),
+  setCardNumber: (cardNumber: number) => store.dispatch(setCardNumber(cardNumber)),
 }

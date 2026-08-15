@@ -2,6 +2,8 @@
   display: flex;
   align-items: center;
   margin-top: -0.4rem;
+  user-select: none;
+  -webkit-user-drag: none;
   gap: 1.2rem;
 }
 .types-goods .name-type {
@@ -17,7 +19,7 @@
 }
 .types-goods .name-type.selected {
   color: #ffca58;
-  tansition: color 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 /*# sourceMappingURL=TypesGoods.css.map */

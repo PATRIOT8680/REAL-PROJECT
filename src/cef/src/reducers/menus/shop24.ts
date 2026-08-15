@@ -1,7 +1,7 @@
 import { IProductCard } from "../../actions/menus/shop24.ts";
 
 const initialState = {
-  isVisible: true,
+  isVisible: false,
   id: 0,
   products: [
     {
@@ -27,6 +27,78 @@ const initialState = {
       description: 'Превращает твой нефритовый стержень в отбойный молоток!',
       price: 1500,
       weight: 0.2,
+    },
+    {
+      id: 1,
+      type: 'foods',
+      name: 'Спранк',
+      description: 'Превращает твой нефритовый стержень в отбойный молоток!',
+      price: 1500,
+      weight: 0.2,
+    },
+    {
+      id: 1,
+      type: 'foods',
+      name: 'Спранк',
+      description: 'Превращает твой нефритовый стержень в отбойный молоток!',
+      price: 1500,
+      weight: 0.2,
+    },
+    {
+      id: 1,
+      type: 'foods',
+      name: 'Спранк',
+      description: 'Превращает твой нефритовый стержень в отбойный молоток!',
+      price: 1500,
+      weight: 0.2,
+    },
+    {
+      id: 1,
+      type: 'foods',
+      name: 'Спранк',
+      description: 'Превращает твой нефритовый стержень в отбойный молоток!',
+      price: 1500,
+      weight: 0.2,
+    },
+    {
+      id: 1,
+      type: 'foods',
+      name: 'Спранк',
+      description: 'Превращает твой нефритовый стержень в отбойный молоток!',
+      price: 1500,
+      weight: 0.2,
+    },
+    {
+      id: 1,
+      type: 'foods',
+      name: 'Спранк',
+      description: 'Превращает твой нефритовый стержень в отбойный молоток!',
+      price: 1500,
+      weight: 0.2,
+    },
+    {
+      id: 1,
+      type: 'foods',
+      name: 'Спранк',
+      description: 'Превращает твой нефритовый стержень в отбойный молоток!',
+      price: 1500,
+      weight: 0.2,
+    },
+    {
+      id: 1,
+      type: 'foods',
+      name: 'Спранк',
+      description: 'Превращает твой нефритовый стержень в отбойный молоток!',
+      price: 1500,
+      weight: 0.2,
+    },
+    {
+      id: 800,
+      type: 'misc',
+      name: 'Burger',
+      description: 'Превращает твой нефритовый стержень в отбойный молоток!',
+      price: 1500,
+      weight: 1.2,
     },
   ] as IProductCard[]
 }

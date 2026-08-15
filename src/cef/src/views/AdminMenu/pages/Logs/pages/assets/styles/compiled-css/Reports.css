@@ -5,6 +5,7 @@
   gap: 1rem;
   flex-direction: column;
   font-family: "Montserrat", sans-serif;
+  overflow: hidden;
 }
 .reports-container .input-search {
   display: flex;
@@ -22,12 +23,11 @@
 .reports-container .input-search .search-report {
   width: 100%;
   height: 2.7rem;
-  border-radius: 3rem;
+  border-radius: 4px;
   outline: none;
-  border: none;
   box-sizing: border-box;
   padding-left: 3.5rem;
-  border: 2px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   background: rgba(255, 255, 255, 0.05);
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
@@ -65,30 +65,27 @@
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  overflow-y: auto;
-  overflow-x: hidden;
   min-height: 0;
   flex: 1;
   min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 0.8rem;
-  scroll-behavior: smooth;
   user-select: none;
 }
 .reports-container .list-reports::-webkit-scrollbar {
-  width: 0.4rem;
+  width: 0.35rem;
+  direction: ltr;
 }
 .reports-container .list-reports::-webkit-scrollbar-track {
   opacity: 1;
-  background-color: rgba(205, 205, 205, 0.0823529412);
-  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.05);
 }
 .reports-container .list-reports::-webkit-scrollbar-thumb {
-  cursor: grabbing;
-  background-color: rgba(205, 205, 205, 0.1098039216);
-  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.1);
 }
 .reports-container .list-reports::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(205, 205, 205, 0.2392156863);
+  background: rgb(255, 202, 88);
 }
 .reports-container .list-reports .el-report {
   display: flex;
@@ -199,14 +196,15 @@
 }
 .reports-container .list-chat {
   display: flex;
-  width: 103%;
+  width: 100%;
+  height: 100%;
   gap: 1.5rem;
   overflow-y: auto;
   padding-right: 0.8rem;
-  margin-left: 0rem;
   flex-direction: column;
   overflow-x: hidden;
-  height: 100%;
+  min-height: 0;
+  flex: 1;
 }
 .reports-container .list-chat::-webkit-scrollbar {
   width: 0.4rem;
@@ -291,3 +289,5 @@
   display: flex;
   align-items: flex-end;
 }
+
+/*# sourceMappingURL=Reports.css.map */

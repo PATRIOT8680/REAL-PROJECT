@@ -19,23 +19,9 @@ const AdminMenu = () => {
     setActivePage(menu)
   }, [])
 
-  const handleKeyDown = (key: 'left' | 'right') => {
-    if (key === 'left') {
-      const currentIndex = pages.indexOf(activePage)
-      const newIndex = (currentIndex - 1 + pages.length) % pages.length
-      setActivePage(pages[newIndex])
-    }
-    else if (key === 'right') {
-      const currentIndex = pages.indexOf(activePage)
-      const newIndex = (currentIndex + 1) % pages.length
-      setActivePage(pages[newIndex])
-    }
+  const handleCloseAMenu = () => {
+    rce.triggerClient('closeAMenu')
   }
-
-  rce.register('amenu:ctrlPress', (key: 'left' | 'right') => {
-    rce.triggerClient('clientCmd', `Нажат ${key}`)
-    handleKeyDown(key)
-  })
 
   const renderActivePage = () => {
     switch (activePage) {
@@ -57,12 +43,17 @@ const AdminMenu = () => {
   }
 
   return (
-    <>
-      <div className="admin-menu">
-        <Header activeMenu={activePage} onMenuChange={handleSelectPage} />
+    <div className='admin-menu'>
+      <Header activeMenu={activePage} onMenuChange={handleSelectPage} />
+      <div className="main-container">
+        <header className="header-amenu">
+          <span className="title">Admin panel</span>
+          <span className="close" onClick={handleCloseAMenu}>ESC</span>
+        </header>
+        <div className="line"></div>
         { renderActivePage() }
       </div>
-    </>
+    </div>
   )
 }
 

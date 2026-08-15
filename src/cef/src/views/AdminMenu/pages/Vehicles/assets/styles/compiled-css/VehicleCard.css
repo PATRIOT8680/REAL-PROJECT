@@ -1,0 +1,101 @@
+.veh-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 14rem;
+  height: 16rem;
+  background: rgba(255, 255, 255, 0.06);
+  box-sizing: border-box;
+  padding: 0.75rem;
+  border-radius: 0.4rem;
+  gap: 0.8rem;
+}
+.veh-card .img-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 6.5rem;
+  overflow: hidden;
+  border-radius: 0.4rem;
+  user-select: none;
+}
+.veh-card .img-box img {
+  object-fit: cover;
+  pointer-events: none;
+  width: 100%;
+}
+.veh-card .line1 {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 0.6rem;
+}
+.veh-card .line1 .veh-name {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  user-select: none;
+}
+.veh-card .line1 .player-id {
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.2rem;
+  color: #ffffff;
+  box-sizing: border-box;
+  padding-left: 0.7rem;
+}
+.veh-card .colors {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+}
+.veh-card .colors .color-btn {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.veh-card .colors .color-btn.select {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25);
+  transition: all 0.2s;
+}
+.veh-card .btns-action {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 1.9rem;
+  gap: 0.5rem;
+}
+.veh-card .btns-action button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  width: 100%;
+  border-radius: 0.3rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  user-select: none;
+  transition: all 0.3s;
+}
+.veh-card .btns-action button:hover {
+  color: #000000;
+  background: #ffffff;
+  transition: all 0.3s;
+}
+
+/*# sourceMappingURL=VehicleCard.css.map */

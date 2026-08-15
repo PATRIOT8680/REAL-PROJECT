@@ -23,6 +23,7 @@ import './assets/fonts/Ubuntu/stylesheet.css'
 import './assets/fonts/BebasNeue/stylesheet.css'
 import './assets/fonts/Manrope/stylesheet.css'
 import './assets/fonts/DrukWideCyr/stylesheet.css'
+import './assets/fonts/Karantina/stylesheet.css'
 
 // Menus
 import Auth from "./views/Auth/Index"
@@ -44,12 +45,14 @@ import Offer from './views/Offer/Index.tsx'
 import DevMenus from "./views/DevMenus/Index.tsx";
 import BuyingBusiness from "./views/BuyingBusiness/BuyingBusiness.tsx";
 import Shop24 from "./views/Shop24/Shop24.tsx";
+import Bank from "./views/Bank/Bank.tsx";
 
 // Components
 import { useVisibleMenus } from "./hooks/useVisibleMenus"
 import BtnAmbient from "./components/BtnAmbient/Index"
 import ChangeLanguage from "./components/ChangeLanguage/Index"
 import ModalComponent from './components/Modal/Index'
+import Whitelist from "./views/Whitelist/Whitelist.tsx";
 
 const App = () => {
   const dispatch = useDispatch()
@@ -75,6 +78,8 @@ const App = () => {
   const devMenusVisible = useSelector((state: RootState) => state.devMenusReducer.isVisible)
   const buyingBusinessVisible = useSelector((state: RootState) => state.buyingBusinessReducer.isVisible)
   const shop24Visible = useSelector((state: RootState) => state.shop24Reducer.isVisible)
+  const whitelistVisible = useSelector((state: RootState) => state.whitelistReducer.isVisible)
+  const bankVisible = useSelector((state: RootState) => state.bankReducer.isVisible)
 
   const sendNotifyReducer = useSelector((state: RootState) => state.sendNotifyReducer)
   const deathReducer = useSelector((state: RootState) => state.deathReducer)
@@ -97,7 +102,9 @@ const App = () => {
       Interaction: interactionVisible,
       Dev: devMenusVisible,
       BuyingBusiness: buyingBusinessVisible,
-      Shop24: shop24Visible
+      Shop24: shop24Visible,
+      Whitelist: whitelistVisible,
+      Bank: bankVisible,
     }
 
     const open = Object.entries(menus)
@@ -184,6 +191,8 @@ const App = () => {
       { devMenusVisible && <DevMenus /> }
       { buyingBusinessVisible && <BuyingBusiness /> }
       { shop24Visible && <Shop24 /> }
+      { whitelistVisible && <Whitelist /> }
+      { bankVisible && <Bank /> }
 
       {/*<div className="language_ambients">*/}
       {/*  /!*{ shouldChangeLanguage && <ChangeLanguage /> }*!/*/}

@@ -1,0 +1,68 @@
+.bank-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transform: translate(-50%, -50%);
+  width: 65rem;
+  height: 43rem;
+  background: rgba(29, 25, 31, 0.98);
+  border-radius: 6px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 2rem;
+  animation: fadeInBtnConfirmPin 0.7s ease;
+}
+.bank-menu .header-bank {
+  user-select: none;
+  flex-shrink: 0;
+}
+.bank-menu .header-bank .title {
+  font-family: "Druk Wide Cyr", sans-serif;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  color: #FFCA58;
+  border-bottom: 2px solid #FFCA58;
+  text-shadow: 0 0 40px rgba(255, 202, 88, 0.8);
+  padding-bottom: 3px;
+}
+.bank-menu .header-bank .esc-exit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 3.7rem;
+  height: 3.7rem;
+  background: #2a242c;
+  color: #636165;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transition: all 0.3s ease;
+  border-radius: 0 6px 0 0;
+  cursor: pointer;
+  z-index: 1;
+}
+.bank-menu .header-bank .esc-exit:hover {
+  color: #FFCA58;
+  background: #342d36;
+  transition: all 0.3s ease;
+}
+.bank-menu .header-bank .esc-exit .keybind {
+  font-family: "Druk Wide Cyr", sans-serif;
+  user-select: none;
+  font-size: 0.8rem;
+  -webkit-user-drag: none;
+}
+.bank-menu .header-bank .esc-exit .description {
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: "Manrope", sans-serif;
+  opacity: 0.8;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/*# sourceMappingURL=Bank.css.map */

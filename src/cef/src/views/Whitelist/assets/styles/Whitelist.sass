@@ -1,0 +1,62 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+.whitelist
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  background: rgba(29, 25, 31, 0.98)
+  border-radius: 4px
+  width: 32rem
+  box-sizing: border-box
+  padding: 1.8rem
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  -webkit-user-drag: none
+  animation: fadeInWhitelist 1.2s ease
+  gap: 1rem
+
+  .title
+    font-family: $Druk
+    font-size: 1.5rem
+    text-transform: uppercase
+    color: #ffca58
+    text-shadow: 0 0 25px rgba(255, 202, 88, 0.4)
+    user-select: none
+
+  .description
+    font-family: $Montserrat
+    font-weight: 400
+    font-size: .95rem
+    line-height: 150%
+    color: rgba(255, 255, 255, 0.7)
+    user-select: none
+
+  button
+    width: 100%
+    user-select: none
+
+  .warning-request
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    user-select: none
+    box-sizing: border-box
+    padding: 1.35rem 0
+    background: rgba(255, 255, 255, 0.1)
+    border-radius: 4px
+    color: rgba(255, 255, 255, 0.5)
+    text-transform: uppercase
+    font-family: $Montserrat
+    font-size: .7rem
+    font-weight: 400
+    animation: fadeInWhitelist .4s ease
+
+@keyframes fadeInWhitelist
+  from
+    opacity: 0
+  to
+    opacity: 1

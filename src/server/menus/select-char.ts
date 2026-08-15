@@ -87,9 +87,10 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
   rce.triggerClient(player, 'execute', 'window.App.selectCharReducer.hideSelectChar()')
 
   rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setNickname('${nickname}')`)
-  console.log(nickname)
   setNumberChar(player.id, numberSlot)
   player.dimension = 0
+
+  console.log('pam 1')
 
   try {
     const sql = `SELECT uid, coordquit, adminlvl, age, cash, bankmoney, lvl, exp, health, armour, chardata FROM chars WHERE firstname = ? AND lastname = ?`
@@ -99,6 +100,7 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
         console.log(chalk.bgRed('• SPAWN •') + chalk.red(` Ошибка запроса к БД: ${err}`))
         return
       }
+      console.log('pam 2')
 
       if (Array.isArray(results) && results.length === 0) {
         console.log(chalk.bgYellow('• SPAWN •') + chalk.yellow(` Игрок с никнеймом ${nickname} не найден в БД.`))
@@ -107,6 +109,7 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
 
       try {
         let coords: any
+        console.log('pam 3')
 
         switch (pointSpawn) {
           case 'exit':
@@ -125,17 +128,19 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
             rce.triggerClient(player, 'sendNotify', 'err', 'Неизвестная точка спавна!', 3500, 'top')
         }
 
-
+        console.log('pam 4')
         const uid = await getDataAccount(player, 'uid', player.id)
         rce.triggerClient(player, 'execute', `window.App.spawnReducer.hideSpawn()`)
         rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setUid(${uid})`)
         sendInventoryToCef(player, uid)
+        console.log('pam 5')
 
         player.spawn(new mp.Vector3(parseFloat(coords.x), parseFloat(coords.y), parseFloat(coords.z)))
         player.heading = parseFloat(coords.heading)
         player.health = results[0].health
         player.armour = results[0].armour
 
+        console.log('pam 6')
         const cash = await getDataAccount(player, 'cash', player.id)
         const bankmoney = await getDataAccount(player, 'bankmoney', player.id)
 
@@ -152,10 +157,13 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
 
         const coordString = JSON.stringify(coordExit)
 
+        console.log('pam 7')
+
         data.query(sql, [coordString, uid], (err, results) => {
           if (err) return console.log(chalk.bgRed('• SHUTDOWN •') + chalk.red(` Ошибка записи coords: ${err}`))
         })
 
+        console.log('pam 8')
         player.setVariable('ADMIN_LVL', results[0].adminlvl)
         connectedUsers.setUser(player.id, {
           uid: results[0].uid,
@@ -170,9 +178,12 @@ rce.registerCef('handleSpawnPlayer', async (player: PlayerMp, nickname: string, 
           unique_quest: results[0].unique_quest
         })
 
+
+        console.log('pam 9')
         rce.trigger('charSpawned', player)
         player.setVariable('gender', dataChar.gender)
         player.setVariable('player_spawned', true)
+        rce.triggerClient(player, 'execute', `window.App.playerInfoReducer.setAdminLvl(${results[0].adminlvl})`)
         rce.triggerClient(player, 'execute', `window.App.cashReducer.setCash(${cash})`)
         rce.triggerClient(player, 'execute', `window.App.bankMoneyReducer.setBankMoney(${bankmoney})`)
 
@@ -230,7 +241,7 @@ rce.registerClient('client:playerSpawnedBeforeAuth', async (player: PlayerMp) =>
               null
 
           if (charData) {
-            let status = 'active'
+            let status = charData.ban !== null ? 'ban' : 'active'
 
             slots.push({
               status: status,
@@ -278,7 +289,7 @@ rce.registerClient('selectChar:getDataAllChars', async (player: PlayerMp) => {
         return
       }
 
-      const sql = 'SELECT firstname, lastname, numberslot, cash, bankmoney FROM chars WHERE sid = ?'
+      const sql = 'SELECT firstname, lastname, numberslot, cash, bankmoney, ban FROM chars WHERE sid = ?'
 
       data.query(sql, [sid], (err, results: any) => {
         if (err) {
@@ -292,6 +303,7 @@ rce.registerClient('selectChar:getDataAllChars', async (player: PlayerMp) => {
           numberslot: char.numberslot,
           cash: char.cash,
           bankmoney: char.bankmoney,
+          ban: JSON.parse(char.ban)
         }))
 
         resolve(charsData)

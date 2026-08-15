@@ -1,5 +1,5 @@
 import { data } from "../database/mysql";
-import { connectedUsers, IConnectedUser } from "../data/dataConnectedUser";
+import { connectedUsers } from "../data/dataConnectedUser";
 import { rce } from "../utils/rce";
 import chalk from "chalk";
 

@@ -16,21 +16,21 @@ export const createInventoryForChar = async (player: PlayerMp, uid: number, sid:
 
     let slotIndex = 4
 
-    // Все предметы одежды — последовательно
-    mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 0, 0, 0), quantity: 1 }       // 4: hat
-    mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 2, 10, 0), quantity: 1 }     // 5: ears
-    mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 1, 1, 0), quantity: 1 }    // 6: mask
-    mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 1, 2, 0), quantity: 1 }      // 7: glasses
-    mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 6, 0, 0), quantity: 1 }      // 8: часы (prop 6)
-    mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 11, 0, 0), quantity: 1 }   // 9: shirt
-    mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 3, 16, 0), quantity: 1 }   // 10: gloves
-    mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 9, 1, 0), quantity: 1 }    // 11: armor
-    mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 11, 3, 0), quantity: 1 }   // 12: jacket
-    mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 5, 40, 0), quantity: 1 }   // 13: bag
-    mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 4, 0, 0), quantity: 1 }    // 14: pants
-    mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 6, 1, 0), quantity: 1 }    // 15: shoes
-    mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 2, 5, 0), quantity: 1 }      // 16: украшения
-    mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 7, 0, 0), quantity: 1 }      // 17: браслет
+    // // Выдаем тестовые предметы
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 0, 0, 0), quantity: 1 }       // 4: hat
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 2, 10, 0), quantity: 1 }     // 5: ears
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 1, 1, 0), quantity: 1 }    // 6: mask
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 1, 2, 0), quantity: 1 }      // 7: glasses
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 6, 0, 0), quantity: 1 }      // 8: часы (prop 6)
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 11, 0, 0), quantity: 1 }   // 9: shirt
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 3, 16, 0), quantity: 1 }   // 10: gloves
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 9, 1, 0), quantity: 1 }    // 11: armor
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 11, 3, 0), quantity: 1 }   // 12: jacket
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 5, 40, 0), quantity: 1 }   // 13: bag
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 4, 0, 0), quantity: 1 }    // 14: pants
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('clothes', 'male', 6, 1, 0), quantity: 1 }    // 15: shoes
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 2, 5, 0), quantity: 1 }      // 16: украшения
+    // mainSlots[slotIndex++] = { id: generateClothesItemId('props', 'male', 7, 0, 0), quantity: 1 }      // 17: браслет
 
     const donateSlotsObj = {
       have: false,

@@ -5,7 +5,7 @@
 	"main": "index.ts",
 	"type": "commonjs",
 	"scripts": {
-		"start": "npm run build && cd .. && ragemp-server.exe",
+    "start": "npm run build && cd .. && start \"RAGE MP Server\" ragemp-server.exe",
 		"dev": "cd cef && npm run dev",
 		"build:cef": "cd cef && npm run build",
 		"build": "rollup -c --bundleConfigAsCjs && npm run build:cef"
@@ -54,6 +54,7 @@
 		"content-disposition": "^0.5.4",
 		"core-util-is": "^1.0.3",
 		"cross-spawn": "^7.0.6",
+		"crypto-js": "^4.2.0",
 		"dayjs": "^1.11.13",
 		"debug": "^4.4.1",
 		"decompress": "^4.2.1",
@@ -190,6 +191,7 @@
 		"react-animated-numbers": "^1.1.1",
 		"react-freezeframe": "^5.0.2",
 		"react-i18next": "^15.6.0",
+		"react-window": "^2.2.7",
 		"readable-stream": "^4.7.0",
 		"readdirp": "^4.1.2",
 		"redux-thunk": "^3.1.0",
@@ -275,6 +277,7 @@
 		"@types/node": "^24.0.14",
 		"@types/ragemp-c": "github:CocaColaBear/types-ragemp-c#v2.0",
 		"@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#v1.0",
+		"@types/react-window": "^1.8.8",
 		"concurrently": "^9.2.0",
 		"dotenv": "^17.2.0",
 		"fdir": "^5.2.0",

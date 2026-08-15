@@ -26,7 +26,6 @@ export const moveItemSlots = (
   targetSlots: any[],
   targetIndex: number
 ): { newSourceSlots: any[], newTargetSlots: any[] } => {
-  // ✅ Если это один и тот же массив (перемещение внутри одной секции)
   if (sourceSlots === targetSlots) {
     const newSlots = sourceSlots.length >= 20 ? [...sourceSlots] : [...sourceSlots, ...Array(20 - sourceSlots.length).fill(null)]
 
@@ -68,7 +67,6 @@ export const moveItemSlots = (
     return { newSourceSlots: newSlots, newTargetSlots: newSlots }
   }
 
-  // ✅ Для разных массивов (перемещение между секциями)
   const newSourceSlots = sourceSlots.length >= 20 ? [...sourceSlots] : [...sourceSlots, ...Array(20 - sourceSlots.length).fill(null)]
   const newTargetSlots = targetSlots.length >= 20 ? [...targetSlots] : [...targetSlots, ...Array(20 - targetSlots.length).fill(null)]
 

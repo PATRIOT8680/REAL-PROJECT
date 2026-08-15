@@ -4,7 +4,11 @@ export interface IProductCard {
   name: string,
   description: string,
   weight: number,
-  price: number
+  price: number,
+}
+
+export interface ICartItem extends IProductCard {
+  quantity: number
 }
 
 export const showShop24 = (

@@ -1,0 +1,62 @@
+.pincode-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5rem;
+  position: relative;
+  user-select: none;
+  gap: 2rem;
+  animation: fadeInBtnConfirmPin 1s ease;
+}
+.pincode-page .title {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  color: #FFCA58;
+}
+.pincode-page .pin-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pincode-page .pin-container .pin-star {
+  font-family: "Druk Wide Cyr", sans-serif;
+  font-size: 2.5rem;
+  color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0 0.4rem 0.4rem 0.4rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.pincode-page .pin-container .pin-star.filled {
+  color: #FFCA58;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+.pincode-page .pin-hint {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.2);
+}
+.pincode-page .main-btn {
+  position: absolute;
+  top: 85%;
+  transform: translateY(-50%);
+  animation: fadeInBtnConfirmPin 0.7s ease;
+}
+
+@keyframes fadeInBtnConfirmPin {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=PinCode.css.map */

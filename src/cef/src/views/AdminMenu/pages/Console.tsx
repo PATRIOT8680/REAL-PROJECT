@@ -34,6 +34,7 @@ interface Suggestion {
 
 const ConsolePage = () => {
   const consoleBufferState = useSelector((state: RootState) => state.consoleBufferReducer)
+  const { nickname } = useSelector((state: RootState) => state.playerInfoReducer)
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const suggestionsRef = useRef<HTMLDivElement>(null)
@@ -50,7 +51,7 @@ const ConsolePage = () => {
 
   rce.register('console:setCommands', (serverCommands: CommandDefinition[]) => {
     rce.triggerClient('clientCmd', 'Зарегали команду')
-    setCommands(serverCommands);
+    setCommands(serverCommands)
   })
 
   rce.register('console:commandResponse', (success: boolean, message: string) => {
@@ -87,7 +88,6 @@ const ConsolePage = () => {
     const timer = setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus()
-        console.log('penis')
       }
     }, 550)
 
@@ -198,7 +198,7 @@ const ConsolePage = () => {
 
     const userMsg: ConsoleMessage = {
       id: messageId,
-      sender: 'Какашке',
+      sender: nickname,
       time: currentTime,
       args: [commandName, ...args]
     }
@@ -230,32 +230,48 @@ const ConsolePage = () => {
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      e.preventDefault()
+      e.preventDefault();
+
+      // Если есть выбранная подсказка И текст в инпуте ещё не полностью введён вручную
       if (selectedSuggestion >= 0 && suggestions.length > 0) {
-        handleSuggestionSelect(suggestions[selectedSuggestion]);
+        const selectedCmd = suggestions[selectedSuggestion].command;
+
+        // Если пользователь уже ввёл полную команду — отправляем сразу
+        if (cmdValue.trim().toLowerCase().startsWith(selectedCmd.toLowerCase() + ' ') ||
+          cmdValue.trim().toLowerCase() === selectedCmd.toLowerCase()) {
+          handleCmdSubmit();
+        } else {
+          // Иначе — просто вставляем подсказку
+          handleSuggestionSelect(suggestions[selectedSuggestion]);
+        }
       } else {
+        // Нет активной подсказки — сразу отправляем
         handleCmdSubmit();
       }
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault()
+    }
+    else if (e.key === 'ArrowDown') {
+      e.preventDefault();
       setSelectedSuggestion(prev =>
         prev < suggestions.length - 1 ? prev + 1 : 0
-      )
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
+      );
+    }
+    else if (e.key === 'ArrowUp') {
+      e.preventDefault();
       setSelectedSuggestion(prev =>
         prev > 0 ? prev - 1 : suggestions.length - 1
-      )
-    } else if (e.key === 'Escape') {
-      setSuggestions([])
-      setSelectedSuggestion(-1)
-    } else if (e.key === 'Tab' && suggestions.length > 0) {
-      e.preventDefault()
+      );
+    }
+    else if (e.key === 'Escape') {
+      setSuggestions([]);
+      setSelectedSuggestion(-1);
+    }
+    else if (e.key === 'Tab' && suggestions.length > 0) {
+      e.preventDefault();
       if (selectedSuggestion >= 0) {
-        handleSuggestionSelect(suggestions[selectedSuggestion])
+        handleSuggestionSelect(suggestions[selectedSuggestion]);
       }
     }
-  }
+  };
 
   const getTime = async () => {
     return await getDateTime()
@@ -316,44 +332,43 @@ const ConsolePage = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="enter-block">
-          <input
-            ref={inputRef}
-            type='text'
-            value={cmdValue}
-            onKeyDown={handleKeyPress}
-            onChange={(e) => setCmdValue(e.target.value)}
-            className='enter-cmd'
-            placeholder='Начните вводить команду...'
-          />
-
-          { cmdValue !== '' && (
-              <span className="enter-keyup">ENTER</span>
-          ) }
-        </div>
-
-
-        {suggestions.length > 0 && (
+        <div className="input-cmds-section">
+          {suggestions.length > 0 && (
             <div ref={suggestionsRef} className="suggestions-container">
               {suggestions.map((suggestion, index) => (
-                  <div
-                      key={suggestion.command}
-                      ref={index === selectedSuggestion ? selectedSuggestionRef : null}
-                      className={`suggestion-item ${index === selectedSuggestion ? 'selected' : ''}`}
-                      onClick={() => handleSuggestionSelect(suggestion)}
-                  >
-                    <div className="suggestion-command">
-                      <span className="command-name">{suggestion.command}</span>
-                      {suggestion.args.map((arg, argIndex) => (
-                          <span key={argIndex} className="command-arg">{arg}</span>
-                      ))}
-                    </div>
-                    <div className="suggestion-description">{suggestion.description}</div>
+                <div
+                  key={suggestion.command}
+                  ref={index === selectedSuggestion ? selectedSuggestionRef : null}
+                  className={`suggestion-item ${index === selectedSuggestion ? 'selected' : ''}`}
+                  onClick={() => handleSuggestionSelect(suggestion)}
+                >
+                  <div className="suggestion-command">
+                    <span className="command-name">{suggestion.command}</span>
+                    {suggestion.args.map((arg, argIndex) => (
+                      <span key={argIndex} className="command-arg">{arg}</span>
+                    ))}
                   </div>
+                  <div className="suggestion-description">{suggestion.description}</div>
+                </div>
               ))}
             </div>
-        )}
+          )}
+          <div className="enter-block">
+            <input
+              ref={inputRef}
+              type='text'
+              value={cmdValue}
+              onKeyDown={handleKeyPress}
+              onChange={(e) => setCmdValue(e.target.value)}
+              className='enter-cmd'
+              placeholder='Начните вводить команду...'
+            />
 
+            { cmdValue !== '' && (
+              <span className="enter-keyup">ENTER</span>
+            ) }
+          </div>
+        </div>
       </div>
     </>
   )

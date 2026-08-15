@@ -1,0 +1,35 @@
+.list-goods {
+  display: grid;
+  direction: rtl;
+  text-align: left;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: flex-end;
+  gap: 1.35rem;
+  padding-left: 1rem;
+  margin-left: -1.3rem;
+  overflow-y: auto;
+  height: 100%;
+  overflow-x: hidden;
+}
+.list-goods::-webkit-scrollbar {
+  width: 0.3rem;
+  direction: ltr;
+}
+.list-goods::-webkit-scrollbar-track {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.05);
+}
+.list-goods::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+.list-goods::-webkit-scrollbar-thumb:hover {
+  background: rgb(255, 202, 88);
+}
+
+@media (max-width: 1310px) {
+  .list-goods {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/*# sourceMappingURL=GoodsList.css.map */

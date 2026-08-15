@@ -40,7 +40,7 @@ const Select = ({ selected, onChange, options, label }: ISelect) => {
          onClick={() => setIsOpen(!isOpen)}
       >
         <span className="custom-select-value">
-          {selectedOption ? selectedOption.name : 'Выберите тип бизнеса'}
+          {selectedOption ? selectedOption.name : 'Custom name'}
         </span>
         <svg className={`arrow-list ${isOpen ? 'opened' : ''}`} width="23" height="20" viewBox="0 0 23 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M21.0002 16.0003C22.1048 16.0003 23.0002 16.8957 23.0002 18.0003C22.9999 19.1047 22.1046 20.0003 21.0002 20.0003H2.00019C0.895788 20.0003 0.00045836 19.1047 0.00019452 18.0003C0.00019452 16.8957 0.895625 16.0003 2.00019 16.0003H21.0002Z" fill="white"/>

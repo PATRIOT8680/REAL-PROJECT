@@ -1,0 +1,73 @@
+$Druk: "Druk Wide Cyr", sans-serif
+$Montserrat: "Montserrat", sans-serif
+
+.input-modal-overlay
+  position: absolute
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  background: rgba(29, 25, 31, 0.65)
+  animation: fadeInInputModal .6s ease
+
+  .input-modal
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    box-sizing: border-box
+    padding: 2rem
+    background: #1D191F
+    box-shadow: 0 0 100px 0 rgba(255, 202, 88, 0.1)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 4px
+    display: flex
+    flex-direction: column
+    gap: 1.1rem
+
+    .modal-header
+      display: flex
+      align-items: center
+      justify-content: space-between
+      width: 100%
+      gap: 3rem
+
+      span
+        font-family: $Druk
+        text-transform: uppercase
+        color: #ffca58
+
+      .close-menu
+        display: flex
+        align-items: center
+        justify-content: center
+        width: 2rem
+        height: 1.7rem
+        color: rgba(255, 255, 255, 0.4)
+        font-family: $Druk
+        background: rgba(255, 255, 255, 0.1)
+        transition: all .3s ease
+        border: none
+        outline: none
+        cursor: pointer
+
+        &:hover
+          transition: all .3s ease
+          background: #ffffff
+          color: #000
+
+    .modal-form
+      display: flex
+      flex-direction: column
+      gap: 1.2rem
+
+      .fields-container
+        display: flex
+        flex-direction: column
+        gap: .9rem
+
+@keyframes fadeInInputModal
+  from
+    opacity: 0
+  to
+    opacity: 1

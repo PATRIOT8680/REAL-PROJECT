@@ -33,23 +33,21 @@ rce.registerServer('server:showSelectChar', async () => {
   const plDimension = mp.players.local.dimension
   mp.game.ui.setPauseMenuActive(false)
 
-  // setTimeout(() => {
-  //   dataChars.forEach((char: any) => {
-  //     const plPos = listCameras[char.numberslot - 1].playerPos
-  //
-  //     mp.labels.new(
-  //         `${char.nickname} [0 LVL]`,
-  //         new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.965),
-  //         { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 255], dimension: plDimension }
-  //     )
-  //
-  //     mp.labels.new(
-  //         `Наличные: $${char.cash} • На карте: $${char.bankmoney}`,
-  //         new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9),
-  //         { los: false, font: 4, drawDistance: 7.5, color: [255, 255, 255, 180], dimension: plDimension }
-  //     )
-  //   })
-  // }, 4000)
+  dataChars.forEach((char: any) => {
+    const plPos = listCameras[char.numberslot - 1].playerPos
+    if (char.ban !== null) {
+      mp.labels.new(
+        `До разблокировки: ${char.ban.days} дн.`,
+        new mp.Vector3(plPos.x, plPos.y, plPos.z + 1),
+        { los: false, font: 0, drawDistance: 7.5, color: [255, 43, 43, 255], dimension: plDimension }
+      )
+      mp.labels.new(
+        `Причина: ${char.ban.reason}`,
+        new mp.Vector3(plPos.x, plPos.y, plPos.z + 0.9),
+        { los: false, font: 4, drawDistance: 7.5, color: [255, 43, 43, 255], dimension: plDimension }
+      )
+    }
+  })
 
   destroyCamera(currentCamera)
   destroyCamera(targetCamera)

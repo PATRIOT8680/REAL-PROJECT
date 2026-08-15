@@ -5,7 +5,9 @@ export interface IPlayerInfo {
   nickname: string,
   eat: number,
   water: number
-  health: number
+  health: number,
+  adminlvl: number,
+  cardNumber: number | null,
 }
 
 const initialState = {
@@ -16,6 +18,8 @@ const initialState = {
   eat: 50,
   water: 100,
   health: 100,
+  adminlvl: 3,
+  cardNumber: null,
 }
 
 export const playerInfoReducer = (state: IPlayerInfo = initialState, action: any) => {
@@ -34,6 +38,10 @@ export const playerInfoReducer = (state: IPlayerInfo = initialState, action: any
       return { ...state, water: action.water }
     case 'SET_HEALTH':
       return { ...state, health: action.health }
+    case 'SET_ADMIN_LVL':
+      return { ...state, adminlvl: action.lvl }
+    case 'SET_CARD_NUMBER':
+      return { ...state, cardNumber: action.cardNumber }
     default:
       return state
   }

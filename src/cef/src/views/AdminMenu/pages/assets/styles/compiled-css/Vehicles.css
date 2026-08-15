@@ -42,9 +42,8 @@
 .vehicles-page .input-search .search-veh {
   width: 98%;
   height: 2.7rem;
-  border-radius: 3rem;
+  border-radius: 4px;
   outline: none;
-  border: none;
   box-sizing: border-box;
   padding-left: 3.5rem;
   border: 2px solid rgba(255, 255, 255, 0.07);
@@ -133,13 +132,35 @@
   background: #ffffff;
   transition: all 0.3s;
 }
-.vehicles-page .category-veh {
+
+.list-all-vehs {
+  display: flex;
+}
+.list-all-vehs::-webkit-scrollbar {
+  width: 0.4rem;
+  direction: ltr;
+}
+.list-all-vehs::-webkit-scrollbar-track {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.05);
+}
+.list-all-vehs::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+.list-all-vehs::-webkit-scrollbar-thumb:hover {
+  background: rgb(255, 202, 88);
+}
+.list-all-vehs .category-section:not(:first-child) .category-veh .header-category {
+  margin-top: 1rem;
+}
+.list-all-vehs .category-section .category-veh {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
+  height: auto;
 }
-.vehicles-page .category-veh .header-category {
+.list-all-vehs .category-section .category-veh .header-category {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -147,7 +168,7 @@
   width: 97%;
   gap: 1rem;
 }
-.vehicles-page .category-veh .header-category .category-name {
+.list-all-vehs .category-section .category-veh .header-category .category-name {
   font-weight: 500;
   color: #2D3432;
   background: #ffffff;
@@ -157,115 +178,23 @@
   user-select: none;
   white-space: nowrap;
 }
-.vehicles-page .category-veh .header-category .line {
+.list-all-vehs .category-section .category-veh .header-category .line {
   height: 3px;
   width: 100%;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3rem;
 }
-.vehicles-page .category-veh .list-vehs {
+
+.list-vehs {
   display: flex;
   flex-direction: row;
   width: 98%;
   flex-wrap: wrap;
   gap: 1rem;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.vehicles-page .category-veh .list-vehs .veh-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 14rem;
-  height: 16rem;
-  background: rgba(255, 255, 255, 0.06);
-  box-sizing: border-box;
-  padding: 0.75rem;
-  border-radius: 0.4rem;
-  gap: 0.8rem;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .img-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 6.5rem;
-  overflow: hidden;
-  border-radius: 0.4rem;
-  user-select: none;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .img-box img {
-  object-fit: cover;
-  pointer-events: none;
-  width: 100%;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .line1 {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 0.6rem;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .line1 .veh-name {
-  font-size: 0.85rem;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 0.2rem;
-  color: rgba(255, 255, 255, 0.9);
-  user-select: none;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .line1 .player-id {
-  width: 100%;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 0.2rem;
-  color: #ffffff;
-  box-sizing: border-box;
-  padding-left: 0.7rem;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .colors {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  width: 100%;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .colors .color-btn {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 0.2rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .colors .color-btn.select {
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25);
-  transition: all 0.2s;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .btns-action {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-  height: 1.9rem;
-  gap: 0.5rem;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .btns-action button {
-  cursor: pointer;
-  border: none;
-  outline: none;
-  width: 100%;
-  border-radius: 0.3rem;
-  font-family: "Montserrat", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  user-select: none;
-  transition: all 0.3s;
-}
-.vehicles-page .category-veh .list-vehs .veh-card .btns-action button:hover {
-  color: #000000;
-  background: #ffffff;
-  transition: all 0.3s;
-}
+
+/*# sourceMappingURL=Vehicles.css.map */

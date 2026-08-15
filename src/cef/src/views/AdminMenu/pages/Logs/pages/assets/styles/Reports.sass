@@ -7,6 +7,7 @@ $Montserrat: "Montserrat", sans-serif
   gap: 1rem
   flex-direction: column
   font-family: $Montserrat
+  overflow: hidden
 
   .input-search
     display: flex
@@ -24,12 +25,11 @@ $Montserrat: "Montserrat", sans-serif
     .search-report
       width: 100%
       height: 2.7rem
-      border-radius: 3rem
+      border-radius: 4px
       outline: none
-      border: none
       box-sizing: border-box
       padding-left: 3.5rem
-      border: 2px solid rgba(255, 255, 255, 0.07)
+      border: 1px solid rgba(255, 255, 255, 0.07)
       background: rgba(255, 255, 255, 0.05)
       font-family: $Montserrat
       font-weight: 500
@@ -67,30 +67,27 @@ $Montserrat: "Montserrat", sans-serif
     display: flex
     flex-direction: column
     gap: 0.8rem
-    overflow-y: auto
-    overflow-x: hidden
     min-height: 0
     flex: 1
     min-height: 0
+    overflow-y: auto
+    overflow-x: hidden
     padding-right: 0.8rem
-    scroll-behavior: smooth
     user-select: none
 
     &::-webkit-scrollbar
-      width: 0.4rem
+      width: .35rem
+      direction: ltr
 
     &::-webkit-scrollbar-track
       opacity: 1
-      background-color: #cdcdcd15
-      border-radius: 100px
+      background: rgba(255, 255, 255, 0.05)
 
     &::-webkit-scrollbar-thumb
-      cursor: grabbing
-      background-color: #cdcdcd1c
-      border-radius: 100px
+      background: rgba(255, 255, 255, 0.1)
 
       &:hover
-        background-color: #cdcdcd3d
+        background: rgba(255, 202, 88)
 
     .el-report
       display: flex
@@ -201,14 +198,15 @@ $Montserrat: "Montserrat", sans-serif
 
   .list-chat
     display: flex
-    width: 103%
+    width: 100%
+    height: 100%
     gap: 1.5rem
     overflow-y: auto
     padding-right: 0.8rem
-    margin-left: 0rem
     flex-direction: column
     overflow-x: hidden
-    height: 100%
+    min-height: 0
+    flex: 1
 
     &::-webkit-scrollbar
       width: 0.4rem

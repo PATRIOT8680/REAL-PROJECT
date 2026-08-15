@@ -1,5 +1,17 @@
 import { CustomEventBase, CustomEventHandler } from "../../../shared/CustomEventBase.ts";
 
+declare var CryptoJS: any;  // библиотека crypto-js д.б. подключена в index.html
+
+// Глобальная переменная для сессионного секрета
+let sessionSecret: string | null = null;
+(window as any).setSessionSecret = (secret: string) => {
+  sessionSecret = secret;
+};
+
+function generateNonce(): string {
+  return Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+}
+
 export class rce extends CustomEventBase {
   static triggerCef(eventName: string, args: string) {
     try {
@@ -26,15 +38,56 @@ export class rce extends CustomEventBase {
 
   static lastServerSend = 0;
 
+  // triggerServer — теперь с подписью
   static triggerServer(eventName: string, ...args: any[]) {
-    mp.trigger("trigger:server", eventName, JSON.stringify(args));
+    if (sessionSecret) {
+      const ts = Date.now();
+      const nonce = generateNonce();
+      const message = `${eventName}:${ts}:${nonce}:${JSON.stringify(args)}`;
+      const secretWA = CryptoJS.enc.Base64.parse(sessionSecret);
+      const hmac = CryptoJS.HmacSHA256(message, secretWA).toString(CryptoJS.enc.Hex);
+      const payload = {
+        __secure: true,
+        __ts: ts,
+        __nonce: nonce,
+        __hmac: hmac,
+        __args: args
+      };
+      // Отправляем имя события открытым текстом (сервер сам зашифрует при необходимости? Нет, нужно шифровать, но сервер ожидает уже зашифрованное имя в trigger:server)
+      // В текущей архитектуре CEF -> клиент -> сервер идёт через mp.trigger('trigger:server', name, ...).
+      // На сервере 'trigger:server' обрабатывается и вызывает rce.triggerCef/triggerClient? Нужно посмотреть.
+      // У нас в клиентском коде есть mp.events.add('trigger:server', ...) который делает mp.events.callRemote('trigger:cef', rce.encryptEventName(name), args).
+      // Значит CEF передаёт незашифрованное имя, клиент его шифрует и отправляет на сервер.
+      // Поэтому здесь мы отправляем payload в 'trigger:server' с незашифрованным eventName — клиент сам зашифрует.
+      mp.trigger("trigger:server", eventName, JSON.stringify(payload));
+    } else {
+      // Обычный вызов без подписи
+      mp.trigger("trigger:server", eventName, JSON.stringify(args));
+    }
   }
 
+  // callServer — с подписью
   static callServer(eventName: string, ...args: any[]): Promise<any> {
     const requestID = this.callServerResponse++;
     return new Promise((resolve, reject) => {
       this.requestServerHandle.set(requestID, resolve);
-      mp.trigger('call:server', requestID, eventName, ...args);
+      if (sessionSecret) {
+        const ts = Date.now();
+        const nonce = generateNonce();
+        const message = `${eventName}:${ts}:${nonce}:${JSON.stringify(args)}`;
+        const secretWA = CryptoJS.enc.Base64.parse(sessionSecret);
+        const hmac = CryptoJS.HmacSHA256(message, secretWA).toString(CryptoJS.enc.Hex);
+        const payload = {
+          __secure: true,
+          __ts: ts,
+          __nonce: nonce,
+          __hmac: hmac,
+          __args: args
+        };
+        mp.trigger('call:server', requestID, eventName, JSON.stringify(payload));
+      } else {
+        mp.trigger('call:server', requestID, eventName, JSON.stringify(args));
+      }
     });
   }
 

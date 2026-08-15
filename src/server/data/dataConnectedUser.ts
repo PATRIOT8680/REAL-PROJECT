@@ -1,20 +1,5 @@
 import { rce } from "../utils/rce";
-
-export interface IConnectedUser {
-  sid?: number | null,
-  login?: string | undefined,
-  uid?: number | null,
-  nickName?: string | undefined,
-  gender?: 'male' | 'female',
-  adminLvl?: number | null,
-  age?: number | null,
-  cash?: number | null,
-  bankmoney?: number | null,
-  donatcoins?: number | null,
-  lvl?: number | null,
-  exp?: number | null,
-  unique_quest?: string | null
-}
+import { IConnectedUser } from "../../shared/types/connectedUsers";
 
 const users = new Map<number, IConnectedUser>()
 
@@ -23,9 +8,8 @@ export const connectedUsers = {
     const existingUser = users.get(playerId) || {}
     users.set(playerId, { ...existingUser, ...userData })
 
-    if (userData.login) {
-      rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`)
-      console.log(`Обновлен пользователь: ${userData.login} (ID: ${playerId})`);
+    if (userData.uid) {
+      rce.triggerClients('execute', `window.App.serverInfoReducer.addPlayer(${JSON.stringify(connectedUsers.getFullData(playerId))})`)
     }
   },
 
@@ -33,12 +17,23 @@ export const connectedUsers = {
     const user = users.get(playerId)
     if (user) {
       users.delete(playerId)
-      rce.triggerClient(mp.players.at(playerId), 'execute', `window.App.serverInfoReducer.setOnline(${connectedUsers.getOnline()})`)
+      rce.triggerClients('execute', `window.App.serverInfoReducer.removePlayer(${user.uid})`)
       console.log(`Удален пользователь: ${user.login || 'Unknown'} (ID: ${playerId})`)
       return true
     }
 
     return false
+  },
+
+  getFullData: (playerId: number): IConnectedUser | undefined => {
+    return users.get(playerId)
+  },
+
+  getFullDataByUid: (uid: number): IConnectedUser | undefined => {
+    for (const user of users.values()) {
+      if (user.uid === uid) return user
+    }
+    return undefined
   },
 
   getUser: (playerId: number): IConnectedUser | undefined => {

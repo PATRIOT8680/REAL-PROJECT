@@ -1,13 +1,13 @@
 import './assets/styles/compiled-css/Reports.css'
-import {useState, useEffect, useRef, KeyboardEvent} from "react";
+import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../reducers/rootReducer.ts";
 import { rce } from "../../../modules/rce.ts";
+import { getDateTime } from "../../../modules/dateTime.ts";
 
 import svg_selectedReport from './assets/img/selectedReport.svg'
 import svg_user from './assets/img/svg_user.svg'
 import svg_admin from './assets/img/svg_admin.svg'
-import {getDateTime} from "../../../modules/dateTime.ts";
 
 export interface IMsg {
   nickName: string,
