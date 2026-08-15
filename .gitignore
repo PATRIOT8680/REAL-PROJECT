@@ -1,14 +1,16 @@
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Build
 dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Editor
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -18,10 +20,25 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Binaries & archives
 bin
 resources
+*.exe
+*.rar
+*.zip
+*.7z
+*.pak
+
+# Node
+node_modules/
+node_modules.rar
+
+client_packages/game_resources/dlcpacks/
+CARS/
+*.rpf
+
+# CEF assets
 client_packages/cef/assets/*.js
 client_packages/cef/assets/*.css
 client_packages/cef/assets/*.map
-client_packages/game_resources/dlcpacks
-CARS
